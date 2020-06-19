@@ -7,7 +7,7 @@
 #include <cblas.h>
 
 #ifdef __cplusplus
-namespace openn {
+namespace codee {
 extern "C" {
 #endif
 

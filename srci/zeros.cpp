@@ -81,10 +81,10 @@ if (o1.H!=1u && o1.only_3D()) { cerr << progstr+": " << __LINE__ << errstr << "4
 if (o1.T==1)
 {
     float *Y;
-    try { Y = new float[o1.N()]; }
+    try { Y = new float[o1.N()](); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::zeros_s(Y,int(o1.N())))
-    { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+    //if (codee::zeros_s(Y,int(o1.N())))
+    //{ cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
         try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
@@ -95,10 +95,10 @@ if (o1.T==1)
 else if (o1.T==101)
 {
     float *Y;
-    try { Y = new float[2u*o1.N()]; }
+    try { Y = new float[2u*o1.N()](); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::zeros_c(Y,int(o1.N())))
-    { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+    //if (codee::zeros_c(Y,int(o1.N())))
+    //{ cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
         try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }

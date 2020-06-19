@@ -26,8 +26,7 @@ endif
 CFLAGS=$(WFLAG) -O3 $(STD) -march=native -fPIC
 
 
-all: Generate Construct Matsel Split_Join Nonlin Stats Conv
-all: Constants Generate Random Construct Matsel Split_Join Nonlin Stats Conv
+all: Generate Construct Matsel Split_Join Elementwise1 Elementwise2 Complex Stats
 
 #Generate: aka "Factory" functions
 #These take 0 inputs (other than parameters) and generate 1 output.
@@ -82,7 +81,11 @@ join3: join3.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 #Elementwise1: 1 input, 1 output element-wise functions
 #These include many common static nonlinearities.
-Elementwise1: Trig Exp_Log Round Special Nonlin
+Elementwise1: Operators Trig Exp_Log Round Special Nonlin
+
+Operators: plusplus minusminus
+plusplus: plusplus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+minusminus: minusminus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Trig: sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh
 sin: sin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -112,19 +115,40 @@ ceil: ceil.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 round: round.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 trunc: trunc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Special: erf tgamma lgamma
+Special: erf erfc tgamma lgamma
 erf: erf.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+erfc: erfc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 tgamma: tgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lgamma: lgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Nonlin: abs square cube sqrt cbrt pow deadzone
+Nonlin: abs square cube sqrt cbrt deadzone
 abs: abs.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 square: square.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cube: cube.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sqrt: sqrt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cbrt: cbrt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-pow: pow.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 deadzone: deadzone.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+
+#Elementwise2: 2 inputs, 1 output, with array broadcasting for the 2 inputs
+Elementwise2: plus minus times rdivide pow hypot atan2
+plus: plus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+minus: minus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+times: times.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+rdivide: rdivide.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+pow: pow.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+hypot: hypot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+atan2: atan2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+
+#Complex: 1-2 inputs, 1 output, for complex operations
+Complex: complex real imag conj arg proj
+complex: complex.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+real: real.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+imag: imag.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+arg: arg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Stats: some basic statistics calculated row-wise or column-wise

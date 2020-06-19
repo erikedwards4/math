@@ -9,9 +9,9 @@ double delta;
 //Description
 string descr;
 descr += "Does hard limiter with deadzone for each element of X.\n";
-descr += "For each element: y = -1, if x<-d\n";
-descr += "                  y =  0, if -d<=x<=d\n";
-descr += "                  y =  1, if x>d\n";
+descr += "For each element: y = -1, if x<-d \n";
+descr += "                  y =  0, if -d<=x<=d \n";
+descr += "                  y =  1, if x>d \n";
 descr += "\n";
 descr += "Use -d (--delta) to specify the deadzone threshold [default=0].\n";
 descr += "For d=0, this is the signum (sign) function.\n";
@@ -30,6 +30,7 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 
 //Get delta
 delta = (a_d->count==0) ? 0.0 : a_d->dval[0];
+if (delta<0.0) { cerr << progstr+": " << __LINE__ << errstr << "delta must be nonnegative" << endl; return 1; }
 
 //Checks
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
@@ -47,8 +48,8 @@ if (i1.T==1)
     try { X = new float[i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file 1 (X)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X)" << endl; return 1; }
-    if (openn::deadzone_inplace_s(X,int(i1.N()),float(delta)))
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+    if (codee::deadzone_inplace_s(X,int(i1.N()),float(delta)))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

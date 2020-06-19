@@ -1,12 +1,12 @@
 //This just gets absolute value of input X element-wise.
-//This has in-place and not-in-place versions, since in-place not good for complex -> real.
+//This has in-place and not-in-place versions.
 
 #include <stdio.h>
 #include <math.h>
 //#include <time.h>
 
 #ifdef __cplusplus
-namespace openn {
+namespace codee {
 extern "C" {
 #endif
 
@@ -111,12 +111,12 @@ int abs_inplace_d (double *X, const int N)
 
 int abs_inplace_c (float *X, const int N)
 {
-    int n;
+    int n, n2;
 
     //Checks
     if (N<0) { fprintf(stderr,"error in abs_inplace_c: N (num elements X) must be nonnegative\n"); return 1; }
 
-    for (n=0; n<2*N; n+=2) { X[n] = sqrtf(X[n]*X[n] + X[n+1]*X[n+1]); X[n+1] = 0.0f; }
+    for (n=0, n2=0; n<N; n++, n2+=2) { X[n] = sqrtf(X[n2]*X[n2] + X[n2+1]*X[n2+1]); }
     
     return 0;
 }
@@ -124,12 +124,12 @@ int abs_inplace_c (float *X, const int N)
 
 int abs_inplace_z (double *X, const int N)
 {
-    int n;
+    int n, n2;
 
     //Checks
     if (N<0) { fprintf(stderr,"error in abs_inplace_z: N (num elements X) must be nonnegative\n"); return 1; }
 
-    for (n=0; n<2*N; n+=2) { X[n] = sqrt(X[n]*X[n] + X[n+1]*X[n+1]); X[n+1] = 0.0; }
+    for (n=0, n2=0; n<N; n++, n2+=2) { X[n] = sqrt(X[n2]*X[n2] + X[n2+1]*X[n2+1]); }
     
     return 0;
 }
