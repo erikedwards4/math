@@ -1,7 +1,6 @@
 //Joins 2 inputs X1, X2 into 1 output Y
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <cblas.h>
 
 #ifdef __cplusplus

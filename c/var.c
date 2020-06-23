@@ -3,7 +3,6 @@
 //This works in place.
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <cblas.h>
 
 #ifdef __cplusplus

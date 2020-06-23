@@ -25,7 +25,7 @@ CFLAGS=$(WFLAG) -O3 $(STD) -march=native -Ic
 #LIBS=-largtable2 -lopenblas -llapacke -llapack -lfftw3f -lfftw3 -lm
 
 
-all: Generate Construct Matsel Split_Join Elementwise1 Elementwise2 Complex Stats
+all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Stats
 	rm -f 7 obj/*.o
 
 
@@ -90,7 +90,7 @@ primes: srci/primes.cpp c/primes.c
 
 #Random: 0 inputs, 1 output with random numbers
 #These use C++ only (the random library for now; PCG random in future)
-Random: Uniform Bernoulli Poisson Normal Sampling
+Random: Uniform Bernoulli Poisson Normal Sampling Randperm
 
 Uniform: uniform_int uniform_real
 uniform_int: srci/uniform_int.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
@@ -122,6 +122,52 @@ discrete: srci/discrete.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@
 piecewise_constant: srci/piecewise_constant.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 piecewise_linear: srci/piecewise_linear.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
+Randperm: #randperm
+randperm: srci/randperm.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+
+
+
+#Construct: 1-2 vectors or matrices input, 1 matrix output constructed from the vectors
+Construct: diagmat toeplitz #prepad postpad tril triu
+diagmat: srci/diagmat.cpp c/diagmat.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+toeplitz: srci/toeplitz.cpp c/toeplitz.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+prepad: srci/prepad.cpp c/prepad.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+postpad: srci/postpad.cpp c/postpad.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+tril: srci/tril.cpp c/tril.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+triu: srci/triu.cpp c/triu.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+
+#Matsel: 1 matrix input, 1 vector output selected from the matrix
+Matsel: diag row col
+diag: srci/diag.cpp c/diag.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+row: srci/row.cpp c/row.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+col: srci/col.cpp c/col.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+
+
+#Rearrange: 1 matrix input, 1 matrix output with elements rearranged
+Rearrange: transpose ctranspose flip sort shift cshift #rot90
+transpose: srci/transpose.cpp c/transpose.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+ctranspose: srci/ctranspose.cpp c/ctranspose.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+flip: srci/flip.cpp c/flip.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+sort: srci/sort.cpp c/sort.c
+	$(ss) -tvd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+shift: srci/shift.cpp c/shift.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+cshift: srci/cshift.cpp c/cshift.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+rot90: srci/rot90.cpp c/rot90.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
 
 #Split_Join: utilities to split matrix into several, or join several matrices into one.
@@ -242,8 +288,10 @@ atan2: srci/atan2.cpp c/atan2.c
 
 
 #Complex: 1-2 inputs, 1 output, for complex operations
-Complex: complex real imag conj arg proj
+Complex: complex polar real imag conj arg norm proj
 complex: srci/complex.cpp c/complex.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+polar: srci/polar.cpp c/polar.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 real: srci/real.cpp c/real.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
@@ -253,6 +301,8 @@ conj: srci/conj.cpp c/conj.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 arg: srci/arg.cpp c/arg.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+norm: srci/norm.cpp c/norm.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 proj: srci/proj.cpp c/proj.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 

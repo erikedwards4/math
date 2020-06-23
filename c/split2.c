@@ -1,7 +1,6 @@
 //Splits 1 input X into 2 outputs Y1, Y2
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <cblas.h>
 
 #ifdef __cplusplus

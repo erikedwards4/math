@@ -2,7 +2,6 @@
 //For complex case, output is real.
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <cblas.h>
 
 #ifdef __cplusplus

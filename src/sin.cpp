@@ -2,6 +2,7 @@
 //@date 2019-2020
 
 
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -22,6 +23,7 @@
 int main(int argc, char *argv[])
 {
     using namespace std;
+    timespec tic, toc;
 
 
     //Declarations
@@ -120,6 +122,7 @@ int main(int argc, char *argv[])
 
 
     //Process
+    clock_gettime(CLOCK_REALTIME,&tic);
     if (i1.T==1)
     {
         float *X;
@@ -127,7 +130,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (openn::sin_inplace_s(X,int(i1.N())))
+        if (codee::sin_inplace_s(X,int(i1.N())))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -143,7 +146,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (openn::sin_inplace_d(X,int(i1.N())))
+        if (codee::sin_inplace_d(X,int(i1.N())))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -159,7 +162,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (openn::sin_inplace_c(X,int(i1.N())))
+        if (codee::sin_inplace_c(X,int(i1.N())))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -175,7 +178,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (openn::sin_inplace_z(X,int(i1.N())))
+        if (codee::sin_inplace_z(X,int(i1.N())))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -188,6 +191,8 @@ int main(int argc, char *argv[])
     {
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
+    clock_gettime(CLOCK_REALTIME,&toc);
+    cerr << "elapsed time = " << (toc.tv_sec-tic.tv_sec)*1e3 + (toc.tv_nsec-tic.tv_nsec)/1e6 << " ms" << endl;
     
 
     //Exit

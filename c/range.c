@@ -2,7 +2,6 @@
 //For complex case, real and imag parts calculated separately.
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 #include <cblas.h>
 
