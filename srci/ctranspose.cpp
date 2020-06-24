@@ -1,47 +1,33 @@
 //Includes
-#include "diagmat.c"
+#include "ctranspose.c"
 
 //Declarations
 const valarray<uint8_t> oktypes = {1,2,101,102};
 const size_t I = 1, O = 1;
-int k;
 
 //Description
 string descr;
 descr += "Matrix construct function.\n";
-descr += "Puts vector X as the kth diagonal of matrix Y.\n";
-descr += "\n";
-descr += "Use -k (--k) to specify the diagonal number [default=0].\n";
-descr += "\n";
-descr += "For k=0, X becomes the main diagonal [default]. \n";
-descr += "For k<0, X becomes the kth sub-diagonal. \n";
-descr += "For k>0, X becomes the kth super-diagonal. \n";
-descr += "\n";
-descr += "Y has the minimal necessary size.\n";
+descr += "Hermitian (complex conjugate) transpose of matrix X.\n";
 descr += "\n";
 descr += "Examples:\n";
-descr += "$ diagmat X -o Y \n";
-descr += "$ diagmat -k-1 X > Y \n";
-descr += "$ cat X | diagmat -k2 > Y \n";
+descr += "$ ctranspose X -o Y \n";
+descr += "$ ctranspose X > Y \n";
+descr += "$ cat X | ctranspose > Y \n";
 
 //Argtable
 struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
-struct arg_int    *a_k = arg_intn("k","k","<int>",0,1,"diagonal number [default=0]");
 struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 
 //Get options
 
-//Get k
-k = (a_k->count>0) ? a_k->ival[0] : 0;
-
 //Checks
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
-if (!i1.isvec()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a vector" << endl; return 1; }
+if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a matrix" << endl; return 1; }
 
 //Set output header info
 o1.F = i1.F; o1.T = i1.T;
-if (k>0) { o1.R = i1.N(); o1.C = i1.N()+uint(k); }
-else { o1.R = i1.N()+uint(-k); o1.C = i1.N(); }
+o1.R = i1.C; o1.C = i1.R;
 o1.S = i1.S; o1.H = i1.H;
 
 //Other prep
@@ -49,39 +35,35 @@ o1.S = i1.S; o1.H = i1.H;
 //Process
 if (i1.T==1)
 {
-    float *X, *Y;
+    float *X;
     try { X = new float[i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    try { Y = new float[o1.N()]; }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::diagmat_s(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+    if (codee::ctranspose_inplace_s(X,int(i1.R),int(i1.C),i1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
-        try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+        try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
-    delete[] X; delete[] Y;
+    delete[] X;
 }
 else if (i1.T==101)
 {
-    float *X, *Y;
+    float *X;
     try { X = new float[2u*i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    try { Y = new float[2u*o1.N()]; }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::diagmat_c(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+    if (codee::ctranspose_inplace_c(X,int(i1.R),int(i1.C),i1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
-        try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+        try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
-    delete[] X; delete[] Y;
+    delete[] X;
 }
 
 //Finish

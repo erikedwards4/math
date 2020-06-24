@@ -59,22 +59,24 @@ nan: nan.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 fill: fill.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 #Other_Generate: 0 inputs, 1 output
-Other_Generate: eye linspace logspace primes
+Other_Generate: eye linspace logspace primes randperm
 eye: eye.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 linspace: linspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 logspace: logspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 primes: primes.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+randperm: randperm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
 #Construct: 1-2 vectors or matrices input, 1 matrix output constructed from the input(s)
-Construct: diagmat toeplitz #prepad postpad tril triu
+Construct: diagmat toeplitz tril triu repmat #prepad postpad
 diagmat: diagmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 toeplitz: toeplitz.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-prepad: prepad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-postpad: postpad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 tril: tril.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 triu: triu.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+prepad: prepad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+postpad: postpad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+repmat: repmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Matsel: 1 matrix input, 1 vector output selected from the matrix
@@ -184,7 +186,7 @@ proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Stats: some basic statistics calculated row-wise or column-wise
-Stats: Prctiles Moments Norms
+Stats: Sums Prctiles Ranges Moments Norms Other_Stats
 
 Sums: sum asum cnt
 sum: sum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

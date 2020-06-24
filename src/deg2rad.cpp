@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "diagmat.c"
+#include "deg2rad.c"
 
 #ifdef I
 #undef I
@@ -29,41 +29,32 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2,101,102};
+    const valarray<uint8_t> oktypes = {1,2};
     const size_t I = 1, O = 1;
     ifstream ifs1; ofstream ofs1;
     int8_t stdi1, stdo1, wo1;
     ioinfo i1, o1;
-    int k;
 
 
     //Description
     string descr;
-    descr += "Matrix construct function.\n";
-    descr += "Puts vector X as the kth diagonal of matrix Y.\n";
-    descr += "\n";
-    descr += "Use -k (--k) to specify the diagonal number [default=0].\n";
-    descr += "\n";
-    descr += "For k=0, X becomes the main diagonal [default]. \n";
-    descr += "For k<0, X becomes the kth sub-diagonal. \n";
-    descr += "For k>0, X becomes the kth super-diagonal. \n";
-    descr += "\n";
-    descr += "Y has the minimal necessary size.\n";
+    descr += "Elementwise trig function.\n";
+    descr += "Converts degrees to radians for each element of X.\n";
+    descr += "For each element: y = x*pi/180.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ diagmat X -o Y \n";
-    descr += "$ diagmat -k-1 X > Y \n";
-    descr += "$ cat X | diagmat -k2 > Y \n";
+    descr += "$ deg2rad X -o Y \n";
+    descr += "$ deg2rad X > Y \n";
+    descr += "$ cat X | deg2rad > Y \n";
 
 
     //Argtable
     int nerrs;
     struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
-    struct arg_int    *a_k = arg_intn("k","k","<int>",0,1,"diagonal number [default=0]");
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_fi, a_k, a_fo, a_help, a_end};
+    void *argtable[] = {a_fi, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -103,20 +94,14 @@ int main(int argc, char *argv[])
 
     //Get options
 
-    //Get k
-    k = (a_k->count>0) ? a_k->ival[0] : 0;
-
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
-    if (!i1.isvec()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a vector" << endl; return 1; }
 
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    if (k>0) { o1.R = i1.N(); o1.C = i1.N()+uint(k); }
-    else { o1.R = i1.N()+uint(-k); o1.C = i1.N(); }
-    o1.S = i1.S; o1.H = i1.H;
+    o1.R = i1.R; o1.C = i1.C; o1.S = i1.S; o1.H = i1.H;
 
 
     //Open output
@@ -137,75 +122,35 @@ int main(int argc, char *argv[])
     //Process
     if (i1.T==1)
     {
-        float *X, *Y;
+        float *X;
         try { X = new float[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new float[o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_s(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        if (codee::deg2rad_inplace_s(X,int(i1.N())))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; delete[] Y;
+        delete[] X;
     }
     else if (i1.T==2)
     {
-        double *X, *Y;
+        double *X;
         try { X = new double[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new double[o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_d(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        if (codee::deg2rad_inplace_d(X,int(i1.N())))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; delete[] Y;
-    }
-    else if (i1.T==101)
-    {
-        float *X, *Y;
-        try { X = new float[2u*i1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new float[2u*o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_c(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
-        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-        if (wo1)
-        {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
-        }
-        delete[] X; delete[] Y;
-    }
-    else if (i1.T==102)
-    {
-        double *X, *Y;
-        try { X = new double[2u*i1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new double[2u*o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_z(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
-        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-        if (wo1)
-        {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
-        }
-        delete[] X; delete[] Y;
+        delete[] X;
     }
     else
     {

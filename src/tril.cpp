@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "diagmat.c"
+#include "tril.c"
 
 #ifdef I
 #undef I
@@ -40,20 +40,21 @@ int main(int argc, char *argv[])
     //Description
     string descr;
     descr += "Matrix construct function.\n";
-    descr += "Puts vector X as the kth diagonal of matrix Y.\n";
+    descr += "Makes lower-triangular Y from input matrix X.\n";
+    descr += "This zeros all elements above the kth diagonal.\n";
     descr += "\n";
     descr += "Use -k (--k) to specify the diagonal number [default=0].\n";
     descr += "\n";
-    descr += "For k=0, X becomes the main diagonal [default]. \n";
-    descr += "For k<0, X becomes the kth sub-diagonal. \n";
-    descr += "For k>0, X becomes the kth super-diagonal. \n";
+    descr += "For k=0, Y is 0 above the main diagonal [default]. \n";
+    descr += "For k<0, Y is 0 above the kth sub-diagonal. \n";
+    descr += "For k>0, Y is 0 above the kth super-diagonal. \n";
     descr += "\n";
-    descr += "Y has the minimal necessary size.\n";
+    descr += "For tensor X, each matrix slice is processed identically.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ diagmat X -o Y \n";
-    descr += "$ diagmat -k-1 X > Y \n";
-    descr += "$ cat X | diagmat -k2 > Y \n";
+    descr += "$ tril X -o Y \n";
+    descr += "$ tril -k-1 X > Y \n";
+    descr += "$ cat X | tril -k2 > Y \n";
 
 
     //Argtable
@@ -109,14 +110,12 @@ int main(int argc, char *argv[])
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
-    if (!i1.isvec()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a vector" << endl; return 1; }
+    if (k<=-int(i1.R) || k>=int(i1.C)) { cerr << progstr+": " << __LINE__ << errstr << "k must be in [1-R C-1]" << endl; return 1; }
 
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    if (k>0) { o1.R = i1.N(); o1.C = i1.N()+uint(k); }
-    else { o1.R = i1.N()+uint(-k); o1.C = i1.N(); }
-    o1.S = i1.S; o1.H = i1.H;
+    o1.R = i1.R; o1.C = i1.C; o1.S = i1.S; o1.H = i1.H;
 
 
     //Open output
@@ -137,75 +136,79 @@ int main(int argc, char *argv[])
     //Process
     if (i1.T==1)
     {
-        float *X, *Y;
+        float *X; //, *Y;
         try { X = new float[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new float[o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        //try { Y = new float[o1.N()]; }
+        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_s(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        //if (codee::tril_s(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
+        if (codee::tril_inplace_s(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; delete[] Y;
+        delete[] X; //delete[] Y;
     }
     else if (i1.T==2)
     {
-        double *X, *Y;
+        double *X; //, *Y;
         try { X = new double[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new double[o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        //try { Y = new double[o1.N()]; }
+        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_d(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        //if (codee::tril_d(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
+        if (codee::tril_inplace_d(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; delete[] Y;
+        delete[] X; //delete[] Y;
     }
     else if (i1.T==101)
     {
-        float *X, *Y;
+        float *X; //, *Y;
         try { X = new float[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new float[2u*o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        //try { Y = new float[2u*o1.N()]; }
+        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_c(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        //if (codee::tril_c(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
+        if (codee::tril_inplace_c(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; delete[] Y;
+        delete[] X; //delete[] Y;
     }
     else if (i1.T==102)
     {
-        double *X, *Y;
+        double *X; //, *Y;
         try { X = new double[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new double[2u*o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        //try { Y = new double[2u*o1.N()]; }
+        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_z(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        //if (codee::tril_z(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
+        if (codee::tril_inplace_z(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; delete[] Y;
+        delete[] X; //delete[] Y;
     }
     else
     {

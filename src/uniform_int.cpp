@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(&Y[0]),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing data for output" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
     }
     else if (o1.T==2)
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(&Y[0]),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing data for output" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
     }
     else if (o1.T==101)
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(&Y[0]),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing data for output" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
     }
     else if (o1.T==102)
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(&Y[0]),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing data for output" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
     }
     else
