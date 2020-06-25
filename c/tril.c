@@ -37,8 +37,8 @@ int tril_s (float *Y, const float *X, const int R, const int C, const int S, con
 
     if (iscolmajor)
     {
-        const int C0 = (C-R-k>0) ? C-R-k : 0; //number of all-0 cols
-        const int CX = (k+1>0) ? k+1 : 0;     //number of all-X cols
+        const int C0 = (k<C-R) ? C-R-k : 0; //number of all-0 cols
+        const int CX = (k>-1) ? k+1 : 0;    //number of all-X cols
         for (h=0; h<H; h++)
         {
             for (s=0; s<S; s++)
@@ -56,8 +56,8 @@ int tril_s (float *Y, const float *X, const int R, const int C, const int S, con
     else
     {
         const int SH = S*H;
-        const int R0 = (-k>0) ? -k : 0;           //number of all-0 rows
-        const int RX = (R-C+k+1>0) ? R-C+k+1 : 0; //number of all-X rows
+        const int R0 = (k<0) ? -k : 0;          //number of all-0 rows
+        const int RX = (k>C-R-1) ? R-C+k+1 : 0; //number of all-X rows
         if (R0>0) { cblas_scopy(R0*C*SH,&z,0,&Y[n],1); n += R0*C*SH; }
         for (r=R0; r<R-RX; r++)
         {
