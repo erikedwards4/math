@@ -319,7 +319,7 @@ Stats: Sums Prctiles Ranges Moments Norms Other_Stats
 
 Sums: sum asum cnt
 sum: srci/sum.cpp c/sum.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+	$(ss) -tvd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 asum: srci/asum.cpp c/asum.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 cnt: srci/cnt.cpp c/cnt.c
