@@ -1,8 +1,11 @@
 //Gets conj part of complex-valued input X.
 //This has in-place and not-in-place versions.
 
+//LAPACKE_?lacgv was surprisingly slow!
+
 #include <stdio.h>
 #include <cblas.h>
+//#include <lapacke.h>
 //#include <time.h>
 
 #ifdef __cplusplus
@@ -70,6 +73,7 @@ int conj_inplace_z (double *X, const int N)
     if (N<0) { fprintf(stderr,"error in conj_inplace_z: N (num elements X) must be nonnegative\n"); return 1; }
 
     //clock_gettime(CLOCK_REALTIME,&tic);
+    //LAPACKE_zlacgv (N,(_Complex double *)X,1);
     //cblas_dscal(N,-1.0,&X[1],2);
     for (n=1; n<N; n+=2) { X[n] = -X[n]; }
     //clock_gettime(CLOCK_REALTIME,&toc);

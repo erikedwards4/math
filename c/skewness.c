@@ -11,13 +11,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int skewness_s (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
-int skewness_d (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
-int skewness_c (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
-int skewness_z (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
+int skewness_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int skewness_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int skewness_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int skewness_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
 
 
-int skewness_s (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased)
+int skewness_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
 {
     const float o = 1.0f;
     float m, s2, s3;

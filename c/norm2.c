@@ -10,13 +10,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int norm2_s (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor);
-int norm2_d (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor);
-int norm2_c (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor);
-int norm2_z (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor);
+int norm2_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int norm2_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int norm2_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int norm2_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
 
 
-int norm2_s (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor)
+int norm2_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -67,7 +67,7 @@ int norm2_s (float *Y, float *X, const int R, const int C, const int dim, const 
 }
 
 
-int norm2_d (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor)
+int norm2_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -118,7 +118,7 @@ int norm2_d (double *Y, double *X, const int R, const int C, const int dim, cons
 }
 
 
-int norm2_c (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor)
+int norm2_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -169,7 +169,7 @@ int norm2_c (float *Y, float *X, const int R, const int C, const int dim, const 
 }
 
 
-int norm2_z (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor)
+int norm2_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 

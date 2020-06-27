@@ -9,13 +9,15 @@ double p;
 
 //Description
 string descr;
-descr += "Gets pth percentile along rows or cols of X.\n";
+descr += "Gets pth percentile along dim of X.\n";
 descr += "\n";
 descr += "Use -p (--p) to give the percentile in [0 100] [default=50].\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-descr += "Use -d0 to work along cols --> Y is a row vec.\n";
-descr += "Use -d1 to work along rows --> Y is a col vec.\n";
+descr += "Use -d0 to get percentile along cols.\n";
+descr += "Use -d1 to get percentile along rows.\n";
+descr += "Use -d2 to get percentile along slices.\n";
+descr += "Use -d3 to get percentile along hyperslices.\n";
 descr += "\n";
 descr += "Examples:\n";
 descr += "$ prctile -p90 X -o Y \n";
@@ -39,11 +41,10 @@ if (p<0.0 || p>100.0) { cerr << progstr+": " << __LINE__ << errstr << "p must be
 if (a_d->count==0) { dim = 0; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
 else { dim = a_d->ival[0]; }
-if (dim>1) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1}" << endl; return 1; }
+if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Checks
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
-if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a matrix" << endl; return 1; }
 
 //Set output header info
 o1.F = i1.F; o1.T = i1.T;
@@ -64,7 +65,7 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::prctile_s(Y,X,int(i1.R),int(i1.C),dim,i1.iscolmajor(),float(p)))
+    if (codee::prctile_s(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor(),float(p)))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

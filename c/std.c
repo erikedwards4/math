@@ -11,13 +11,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int std_s (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
-int std_d (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
-int std_c (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
-int std_z (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
+int std_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int std_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int std_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int std_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
 
 
-int std_s (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased)
+int std_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
 {
     const float o = 1.0f;
     float m, den;
@@ -80,7 +80,7 @@ int std_s (float *Y, float *X, const int R, const int C, const int dim, const ch
 }
 
 
-int std_d (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor, const char biased)
+int std_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
 {
     const double o = 1.0;
     double m, den;
@@ -143,7 +143,7 @@ int std_d (double *Y, double *X, const int R, const int C, const int dim, const 
 }
 
 
-int std_c (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased)
+int std_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
 {
     const float o[2] =  {1.0f,0.0f};
     _Complex float m;
@@ -207,7 +207,7 @@ int std_c (float *Y, float *X, const int R, const int C, const int dim, const ch
 }
 
 
-int std_z (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor, const char biased)
+int std_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
 {
     const double o[2] =  {1.0,0.0};
     _Complex double m;

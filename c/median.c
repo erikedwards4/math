@@ -12,8 +12,8 @@ extern "C" {
 int cmp_ascend_s (const void *a, const void *b);
 int cmp_ascend_d (const void *a, const void *b);
 
-int median_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int median_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
+int median_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int median_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
 
 
 int cmp_ascend_s (const void *a, const void *b)
@@ -38,7 +38,7 @@ int cmp_ascend_d (const void *a, const void *b)
 }
 
 
-int median_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int median_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
     float *X1; //1 row or col of X
@@ -101,7 +101,7 @@ int median_s (float *Y, const float *X, const int R, const int C, const int dim,
 }
 
 
-int median_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int median_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
     double *X1; //1 row or col of X

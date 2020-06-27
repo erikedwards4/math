@@ -13,8 +13,8 @@ extern "C" {
 int cmp_ascend_s (const void *a, const void *b);
 int cmp_ascend_d (const void *a, const void *b);
 
-int prctile_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor, const float p);
-int prctile_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor, const double p);
+int prctile_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const float p);
+int prctile_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const double p);
 
 
 int cmp_ascend_s (const void *a, const void *b)
@@ -39,7 +39,7 @@ int cmp_ascend_d (const void *a, const void *b)
 }
 
 
-int prctile_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor, const float p)
+int prctile_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const float p)
 {
     int r, c, n1, n2;
     float w1, w2;
@@ -108,7 +108,7 @@ int prctile_s (float *Y, const float *X, const int R, const int C, const int dim
 }
 
 
-int prctile_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor, const double p)
+int prctile_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const double p)
 {
     int r, c, n1, n2;
     double w1, w2;

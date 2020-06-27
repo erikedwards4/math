@@ -25,7 +25,7 @@ CFLAGS=$(WFLAG) -O3 $(STD) -march=native -Ic
 #LIBS=-largtable2 -lopenblas -llapacke -llapack -lfftw3f -lfftw3 -lm
 
 
-all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Stats
+all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Stats Linalg
 	rm -f 7 obj/*.o
 
 
@@ -157,13 +157,13 @@ col: srci/col.cpp c/col.c
 #Rearrange: 1 matrix input, 1 matrix output with elements rearranged
 Rearrange: transpose ctranspose flip sort shift cshift #rot90
 transpose: srci/transpose.cpp c/transpose.c
-	$(ss) -tvd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 ctranspose: srci/ctranspose.cpp c/ctranspose.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 flip: srci/flip.cpp c/flip.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 sort: srci/sort.cpp c/sort.c
-	$(ss) -tvd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke
 shift: srci/shift.cpp c/shift.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 cshift: srci/cshift.cpp c/cshift.c
@@ -319,7 +319,7 @@ Stats: Sums Prctiles Ranges Moments Norms Other_Stats
 
 Sums: sum asum cnt
 sum: srci/sum.cpp c/sum.c
-	$(ss) -tvd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 asum: srci/asum.cpp c/asum.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 cnt: srci/cnt.cpp c/cnt.c
@@ -373,6 +373,11 @@ coeff_var: srci/coeff_var.cpp c/coeff_var.c
 mad: srci/mad.cpp c/mad.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 
+
+
+#Linalg: linear algebra routines
+#Also see LAPACKE ?large for U*D*U'
+Linalg: matmul matmul3 kronecker matnorm lq qr lu
 
 clean:
 	find ./obj -type f -name *.o | xargs rm -f

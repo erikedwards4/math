@@ -9,13 +9,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int asum_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int asum_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
-int asum_c (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int asum_z (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
+int asum_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int asum_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int asum_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int asum_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
 
 
-int asum_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int asum_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -66,7 +66,7 @@ int asum_s (float *Y, const float *X, const int R, const int C, const int dim, c
 }
 
 
-int asum_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int asum_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -117,7 +117,7 @@ int asum_d (double *Y, const double *X, const int R, const int C, const int dim,
 }
 
 
-int asum_c (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int asum_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -168,7 +168,7 @@ int asum_c (float *Y, const float *X, const int R, const int C, const int dim, c
 }
 
 
-int asum_z (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int asum_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 

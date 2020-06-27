@@ -9,11 +9,13 @@ char b;
 
 //Description
 string descr;
-descr += "Gets standard deviation along rows or cols of X.\n";
+descr += "Gets standard deviation along dim of X.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-descr += "Use -d0 to work along cols --> Y is a row vec.\n";
-descr += "Use -d1 to work along rows --> Y is a col vec.\n";
+descr += "Use -d0 to get std along cols.\n";
+descr += "Use -d1 to get std along rows.\n";
+descr += "Use -d2 to get std along slices.\n";
+descr += "Use -d3 to get std along hyperslices.\n";
 descr += "\n";
 descr += "Include -b (--biased) to use the biased denominator [default is unbiased].\n";
 descr += "The biased denominator is N, and the unbiased denominator is N-1.\n";
@@ -36,14 +38,13 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 if (a_d->count==0) { dim = 0; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
 else { dim = a_d->ival[0]; }
-if (dim>1) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1}" << endl; return 1; }
+if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Get b
 b = (a_b->count>0);
 
 //Checks
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
-if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a matrix" << endl; return 1; }
 
 //Set output header info
 o1.F = i1.F;
@@ -65,7 +66,7 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::std_s(Y,X,int(i1.R),int(i1.C),dim,i1.iscolmajor(),b))
+    if (codee::std_s(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor(),b))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -83,7 +84,7 @@ else if (i1.T==101)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::std_c(Y,X,int(i1.R),int(i1.C),dim,i1.iscolmajor(),b))
+    if (codee::std_c(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor(),b))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

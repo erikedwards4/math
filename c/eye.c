@@ -1,7 +1,9 @@
 //Sets all elements of Y equal to 0, except 1s on the main diagonal.
+//LAPACKE_slaset was definitely slower than the cblas_scopy solution. 
 
 #include <stdio.h>
 #include <cblas.h>
+//#include <lapacke.h>
 //#include <time.h>
 
 #ifdef __cplusplus
@@ -32,6 +34,12 @@ int eye_s (float *Y, const int R, const int C, const char iscolmajor)
     //Set diag to 1
     if (iscolmajor) { cblas_scopy(M,&o,0,Y,R+1); }
     else { cblas_scopy(M,&o,0,Y,C+1); }
+
+    //LAPACKE solution
+    //const int LO = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
+    //const int lda = (iscolmajor) ? R : C;
+    //if (LAPACKE_slaset(LO,'A',R,C,0.0f,1.0f,Y,lda))
+    //{ fprintf(stderr,"error in eye_s: problem with LAPACKE function\n"); return 1; }
 
     //clock_gettime(CLOCK_REALTIME,&toc);
     //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);

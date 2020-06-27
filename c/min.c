@@ -18,18 +18,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int min_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int min_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
-int min_c (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int min_z (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
+int min_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int min_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int min_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int min_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
 
-int min_inplace_s (float *X, const int R, const int C, const int dim, const char iscolmajor);
-int min_inplace_d (double *X, const int R, const int C, const int dim, const char iscolmajor);
-int min_inplace_c (float *X, const int R, const int C, const int dim, const char iscolmajor);
-int min_inplace_z (double *X, const int R, const int C, const int dim, const char iscolmajor);
+int min_inplace_s (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int min_inplace_d (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int min_inplace_c (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int min_inplace_z (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
 
 
-int min_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int min_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
     float mn;
@@ -93,7 +93,7 @@ int min_s (float *Y, const float *X, const int R, const int C, const int dim, co
 }
 
 
-int min_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int min_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
     double mn;
@@ -153,7 +153,7 @@ int min_d (double *Y, const double *X, const int R, const int C, const int dim, 
 }
 
 
-// int min_c (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+// int min_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 // {
 //     int r, c;
 
@@ -208,7 +208,7 @@ int min_d (double *Y, const double *X, const int R, const int C, const int dim, 
 // }
 
 
-// int min_z (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+// int min_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 // {
 //     int r, c;
 
@@ -263,7 +263,7 @@ int min_d (double *Y, const double *X, const int R, const int C, const int dim, 
 // }
 
 
-int min_inplace_s (float *X, const int R, const int C, const int dim, const char iscolmajor)
+int min_inplace_s (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     float mn;
     int r, c;
@@ -339,7 +339,7 @@ int min_inplace_s (float *X, const int R, const int C, const int dim, const char
 }
 
 
-int min_inplace_d (double *X, const int R, const int C, const int dim, const char iscolmajor)
+int min_inplace_d (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     double mn;
     int r, c;
@@ -411,7 +411,7 @@ int min_inplace_d (double *X, const int R, const int C, const int dim, const cha
 }
 
 
-int min_inplace_c (float *X, const int R, const int C, const int dim, const char iscolmajor)
+int min_inplace_c (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     float mn, a2;
     int r, c;
@@ -487,7 +487,7 @@ int min_inplace_c (float *X, const int R, const int C, const int dim, const char
 }
 
 
-int min_inplace_z (double *X, const int R, const int C, const int dim, const char iscolmajor)
+int min_inplace_z (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     double mn, a2;
     int r, c;

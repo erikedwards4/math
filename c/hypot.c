@@ -3,8 +3,11 @@
 //For complex input, output is real-valued: y = sqrt(|x1|^2 + |x2|^2)
 //This has in-place and not-in-place versions.
 
+//LAPACKE_slapy2 was definitely slower than hypotf. (But LAPACKE_slapy3 would be good for 3D case.)
+
 #include <stdio.h>
 #include <math.h>
+//#include <lapacke.h>
 //#include <time.h>
 
 #ifdef __cplusplus
@@ -388,6 +391,7 @@ int hypot_inplace_s (float *X1, const float *X2, const int R1, const int C1, con
     else if (N==N2)
     {
         while (n<N) { X1[n] = hypotf(X1[n],X2[n]); n++; }
+        //while (n<N) { X1[n] = LAPACKE_slapy2(X1[n],X2[n]); n++; }
     }
     else if (iscolmajor)
     {

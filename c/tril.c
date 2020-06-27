@@ -1,9 +1,12 @@
 //Zeros all elements above the kth diagonal of matrix X.
 //This has in-place and not-in-place versions.
 
+//LAPACKE_?lacpy was surprisingly a bit slower even for square, k==0 case.
+
 #include <stdio.h>
 #include <cblas.h>
-//#include <time.h>
+#include <lapacke.h>
+#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -35,6 +38,13 @@ int tril_s (float *Y, const float *X, const int R, const int C, const int S, con
     if (H<1) { fprintf(stderr,"error in tril_s: H (num hyperslices X) must be positive\n"); return 1; }
     if (k<=-R || k>=C) { fprintf(stderr,"error in tril_s: k must be in [1-R C-1]\n"); return 1; }
 
+    // if (k==0 && R==C && S*H==1)
+    // {
+    //     const CBLAS_ORDER Ord = (iscolmajor) ? CblasColMajor : CblasRowMajor;
+    //     const int lda = (iscolmajor) ? R : C;
+    //     if (LAPACKE_slacpy (Ord,'L',R,C,X,lda,Y,lda))
+    //     { fprintf(stderr,"error in tril_s: problem with LAPACKE function\n"); return 1; }
+    // }
     if (iscolmajor)
     {
         const int C0 = (k<C-R) ? C-R-k : 0; //number of all-0 cols

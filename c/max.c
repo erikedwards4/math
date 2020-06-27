@@ -15,18 +15,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int max_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int max_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
-int max_c (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int max_z (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
+int max_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int max_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int max_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int max_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
 
-int max_inplace_s (float *X, const int R, const int C, const int dim, const char iscolmajor);
-int max_inplace_d (double *X, const int R, const int C, const int dim, const char iscolmajor);
-int max_inplace_c (float *X, const int R, const int C, const int dim, const char iscolmajor);
-int max_inplace_z (double *X, const int R, const int C, const int dim, const char iscolmajor);
+int max_inplace_s (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int max_inplace_d (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int max_inplace_c (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int max_inplace_z (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
 
 
-int max_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int max_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
     float mx;
@@ -90,7 +90,7 @@ int max_s (float *Y, const float *X, const int R, const int C, const int dim, co
 }
 
 
-int max_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int max_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
     double mx;
@@ -150,7 +150,7 @@ int max_d (double *Y, const double *X, const int R, const int C, const int dim, 
 }
 
 
-int max_c (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int max_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -205,7 +205,7 @@ int max_c (float *Y, const float *X, const int R, const int C, const int dim, co
 }
 
 
-int max_z (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int max_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -260,7 +260,7 @@ int max_z (double *Y, const double *X, const int R, const int C, const int dim, 
 }
 
 
-int max_inplace_s (float *X, const int R, const int C, const int dim, const char iscolmajor)
+int max_inplace_s (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     float mx;
     int r, c;
@@ -336,7 +336,7 @@ int max_inplace_s (float *X, const int R, const int C, const int dim, const char
 }
 
 
-int max_inplace_d (double *X, const int R, const int C, const int dim, const char iscolmajor)
+int max_inplace_d (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     double mx;
     int r, c;
@@ -408,7 +408,7 @@ int max_inplace_d (double *X, const int R, const int C, const int dim, const cha
 }
 
 
-int max_inplace_c (float *X, const int R, const int C, const int dim, const char iscolmajor)
+int max_inplace_c (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -463,7 +463,7 @@ int max_inplace_c (float *X, const int R, const int C, const int dim, const char
 }
 
 
-int max_inplace_z (double *X, const int R, const int C, const int dim, const char iscolmajor)
+int max_inplace_z (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 

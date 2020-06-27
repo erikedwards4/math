@@ -9,13 +9,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int cnt_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int cnt_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
-int cnt_c (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int cnt_z (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor);
+int cnt_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int cnt_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int cnt_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int cnt_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
 
 
-int cnt_s (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int cnt_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -70,7 +70,7 @@ int cnt_s (float *Y, const float *X, const int R, const int C, const int dim, co
 }
 
 
-int cnt_d (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int cnt_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -125,7 +125,7 @@ int cnt_d (double *Y, const double *X, const int R, const int C, const int dim, 
 }
 
 
-int cnt_c (float *Y, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int cnt_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -180,7 +180,7 @@ int cnt_c (float *Y, const float *X, const int R, const int C, const int dim, co
 }
 
 
-int cnt_z (double *Y, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int cnt_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
 {
     int r, c;
 

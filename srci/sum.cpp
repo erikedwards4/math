@@ -8,11 +8,13 @@ int dim;
 
 //Description
 string descr;
-descr += "Gets sum along rows or cols of X.\n";
+descr += "Gets sum along dim of X.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-descr += "Use -d0 to work along cols --> Y is a row vec.\n";
-descr += "Use -d1 to work along rows --> Y is a col vec.\n";
+descr += "Use -d0 to sum along cols.\n";
+descr += "Use -d1 to sum along rows.\n";
+descr += "Use -d2 to sum along slices.\n";
+descr += "Use -d3 to sum along hyperslices.\n";
 descr += "\n";
 descr += "Examples:\n";
 descr += "$ sum X -o Y \n";

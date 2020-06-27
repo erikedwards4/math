@@ -11,11 +11,11 @@ namespace codee {
 extern "C" {
 #endif
 
-int coeff_var_s (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
-int coeff_var_d (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor, const char biased);
+int coeff_var_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int coeff_var_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
 
 
-int coeff_var_s (float *Y, float *X, const int R, const int C, const int dim, const char iscolmajor, const char biased)
+int coeff_var_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
 {
     const float o = 1.0f;
     float m, den;
@@ -78,7 +78,7 @@ int coeff_var_s (float *Y, float *X, const int R, const int C, const int dim, co
 }
 
 
-int coeff_var_d (double *Y, double *X, const int R, const int C, const int dim, const char iscolmajor, const char biased)
+int coeff_var_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
 {
     const double o = 1.0;
     double m, den;

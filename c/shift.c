@@ -3,6 +3,7 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <cblas.h>
 //#include <time.h>
 
@@ -37,9 +38,9 @@ int shift_s (float *Y, const float *X, const int R, const int C, const int S, co
 
     //Set ints
     const int N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const int I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const int J = N * I;
-    const int L = R*C*S*H/(I*N);
+    const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const int J = N * K;
+    const int L = R*C*S*H/(K*N);
 
     //Sort
     if (P==0) { cblas_scopy(R*C*S*H,X,1,Y,1); }
@@ -48,16 +49,16 @@ int shift_s (float *Y, const float *X, const int R, const int C, const int S, co
     {
         for (l=0; l<L; l++, n+=J)
         {
-            cblas_scopy((N+P)*I,&X[n-P*I],1,&Y[n],1);
-            cblas_scopy(-P*I,&z,0,&Y[n+(N+P)*I],1);
+            cblas_scopy((N+P)*K,&X[n-P*K],1,&Y[n],1);
+            cblas_scopy(-P*K,&z,0,&Y[n+(N+P)*K],1);
         }
     }
     else
     {
         for (l=0; l<L; l++, n+=J)
         {
-            cblas_scopy((N-P)*I,&X[n],1,&Y[n+P*I],1);
-            cblas_scopy(P*I,&z,0,&Y[n],1);
+            cblas_scopy((N-P)*K,&X[n],1,&Y[n+P*K],1);
+            cblas_scopy(P*K,&z,0,&Y[n],1);
         }
     }
     //clock_gettime(CLOCK_REALTIME,&toc);
@@ -80,9 +81,9 @@ int shift_d (double *Y, const double *X, const int R, const int C, const int S, 
 
     //Set ints
     const int N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const int I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const int J = N * I;
-    const int L = R*C*S*H/(I*N);
+    const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const int J = N * K;
+    const int L = R*C*S*H/(K*N);
 
     //Sort
     if (P==0) { cblas_dcopy(R*C*S*H,X,1,Y,1); }
@@ -91,16 +92,16 @@ int shift_d (double *Y, const double *X, const int R, const int C, const int S, 
     {
         for (l=0; l<L; l++, n+=J)
         {
-            cblas_dcopy((N+P)*I,&X[n-P*I],1,&Y[n],1);
-            cblas_dcopy(-P*I,&z,0,&Y[n+(N+P)*I],1);
+            cblas_dcopy((N+P)*K,&X[n-P*K],1,&Y[n],1);
+            cblas_dcopy(-P*K,&z,0,&Y[n+(N+P)*K],1);
         }
     }
     else
     {
         for (l=0; l<L; l++, n+=J)
         {
-            cblas_dcopy((N-P)*I,&X[n],1,&Y[n+P*I],1);
-            cblas_dcopy(P*I,&z,0,&Y[n],1);
+            cblas_dcopy((N-P)*K,&X[n],1,&Y[n+P*K],1);
+            cblas_dcopy(P*K,&z,0,&Y[n],1);
         }
     }
     
@@ -121,9 +122,9 @@ int shift_c (float *Y, const float *X, const int R, const int C, const int S, co
 
     //Set ints
     const int N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const int I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const int J = N * I;
-    const int L = R*C*S*H/(I*N);
+    const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const int J = N * K;
+    const int L = R*C*S*H/(K*N);
 
     //Sort
     if (P==0) { cblas_ccopy(R*C*S*H,X,1,Y,1); }
@@ -132,16 +133,16 @@ int shift_c (float *Y, const float *X, const int R, const int C, const int S, co
     {
         for (l=0; l<L; l++, n+=2*J)
         {
-            cblas_ccopy((N+P)*I,&X[n-2*P*I],1,&Y[n],1);
-            cblas_ccopy(-P*I,z,0,&Y[n+2*(N+P)*I],1);
+            cblas_ccopy((N+P)*K,&X[n-2*P*K],1,&Y[n],1);
+            cblas_ccopy(-P*K,z,0,&Y[n+2*(N+P)*K],1);
         }
     }
     else
     {
         for (l=0; l<L; l++, n+=2*J)
         {
-            cblas_ccopy((N-P)*I,&X[n],1,&Y[n+2*P*I],1);
-            cblas_ccopy(P*I,z,0,&Y[n],1);
+            cblas_ccopy((N-P)*K,&X[n],1,&Y[n+2*P*K],1);
+            cblas_ccopy(P*K,z,0,&Y[n],1);
         }
     }
     
@@ -162,9 +163,9 @@ int shift_z (double *Y, const double *X, const int R, const int C, const int S, 
 
     //Set ints
     const int N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const int I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const int J = N * I;
-    const int L = R*C*S*H/(I*N);
+    const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const int J = N * K;
+    const int L = R*C*S*H/(K*N);
 
     //Sort
     if (P==0) { cblas_zcopy(R*C*S*H,X,1,Y,1); }
@@ -173,16 +174,16 @@ int shift_z (double *Y, const double *X, const int R, const int C, const int S, 
     {
         for (l=0; l<L; l++, n+=2*J)
         {
-            cblas_zcopy((N+P)*I,&X[n-2*P*I],1,&Y[n],1);
-            cblas_zcopy(-P*I,z,0,&Y[n+2*(N+P)*I],1);
+            cblas_zcopy((N+P)*K,&X[n-2*P*K],1,&Y[n],1);
+            cblas_zcopy(-P*K,z,0,&Y[n+2*(N+P)*K],1);
         }
     }
     else
     {
         for (l=0; l<L; l++, n+=2*J)
         {
-            cblas_zcopy((N-P)*I,&X[n],1,&Y[n+2*P*I],1);
-            cblas_zcopy(P*I,z,0,&Y[n],1);
+            cblas_zcopy((N-P)*K,&X[n],1,&Y[n+2*P*K],1);
+            cblas_zcopy(P*K,z,0,&Y[n],1);
         }
     }
     
@@ -205,9 +206,9 @@ int shift_inplace_s (float *X, const int R, const int C, const int S, const int 
 
     //Set ints
     const int N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const int I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const int J = N * I;
-    const int L = R*C*S*H/(I*N);
+    const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const int J = N * K;
+    const int L = R*C*S*H/(K*N);
 
     //Sort
     if (P<=-N || P>=N) { cblas_scopy(R*C*S*H,&z,0,X,1); }
@@ -215,19 +216,19 @@ int shift_inplace_s (float *X, const int R, const int C, const int S, const int 
     {
         for (l=0; l<L; l++, n+=J)
         {
-            cblas_scopy((N+P)*I,&X[n-P*I],1,&X[n],1);
-            cblas_scopy(-P*I,&z,0,&X[n+(N+P)*I],1);
+            cblas_scopy((N+P)*K,&X[n-P*K],1,&X[n],1);
+            cblas_scopy(-P*K,&z,0,&X[n+(N+P)*K],1);
         }
     }
     else if (P>0)
     {
         float *X1;
-        if (!(X1=(float *)malloc((size_t)(I*(N-P))*sizeof(float)))) { fprintf(stderr,"error in shift_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(X1=(float *)malloc((size_t)(K*(N-P))*sizeof(float)))) { fprintf(stderr,"error in shift_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
         for (l=0; l<L; l++, n+=J)
         {
-            cblas_scopy((N-P)*I,&X[n],1,X1,1);
-            cblas_scopy((N-P)*I,X1,1,&X[n+P*I],1);
-            cblas_scopy(P*I,&z,0,&X[n],1);
+            cblas_scopy((N-P)*K,&X[n],1,X1,1);
+            cblas_scopy((N-P)*K,X1,1,&X[n+P*K],1);
+            cblas_scopy(P*K,&z,0,&X[n],1);
         }
         free(X1);
     }
@@ -251,9 +252,9 @@ int shift_inplace_d (double *X, const int R, const int C, const int S, const int
 
     //Set ints
     const int N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const int I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const int J = N * I;
-    const int L = R*C*S*H/(I*N);
+    const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const int J = N * K;
+    const int L = R*C*S*H/(K*N);
 
     //Sort
     if (P<=-N || P>=N) { cblas_dcopy(R*C*S*H,&z,0,X,1); }
@@ -261,19 +262,19 @@ int shift_inplace_d (double *X, const int R, const int C, const int S, const int
     {
         for (l=0; l<L; l++, n+=J)
         {
-            cblas_dcopy((N+P)*I,&X[n-P*I],1,&X[n],1);
-            cblas_dcopy(-P*I,&z,0,&X[n+(N+P)*I],1);
+            cblas_dcopy((N+P)*K,&X[n-P*K],1,&X[n],1);
+            cblas_dcopy(-P*K,&z,0,&X[n+(N+P)*K],1);
         }
     }
     else if (P>0)
     {
         double *X1;
-        if (!(X1=(double *)malloc((size_t)(I*(N-P))*sizeof(double)))) { fprintf(stderr,"error in shift_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(X1=(double *)malloc((size_t)(K*(N-P))*sizeof(double)))) { fprintf(stderr,"error in shift_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
         for (l=0; l<L; l++, n+=J)
         {
-            cblas_dcopy((N-P)*I,&X[n],1,X1,1);
-            cblas_dcopy((N-P)*I,X1,1,&X[n+P*I],1);
-            cblas_dcopy(P*I,&z,0,&X[n],1);
+            cblas_dcopy((N-P)*K,&X[n],1,X1,1);
+            cblas_dcopy((N-P)*K,X1,1,&X[n+P*K],1);
+            cblas_dcopy(P*K,&z,0,&X[n],1);
         }
         free(X1);
     }
@@ -295,9 +296,9 @@ int shift_inplace_c (float *X, const int R, const int C, const int S, const int 
 
     //Set ints
     const int N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const int I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const int J = N * I;
-    const int L = R*C*S*H/(I*N);
+    const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const int J = N * K;
+    const int L = R*C*S*H/(K*N);
 
     //Sort
     if (P<=-N || P>=N) { cblas_ccopy(R*C*S*H,z,0,X,1); }
@@ -305,19 +306,19 @@ int shift_inplace_c (float *X, const int R, const int C, const int S, const int 
     {
         for (l=0; l<L; l++, n+=2*J)
         {
-            cblas_ccopy((N+P)*I,&X[n-2*P*I],1,&X[n],1);
-            cblas_ccopy(-P*I,z,0,&X[n+2*(N+P)*I],1);
+            cblas_ccopy((N+P)*K,&X[n-2*P*K],1,&X[n],1);
+            cblas_ccopy(-P*K,z,0,&X[n+2*(N+P)*K],1);
         }
     }
     else if (P>0)
     {
         float *X1;
-        if (!(X1=(float *)malloc((size_t)(2*I*(N-P))*sizeof(float)))) { fprintf(stderr,"error in shift_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(X1=(float *)malloc((size_t)(2*K*(N-P))*sizeof(float)))) { fprintf(stderr,"error in shift_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
         for (l=0; l<L; l++, n+=2*J)
         {
-            cblas_ccopy((N-P)*I,&X[n],1,X1,1);
-            cblas_ccopy((N-P)*I,X1,1,&X[n+2*P*I],1);
-            cblas_ccopy(P*I,z,0,&X[n],1);
+            cblas_ccopy((N-P)*K,&X[n],1,X1,1);
+            cblas_ccopy((N-P)*K,X1,1,&X[n+2*P*K],1);
+            cblas_ccopy(P*K,z,0,&X[n],1);
         }
         free(X1);
     }
@@ -339,9 +340,9 @@ int shift_inplace_z (double *X, const int R, const int C, const int S, const int
 
     //Set ints
     const int N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const int I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const int J = N * I;
-    const int L = R*C*S*H/(I*N);
+    const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const int J = N * K;
+    const int L = R*C*S*H/(K*N);
 
     //Sort
     if (P<=-N || P>=N) { cblas_zcopy(R*C*S*H,z,0,X,1); }
@@ -349,19 +350,19 @@ int shift_inplace_z (double *X, const int R, const int C, const int S, const int
     {
         for (l=0; l<L; l++, n+=2*J)
         {
-            cblas_zcopy((N+P)*I,&X[n-2*P*I],1,&X[n],1);
-            cblas_zcopy(-P*I,z,0,&X[n+2*(N+P)*I],1);
+            cblas_zcopy((N+P)*K,&X[n-2*P*K],1,&X[n],1);
+            cblas_zcopy(-P*K,z,0,&X[n+2*(N+P)*K],1);
         }
     }
     else if (P>0)
     {
         double *X1;
-        if (!(X1=(double *)malloc((size_t)(2*I*(N-P))*sizeof(double)))) { fprintf(stderr,"error in shift_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(X1=(double *)malloc((size_t)(2*K*(N-P))*sizeof(double)))) { fprintf(stderr,"error in shift_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
         for (l=0; l<L; l++, n+=2*J)
         {
-            cblas_zcopy((N-P)*I,&X[n],1,X1,1);
-            cblas_zcopy((N-P)*I,X1,1,&X[n+2*P*I],1);
-            cblas_zcopy(P*I,z,0,&X[n],1);
+            cblas_zcopy((N-P)*K,&X[n],1,X1,1);
+            cblas_zcopy((N-P)*K,X1,1,&X[n+2*P*K],1);
+            cblas_zcopy(P*K,z,0,&X[n],1);
         }
         free(X1);
     }
