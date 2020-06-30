@@ -38,7 +38,7 @@ int eye_s (float *Y, const int R, const int C, const char iscolmajor)
     //LAPACKE solution
     //const int LO = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
     //const int lda = (iscolmajor) ? R : C;
-    //if (LAPACKE_slaset(LO,'A',R,C,0.0f,1.0f,Y,lda))
+    //if (LAPACKE_slaset_work(LO,'A',R,C,0.0f,1.0f,Y,lda))
     //{ fprintf(stderr,"error in eye_s: problem with LAPACKE function\n"); return 1; }
 
     //clock_gettime(CLOCK_REALTIME,&toc);

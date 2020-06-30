@@ -60,7 +60,7 @@ int deg2rad_inplace_s (float *X, const int N)
 
     //clock_gettime(CLOCK_REALTIME,&tic);
     cblas_sscal(N,d2r,X,1);
-    //if (LAPACKE_slascl(LAPACK_COL_MAJOR,'G',0,0,180.0f,(float)M_PI,1,N,X,1))
+    //if (LAPACKE_slascl_work(LAPACK_COL_MAJOR,'G',0,0,180.0f,(float)M_PI,1,N,X,1))
     //{ fprintf(stderr,"error in deg2rad_inplace_s: problem with LAPACKE function\n"); return 1; }
     //clock_gettime(CLOCK_REALTIME,&toc);
     //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);

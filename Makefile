@@ -22,7 +22,7 @@ else
 endif
 
 CFLAGS=$(WFLAG) -O3 $(STD) -march=native -Ic
-#LIBS=-largtable2 -lopenblas -llapacke -llapack -lfftw3f -lfftw3 -lm
+#LIBS=-largtable2 -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
 all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Stats Linalg
@@ -377,7 +377,7 @@ mad: srci/mad.cpp c/mad.c
 
 #Linalg: linear algebra routines
 #Also see LAPACKE ?large for U*D*U'
-Linalg: matmul matmul3 kronecker matnorm lq qr lu
+Linalg: matmul matmul3 kronecker matnorm chol lq qr lu
 
 clean:
 	find ./obj -type f -name *.o | xargs rm -f

@@ -391,7 +391,7 @@ int hypot_inplace_s (float *X1, const float *X2, const int R1, const int C1, con
     else if (N==N2)
     {
         while (n<N) { X1[n] = hypotf(X1[n],X2[n]); n++; }
-        //while (n<N) { X1[n] = LAPACKE_slapy2(X1[n],X2[n]); n++; }
+        //while (n<N) { X1[n] = LAPACKE_slapy2_work(X1[n],X2[n]); n++; }
     }
     else if (iscolmajor)
     {

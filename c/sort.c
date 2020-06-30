@@ -165,7 +165,7 @@ int sort_s (float *Y, const float *X, const int R, const int C, const int S, con
     else if (M==1 && L==1)
     {
         cblas_scopy(R*C*S*H,X,1,Y,1);
-        if (LAPACKE_slasrt(id,N,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
+        if (LAPACKE_slasrt_work(id,N,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
         //qsort(X,(size_t)(N),sizeof(float),comp);
     }
     else if (K==1)
@@ -175,7 +175,7 @@ int sort_s (float *Y, const float *X, const int R, const int C, const int S, con
             for (m=0, n=l*M*N; m<M; m++, n+=J)
             {
                 cblas_scopy(N,&X[n],1,&Y[n],1);
-                if (LAPACKE_slasrt(id,N,&Y[n])) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
+                if (LAPACKE_slasrt_work(id,N,&Y[n])) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
                 //qsort(&Y[n],(size_t)(N),sizeof(float),comp);
             }
         }
@@ -188,7 +188,7 @@ int sort_s (float *Y, const float *X, const int R, const int C, const int S, con
             for (m=0, n=l*M*N; m<M; m++, n+=J)
             {
                 cblas_scopy(N,&X[n],K,X1,1);
-                if (LAPACKE_slasrt(id,N,X1)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
+                if (LAPACKE_slasrt_work(id,N,X1)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
                 //qsort(X1,(size_t)(N),sizeof(float),comp);
                 cblas_scopy(N,X1,1,&Y[n],K);
             }
@@ -350,8 +350,8 @@ int sort_inplace_s (float *X, const int R, const int C, const int S, const int H
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
     int l, m, n;
     float *X1;
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
+    struct timespec tic, toc;
+    clock_gettime(CLOCK_REALTIME,&tic);
 
     //Checks
     if (R<0) { fprintf(stderr,"error in sort_inplace_s: R (num rows X) must be nonnegative\n"); return 1; }
@@ -370,7 +370,7 @@ int sort_inplace_s (float *X, const int R, const int C, const int S, const int H
     if (N==1) {}
     else if (M==1 && L==1)
     {
-        if (LAPACKE_slasrt(id,N,X)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
+        if (LAPACKE_slasrt_work(id,N,X)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
         //qsort(X,(size_t)(N),sizeof(float),comp);
     }
     else if (K==1)
@@ -379,7 +379,7 @@ int sort_inplace_s (float *X, const int R, const int C, const int S, const int H
         {
             for (m=0, n=l*M*N; m<M; m++, n+=J)
             {
-                if (LAPACKE_slasrt(id,N,&X[n])) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
+                if (LAPACKE_slasrt_work(id,N,&X[n])) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
                 //qsort(&X[n],(size_t)(N),sizeof(float),comp);
             }
         }
@@ -392,14 +392,14 @@ int sort_inplace_s (float *X, const int R, const int C, const int S, const int H
             for (m=0, n=l*M*N; m<M; m++, n+=J)
             {
                 cblas_scopy(N,&X[n],K,X1,1);
-                if (LAPACKE_slasrt(id,N,X1)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
+                if (LAPACKE_slasrt_work(id,N,X1)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
                 //qsort(X1,(size_t)(N),sizeof(float),comp);
                 cblas_scopy(N,X1,1,&X[n],K);
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+    clock_gettime(CLOCK_REALTIME,&toc);
+    fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }

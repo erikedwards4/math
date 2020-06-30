@@ -2,7 +2,6 @@
 //@date 2019-2020
 
 
-#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -23,7 +22,6 @@
 int main(int argc, char *argv[])
 {
     using namespace std;
-    timespec tic, toc;
 
 
     //Declarations
@@ -41,11 +39,13 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Gets sum along rows or cols of X.\n";
+    descr += "Gets sum along dim of X.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to work along cols --> Y is a row vec.\n";
-    descr += "Use -d1 to work along rows --> Y is a col vec.\n";
+    descr += "Use -d0 to sum along cols.\n";
+    descr += "Use -d1 to sum along rows.\n";
+    descr += "Use -d2 to sum along slices.\n";
+    descr += "Use -d3 to sum along hyperslices.\n";
     descr += "\n";
     descr += "Examples:\n";
     descr += "$ sum X -o Y \n";
@@ -136,7 +136,6 @@ int main(int argc, char *argv[])
 
 
     //Process
-    clock_gettime(CLOCK_REALTIME,&tic);
     if (i1.T==1)
     {
         float *X, *Y;
@@ -213,8 +212,6 @@ int main(int argc, char *argv[])
     {
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
-    clock_gettime(CLOCK_REALTIME,&toc);
-    cerr << "elapsed time = " << (toc.tv_sec-tic.tv_sec)*1e3 + (toc.tv_nsec-tic.tv_nsec)/1e6 << " ms" << endl;
     
 
     //Exit

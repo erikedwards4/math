@@ -5,6 +5,7 @@
 const valarray<uint8_t> oktypes = {1,2,101,102};
 const size_t I = 0, O = 1;
 double a, b;
+int dim, N;
 
 //Description
 string descr;
@@ -13,9 +14,11 @@ descr += "Output Y is a row vector with elements logarithmically spaced from 10^
 descr += "\n";
 descr += "Use -n (--N) to specify the length of Y [default=100].\n";
 descr += "\n";
+descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
+descr += "Y is column vector for d=0, a row vector for d=1, etc.\n";
+descr += "\n";
 descr += "Use -t (--type) to specify output data type [default=1 -> float].\n";
 descr += "Data type can also be 2 (double).\n";
-descr += "Internally, the Sieve of Eratosthanes uses integers.\n";
 descr += "\n";
 descr += "Use -f (--fmt) to specify output file format [default=147 -> NumPy].\n";
 descr += "File format can also be 1 (ArrayFire), 65 (Armadillo),\n";
@@ -30,6 +33,7 @@ descr += "$ logspace -n11 -a-2.5 -b4.5 -t2 > Y \n";
 struct arg_dbl    *a_a = arg_dbln("a","a","<dbl>",0,1,"start value [default=0.0]");
 struct arg_dbl    *a_b = arg_dbln("b","b","<dbl>",0,1,"end value [default=1.0]");
 struct arg_int    *a_n = arg_intn("n","N","<uint>",0,1,"length of output Y [default=100]");
+struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
 struct arg_int *a_otyp = arg_intn("t","type","<uint>",0,1,"output data type [default=1]");
 struct arg_int *a_ofmt = arg_intn("f","fmt","<uint>",0,1,"output file format [default=147]");
 struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
@@ -42,10 +46,16 @@ a = (a_a->count==0) ? 0.0 : a_a->dval[0];
 //Get b
 b = (a_b->count==0) ? 1.0 : a_b->dval[0];
 
-//Get o1.C
-if (a_n->count==0) { o1.C = 100u; }
-else if (a_n->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "N must be positive" << endl; return 1; }
-else { o1.C = uint32_t(a_n->ival[0]); }
+//Get dim
+if (a_d->count==0) { dim = 0; }
+else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
+else { dim = a_d->ival[0]; }
+if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+
+//Get N
+if (a_n->count==0) { N = 100; }
+else if (a_n->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "N (length of Y) must be positive" << endl; return 1; }
+else { N = a_n->ival[0]; }
 
 //Get o1.F
 if (a_ofmt->count==0) { o1.F = 147; }
@@ -67,7 +77,10 @@ if ((o1.T==oktypes).sum()==0)
 //Checks
 
 //Set output header info
-o1.R = o1.S = o1.H = 1u;
+o1.R = (dim==0) ? uint32_t(N) : 1u;
+o1.C = (dim==1) ? uint32_t(N) : 1u;
+o1.S = (dim==2) ? uint32_t(N) : 1u;
+o1.H = (dim==3) ? uint32_t(N) : 1u;
 
 //Other prep
 
@@ -77,7 +90,7 @@ if (o1.T==1)
     float *Y;
     try { Y = new float[o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::logspace_s(Y,int(o1.C),float(a),float(b)))
+    if (codee::logspace_s(Y,N,float(a),float(b)))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -91,7 +104,7 @@ else if (o1.T==101)
     float *Y;
     try { Y = new float[2u*o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::logspace_c(Y,int(o1.C),float(a),float(b)))
+    if (codee::logspace_c(Y,N,float(a),float(b)))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

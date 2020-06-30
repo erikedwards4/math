@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "linspace.c"
+#include "kurtosis.c"
 
 #ifdef I
 #undef I
@@ -29,50 +29,44 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2,101,102};
-    const size_t O = 1;
-    ofstream ofs1;
-    int8_t stdo1, wo1;
-    ioinfo o1;
-    double a, b;
-    int dim, N;
+    const valarray<uint8_t> oktypes = {1,2,101};
+    const size_t I = 1, O = 1;
+    ifstream ifs1; ofstream ofs1;
+    int8_t stdi1, stdo1, wo1;
+    ioinfo i1, o1;
+    int dim;
+    char b;
 
 
     //Description
     string descr;
-    descr += "Generate function (0 inputs, 1 output).\n";
-    descr += "Output Y is a vector with elements linearly spaced from a to b.\n";
-    descr += "\n";
-    descr += "Use -n (--N) to specify the length of Y [default=100].\n";
+    descr += "Gets kurtosis along dim of X.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Y is column vector for d=0, a row vector for d=1, etc.\n";
+    descr += "Use -d0 to get kurtosis along cols.\n";
+    descr += "Use -d1 to get kurtosis along rows.\n";
+    descr += "Use -d2 to get kurtosis along slices.\n";
+    descr += "Use -d3 to get kurtosis along hyperslices.\n";
     descr += "\n";
-    descr += "Use -t (--type) to specify output data type [default=1 -> float].\n";
-    descr += "Data type can also be 2 (double).\n";
-    descr += "\n";
-    descr += "Use -f (--fmt) to specify output file format [default=147 -> NumPy].\n";
-    descr += "File format can also be 1 (ArrayFire), 65 (Armadillo),\n";
-    descr += "101 (minimal row-major format), or 102 (minimal col-major format).\n";
+    descr += "Include -b (--biased) to use the biased sample estimate [default is unbiased].\n";
+    descr += "The 'unbiased' estimate [default] is unbiased only for normal distribution.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ linspace -n10 -a0.1 -b9.1 -o Y \n";
-    descr += "$ linspace -n9 -a1 -b-3 > Y \n";
-    descr += "$ linspace -n11 -a-2.5 -b4.5 -t2 > Y \n";
+    descr += "$ kurtosis X -o Y \n";
+    descr += "$ kurtosis X > Y \n";
+    descr += "$ kurtosis -d1 X > Y \n";
+    descr += "$ cat X | kurtosis > Y \n";
 
 
     //Argtable
     int nerrs;
-    struct arg_dbl    *a_a = arg_dbln("a","a","<dbl>",0,1,"start value [default=0.0]");
-    struct arg_dbl    *a_b = arg_dbln("b","b","<dbl>",0,1,"end value [default=1.0]");
-    struct arg_int    *a_n = arg_intn("n","N","<uint>",0,1,"length of output Y [default=100]");
+    struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
     struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
-    struct arg_int *a_otyp = arg_intn("t","type","<uint>",0,1,"output data type [default=1]");
-    struct arg_int *a_ofmt = arg_intn("f","fmt","<uint>",0,1,"output file format [default=147]");
+    struct arg_lit    *a_b = arg_litn("b","biased",0,1,"use biased sample estimate [default=unbiased]");
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_a, a_b, a_n, a_d, a_otyp, a_ofmt, a_fo, a_help, a_end};
+    void *argtable[] = {a_fi, a_d, a_b, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -84,19 +78,33 @@ int main(int argc, char *argv[])
     if (nerrs>0) { arg_print_errors(stderr,a_end,(progstr+": "+to_string(__LINE__)+errstr).c_str()); return 1; }
 
 
+    //Check stdin
+    stdi1 = (a_fi->count==0 || strlen(a_fi->filename[0])==0 || strcmp(a_fi->filename[0],"-")==0);
+    if (stdi1>0 && isatty(fileno(stdin))) { cerr << progstr+": " << __LINE__ << errstr << "no stdin detected" << endl; return 1; }
+
+
     //Check stdout
     if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0 || strcmp(a_fo->filename[0],"-")==0); }
     else { stdo1 = (!isatty(fileno(stdout))); }
     wo1 = (stdo1 || a_fo->count>0);
 
 
+    //Open input
+    if (stdi1) { ifs1.copyfmt(cin); ifs1.basic_ios<char>::rdbuf(cin.rdbuf()); } else { ifs1.open(a_fi->filename[0]); }
+    if (!ifs1) { cerr << progstr+": " << __LINE__ << errstr << "problem opening input file" << endl; return 1; }
+
+
+    //Read input header
+    if (!read_input_header(ifs1,i1)) { cerr << progstr+": " << __LINE__ << errstr << "problem reading header for input file" << endl; return 1; }
+    if ((i1.T==oktypes).sum()==0)
+    {
+        cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        cerr << endl; return 1;
+    }
+
+
     //Get options
-
-    //Get a
-    a = (a_a->count==0) ? 0.0 : a_a->dval[0];
-
-    //Get b
-    b = (a_b->count==0) ? 1.0 : a_b->dval[0];
 
     //Get dim
     if (a_d->count==0) { dim = 0; }
@@ -104,34 +112,21 @@ int main(int argc, char *argv[])
     else { dim = a_d->ival[0]; }
     if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
-    //Get N
-    if (a_n->count==0) { N = 100; }
-    else if (a_n->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "N (length of Y) must be positive" << endl; return 1; }
-    else { N = a_n->ival[0]; }
+    //Get b
+    b = (a_b->count>0);
 
-    //Get o1.F
-    if (a_ofmt->count==0) { o1.F = 147; }
-    else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
-    else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-    else { o1.F = uint8_t(a_ofmt->ival[0]); }
 
-    //Get o1.T
-    if (a_otyp->count==0) { o1.T = 1; }
-    else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "data type must be positive int" << endl; return 1; }
-    else { o1.T = uint8_t(a_otyp->ival[0]); }
-    if ((o1.T==oktypes).sum()==0)
-    {
-        cerr << progstr+": " << __LINE__ << errstr << "output data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
-        cerr << endl; return 1;
-    }
+    //Checks
+    if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
 
 
     //Set output header info
-    o1.R = (dim==0) ? uint32_t(N) : 1u;
-    o1.C = (dim==1) ? uint32_t(N) : 1u;
-    o1.S = (dim==2) ? uint32_t(N) : 1u;
-    o1.H = (dim==3) ? uint32_t(N) : 1u;
+    o1.F = i1.F; o1.T = i1.T;
+    //o1.T = (i1.T<100) ? i1.T : i1.T-100;
+    o1.R = (dim==0) ? 1u : i1.R;
+    o1.C = (dim==1) ? 1u : i1.C;
+    o1.S = (dim==2) ? 1u : i1.S;
+    o1.H = (dim==3) ? 1u : i1.H;
 
 
     //Open output
@@ -150,61 +145,59 @@ int main(int argc, char *argv[])
 
 
     //Process
-    if (o1.T==1)
+    if (i1.T==1)
     {
-        float *Y;
+        float *X, *Y;
+        try { X = new float[i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new float[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::linspace_s(Y,N,float(a),float(b)))
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::kurtosis_s(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor(),b))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] Y;
+        delete[] X; delete[] Y;
     }
-    else if (o1.T==2)
+    else if (i1.T==2)
     {
-        double *Y;
+        double *X, *Y;
+        try { X = new double[i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new double[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::linspace_d(Y,N,double(a),double(b)))
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::kurtosis_d(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor(),b))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] Y;
+        delete[] X; delete[] Y;
     }
-    else if (o1.T==101)
+    else if (i1.T==101)
     {
-        float *Y;
+        float *X, *Y;
+        try { X = new float[2u*i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new float[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::linspace_c(Y,N,float(a),float(b)))
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::kurtosis_c(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor(),b))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] Y;
-    }
-    else if (o1.T==102)
-    {
-        double *Y;
-        try { Y = new double[2u*o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::linspace_z(Y,N,double(a),double(b)))
-        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-        if (wo1)
-        {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
-        }
-        delete[] Y;
+        delete[] X; delete[] Y;
     }
     else
     {
