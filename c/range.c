@@ -21,7 +21,6 @@ int range_s (float *Y, const float *X, const int R, const int C,const int S, con
     int r, c;
     float mn, mx;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in range_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in range_s: C (ncols X) must be positive\n"); return 1; }
 
@@ -97,7 +96,6 @@ int range_d (double *Y, const double *X, const int R, const int C,const int S, c
     int r, c;
     double mn, mx;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in range_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in range_d: C (ncols X) must be positive\n"); return 1; }
 
@@ -173,7 +171,6 @@ int range_c (float *Y, const float *X, const int R, const int C,const int S, con
     int r, c;
     float mn, mx, a2;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in range_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in range_c: C (ncols X) must be positive\n"); return 1; }
 
@@ -249,7 +246,6 @@ int range_z (double *Y, const double *X, const int R, const int C,const int S, c
     int r, c;
     double mn, mx, a2;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in range_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in range_z: C (ncols X) must be positive\n"); return 1; }
 

@@ -45,7 +45,6 @@ int prctile_s (float *Y, const float *X, const int R, const int C,const int S, c
     float w1, w2;
     float *X1; //1 row or col of X
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in prctile_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in prctile_s: C (ncols X) must be positive\n"); return 1; }
 
@@ -114,7 +113,6 @@ int prctile_d (double *Y, const double *X, const int R, const int C,const int S,
     double w1, w2;
     double *X1; //1 row or col of X
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in prctile_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in prctile_d: C (ncols X) must be positive\n"); return 1; }
 

@@ -23,7 +23,6 @@ int std_s (float *Y, float *X, const int R, const int C,const int S, const int H
     float m, den;
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in std_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in std_s: C (ncols X) must be positive\n"); return 1; }
 
@@ -86,7 +85,6 @@ int std_d (double *Y, double *X, const int R, const int C,const int S, const int
     double m, den;
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in std_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in std_d: C (ncols X) must be positive\n"); return 1; }
 
@@ -150,7 +148,6 @@ int std_c (float *Y, float *X, const int R, const int C,const int S, const int H
     float den;
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in std_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in std_c: C (ncols X) must be positive\n"); return 1; }
 
@@ -214,7 +211,6 @@ int std_z (double *Y, double *X, const int R, const int C,const int S, const int
     double den;
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in std_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in std_z: C (ncols X) must be positive\n"); return 1; }
 

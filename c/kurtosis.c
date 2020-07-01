@@ -28,7 +28,6 @@ int kurtosis_s (float *Y, float *X, const int R, const int C,const int S, const 
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in kurtosis_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in kurtosis_s: C (ncols X) must be positive\n"); return 1; }
     if (S<1) { fprintf(stderr,"error in kurtosis_s: S (num slices X) must be positive\n"); return 1; }
@@ -175,7 +174,6 @@ int kurtosis_d (double *Y, double *X, const int R, const int C,const int S, cons
     int r, c, l, m, n, n1 = 0, n2 = 0;
     double *x1, *xni;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in kurtosis_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in kurtosis_d: C (ncols X) must be positive\n"); return 1; }
     if (S<1) { fprintf(stderr,"error in kurtosis_d: S (num slices X) must be positive\n"); return 1; }
@@ -322,7 +320,6 @@ int kurtosis_c (float *Y, float *X, const int R, const int C,const int S, const 
     int n = 0, n1 = 0;
     //int l, m, n = 0, n1 = 0, n2 = 0;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in kurtosis_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in kurtosis_c: C (ncols X) must be positive\n"); return 1; }
     if (S<1) { fprintf(stderr,"error in kurtosis_c: S (num slices X) must be positive\n"); return 1; }
@@ -413,7 +410,6 @@ int kurtosis_z (double *Y, double *X, const int R, const int C,const int S, cons
     double tmp, *x1;
     int n = 0, n1 = 0;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in kurtosis_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in kurtosis_z: C (ncols X) must be positive\n"); return 1; }
     if (S<1) { fprintf(stderr,"error in kurtosis_z: S (num slices X) must be positive\n"); return 1; }

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <cblas.h>
-#include <time.h>
+//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -19,15 +19,6 @@ int polar_d (double *Y, const double *X1, const double *X2, const int R1, const 
 
 int polar_s (float *Y, const float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
 {
-    const int R = (R1>R2) ? R1 : R2;
-    const int C = (C1>C2) ? C1 : C2;
-    const int S = (S1>S2) ? S1 : S2;
-    const int H = (H1>H2) ? H1 : H2;
-    const int N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
-    int r, c, s, h, n1, n2 = 0, n = 0;
-    struct timespec tic, toc;
-
-    //Checks
     if (R1<0) { fprintf(stderr,"error in polar_s: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in polar_s: C1 (num cols X1) must be nonnegative\n"); return 1; }
     if (S1<0) { fprintf(stderr,"error in polar_s: S1 (num slices X1) must be nonnegative\n"); return 1; }
@@ -37,7 +28,13 @@ int polar_s (float *Y, const float *X1, const float *X2, const int R1, const int
     if (S2<0) { fprintf(stderr,"error in polar_s: S2 (num slices X2) must be nonnegative\n"); return 1; }
     if (H2<0) { fprintf(stderr,"error in polar_s: H2 (num hyperslices X2) must be nonnegative\n"); return 1; }
 
-    //clock_gettime(CLOCK_REALTIME,&tic);
+    const int R = (R1>R2) ? R1 : R2;
+    const int C = (C1>C2) ? C1 : C2;
+    const int S = (S1>S2) ? S1 : S2;
+    const int H = (H1>H2) ? H1 : H2;
+    const int N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
+    int n1, n2 = 0, n = 0;
+
     if (N1==1)
     {
         while (n<N) { Y[n2] = X1[0]*cosf(X2[n]); Y[n2+1] = X1[0]*sinf(X2[n]); n++; n2+=2; }
@@ -59,15 +56,15 @@ int polar_s (float *Y, const float *X1, const float *X2, const int R1, const int
         const int RCS1 = R1*C1*(S1>1), RCS2 = R2*C2*(S2>1);
         const int RC1 = R1*(C1>1), RC2 = R2*(C2>1);
         const int r1i = (R1>1), r2i = (R2>1);
-        for (h=0; h<H; h++)
+        for (int h=0; h<H; h++)
         {
-            for (s=0; s<S; s++)
+            for (int s=0; s<S; s++)
             {
-                for (c=0; c<C; c++)
+                for (int c=0; c<C; c++)
                 {
                     n1 = h*RCSH1 + s*RCS1 + c*RC1;
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (r=0; r<R; r++)
+                    for (int r=0; r<R; r++)
                     {
                         Y[n] = X1[n1]*cosf(X2[n2]); Y[n+1] = X1[n1]*sinf(X2[n2]);
                         n+=2; n1 += r1i; n2 += r2i;
@@ -82,15 +79,15 @@ int polar_s (float *Y, const float *X1, const float *X2, const int R1, const int
         const int HSC1 = H1*S1*(C1>1), HSC2 = H2*S2*(C2>1);
         const int HS1 = H1*(S1>1), HS2 = H2*(S2>1);
         const int h1i = (H1>1), h2i = (H2>1);
-        for (r=0; r<R; r++)
+        for (int r=0; r<R; r++)
         {
-            for (c=0; c<C; c++)
+            for (int c=0; c<C; c++)
             {
-                for (s=0; s<S; s++)
+                for (int s=0; s<S; s++)
                 {
                     n1 = r*HSCR1 + c*HSC1 + s*HS1;
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (h=0; h<H; h++)
+                    for (int h=0; h<H; h++)
                     {
                         Y[n] = X1[n1]*cosf(X2[n2]); Y[n+1] = X1[n1]*sinf(X2[n2]);
                         n+=2; n1 += h1i; n2 += h2i;
@@ -99,8 +96,6 @@ int polar_s (float *Y, const float *X1, const float *X2, const int R1, const int
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -108,14 +103,6 @@ int polar_s (float *Y, const float *X1, const float *X2, const int R1, const int
 
 int polar_d (double *Y, const double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
 {
-    const int R = (R1>R2) ? R1 : R2;
-    const int C = (C1>C2) ? C1 : C2;
-    const int S = (S1>S2) ? S1 : S2;
-    const int H = (H1>H2) ? H1 : H2;
-    const int N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
-    int r, c, s, h, n1, n2 = 0, n = 0;
-
-    //Checks
     if (R1<0) { fprintf(stderr,"error in polar_d: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in polar_d: C1 (num cols X1) must be nonnegative\n"); return 1; }
     if (S1<0) { fprintf(stderr,"error in polar_d: S1 (num slices X1) must be nonnegative\n"); return 1; }
@@ -124,6 +111,13 @@ int polar_d (double *Y, const double *X1, const double *X2, const int R1, const 
     if (C2<0) { fprintf(stderr,"error in polar_d: C2 (num cols X2) must be nonnegative\n"); return 1; }
     if (S2<0) { fprintf(stderr,"error in polar_d: S2 (num slices X2) must be nonnegative\n"); return 1; }
     if (H2<0) { fprintf(stderr,"error in polar_d: H2 (num hyperslices X2) must be nonnegative\n"); return 1; }
+
+    const int R = (R1>R2) ? R1 : R2;
+    const int C = (C1>C2) ? C1 : C2;
+    const int S = (S1>S2) ? S1 : S2;
+    const int H = (H1>H2) ? H1 : H2;
+    const int N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
+    int n1, n2 = 0, n = 0;
 
     if (N1==1)
     {
@@ -144,15 +138,15 @@ int polar_d (double *Y, const double *X1, const double *X2, const int R1, const 
         const int RCS1 = R1*C1*(S1>1), RCS2 = R2*C2*(S2>1);
         const int RC1 = R1*(C1>1), RC2 = R2*(C2>1);
         const int r1i = (R1>1), r2i = (R2>1);
-        for (h=0; h<H; h++)
+        for (int h=0; h<H; h++)
         {
-            for (s=0; s<S; s++)
+            for (int s=0; s<S; s++)
             {
-                for (c=0; c<C; c++)
+                for (int c=0; c<C; c++)
                 {
                     n1 = h*RCSH1 + s*RCS1 + c*RC1;
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (r=0; r<R; r++)
+                    for (int r=0; r<R; r++)
                     {
                         Y[n] = X1[n1]*cos(X2[n2]); Y[n+1] = X1[n1]*sin(X2[n2]);
                         n+=2; n1 += r1i; n2 += r2i;
@@ -167,15 +161,15 @@ int polar_d (double *Y, const double *X1, const double *X2, const int R1, const 
         const int HSC1 = H1*S1*(C1>1), HSC2 = H2*S2*(C2>1);
         const int HS1 = H1*(S1>1), HS2 = H2*(S2>1);
         const int h1i = (H1>1), h2i = (H2>1);
-        for (r=0; r<R; r++)
+        for (int r=0; r<R; r++)
         {
-            for (c=0; c<C; c++)
+            for (int c=0; c<C; c++)
             {
-                for (s=0; s<S; s++)
+                for (int s=0; s<S; s++)
                 {
                     n1 = r*HSCR1 + c*HSC1 + s*HS1;
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (h=0; h<H; h++)
+                    for (int h=0; h<H; h++)
                     {
                         Y[n] = X1[n1]*cos(X2[n2]); Y[n+1] = X1[n1]*sin(X2[n2]);
                         n+=2; n1 += h1i; n2 += h2i;

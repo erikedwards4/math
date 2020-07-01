@@ -21,7 +21,6 @@ int coeff_var_s (float *Y, float *X, const int R, const int C,const int S, const
     float m, den;
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in coeff_var_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in coeff_var_s: C (ncols X) must be positive\n"); return 1; }
 
@@ -84,7 +83,6 @@ int coeff_var_d (double *Y, double *X, const int R, const int C,const int S, con
     double m, den;
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in coeff_var_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in coeff_var_d: C (ncols X) must be positive\n"); return 1; }
 

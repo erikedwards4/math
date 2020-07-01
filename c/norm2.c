@@ -20,7 +20,6 @@ int norm2_s (float *Y, float *X, const int R, const int C,const int S, const int
 {
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in norm2_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in norm2_s: C (ncols X) must be positive\n"); return 1; }
 
@@ -71,7 +70,6 @@ int norm2_d (double *Y, double *X, const int R, const int C,const int S, const i
 {
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in norm2_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in norm2_d: C (ncols X) must be positive\n"); return 1; }
 
@@ -122,7 +120,6 @@ int norm2_c (float *Y, float *X, const int R, const int C,const int S, const int
 {
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in norm2_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in norm2_c: C (ncols X) must be positive\n"); return 1; }
 
@@ -173,7 +170,6 @@ int norm2_z (double *Y, double *X, const int R, const int C,const int S, const i
 {
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in norm2_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in norm2_z: C (ncols X) must be positive\n"); return 1; }
 

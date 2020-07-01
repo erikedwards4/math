@@ -17,7 +17,6 @@ int zeros_z (double *Y, const int N);
 
 int zeros_s (float *Y, const int N)
 {
-    //Checks
     if (N<0) { fprintf(stderr,"error in zeros_s: N (num elements Y) must be nonnegative\n"); return 1; }
 
     const float z = 0.0f;
@@ -35,7 +34,6 @@ int zeros_s (float *Y, const int N)
 
 int zeros_d (double *Y, const int N)
 {
-    //Checks
     if (N<0) { fprintf(stderr,"error in zeros_d: N (num elements Y) must be nonnegative\n"); return 1; }
 
     const double z = 0.0;
@@ -48,7 +46,6 @@ int zeros_d (double *Y, const int N)
 
 int zeros_c (float *Y, const int N)
 {
-    //Checks
     if (N<0) { fprintf(stderr,"error in zeros_c: N (num elements Y) must be nonnegative\n"); return 1; }
 
     const float z[2] = {0.0f,0.0f};
@@ -61,7 +58,6 @@ int zeros_c (float *Y, const int N)
 
 int zeros_z (double *Y, const int N)
 {
-    //Checks
     if (N<0) { fprintf(stderr,"error in zeros_z: N (num elements Y) must be nonnegative\n"); return 1; }
 
     const double z[2] = {0.0,0.0};

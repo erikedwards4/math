@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     //Process
     if (i1.T==1)
     {
-        float *X, *Y;
+        float *X;, *Y;
         try { X = new float[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new float[o1.N()]; }
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
     }
     else if (i1.T==2)
     {
-        double *X, *Y;
+        double *X;, *Y;
         try { X = new double[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new double[o1.N()]; }

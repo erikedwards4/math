@@ -19,19 +19,15 @@ int eye_z (double *Y, const int R, const int C, const char iscolmajor);
 
 int eye_s (float *Y, const int R, const int C, const char iscolmajor)
 {
+    if (R<0) { fprintf(stderr,"error in eye_s: R (num rows Y) must be nonnegative\n"); return 1; }
+    if (C<0) { fprintf(stderr,"error in eye_s: C (num cols Y) must be nonnegative\n"); return 1; }
+
     const float z = 0.0f, o = 1.0f;
     const int M = (R<C) ? R : C;
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
 
-    //Checks
-    if (R<0) { fprintf(stderr,"error in eye_s: R (num rows Y) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in eye_s: C (num cols Y) must be nonnegative\n"); return 1; }
-
-    //Set all elements to 0
     cblas_scopy(R*C,&z,0,Y,1);
-
-    //Set diag to 1
     if (iscolmajor) { cblas_scopy(M,&o,0,Y,R+1); }
     else { cblas_scopy(M,&o,0,Y,C+1); }
 
@@ -50,24 +46,15 @@ int eye_s (float *Y, const int R, const int C, const char iscolmajor)
 
 int eye_d (double *Y, const int R, const int C, const char iscolmajor)
 {
-    const double z = 0.0, o = 1.0;
-    const int M = (R<C) ? R : C;
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
-
-    //Checks
     if (R<0) { fprintf(stderr,"error in eye_d: R (num rows Y) must be nonnegative\n"); return 1; }
     if (C<0) { fprintf(stderr,"error in eye_d: C (num cols Y) must be nonnegative\n"); return 1; }
 
-    //Set all elements to 0
-    cblas_dcopy(R*C,&z,0,Y,1);
+    const double z = 0.0, o = 1.0;
+    const int M = (R<C) ? R : C;
 
-    //Set diag to 1
+    cblas_dcopy(R*C,&z,0,Y,1);
     if (iscolmajor) { cblas_dcopy(M,&o,0,Y,R+1); }
     else { cblas_dcopy(M,&o,0,Y,C+1); }
-
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -75,24 +62,15 @@ int eye_d (double *Y, const int R, const int C, const char iscolmajor)
 
 int eye_c (float *Y, const int R, const int C, const char iscolmajor)
 {
-    const float z[2] = {0.0f,0.0f}, o[2] = {1.0f,0.0f};
-    const int M = (R<C) ? R : C;
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
-
-    //Checks
     if (R<0) { fprintf(stderr,"error in eye_c: R (num rows Y) must be nonnegative\n"); return 1; }
     if (C<0) { fprintf(stderr,"error in eye_c: C (num cols Y) must be nonnegative\n"); return 1; }
 
-    //Set all elements to 0
-    cblas_ccopy(R*C,z,0,Y,1);
+    const float z[2] = {0.0f,0.0f}, o[2] = {1.0f,0.0f};
+    const int M = (R<C) ? R : C;
 
-    //Set diag to 1
+    cblas_ccopy(R*C,z,0,Y,1);
     if (iscolmajor) { cblas_ccopy(M,o,0,Y,R+1); }
     else { cblas_ccopy(M,o,0,Y,C+1); }
-
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -100,24 +78,15 @@ int eye_c (float *Y, const int R, const int C, const char iscolmajor)
 
 int eye_z (double *Y, const int R, const int C, const char iscolmajor)
 {
-    const double z[2] = {0.0,0.0}, o[2] = {1.0,0.0};
-    const int M = (R<C) ? R : C;
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
-
-    //Checks
     if (R<0) { fprintf(stderr,"error in eye_z: R (num rows Y) must be nonnegative\n"); return 1; }
     if (C<0) { fprintf(stderr,"error in eye_z: C (num cols Y) must be nonnegative\n"); return 1; }
 
-    //Set all elements to 0
-    cblas_zcopy(R*C,z,0,Y,1);
+    const double z[2] = {0.0,0.0}, o[2] = {1.0,0.0};
+    const int M = (R<C) ? R : C;
 
-    //Set diag to 1
+    cblas_zcopy(R*C,z,0,Y,1);
     if (iscolmajor) { cblas_zcopy(M,o,0,Y,R+1); }
     else { cblas_zcopy(M,o,0,Y,C+1); }
-
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }

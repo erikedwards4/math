@@ -32,7 +32,6 @@ int max_s (float *Y, const float *X, const int R, const int C,const int S, const
     float mx;
     //struct timespec tic, toc;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in max_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in max_s: C (ncols X) must be positive\n"); return 1; }
 
@@ -95,7 +94,6 @@ int max_d (double *Y, const double *X, const int R, const int C,const int S, con
     int r, c;
     double mx;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in max_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in max_d: C (ncols X) must be positive\n"); return 1; }
 
@@ -154,7 +152,6 @@ int max_c (float *Y, const float *X, const int R, const int C,const int S, const
 {
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in max_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in max_c: C (ncols X) must be positive\n"); return 1; }
 
@@ -209,7 +206,6 @@ int max_z (double *Y, const double *X, const int R, const int C,const int S, con
 {
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in max_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in max_z: C (ncols X) must be positive\n"); return 1; }
 
@@ -266,7 +262,6 @@ int max_inplace_s (float *X, const int R, const int C,const int S, const int H, 
     int r, c;
     //struct timespec tic, toc;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in max_inplace_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in max_inplace_s: C (ncols X) must be positive\n"); return 1; }
 
@@ -341,7 +336,6 @@ int max_inplace_d (double *X, const int R, const int C,const int S, const int H,
     double mx;
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in max_inplace_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in max_inplace_d: C (ncols X) must be positive\n"); return 1; }
 
@@ -412,7 +406,6 @@ int max_inplace_c (float *X, const int R, const int C,const int S, const int H, 
 {
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in max_inplace_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in max_inplace_c: C (ncols X) must be positive\n"); return 1; }
 
@@ -467,7 +460,6 @@ int max_inplace_z (double *X, const int R, const int C,const int S, const int H,
 {
     int r, c;
 
-    //Checks
     if (R<1) { fprintf(stderr,"error in max_inplace_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in max_inplace_z: C (ncols X) must be positive\n"); return 1; }
 

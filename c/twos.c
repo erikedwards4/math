@@ -18,12 +18,11 @@ int twos_z (double *Y, const int N);
 
 int twos_s (float *Y, const int N)
 {
+    if (N<0) { fprintf(stderr,"error in twos_s: N (num elements Y) must be nonnegative\n"); return 1; }
+
     const float v = 2.0f;
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
-
-    //Checks
-    if (N<0) { fprintf(stderr,"error in twos_s: N (num elements Y) must be nonnegative\n"); return 1; }
 
     cblas_scopy(N,&v,0,Y,1);
 
@@ -36,13 +35,12 @@ int twos_s (float *Y, const int N)
 
 int twos_d (double *Y, const int N)
 {
+    if (N<0) { fprintf(stderr,"error in twos_d: N (num elements Y) must be nonnegative\n"); return 1; }
+
     const double v = 2.0;
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
-
-    //Checks
-    if (N<0) { fprintf(stderr,"error in twos_d: N (num elements Y) must be nonnegative\n"); return 1; }
-
+    
     cblas_dcopy(N,&v,0,Y,1);
 
     //clock_gettime(CLOCK_REALTIME,&toc);
@@ -54,12 +52,11 @@ int twos_d (double *Y, const int N)
 
 int twos_c (float *Y, const int N)
 {
+    if (N<0) { fprintf(stderr,"error in twos_c: N (num elements Y) must be nonnegative\n"); return 1; }
+
     const float v[2] = {2.0f,0.0f};
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
-
-    //Checks
-    if (N<0) { fprintf(stderr,"error in twos_c: N (num elements Y) must be nonnegative\n"); return 1; }
 
     cblas_ccopy(N,v,0,Y,1);
 
@@ -72,12 +69,11 @@ int twos_c (float *Y, const int N)
 
 int twos_z (double *Y, const int N)
 {
+    if (N<0) { fprintf(stderr,"error in twos_z: N (num elements Y) must be nonnegative\n"); return 1; }
+
     const double v[2] = {2.0,0.0};
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
-
-    //Checks
-    if (N<0) { fprintf(stderr,"error in twos_z: N (num elements Y) must be nonnegative\n"); return 1; }
 
     cblas_zcopy(N,v,0,Y,1);
 

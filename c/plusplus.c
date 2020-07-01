@@ -14,12 +14,9 @@ int plusplus_d (double *X, const int N);
 
 int plusplus_s (float *X, const int N)
 {
-    int n;
-
-    //Checks
     if (N<0) { fprintf(stderr,"error in plusplus_s: N (num elements X) must be nonnegative\n"); return 1; }
 
-    for (n=0; n<N; n++) { X[n]++; }
+    for (int n=0; n<N; n++) { X[n]++; }
 
     return 0;
 }
@@ -27,12 +24,9 @@ int plusplus_s (float *X, const int N)
 
 int plusplus_d (double *X, const int N)
 {
-    int n;
-
-    //Checks
     if (N<0) { fprintf(stderr,"error in plusplus_d: N (num elements X) must be nonnegative\n"); return 1; }
 
-    for (n=0; n<N; n++) { X[n]++; }
+    for (int n=0; n<N; n++) { X[n]++; }
     
     return 0;
 }

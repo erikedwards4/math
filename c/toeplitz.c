@@ -25,12 +25,9 @@ int toeplitz2_z (double *Y, const double *X1, const double *X2, const int N1, co
 
 int toeplitz1_s (float *Y, const float *X, const int N)
 {
-    int k;
-
-    //Checks
     if (N<1) { fprintf(stderr,"error in toeplitz1_s: N (length X1) must be positive\n"); return 1; }
 
-    for (k=0; k<N; k++)
+    for (int k=0; k<N; k++)
     {
         cblas_scopy(N-k,&X[k],0,&Y[k],N+1);
         cblas_scopy(N-k,&X[k],0,&Y[k*N],N+1);
@@ -42,12 +39,9 @@ int toeplitz1_s (float *Y, const float *X, const int N)
 
 int toeplitz1_d (double *Y, const double *X, const int N)
 {
-    int k;
-
-    //Checks
     if (N<1) { fprintf(stderr,"error in toeplitz1_d: N (length X1) must be positive\n"); return 1; }
 
-    for (k=0; k<N; k++)
+    for (int k=0; k<N; k++)
     {
         cblas_dcopy(N-k,&X[k],0,&Y[k],N+1);
         cblas_dcopy(N-k,&X[k],0,&Y[k*N],N+1);
@@ -59,12 +53,9 @@ int toeplitz1_d (double *Y, const double *X, const int N)
 
 int toeplitz1_c (float *Y, const float *X, const int N)
 {
-    int k;
-
-    //Checks
     if (N<1) { fprintf(stderr,"error in toeplitz1_c: N (length X1) must be positive\n"); return 1; }
 
-    for (k=0; k<N; k++)
+    for (int k=0; k<N; k++)
     {
         cblas_ccopy(N-k,&X[2*k],0,&Y[2*k],N+1);
         cblas_ccopy(N-k,&X[2*k],0,&Y[2*k*N],N+1);
@@ -76,12 +67,9 @@ int toeplitz1_c (float *Y, const float *X, const int N)
 
 int toeplitz1_z (double *Y, const double *X, const int N)
 {
-    int k;
-
-    //Checks
     if (N<1) { fprintf(stderr,"error in toeplitz1_z: N (length X1) must be positive\n"); return 1; }
 
-    for (k=0; k<N; k++)
+    for (int k=0; k<N; k++)
     {
         cblas_zcopy(N-k,&X[2*k],0,&Y[2*k],N+1);
         cblas_zcopy(N-k,&X[2*k],0,&Y[2*k*N],N+1);
@@ -93,11 +81,10 @@ int toeplitz1_z (double *Y, const double *X, const int N)
 
 int toeplitz2_s (float *Y, const float *X1, const float *X2, const int N1, const int N2, const char iscolmajor)
 {
-    int k;
-
-    //Checks
     if (N1<1) { fprintf(stderr,"error in toeplitz2_s: N1 (length X1) must be positive\n"); return 1; }
     if (N2<1) { fprintf(stderr,"error in toeplitz2_s: N2 (length X2) must be positive\n"); return 1; }
+
+    int k;
 
     if (iscolmajor)
     {
@@ -116,11 +103,10 @@ int toeplitz2_s (float *Y, const float *X1, const float *X2, const int N1, const
 
 int toeplitz2_d (double *Y, const double *X1, const double *X2, const int N1, const int N2, const char iscolmajor)
 {
-    int k;
-
-    //Checks
     if (N1<1) { fprintf(stderr,"error in toeplitz2_d: N1 (length X1) must be positive\n"); return 1; }
     if (N2<1) { fprintf(stderr,"error in toeplitz2_d: N2 (length X2) must be positive\n"); return 1; }
+
+    int k;
 
     if (iscolmajor)
     {
@@ -139,11 +125,10 @@ int toeplitz2_d (double *Y, const double *X1, const double *X2, const int N1, co
 
 int toeplitz2_c (float *Y, const float *X1, const float *X2, const int N1, const int N2, const char iscolmajor)
 {
-    int k;
-
-    //Checks
     if (N1<1) { fprintf(stderr,"error in toeplitz2_c: N1 (length X1) must be positive\n"); return 1; }
     if (N2<1) { fprintf(stderr,"error in toeplitz2_c: N2 (length X2) must be positive\n"); return 1; }
+
+    int k;
 
     if (iscolmajor)
     {
@@ -162,11 +147,10 @@ int toeplitz2_c (float *Y, const float *X1, const float *X2, const int N1, const
 
 int toeplitz2_z (double *Y, const double *X1, const double *X2, const int N1, const int N2, const char iscolmajor)
 {
-    int k;
-
-    //Checks
     if (N1<1) { fprintf(stderr,"error in toeplitz2_z: N1 (length X1) must be positive\n"); return 1; }
     if (N2<1) { fprintf(stderr,"error in toeplitz2_z: N2 (length X2) must be positive\n"); return 1; }
+
+    int k;
 
     if (iscolmajor)
     {

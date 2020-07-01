@@ -17,19 +17,18 @@ int primes_i (int *Y, int *cnt, const int N);
 
 int primes_i (int *Y, int *cnt, const int N)
 {
-    int m, n;
-	int8_t *sieve;
+    if (N<0) { fprintf(stderr,"error in primes_i: N (num elements Y) must be nonnegative\n"); return 1; }
+    int n;
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
 
-    //Checks
-    if (N<0) { fprintf(stderr,"error in primes_i: N (num elements Y) must be nonnegative\n"); return 1; }
-
     //Sieve of Eratosthenes
-	if (!(sieve=(int8_t*)calloc((size_t)N,1))) { fprintf(stderr,"Error in primes: problem with calloc. "); perror("caloc"); return 1; }
-	for (n=0; n<N; n++)
+    int8_t *sieve;
+	if (!(sieve=(int8_t*)calloc((size_t)N,1))) { fprintf(stderr,"error in primes: problem with calloc. "); perror("caloc"); return 1; }
+	
+    for (n=0; n<N; n++)
 	{
-		if (sieve[n]==0) { for (m=3*n+3; m<N; m+=2*n+3) { sieve[m] = 1; } }
+		if (sieve[n]==0) { for (int m=3*n+3; m<N; m+=2*n+3) { sieve[m] = 1; } }
 	}
     Y[0] = 2;
     *cnt = 1;
