@@ -27,6 +27,7 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
 
     const int RC = R*C, SH = S*H, N = RC*SH;
     const int N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const int N2 = N/N1;
     const float z = 0.0f, o = 1.0f, ni = 1.0f / N1;
     const float den = (biased) ? 1.0f/N1 : 1.0f/(N1-1);
 
@@ -34,9 +35,9 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
     else if (N1==N)
     {
         Y[0] = 0.0f;
-        for (int n=0; n<N1; n++) { Y[0] += X[n]; }
-        cblas_saxpy(N1,-Y[0],&ni,0,X,1);
-        Y[0] = cblas_sdot(N1,X,1,X,1) * den;
+        for (int n=0; n<N; n++) { Y[0] += X[n]; }
+        cblas_saxpy(N,-Y[0],&ni,0,X,1);
+        Y[0] = cblas_sdot(N,X,1,X,1) * den;
     }
     else if (SH==1)
     {
@@ -50,31 +51,16 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
         cblas_scopy(N1,&ni,0,x1,1);
         cblas_sgemv(Ord,Tr,R,C,1.0f,X,ldc,x1,1,0.0f,Y,1);
         cblas_scopy(N1,&o,0,x1,1);
-        if (dim==0)
+        if (dim==0) { cblas_sgemm(Ord,Tr,Tr,R,C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc); }
+        else { cblas_sgemm(Ord,Tr,Tr,R,C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
+        if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            cblas_sgemm(Ord,Tr,Tr,R,C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc);
-            if (iscolmajor)
-            {
-                for (int c=0; c<C; c++) { Y[c] = cblas_sdot(N1,&X[c*R],1,&X[c*R],1) * den; }
-            }
-            else
-            {
-                for (int n=0; n<RC; n++) { X[n] *= X[n]; }
-                cblas_sgemv(Ord,Tr,R,C,den,X,ldc,x1,1,0.0f,Y,1);
-            }
+            for (int n2=0; n2<N2; n2++) { Y[n2] = cblas_sdot(N1,&X[n2*N1],1,&X[n2*N1],1) * den; }
         }
         else
         {
-            cblas_sgemm(Ord,Tr,Tr,R,C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc);
-            if (iscolmajor)
-            {
-                for (int n=0; n<RC; n++) { X[n] *= X[n]; }
-                cblas_sgemv(Ord,Tr,R,C,den,X,ldc,x1,1,0.0f,Y,1);
-            }
-            else
-            {
-                for (int r=0; r<R; r++) { Y[r] = cblas_sdot(N1,&X[r*C],1,&X[r*C],1) * den; }
-            }
+            for (int n=0; n<N; n++) { X[n] *= X[n]; }
+            cblas_sgemv(Ord,Tr,R,C,den,X,ldc,x1,1,0.0f,Y,1);
         }
         free(x1);
     }
@@ -142,8 +128,6 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
     
     return 0;
 }
@@ -165,9 +149,9 @@ int var_d (double *Y, double *X, const int R, const int C,const int S, const int
     else if (N1==N)
     {
         Y[0] = 0.0;
-        for (int n=0; n<N1; n++) { Y[0] += X[n]; }
-        cblas_daxpy(N1,-Y[0],&ni,0,X,1);
-        Y[0] = cblas_ddot(N1,X,1,X,1) * den;
+        for (int n=0; n<N; n++) { Y[0] += X[n]; }
+        cblas_daxpy(N,-Y[0],&ni,0,X,1);
+        Y[0] = cblas_ddot(N,X,1,X,1) * den;
     }
     else if (SH==1)
     {
@@ -181,31 +165,16 @@ int var_d (double *Y, double *X, const int R, const int C,const int S, const int
         cblas_dcopy(N1,&ni,0,x1,1);
         cblas_dgemv(Ord,Tr,R,C,1.0,X,ldc,x1,1,0.0,Y,1);
         cblas_dcopy(N1,&o,0,x1,1);
-        if (dim==0)
+        if (dim==0) { cblas_dgemm(Ord,Tr,Tr,R,C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc); }
+        else { cblas_dgemm(Ord,Tr,Tr,R,C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
+        if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            cblas_dgemm(Ord,Tr,Tr,R,C,1,-1.0,x1,lda,Y,ldb,1.0,X,ldc);
-            if (iscolmajor)
-            {
-                for (int c=0; c<C; c++) { Y[c] = cblas_ddot(N1,&X[c*R],1,&X[c*R],1) * den; }
-            }
-            else
-            {
-                for (int n=0; n<RC; n++) { X[n] *= X[n]; }
-                cblas_dgemv(Ord,Tr,R,C,den,X,ldc,x1,1,0.0,Y,1);
-            }
+            for (int n2=0; n2<N2; n2++) { Y[n2] = cblas_ddot(N1,&X[n2*N1],1,&X[n2*N1],1) * den; }
         }
         else
         {
-            cblas_dgemm(Ord,Tr,Tr,R,C,1,-1.0,Y,ldb,x1,lda,1.0,X,ldc);
-            if (iscolmajor)
-            {
-                for (int n=0; n<RC; n++) { X[n] *= X[n]; }
-                cblas_dgemv(Ord,Tr,R,C,den,X,ldc,x1,1,0.0,Y,1);
-            }
-            else
-            {
-                for (int r=0; r<R; r++) { Y[r] = cblas_ddot(N1,&X[r*C],1,&X[r*C],1) * den; }
-            }
+            for (int n=0; n<N; n++) { X[n] *= X[n]; }
+            cblas_dgemv(Ord,Tr,R,C,den,X,ldc,x1,1,0.0,Y,1);
         }
         free(x1);
     }
@@ -288,7 +257,6 @@ int var_c (float *Y, float *X, const int R, const int C,const int S, const int H
     const int RC = R*C, SH = S*H, N = RC*SH;
     const int N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float den = (biased) ? 1.0f/N1 : 1.0f/(N1-1);
-    float mn[2] = {0.0f,0.0f};
 
     if (N1==1)
     {
@@ -298,6 +266,7 @@ int var_c (float *Y, float *X, const int R, const int C,const int S, const int H
     else if (N1==N)
     {
         const float ni[2] = {-1.0f/N1,0.0f};
+        float mn[2] = {0.0f,0.0f};
         for (int n=0; n<2*N1; n+=2) { mn[0] += X[n]; mn[1] += X[n+1]; }
         cblas_caxpy(N1,mn,ni,0,X,1);
         cblas_cdotc_sub(N1,X,1,X,1,(_Complex float *)mn);
@@ -310,6 +279,7 @@ int var_c (float *Y, float *X, const int R, const int C,const int S, const int H
         const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const int J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         const float ni[2] = {-1.0f/N1,0.0f};
+        float mn[2] = {0.0f,0.0f};
         float *x1;
         if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in var_c: problem with malloc. "); perror("malloc"); return 1; }
         for (int l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
@@ -324,6 +294,7 @@ int var_c (float *Y, float *X, const int R, const int C,const int S, const int H
                 Y[n2] = mn[0] * den;
             }
         }
+        free(x1);
     }
 
     return 0;
@@ -340,7 +311,6 @@ int var_z (double *Y, double *X, const int R, const int C,const int S, const int
     const int RC = R*C, SH = S*H, N = RC*SH;
     const int N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double den = (biased) ? 1.0/N1 : 1.0/(N1-1);
-    double mn[2] = {0.0,0.0};
 
     if (N1==1)
     {
@@ -350,6 +320,7 @@ int var_z (double *Y, double *X, const int R, const int C,const int S, const int
     else if (N1==N)
     {
         const double ni[2] = {-1.0/N1,0.0};
+        double mn[2] = {0.0,0.0};
         for (int n=0; n<2*N1; n+=2) { mn[0] += X[n]; mn[1] += X[n+1]; }
         cblas_zaxpy(N1,mn,ni,0,X,1);
         cblas_zdotc_sub(N1,X,1,X,1,(_Complex double *)mn);
@@ -362,6 +333,7 @@ int var_z (double *Y, double *X, const int R, const int C,const int S, const int
         const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const int J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         const double ni[2] = {-1.0/N1,0.0};
+        double mn[2] = {0.0,0.0};
         double *x1;
         if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in var_z: problem with malloc. "); perror("malloc"); return 1; }
         for (int l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
@@ -376,6 +348,7 @@ int var_z (double *Y, double *X, const int R, const int C,const int S, const int
                 Y[n2] = mn[0] * den;
             }
         }
+        free(x1);
     }
 
     return 0;

@@ -25,12 +25,10 @@ int abs_s (float *Y, const float *X, const int N)
 {
     if (N<0) { fprintf(stderr,"error in abs_s: N (num elements X) must be nonnegative\n"); return 1; }
 
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     for (int n=0; n<N; n++) { Y[n] = fabsf(X[n]); }
     //for (int n=0; n<N; n++) { Y[n] = (X[n]<0.0f) ? -X[n] : X[n]; }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
