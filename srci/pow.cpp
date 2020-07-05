@@ -54,7 +54,7 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (P)" << endl; return 1; }
     if (i1.N()==o1.N())
     {
-        if (codee::pow_inplace_s(X,P,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+        if (codee::pow_inplace_s(X,P,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -67,7 +67,7 @@ if (i1.T==1)
         float *Y;
         try { Y = new float[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::pow_s(Y,X,P,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+        if (codee::pow_s(Y,X,P,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -91,7 +91,7 @@ else if (i1.T==101)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (P)" << endl; return 1; }
     if (i1.N()==o1.N())
     {
-        if (codee::pow_inplace_c(X,P,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+        if (codee::pow_inplace_c(X,P,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -104,7 +104,7 @@ else if (i1.T==101)
         float *Y;
         try { Y = new float[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::pow_c(Y,X,P,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+        if (codee::pow_c(Y,X,P,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

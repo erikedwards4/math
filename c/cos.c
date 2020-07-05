@@ -11,44 +11,38 @@ namespace codee {
 extern "C" {
 #endif
 
-int cos_s (float *Y, const float *X, const int N);
-int cos_d (double *Y, const double *X, const int N);
-int cos_c (float *Y, const float *X, const int N);
-int cos_z (double *Y, const double *X, const int N);
+int cos_s (float *Y, const float *X, const size_t N);
+int cos_d (double *Y, const double *X, const size_t N);
+int cos_c (float *Y, const float *X, const size_t N);
+int cos_z (double *Y, const double *X, const size_t N);
 
-int cos_inplace_s (float *X, const int N);
-int cos_inplace_d (double *X, const int N);
-int cos_inplace_c (float *X, const int N);
-int cos_inplace_z (double *X, const int N);
+int cos_inplace_s (float *X, const size_t N);
+int cos_inplace_d (double *X, const size_t N);
+int cos_inplace_c (float *X, const size_t N);
+int cos_inplace_z (double *X, const size_t N);
 
 
-int cos_s (float *Y, const float *X, const int N)
+int cos_s (float *Y, const float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in cos_s: N (num elements X) must be nonnegative\n"); return 1; }
-
-    for (int n=0; n<N; n++) { Y[n] = cosf(X[n]); }
+    for (size_t n=0; n<N; n++) { Y[n] = cosf(X[n]); }
 
     return 0;
 }
 
 
-int cos_d (double *Y, const double *X, const int N)
+int cos_d (double *Y, const double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in cos_d: N (num elements X) must be nonnegative\n"); return 1; }
-
-    for (int n=0; n<N; n++) { Y[n] = cos(X[n]); }
+    for (size_t n=0; n<N; n++) { Y[n] = cos(X[n]); }
     
     return 0;
 }
 
 
-int cos_c (float *Y, const float *X, const int N)
+int cos_c (float *Y, const float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in cos_c: N (num elements X) must be nonnegative\n"); return 1; }
-
     _Complex float y;
 
-    for (int n2=0; n2<2*N; n2+=2)
+    for (size_t n2=0; n2<2*N; n2+=2)
     {
         y = ccosf(X[n2]+1.0if*X[n2+1]);
         memcpy(&Y[n2],(float *)&y,2*sizeof(float));
@@ -58,13 +52,11 @@ int cos_c (float *Y, const float *X, const int N)
 }
 
 
-int cos_z (double *Y, const double *X, const int N)
+int cos_z (double *Y, const double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in cos_z: N (num elements X) must be nonnegative\n"); return 1; }
-
     _Complex double y;
 
-    for (int n2=0; n2<2*N; n2+=2)
+    for (size_t n2=0; n2<2*N; n2+=2)
     {
         y = ccos(X[n2]+1.0i*X[n2+1]);
         memcpy(&Y[n2],(double *)&y,2*sizeof(double));
@@ -74,33 +66,27 @@ int cos_z (double *Y, const double *X, const int N)
 }
 
 
-int cos_inplace_s (float *X, const int N)
+int cos_inplace_s (float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in cos_inplace_s: N (num elements X) must be nonnegative\n"); return 1; }
-
-    for (int n=0; n<N; n++) { X[n] = cosf(X[n]); }
+    for (size_t n=0; n<N; n++) { X[n] = cosf(X[n]); }
 
     return 0;
 }
 
 
-int cos_inplace_d (double *X, const int N)
+int cos_inplace_d (double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in cos_inplace_d: N (num elements X) must be nonnegative\n"); return 1; }
-
-    for (int n=0; n<N; n++) { X[n] = cos(X[n]); }
+    for (size_t n=0; n<N; n++) { X[n] = cos(X[n]); }
     
     return 0;
 }
 
 
-int cos_inplace_c (float *X, const int N)
+int cos_inplace_c (float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in cos_inplace_c: N (num elements X) must be nonnegative\n"); return 1; }
-    
     _Complex float x;
 
-    for (int n2=0; n2<2*N; n2+=2)
+    for (size_t n2=0; n2<2*N; n2+=2)
     {
         x = ccosf(X[n2]+1.0if*X[n2+1]);
         memcpy(&X[n2],(float *)&x,2*sizeof(float));
@@ -110,13 +96,11 @@ int cos_inplace_c (float *X, const int N)
 }
 
 
-int cos_inplace_z (double *X, const int N)
+int cos_inplace_z (double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in cos_inplace_z: N (num elements X) must be nonnegative\n"); return 1; }
-
     _Complex double x;
 
-    for (int n2=0; n2<2*N; n2+=2)
+    for (size_t n2=0; n2<2*N; n2+=2)
     {
         x = ccos(X[n2]+1.0i*X[n2+1]);
         memcpy(&X[n2],(double *)&x,2*sizeof(double));

@@ -2,14 +2,12 @@
 //@date 2019-2020
 
 
-#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -23,7 +21,6 @@
 int main(int argc, char *argv[])
 {
     using namespace std;
-    timespec tic, toc;
 
 
     //Declarations
@@ -142,7 +139,6 @@ int main(int argc, char *argv[])
 
 
     //Process
-    clock_gettime(CLOCK_REALTIME,&tic);
     if (i1.T==1)
     {
         float *X; //, *Y;
@@ -152,7 +148,7 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::asum_inplace_s(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor()))
+        if (codee::asum_inplace_s(X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -170,7 +166,7 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::asum_inplace_d(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor()))
+        if (codee::asum_inplace_d(X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -188,7 +184,7 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::asum_inplace_c(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor()))
+        if (codee::asum_inplace_c(X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -206,7 +202,7 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::asum_inplace_z(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),dim,i1.iscolmajor()))
+        if (codee::asum_inplace_z(X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -219,8 +215,6 @@ int main(int argc, char *argv[])
     {
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
-    clock_gettime(CLOCK_REALTIME,&toc);
-    cerr << "elapsed time = " << (toc.tv_sec-tic.tv_sec)*1e3 + (toc.tv_nsec-tic.tv_nsec)/1e6 << " ms" << endl;
     
 
     //Exit

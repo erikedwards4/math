@@ -21,17 +21,15 @@ int row_inplace_z (double *X, const size_t R, const size_t C, const size_t S, co
 
 int row_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t r)
 {
-    if (R<=r) { fprintf(stderr,"error in row_s: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
+    if (r>R) { fprintf(stderr,"error in row_s: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
 
     if (iscolmajor)
     {
-        size_t n = 0, m = r;
-        for (size_t h=0; h<H; h++)
+        for (size_t h=0, n=0, m=r; h<H; h++)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, m+=R*C, n+=R)
             {
                 cblas_scopy((int)C,&X[m],(int)R,&Y[n],1);
-                m += R*C; n += R;
             }
         }
     }
@@ -46,17 +44,15 @@ int row_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
 int row_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t r)
 {
-    if (R<=r) { fprintf(stderr,"error in row_d: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
+    if (r>R) { fprintf(stderr,"error in row_d: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
 
     if (iscolmajor)
     {
-        size_t n = 0, m = r;
-        for (size_t h=0; h<H; h++)
+        for (size_t h=0, n=0, m=r; h<H; h++)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, m+=R*C, n+=R)
             {
                 cblas_dcopy((int)C,&X[m],(int)R,&Y[n],1);
-                m += R*C; n += R;
             }
         }
     }
@@ -71,17 +67,15 @@ int row_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
 int row_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t r)
 {
-    if (R<=r) { fprintf(stderr,"error in row_c: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
+    if (r>R) { fprintf(stderr,"error in row_c: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
 
     if (iscolmajor)
     {
-        size_t n = 0, m = 2*r;
-        for (size_t h=0; h<H; h++)
+        for (size_t h=0, n=0, m=2*r; h<H; h++)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, m+=2*R*C, n+=2*R)
             {
                 cblas_ccopy((int)C,&X[m],(int)R,&Y[n],1);
-                m += 2*R*C; n += 2*R;
             }
         }
     }
@@ -96,17 +90,15 @@ int row_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
 int row_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t r)
 {
-    if (R<=r) { fprintf(stderr,"error in row_z: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
+    if (r>R) { fprintf(stderr,"error in row_z: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
 
     if (iscolmajor)
     {
-        size_t n = 0, m = 2*r;
-        for (size_t h=0; h<H; h++)
+        for (size_t h=0, n=0, m=2*r; h<H; h++)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, m+=2*R*C, n+=2*R)
             {
                 cblas_zcopy((int)C,&X[m],(int)R,&Y[n],1);
-                m += 2*R*C; n += 2*R;
             }
         }
     }
@@ -121,17 +113,15 @@ int row_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
 int row_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t r)
 {
-    if (R<=r) { fprintf(stderr,"error in row_inplace_s: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
+    if (r>R) { fprintf(stderr,"error in row_inplace_s: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
 
     if (iscolmajor)
     {
-        size_t n = 0, m = r;
-        for (size_t h=0; h<H; h++)
+        for (size_t h=0, n=0, m=r; h<H; h++)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, m+=R*C, n+=R)
             {
                 cblas_scopy((int)C,&X[m],(int)R,&X[n],1);
-                m += R*C; n += R;
             }
         }
     }
@@ -146,17 +136,15 @@ int row_inplace_s (float *X, const size_t R, const size_t C, const size_t S, con
 
 int row_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t r)
 {
-    if (R<=r) { fprintf(stderr,"error in row_inplace_d: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
+    if (r>R) { fprintf(stderr,"error in row_inplace_d: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
 
     if (iscolmajor)
     {
-        size_t n = 0, m = r;
-        for (size_t h=0; h<H; h++)
+        for (size_t h=0, n=0, m=r; h<H; h++)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, m+=R*C, n+=R)
             {
                 cblas_dcopy((int)C,&X[m],(int)R,&X[n],1);
-                m += R*C; n += R;
             }
         }
     }
@@ -171,17 +159,15 @@ int row_inplace_d (double *X, const size_t R, const size_t C, const size_t S, co
 
 int row_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t r)
 {
-    if (R<=r) { fprintf(stderr,"error in row_inplace_c: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
+    if (r>R) { fprintf(stderr,"error in row_inplace_c: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
 
     if (iscolmajor)
     {
-        size_t n = 0, m = 2*r;
-        for (size_t h=0; h<H; h++)
+        for (size_t h=0, n=0, m=2*r; h<H; h++)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, m+=2*R*C, n+=2*R)
             {
                 cblas_ccopy((int)C,&X[m],(int)R,&X[n],1);
-                m += 2*R*C; n += 2*R;
             }
         }
     }
@@ -196,17 +182,15 @@ int row_inplace_c (float *X, const size_t R, const size_t C, const size_t S, con
 
 int row_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t r)
 {
-    if (R<=r) { fprintf(stderr,"error in row_inplace_z: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
+    if (r>R) { fprintf(stderr,"error in row_inplace_z: R (nrows X) must be greater than r (row num to select)\n"); return 1; }
 
     if (iscolmajor)
     {
-        size_t n = 0, m = 2*r;
-        for (size_t h=0; h<H; h++)
+        for (size_t h=0, n=0, m=2*r; h<H; h++)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, m+=2*R*C, n+=2*R)
             {
                 cblas_zcopy((int)C,&X[m],(int)R,&X[n],1);
-                m += 2*R*C; n += 2*R;
             }
         }
     }

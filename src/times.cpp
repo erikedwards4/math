@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -147,7 +146,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i1.N()==o1.N())
         {
-            if (codee::times_inplace_s(X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+            if (codee::times_inplace_s(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -160,7 +159,7 @@ int main(int argc, char *argv[])
             float *Y;
             try { Y = new float[o1.N()]; }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-            if (codee::times_s(Y,X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+            if (codee::times_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -184,7 +183,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i1.N()==o1.N())
         {
-            if (codee::times_inplace_d(X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+            if (codee::times_inplace_d(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -197,7 +196,7 @@ int main(int argc, char *argv[])
             double *Y;
             try { Y = new double[o1.N()]; }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-            if (codee::times_d(Y,X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+            if (codee::times_d(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -221,7 +220,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i1.N()==o1.N())
         {
-            if (codee::times_inplace_c(X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+            if (codee::times_inplace_c(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -234,7 +233,7 @@ int main(int argc, char *argv[])
             float *Y;
             try { Y = new float[2u*o1.N()]; }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-            if (codee::times_c(Y,X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+            if (codee::times_c(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -258,7 +257,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i1.N()==o1.N())
         {
-            if (codee::times_inplace_z(X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+            if (codee::times_inplace_z(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -271,7 +270,7 @@ int main(int argc, char *argv[])
             double *Y;
             try { Y = new double[2u*o1.N()]; }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-            if (codee::times_z(Y,X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+            if (codee::times_z(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {

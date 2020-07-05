@@ -11,46 +11,40 @@ namespace codee {
 extern "C" {
 #endif
 
-int asinh_s (float *Y, const float *X, const int N);
-int asinh_d (double *Y, const double *X, const int N);
-int asinh_c (float *Y, const float *X, const int N);
-int asinh_z (double *Y, const double *X, const int N);
+int asinh_s (float *Y, const float *X, const size_t N);
+int asinh_d (double *Y, const double *X, const size_t N);
+int asinh_c (float *Y, const float *X, const size_t N);
+int asinh_z (double *Y, const double *X, const size_t N);
 
-int asinh_inplace_s (float *X, const int N);
-int asinh_inplace_d (double *X, const int N);
-int asinh_inplace_c (float *X, const int N);
-int asinh_inplace_z (double *X, const int N);
+int asinh_inplace_s (float *X, const size_t N);
+int asinh_inplace_d (double *X, const size_t N);
+int asinh_inplace_c (float *X, const size_t N);
+int asinh_inplace_z (double *X, const size_t N);
 
 
-int asinh_s (float *Y, const float *X, const int N)
+int asinh_s (float *Y, const float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in asinh_s: N (num elements X) must be nonnegative\n"); return 1; }
-
-    //for (int n=0; n<N; n++) { Y[n] = asinhf(X[n]); }
-    for (int n=0; n<N; n++) { Y[n] = logf(X[n] + sqrtf(fmaf(X[n],X[n],1.0f))); }
+    //for (size_t n=0; n<N; n++) { Y[n] = asinhf(X[n]); }
+    for (size_t n=0; n<N; n++) { Y[n] = logf(X[n] + sqrtf(fmaf(X[n],X[n],1.0f))); }
 
     return 0;
 }
 
 
-int asinh_d (double *Y, const double *X, const int N)
+int asinh_d (double *Y, const double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in asinh_d: N (num elements X) must be nonnegative\n"); return 1; }
-
-    //for (int n=0; n<N; n++) { Y[n] = asinh(X[n]); }
-    for (int n=0; n<N; n++) { Y[n] = log(X[n] + sqrt(fma(X[n],X[n],1.0))); }
+    //for (size_t n=0; n<N; n++) { Y[n] = asinh(X[n]); }
+    for (size_t n=0; n<N; n++) { Y[n] = log(X[n] + sqrt(fma(X[n],X[n],1.0))); }
     
     return 0;
 }
 
 
-int asinh_c (float *Y, const float *X, const int N)
+int asinh_c (float *Y, const float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in asinh_c: N (num elements X) must be nonnegative\n"); return 1; }
-
     _Complex float x, y;
 
-    for (int n2=0; n2<2*N; n2+=2)
+    for (size_t n2=0; n2<2*N; n2+=2)
     {
         //y = casinhf(X[n2]+1.0if*X[n2+1]);
         x = X[n2] + 1.0if*X[n2+1];
@@ -62,13 +56,11 @@ int asinh_c (float *Y, const float *X, const int N)
 }
 
 
-int asinh_z (double *Y, const double *X, const int N)
+int asinh_z (double *Y, const double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in asinh_z: N (num elements X) must be nonnegative\n"); return 1; }
-
     _Complex double x, y;
 
-    for (int n2=0; n2<2*N; n2+=2)
+    for (size_t n2=0; n2<2*N; n2+=2)
     {
         //y = casinh(X[n2]+1.0i*X[n2+1]);
         x = X[n2] + 1.0i*X[n2+1];
@@ -80,35 +72,29 @@ int asinh_z (double *Y, const double *X, const int N)
 }
 
 
-int asinh_inplace_s (float *X, const int N)
+int asinh_inplace_s (float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in asinh_inplace_s: N (num elements X) must be nonnegative\n"); return 1; }
-
-    //for (int n=0; n<N; n++) { X[n] = asinhf(X[n]); }
-    for (int n=0; n<N; n++) { X[n] = logf(X[n] + sqrtf(fmaf(X[n],X[n],1.0f))); }
+    //for (size_t n=0; n<N; n++) { X[n] = asinhf(X[n]); }
+    for (size_t n=0; n<N; n++) { X[n] = logf(X[n] + sqrtf(fmaf(X[n],X[n],1.0f))); }
 
     return 0;
 }
 
 
-int asinh_inplace_d (double *X, const int N)
+int asinh_inplace_d (double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in asinh_inplace_d: N (num elements X) must be nonnegative\n"); return 1; }
-
-    //for (int n=0; n<N; n++) { X[n] = asinh(X[n]); }
-    for (int n=0; n<N; n++) { X[n] = log(X[n] + sqrt(fma(X[n],X[n],1.0))); }
+    //for (size_t n=0; n<N; n++) { X[n] = asinh(X[n]); }
+    for (size_t n=0; n<N; n++) { X[n] = log(X[n] + sqrt(fma(X[n],X[n],1.0))); }
     
     return 0;
 }
 
 
-int asinh_inplace_c (float *X, const int N)
+int asinh_inplace_c (float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in asinh_inplace_c: N (num elements X) must be nonnegative\n"); return 1; }
-
     _Complex float x;
 
-    for (int n2=0; n2<2*N; n2+=2)
+    for (size_t n2=0; n2<2*N; n2+=2)
     {
         //x = casinhf(X[n2]+1.0if*X[n2+1]);
         x = X[n2] + 1.0if*X[n2+1];
@@ -120,13 +106,11 @@ int asinh_inplace_c (float *X, const int N)
 }
 
 
-int asinh_inplace_z (double *X, const int N)
+int asinh_inplace_z (double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in asinh_inplace_z: N (num elements X) must be nonnegative\n"); return 1; }
-    
     _Complex double x;
 
-    for (int n2=0; n2<2*N; n2+=2)
+    for (size_t n2=0; n2<2*N; n2+=2)
     {
         //x = casinh(X[n2]+1.0i*X[n2+1]);
         x = X[n2] + 1.0i*X[n2+1];

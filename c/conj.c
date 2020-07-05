@@ -13,33 +13,29 @@ namespace codee {
 extern "C" {
 #endif
 
-int conj_c (float *Y, const float *X, const int N);
-int conj_z (double *Y, const double *X, const int N);
+int conj_c (float *Y, const float *X, const size_t N);
+int conj_z (double *Y, const double *X, const size_t N);
 
-int conj_inplace_c (float *X, const int N);
-int conj_inplace_z (double *X, const int N);
+int conj_inplace_c (float *X, const size_t N);
+int conj_inplace_z (double *X, const size_t N);
 
 
-int conj_c (float *Y, const float *X, const int N)
+int conj_c (float *Y, const float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in conj_s: N (num elements X) must be nonnegative\n"); return 1; }
-
-    cblas_scopy(2*N,X,1,Y,1);
-    cblas_sscal(N,-1.0f,&Y[1],2);
+    cblas_scopy(2*(int)N,X,1,Y,1);
+    cblas_sscal((int)N,-1.0f,&Y[1],2);
 
     return 0;
 }
 
 
-int conj_z (double *Y, const double *X, const int N)
+int conj_z (double *Y, const double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in conj_z: N (num elements X) must be nonnegative\n"); return 1; }
-
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
 
-    cblas_dcopy(2*N,X,1,Y,1);
-    cblas_dscal(N,-1.0,&Y[1],2);
+    cblas_dcopy(2*(int)N,X,1,Y,1);
+    cblas_dscal((int)N,-1.0,&Y[1],2);
     //for (n=0; n<2*N; n+=2) { Y[n] = X[n]; }
     //for (n=1; n<2*N; n+=2) { Y[n] = -X[n]; }
 
@@ -50,26 +46,22 @@ int conj_z (double *Y, const double *X, const int N)
 }
 
 
-int conj_inplace_c (float *X, const int N)
+int conj_inplace_c (float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in conj_inplace_c: N (num elements X) must be nonnegative\n"); return 1; }
-
-    for (int n=1; n<N; n+=2) { X[n] = -X[n]; }
+    for (size_t n=1; n<N; n+=2) { X[n] = -X[n]; }
     
     return 0;
 }
 
 
-int conj_inplace_z (double *X, const int N)
+int conj_inplace_z (double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in conj_inplace_z: N (num elements X) must be nonnegative\n"); return 1; }
-
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
 
-    //LAPACKE_zlacgv_work(N,(_Complex double *)X,1);
-    //cblas_dscal(N,-1.0,&X[1],2);
-    for (int n=1; n<N; n+=2) { X[n] = -X[n]; }
+    //LAPACKE_zlacgv_work((int)N,(_Complex double *)X,1);
+    //cblas_dscal((int)N,-1.0,&X[1],2);
+    for (size_t n=1; n<N; n+=2) { X[n] = -X[n]; }
     
     //clock_gettime(CLOCK_REALTIME,&toc);
     //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);

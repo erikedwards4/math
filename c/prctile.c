@@ -45,9 +45,6 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C,const si
     float w1, w2;
     float *X1; //1 row or col of X
 
-    if (R<1) { fprintf(stderr,"error in prctile_s: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in prctile_s: C (ncols X) must be positive\n"); return 1; }
-
     //Prep interpolation weights
     w2 = (dim==0) ? (p/100.0f)*(R-1) : (p/100.0f)*(C-1);
     n1 = (int)floorf(w2); n2 = n1 + 1;
@@ -112,9 +109,6 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C,const 
     int r, c, n1, n2;
     double w1, w2;
     double *X1; //1 row or col of X
-
-    if (R<1) { fprintf(stderr,"error in prctile_d: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in prctile_d: C (ncols X) must be positive\n"); return 1; }
 
     //Prep interpolation weights
     w2 = (dim==0) ? (p/100.0)*(R-1) : (p/100.0)*(C-1);

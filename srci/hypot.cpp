@@ -58,7 +58,7 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
     if (i1.N()==o1.N())
     {
-        if (codee::hypot_inplace_s(X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+        if (codee::hypot_inplace_s(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -71,7 +71,7 @@ if (i1.T==1)
         float *Y;
         try { Y = new float[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::hypot_s(Y,X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+        if (codee::hypot_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -95,7 +95,7 @@ else if (i1.T==101)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
     if (i1.N()==o1.N())
     {
-        if (codee::hypot_inplace_c(X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+        if (codee::hypot_inplace_c(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -108,7 +108,7 @@ else if (i1.T==101)
         float *Y;
         try { Y = new float[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::hypot_c(Y,X1,X2,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(i2.R),int(i2.C),int(i2.S),int(i2.H),o1.iscolmajor()))
+        if (codee::hypot_c(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

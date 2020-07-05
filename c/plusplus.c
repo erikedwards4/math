@@ -8,25 +8,21 @@ namespace codee {
 extern "C" {
 #endif
 
-int plusplus_s (float *X, const int N);
-int plusplus_d (double *X, const int N);
+int plusplus_s (float *X, const size_t N);
+int plusplus_d (double *X, const size_t N);
 
 
-int plusplus_s (float *X, const int N)
+int plusplus_s (float *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in plusplus_s: N (num elements X) must be nonnegative\n"); return 1; }
-
-    for (int n=0; n<N; n++) { X[n]++; }
+    for (size_t n=0; n<N; n++) { X[n]++; }
 
     return 0;
 }
 
 
-int plusplus_d (double *X, const int N)
+int plusplus_d (double *X, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in plusplus_d: N (num elements X) must be nonnegative\n"); return 1; }
-
-    for (int n=0; n<N; n++) { X[n]++; }
+    for (size_t n=0; n<N; n++) { X[n]++; }
     
     return 0;
 }

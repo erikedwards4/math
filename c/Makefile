@@ -185,7 +185,7 @@ proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
-#Stats: some basic statistics calculated row-wise or column-wise
+#Stats: some basic statistics calculated along rows, cols, etc.
 Stats: Sums Prctiles Ranges Moments Norms Other_Stats
 
 Sums: sum asum cnt

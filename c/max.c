@@ -32,9 +32,6 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
     float mx;
     //struct timespec tic, toc;
 
-    if (R<1) { fprintf(stderr,"error in max_s: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in max_s: C (ncols X) must be positive\n"); return 1; }
-
     //clock_gettime(CLOCK_REALTIME,&tic);
     if (dim==0)
     {
@@ -94,9 +91,6 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C,const size
     int r, c;
     double mx;
 
-    if (R<1) { fprintf(stderr,"error in max_d: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in max_d: C (ncols X) must be positive\n"); return 1; }
-
     if (dim==0)
     {
         if (iscolmajor)
@@ -152,9 +146,6 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C,const size_t
 {
     int r, c;
 
-    if (R<1) { fprintf(stderr,"error in max_c: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in max_c: C (ncols X) must be positive\n"); return 1; }
-
     if (dim==0)
     {
         if (iscolmajor)
@@ -205,9 +196,6 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C,const size_t
 int max_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
-
-    if (R<1) { fprintf(stderr,"error in max_z: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in max_z: C (ncols X) must be positive\n"); return 1; }
 
     if (dim==0)
     {
@@ -261,11 +249,8 @@ int max_inplace_s (float *X, const size_t R, const size_t C,const size_t S, cons
     float mx;
     int r, c;
     //struct timespec tic, toc;
-
-    if (R<1) { fprintf(stderr,"error in max_inplace_s: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in max_inplace_s: C (ncols X) must be positive\n"); return 1; }
-
     //clock_gettime(CLOCK_REALTIME,&tic);
+
     if (dim==0)
     {
         if (iscolmajor)
@@ -336,9 +321,6 @@ int max_inplace_d (double *X, const size_t R, const size_t C,const size_t S, con
     double mx;
     int r, c;
 
-    if (R<1) { fprintf(stderr,"error in max_inplace_d: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in max_inplace_d: C (ncols X) must be positive\n"); return 1; }
-
     if (dim==0)
     {
         if (iscolmajor)
@@ -406,9 +388,6 @@ int max_inplace_c (float *X, const size_t R, const size_t C,const size_t S, cons
 {
     int r, c;
 
-    if (R<1) { fprintf(stderr,"error in max_inplace_c: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in max_inplace_c: C (ncols X) must be positive\n"); return 1; }
-
     if (dim==0)
     {
         if (iscolmajor)
@@ -459,9 +438,6 @@ int max_inplace_c (float *X, const size_t R, const size_t C,const size_t S, cons
 int max_inplace_z (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
-
-    if (R<1) { fprintf(stderr,"error in max_inplace_z: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in max_inplace_z: C (ncols X) must be positive\n"); return 1; }
 
     if (dim==0)
     {

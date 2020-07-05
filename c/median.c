@@ -43,9 +43,6 @@ int median_s (float *Y, const float *X, const size_t R, const size_t C,const siz
     int r, c;
     float *X1; //1 row or col of X
 
-    if (R<1) { fprintf(stderr,"error in median_s: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in median_s: C (ncols X) must be positive\n"); return 1; }
-
     if (dim==0)
     {
         if (!(X1=(float *)malloc((size_t)R*sizeof(float)))) { fprintf(stderr,"error in median_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -104,9 +101,6 @@ int median_d (double *Y, const double *X, const size_t R, const size_t C,const s
 {
     int r, c;
     double *X1; //1 row or col of X
-
-    if (R<1) { fprintf(stderr,"error in median_d: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in median_d: C (ncols X) must be positive\n"); return 1; }
 
     if (dim==0)
     {

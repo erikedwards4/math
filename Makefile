@@ -259,7 +259,7 @@ lgamma: srci/lgamma.cpp c/lgamma.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 #Nonlin: other 1 input, 1 output static nonlinearities
-Nonlin: abs square cube sqrt cbrt pow deadzone
+Nonlin: abs square cube sqrt cbrt deadzone
 abs: srci/abs.cpp c/abs.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 square: srci/square.cpp c/square.c
@@ -314,7 +314,7 @@ proj: srci/proj.cpp c/proj.c
 
 
 
-#Stats: some basic statistics calculated row-wise or column-wise
+#Stats: some basic statistics calculated along rows, cols, etc.
 Stats: Sums Prctiles Ranges Moments Norms Other_Stats
 
 Sums: sum asum cnt

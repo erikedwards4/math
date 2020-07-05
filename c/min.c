@@ -31,48 +31,43 @@ int min_inplace_z (double *X, const size_t R, const size_t C,const size_t S, con
 
 int min_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in min_s: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in min_s: C (ncols X) must be positive\n"); return 1; }
-    if (S<1) { fprintf(stderr,"error in min_s: S (num slices X) must be positive\n"); return 1; }
-    if (H<1) { fprintf(stderr,"error in min_s: H (num hyperslices X) must be positive\n"); return 1; }
-
-    const int RC = R*C, SH = S*H, N = RC*SH;
-    const int N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N1==1) { cblas_scopy(N,X,1,Y,1); }
     else if (N1==N)
     {
         Y[0] = X[0];
-        for (int n=1; n<N; n++) { if (X[n]<Y[0]) { Y[0] = X[n]; } }
+        for (size_t n=1; n<N; n++) { if (X[n]<Y[0]) { Y[0] = X[n]; } }
     }
     else if (SH==1)
     {
-        const int N2 = N/N1;
+        const size_t N2 = N/N1;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
             struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-            for (int n2=0, n=0; n2<N2; n2++)
+            for (size_t n2=0, n=0; n2<N2; n2++)
             {
                 Y[n2] = X[n]; n++;
-                for (int n1=1; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
+                for (size_t n1=1; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
             }
-            // for (int n2=0; n2<N2; n2++, Y++)
+            // for (size_t n2=0; n2<N2; n2++, Y++)
             // {
             //     *Y = *X; X++;
-            //     for (int n1=1; n1<N1; n1++, X++) { if (*X<*Y) { *Y = *X; } }
+            //     for (size_t n1=1; n1<N1; n1++, X++) { if (*X<*Y) { *Y = *X; } }
             // }
             clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
         }
         else
         {
-            for (int n2=0; n2<N2; n2++, Y++)
+            for (size_t n2=0; n2<N2; n2++, Y++)
             {
                 //Y[n2] = X[n2];  //so strange, this is slower here, but faster above and below
-                //for (int n1=1; n1<N1; n1++) { if (X[n1*N2+n2]<Y[n2]) { Y[n2] = X[n1*N2+n2]; } }
+                //for (size_t n1=1; n1<N1; n1++) { if (X[n1*N2+n2]<Y[n2]) { Y[n2] = X[n1*N2+n2]; } }
                 //float mn = X[n2];
-                //for (int n1=1; n1<N1; n1++) { if (X[n1*N2+n2]<mn) { mn = X[n1*N2+n2]; } }
+                //for (size_t n1=1; n1<N1; n1++) { if (X[n1*N2+n2]<mn) { mn = X[n1*N2+n2]; } }
                 *Y = X[n2];
-                for (int n1=1; n1<N1; n1++) { if (X[n1*N2+n2]<*Y) { *Y = X[n1*N2+n2]; } }
+                for (size_t n1=1; n1<N1; n1++) { if (X[n1*N2+n2]<*Y) { *Y = X[n1*N2+n2]; } }
             }
         }
     }
@@ -85,7 +80,7 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
                 for (size_t c=0; c<C; c++, n2++)
                 {
                     Y[n2] = X[n];
-                    for (int n1=0; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
+                    for (size_t n1=0; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
                 }
             }
         }
@@ -97,22 +92,22 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
             for (size_t c=0; c<C; c++, n2++)
             {
                 Y[n2] = X[n];
-                for (int n1=0; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
+                for (size_t n1=0; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
             }
         }
     }
     else
     {
-        const int M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const int L = N/(M*N1);
-        const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const int J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (int l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t L = N/(M*N1);
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
         {
-            for (int m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, n+=J, n2++)
             {
                 Y[n2] = X[n];
-                for (int n1=0; n1<N1; n1+=K) { if (X[n+n1]<Y[n2]) { Y[n2] = X[n+n1]; } }
+                for (size_t n1=0; n1<N1; n1+=K) { if (X[n+n1]<Y[n2]) { Y[n2] = X[n+n1]; } }
             }
         }
     }
@@ -123,37 +118,32 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
 
 int min_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in min_d: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in min_d: C (ncols X) must be positive\n"); return 1; }
-    if (S<1) { fprintf(stderr,"error in min_d: S (num slices X) must be positive\n"); return 1; }
-    if (H<1) { fprintf(stderr,"error in min_d: H (num hyperslices X) must be positive\n"); return 1; }
-
-    const int RC = R*C, SH = S*H, N = RC*SH;
-    const int N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N1==1) { cblas_dcopy(N,X,1,Y,1); }
     else if (N1==N)
     {
         Y[0] = X[0];
-        for (int n=1; n<N; n++) { if (X[n]<Y[0]) { Y[0] = X[n]; } }
+        for (size_t n=1; n<N; n++) { if (X[n]<Y[0]) { Y[0] = X[n]; } }
     }
     else if (SH==1)
     {
-        const int N2 = N/N1;
+        const size_t N2 = N/N1;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (int n2=0, n=0; n2<N2; n2++)
+            for (size_t n2=0, n=0; n2<N2; n2++)
             {
                 Y[n2] = X[n]; n++;
-                for (int n1=1; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
+                for (size_t n1=1; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
             }
         }
         else
         {
-            for (int n2=0; n2<N2; n2++)
+            for (size_t n2=0; n2<N2; n2++)
             {
                 double mn = X[n2];
-                for (int n1=1; n1<N1; n1++) { if (X[n1*N2+n2]<mn) { mn = X[n1*N2+n2]; } }
+                for (size_t n1=1; n1<N1; n1++) { if (X[n1*N2+n2]<mn) { mn = X[n1*N2+n2]; } }
                 Y[n2] = mn;
             }
         }
@@ -167,7 +157,7 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C,const size
                 for (size_t c=0; c<C; c++, n2++)
                 {
                     Y[n2] = X[n];
-                    for (int n1=0; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
+                    for (size_t n1=0; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
                 }
             }
         }
@@ -179,22 +169,22 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C,const size
             for (size_t c=0; c<C; c++, n2++)
             {
                 Y[n2] = X[n];
-                for (int n1=0; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
+                for (size_t n1=0; n1<N1; n1++, n++) { if (X[n]<Y[n2]) { Y[n2] = X[n]; } }
             }
         }
     }
     else
     {
-        const int M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const int L = N/(M*N1);
-        const int K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const int J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (int l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t L = N/(M*N1);
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
         {
-            for (int m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, n+=J, n2++)
             {
                 Y[n2] = X[n];
-                for (int n1=0; n1<N1; n1+=K) { if (X[n+n1]<Y[n2]) { Y[n2] = X[n+n1]; } }
+                for (size_t n1=0; n1<N1; n1+=K) { if (X[n+n1]<Y[n2]) { Y[n2] = X[n+n1]; } }
             }
         }
     }
@@ -205,11 +195,6 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C,const size
 
 // int min_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 // {
-//     int r, c;
-
-//     if (R<1) { fprintf(stderr,"error in min_c: R (nrows X) must be positive\n"); return 1; }
-//     if (C<1) { fprintf(stderr,"error in min_c: C (ncols X) must be positive\n"); return 1; }
-
 //     if (dim==0)
 //     {
 //         if (iscolmajor)
@@ -313,9 +298,6 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C,const size
 
 int min_inplace_s (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in min_inplace_s: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in min_inplace_s: C (ncols X) must be positive\n"); return 1; }
-
     int r, c;
     float mn;
     struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
@@ -386,9 +368,6 @@ int min_inplace_s (float *X, const size_t R, const size_t C,const size_t S, cons
 
 int min_inplace_d (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in min_inplace_d: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in min_inplace_d: C (ncols X) must be positive\n"); return 1; }
-    
     int r, c;
     double mn;
 
@@ -459,9 +438,6 @@ int min_inplace_c (float *X, const size_t R, const size_t C,const size_t S, cons
 {
     float mn, a2;
     int r, c;
-
-    if (R<1) { fprintf(stderr,"error in min_inplace_c: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in min_inplace_c: C (ncols X) must be positive\n"); return 1; }
 
     if (dim==0)
     {
@@ -534,9 +510,6 @@ int min_inplace_z (double *X, const size_t R, const size_t C,const size_t S, con
 {
     double mn, a2;
     int r, c;
-
-    if (R<1) { fprintf(stderr,"error in min_inplace_z: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in min_inplace_z: C (ncols X) must be positive\n"); return 1; }
 
     if (dim==0)
     {
