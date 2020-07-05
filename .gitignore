@@ -4,6 +4,7 @@ b2t
 *.so
 *.o
 **/c/old/
+**/c/old2/
 **/bin/
 **/obj/
 
