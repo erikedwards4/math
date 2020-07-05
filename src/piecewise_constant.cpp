@@ -8,11 +8,11 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
 #include <random>
+#include <complex>
 
 #ifdef I
 #undef I
@@ -127,22 +127,22 @@ int main(int argc, char *argv[])
     //Get o1.R
     if (a_nr->count==0) { o1.R = 1u; }
     else if (a_nr->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "R (nrows) must be nonnegative" << endl; return 1; }
-    else { o1.R = uint32_t(a_nr->ival[0]); }
+    else { o1.R = size_t(a_nr->ival[0]); }
 
     //Get o1.C
     if (a_nc->count==0) { o1.C = 1u; }
     else if (a_nc->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "C (ncols) must be nonnegative" << endl; return 1; }
-    else { o1.C = uint32_t(a_nc->ival[0]); }
+    else { o1.C = size_t(a_nc->ival[0]); }
 
     //Get o1.S
     if (a_ns->count==0) { o1.S = 1u; }
     else if (a_ns->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "S (nslices) must be nonnegative" << endl; return 1; }
-    else { o1.S = uint32_t(a_ns->ival[0]); }
+    else { o1.S = size_t(a_ns->ival[0]); }
 
     //Get o1.H
     if (a_nh->count==0) { o1.H = 1u; }
     else if (a_nh->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "H (nhyperslices) must be nonnegative" << endl; return 1; }
-    else { o1.H = uint32_t(a_nh->ival[0]); }
+    else { o1.H = size_t(a_nh->ival[0]); }
 
 
     //Checks
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(&Y[0]),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing data for output" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
     }
     else if (o1.T==2)
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(&Y[0]),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing data for output" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
     }
     else

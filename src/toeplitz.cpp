@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -147,12 +146,12 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i2.N()>0u)
         {
-            if (codee::toeplitz2_s(Y,X1,X2,int(i1.N()),int(i2.N()),o1.iscolmajor()))
+            if (codee::toeplitz2_s(Y,X1,X2,i1.N(),i2.N(),o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
         else
         {
-            if (codee::toeplitz1_s(Y,X1,int(i1.N())))
+            if (codee::toeplitz1_s(Y,X1,i1.N()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
         
@@ -178,12 +177,12 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i2.N()>0u)
         {
-            if (codee::toeplitz2_d(Y,X1,X2,int(i1.N()),int(i2.N()),o1.iscolmajor()))
+            if (codee::toeplitz2_d(Y,X1,X2,i1.N(),i2.N(),o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
         else
         {
-            if (codee::toeplitz1_d(Y,X1,int(i1.N())))
+            if (codee::toeplitz1_d(Y,X1,i1.N()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
         
@@ -209,12 +208,12 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i2.N()>0u)
         {
-            if (codee::toeplitz2_c(Y,X1,X2,int(i1.N()),int(i2.N()),o1.iscolmajor()))
+            if (codee::toeplitz2_c(Y,X1,X2,i1.N(),i2.N(),o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
         else
         {
-            if (codee::toeplitz1_c(Y,X1,int(i1.N())))
+            if (codee::toeplitz1_c(Y,X1,i1.N()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
         
@@ -240,12 +239,12 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i2.N()>0u)
         {
-            if (codee::toeplitz2_z(Y,X1,X2,int(i1.N()),int(i2.N()),o1.iscolmajor()))
+            if (codee::toeplitz2_z(Y,X1,X2,i1.N(),i2.N(),o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
         else
         {
-            if (codee::toeplitz1_z(Y,X1,int(i1.N())))
+            if (codee::toeplitz1_z(Y,X1,i1.N()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
         

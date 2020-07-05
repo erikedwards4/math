@@ -18,7 +18,7 @@ endif
 
 ifeq ($(CC),clang++)
 	STD=-std=c++11
-	WFLAG=-Weverything -Wno-c++98-compat -Wno-padded -Wno-old-style-cast -Wno-gnu-imaginary-constant -Wno-deprecated
+	WFLAG=-Weverything -Wno-c++98-compat -Wno-padded -Wno-gnu-imaginary-constant -Wno-deprecated -Wno-old-style-cast
 else
 	WFLAG=-Wall -Wextra
 endif

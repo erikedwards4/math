@@ -1,4 +1,4 @@
-//Sets all N elements of Y equal to infinity.
+//Sets all N elements of Y equal to infinity (HUGE_VAL).
 //For complex cases, only real part is set to infinity (HUGE_VAL).
 
 #include <stdio.h>
@@ -11,55 +11,47 @@ namespace codee {
 extern "C" {
 #endif
 
-int inf_s (float *Y, const int N);
-int inf_d (double *Y, const int N);
-int inf_c (float *Y, const int N);
-int inf_z (double *Y, const int N);
+int inf_s (float *Y, const size_t N);
+int inf_d (double *Y, const size_t N);
+int inf_c (float *Y, const size_t N);
+int inf_z (double *Y, const size_t N);
 
 
-int inf_s (float *Y, const int N)
+int inf_s (float *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in inf_s: N (num elements Y) must be nonnegative\n"); return 1; }
+    const float v = HUGE_VALF;
 
-    const float v = (float)HUGE_VAL;
-
-    cblas_scopy(N,&v,0,Y,1);
+    cblas_scopy((int)N,&v,0,Y,1);
 
     return 0;
 }
 
 
-int inf_d (double *Y, const int N)
+int inf_d (double *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in inf_d: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const double v = HUGE_VAL;
 
-    cblas_dcopy(N,&v,0,Y,1);
+    cblas_dcopy((int)N,&v,0,Y,1);
 
     return 0;
 }
 
 
-int inf_c (float *Y, const int N)
+int inf_c (float *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in inf_c: N (num elements Y) must be nonnegative\n"); return 1; }
+    const float v[2] = {HUGE_VALF,0.0f};
 
-    const float v[2] = {(float)HUGE_VAL,0.0f};
-
-    cblas_ccopy(N,v,0,Y,1);
+    cblas_ccopy((int)N,v,0,Y,1);
 
     return 0;
 }
 
 
-int inf_z (double *Y, const int N)
+int inf_z (double *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in inf_z: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const double v[2] = {HUGE_VAL,0.0};
 
-    cblas_zcopy(N,v,0,Y,1);
+    cblas_zcopy((int)N,v,0,Y,1);
 
     return 0;
 }

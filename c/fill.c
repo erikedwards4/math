@@ -2,7 +2,6 @@
 //For complex cases, only real part is set to val.
 
 #include <stdio.h>
-#include <float.h>
 #include <cblas.h>
 //#include <time.h>
 
@@ -11,51 +10,43 @@ namespace codee {
 extern "C" {
 #endif
 
-int fill_s (float *Y, const int N, const float val);
-int fill_d (double *Y, const int N, const double val);
-int fill_c (float *Y, const int N, const float val);
-int fill_z (double *Y, const int N, const double val);
+int fill_s (float *Y, const size_t N, const float val);
+int fill_d (double *Y, const size_t N, const double val);
+int fill_c (float *Y, const size_t N, const float val);
+int fill_z (double *Y, const size_t N, const double val);
 
 
-int fill_s (float *Y, const int N, const float val)
+int fill_s (float *Y, const size_t N, const float val)
 {
-    if (N<0) { fprintf(stderr,"error in fill_s: N (num elements Y) must be nonnegative\n"); return 1; }
-
-    cblas_scopy(N,&val,0,Y,1);
+    cblas_scopy((int)N,&val,0,Y,1);
 
     return 0;
 }
 
 
-int fill_d (double *Y, const int N, const double val)
+int fill_d (double *Y, const size_t N, const double val)
 {
-    if (N<0) { fprintf(stderr,"error in fill_d: N (num elements Y) must be nonnegative\n"); return 1; }
-
-    cblas_dcopy(N,&val,0,Y,1);
+    cblas_dcopy((int)N,&val,0,Y,1);
 
     return 0;
 }
 
 
-int fill_c (float *Y, const int N, const float val)
+int fill_c (float *Y, const size_t N, const float val)
 {
-    if (N<0) { fprintf(stderr,"error in fill_c: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const float v[2] = {val,0.0f};
 
-    cblas_ccopy(N,v,0,Y,1);
+    cblas_ccopy((int)N,v,0,Y,1);
 
     return 0;
 }
 
 
-int fill_z (double *Y, const int N, const double val)
+int fill_z (double *Y, const size_t N, const double val)
 {
-    if (N<0) { fprintf(stderr,"error in fill_z: N (num elements Y) must be nonnegative\n"); return 1; }
-    
     const double v[2] = {val,0.0};
 
-    cblas_zcopy(N,v,0,Y,1);
+    cblas_zcopy((int)N,v,0,Y,1);
 
     return 0;
 }

@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -35,7 +34,8 @@ int main(int argc, char *argv[])
     int8_t stdo1, wo1;
     ioinfo o1;
     double a, b;
-    int dim, N;
+    int dim;
+    size_t N;
 
 
     //Description
@@ -105,9 +105,9 @@ int main(int argc, char *argv[])
     if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
     //Get N
-    if (a_n->count==0) { N = 100; }
+    if (a_n->count==0) { N = 100u; }
     else if (a_n->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "N (length of Y) must be positive" << endl; return 1; }
-    else { N = a_n->ival[0]; }
+    else { N = size_t(a_n->ival[0]); }
 
     //Get o1.F
     if (a_ofmt->count==0) { o1.F = 147; }
@@ -128,10 +128,10 @@ int main(int argc, char *argv[])
 
 
     //Set output header info
-    o1.R = (dim==0) ? uint32_t(N) : 1u;
-    o1.C = (dim==1) ? uint32_t(N) : 1u;
-    o1.S = (dim==2) ? uint32_t(N) : 1u;
-    o1.H = (dim==3) ? uint32_t(N) : 1u;
+    o1.R = (dim==0) ? N : 1u;
+    o1.C = (dim==1) ? N : 1u;
+    o1.S = (dim==2) ? N : 1u;
+    o1.H = (dim==3) ? N : 1u;
 
 
     //Open output

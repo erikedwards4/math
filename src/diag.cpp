@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -115,8 +114,8 @@ int main(int argc, char *argv[])
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    if (k>=0) { o1.R = (int(i1.C)-k<int(i1.R)) ? i1.C-uint(k) : i1.R; }
-    else { o1.R = (int(i1.R)+k<int(i1.C)) ? i1.R-uint(-k) : i1.C; }
+    if (k>=0) { o1.R = (int(i1.C)-k<int(i1.R)) ? i1.C-size_t(k) : i1.R; }
+    else { o1.R = (int(i1.R)+k<int(i1.C)) ? i1.R-size_t(-k) : i1.C; }
     o1.C = 1u;
     o1.S = i1.S; o1.H = i1.H;
 
@@ -146,8 +145,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::diag_s(Y,X,int(i1.R),int(i1.C),i1.iscolmajor(),k))
-        if (codee::diag_inplace_s(X,int(i1.R),int(i1.C),i1.iscolmajor(),k))
+        //if (codee::diag_s(Y,X,i1.R,i1.C,i1.iscolmajor(),k))
+        if (codee::diag_inplace_s(X,i1.R,i1.C,i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -165,8 +164,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::diag_d(Y,X,int(i1.R),int(i1.C),i1.iscolmajor(),k))
-        if (codee::diag_inplace_d(X,int(i1.R),int(i1.C),i1.iscolmajor(),k))
+        //if (codee::diag_d(Y,X,i1.R,i1.C,i1.iscolmajor(),k))
+        if (codee::diag_inplace_d(X,i1.R,i1.C,i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -182,7 +181,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diag_inplace_c(X,int(i1.R),int(i1.C),i1.iscolmajor(),k))
+        if (codee::diag_inplace_c(X,i1.R,i1.C,i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -198,7 +197,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diag_inplace_z(X,int(i1.R),int(i1.C),i1.iscolmajor(),k))
+        if (codee::diag_inplace_z(X,i1.R,i1.C,i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

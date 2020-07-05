@@ -11,18 +11,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int asum_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int asum_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int asum_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int asum_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int asum_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int asum_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int asum_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int asum_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
 
-int asum_inplace_s (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int asum_inplace_d (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int asum_inplace_c (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int asum_inplace_z (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int asum_inplace_s (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int asum_inplace_d (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int asum_inplace_c (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int asum_inplace_z (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
 
 
-int asum_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int asum_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in asum_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in asum_s: C (ncols X) must be positive\n"); return 1; }
@@ -51,7 +51,7 @@ int asum_s (float *Y, const float *X, const int R, const int C,const int S, cons
 }
 
 
-int asum_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int asum_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in asum_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in asum_d: C (ncols X) must be positive\n"); return 1; }
@@ -77,7 +77,7 @@ int asum_d (double *Y, const double *X, const int R, const int C,const int S, co
 }
 
 
-int asum_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int asum_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in asum_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in asum_c: C (ncols X) must be positive\n"); return 1; }
@@ -103,7 +103,7 @@ int asum_c (float *Y, const float *X, const int R, const int C,const int S, cons
 }
 
 
-int asum_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int asum_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in asum_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in asum_z: C (ncols X) must be positive\n"); return 1; }
@@ -129,7 +129,7 @@ int asum_z (double *Y, const double *X, const int R, const int C,const int S, co
 }
 
 
-int asum_inplace_s (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int asum_inplace_s (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in asum_inplace_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in asum_inplace_s: C (ncols X) must be positive\n"); return 1; }
@@ -158,7 +158,7 @@ int asum_inplace_s (float *X, const int R, const int C,const int S, const int H,
 }
 
 
-int asum_inplace_d (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int asum_inplace_d (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in asum_inplace_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in asum_inplace_d: C (ncols X) must be positive\n"); return 1; }
@@ -184,7 +184,7 @@ int asum_inplace_d (double *X, const int R, const int C,const int S, const int H
 }
 
 
-int asum_inplace_c (float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int asum_inplace_c (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in asum_inplace_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in asum_inplace_c: C (ncols X) must be positive\n"); return 1; }
@@ -210,7 +210,7 @@ int asum_inplace_c (float *X, const int R, const int C,const int S, const int H,
 }
 
 
-int asum_inplace_z (double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int asum_inplace_z (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in asum_inplace_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in asum_inplace_z: C (ncols X) must be positive\n"); return 1; }

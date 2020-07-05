@@ -8,48 +8,45 @@ namespace codee {
 extern "C" {
 #endif
 
-int split2_s (float *Y1, float *Y2, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int split2_d (double *Y1, double *Y2, const double *X, const int R, const int C, const int dim, const char iscolmajor);
-int split2_c (float *Y1, float *Y2, const float *X, const int R, const int C, const int dim, const char iscolmajor);
-int split2_z (double *Y1, double *Y2, const double *X, const int R, const int C, const int dim, const char iscolmajor);
+int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const int dim, const char iscolmajor);
+int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const int dim, const char iscolmajor);
+int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const int dim, const char iscolmajor);
+int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const int dim, const char iscolmajor);
 
 
-int split2_s (float *Y1, float *Y2, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const int dim, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in split2_s: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in split2_s: C (ncols X) must be positive\n"); return 1; }
-
-    const int R2 = R/2, C2 = C/2;
+    const size_t R2 = R/2, C2 = C/2;
 
     if (dim==0)
     {
         if (iscolmajor)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                cblas_scopy(R2,&X[c*R],1,&Y1[c*R2],1);
-                cblas_scopy(R2,&X[c*R+R2],1,&Y2[c*R2],1);
+                cblas_scopy((int)R2,&X[c*R],1,&Y1[c*R2],1);
+                cblas_scopy((int)R2,&X[c*R+R2],1,&Y2[c*R2],1);
             }
         }
         else
         {
-            cblas_scopy(R*C2,X,1,Y1,1);
-            cblas_scopy(R*C2,&X[R*C2],1,Y2,1);
+            cblas_scopy((int)(R*C2),X,1,Y1,1);
+            cblas_scopy((int)(R*C2),&X[R*C2],1,Y2,1);
         }
     }
     else if (dim==1)
     {
         if (iscolmajor)
         {
-            cblas_scopy(R*C2,X,1,Y1,1);
-            cblas_scopy(R*C2,&X[R*C2],1,Y2,1);
+            cblas_scopy((int)(R*C2),X,1,Y1,1);
+            cblas_scopy((int)(R*C2),&X[R*C2],1,Y2,1);
         }
         else
         {
-            for (int r=0; r<R; r++)
+            for (size_t r=0; r<R; r++)
             {
-                cblas_scopy(C2,&X[r*C],1,&Y1[r*C2],1);
-                cblas_scopy(C2,&X[r*C+C2],1,&Y2[r*C2],1);
+                cblas_scopy((int)C2,&X[r*C],1,&Y1[r*C2],1);
+                cblas_scopy((int)C2,&X[r*C+C2],1,&Y2[r*C2],1);
             }
         }
     }
@@ -62,42 +59,39 @@ int split2_s (float *Y1, float *Y2, const float *X, const int R, const int C, co
 }
 
 
-int split2_d (double *Y1, double *Y2, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const int dim, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in split2_d: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in split2_d: C (ncols X) must be positive\n"); return 1; }
-
-    const int R2 = R/2, C2 = C/2;
+    const size_t R2 = R/2, C2 = C/2;
 
     if (dim==0)
     {
         if (iscolmajor)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                cblas_dcopy(R2,&X[c*R],1,&Y1[c*R2],1);
-                cblas_dcopy(R2,&X[c*R+R2],1,&Y2[c*R2],1);
+                cblas_dcopy((int)R2,&X[c*R],1,&Y1[c*R2],1);
+                cblas_dcopy((int)R2,&X[c*R+R2],1,&Y2[c*R2],1);
             }
         }
         else
         {
-            cblas_dcopy(R*C2,X,1,Y1,1);
-            cblas_dcopy(R*C2,&X[R*C2],1,Y2,1);
+            cblas_dcopy((int)(R*C2),X,1,Y1,1);
+            cblas_dcopy((int)(R*C2),&X[R*C2],1,Y2,1);
         }
     }
     else if (dim==1)
     {
         if (iscolmajor)
         {
-            cblas_dcopy(R*C2,X,1,Y1,1);
-            cblas_dcopy(R*C2,&X[R*C2],1,Y2,1);
+            cblas_dcopy((int)(R*C2),X,1,Y1,1);
+            cblas_dcopy((int)(R*C2),&X[R*C2],1,Y2,1);
         }
         else
         {
-            for (int r=0; r<R; r++)
+            for (size_t r=0; r<R; r++)
             {
-                cblas_dcopy(C2,&X[r*C],1,&Y1[r*C2],1);
-                cblas_dcopy(C2,&X[r*C+C2],1,&Y2[r*C2],1);
+                cblas_dcopy((int)C2,&X[r*C],1,&Y1[r*C2],1);
+                cblas_dcopy((int)C2,&X[r*C+C2],1,&Y2[r*C2],1);
             }
         }
     }
@@ -110,42 +104,39 @@ int split2_d (double *Y1, double *Y2, const double *X, const int R, const int C,
 }
 
 
-int split2_c (float *Y1, float *Y2, const float *X, const int R, const int C, const int dim, const char iscolmajor)
+int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const int dim, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in split2_c: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in split2_c: C (ncols X) must be positive\n"); return 1; }
-
-    const int R2 = R/2, C2 = C/2;
+    const size_t R2 = R/2, C2 = C/2;
 
     if (dim==0)
     {
         if (iscolmajor)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                cblas_ccopy(R2,&X[2*c*R],1,&Y1[c*R],1);
-                cblas_ccopy(R2,&X[2*c*R+R],1,&Y2[c*R],1);
+                cblas_ccopy((int)R2,&X[2*c*R],1,&Y1[c*R],1);
+                cblas_ccopy((int)R2,&X[2*c*R+R],1,&Y2[c*R],1);
             }
         }
         else
         {
-            cblas_ccopy(R*C2,X,1,Y1,1);
-            cblas_ccopy(R*C2,&X[R*C],1,Y2,1);
+            cblas_ccopy((int)(R*C2),X,1,Y1,1);
+            cblas_ccopy((int)(R*C2),&X[R*C],1,Y2,1);
         }
     }
     else if (dim==1)
     {
         if (iscolmajor)
         {
-            cblas_ccopy(R*C2,X,1,Y1,1);
-            cblas_ccopy(R*C2,&X[R*C],1,Y2,1);
+            cblas_ccopy((int)(R*C2),X,1,Y1,1);
+            cblas_ccopy((int)(R*C2),&X[R*C],1,Y2,1);
         }
         else
         {
-            for (int r=0; r<R; r++)
+            for (size_t r=0; r<R; r++)
             {
-                cblas_ccopy(C2,&X[2*r*C],1,&Y1[r*C],1);
-                cblas_ccopy(C2,&X[2*r*C+C],1,&Y2[r*C],1);
+                cblas_ccopy((int)C2,&X[2*r*C],1,&Y1[r*C],1);
+                cblas_ccopy((int)C2,&X[2*r*C+C],1,&Y2[r*C],1);
             }
         }
     }
@@ -158,42 +149,39 @@ int split2_c (float *Y1, float *Y2, const float *X, const int R, const int C, co
 }
 
 
-int split2_z (double *Y1, double *Y2, const double *X, const int R, const int C, const int dim, const char iscolmajor)
+int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const int dim, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in split2_z: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in split2_z: C (ncols X) must be positive\n"); return 1; }
-
-    const int R2 = R/2, C2 = C/2;
+    const size_t R2 = R/2, C2 = C/2;
 
     if (dim==0)
     {
         if (iscolmajor)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                cblas_zcopy(R2,&X[2*c*R],1,&Y1[c*R],1);
-                cblas_zcopy(R2,&X[2*c*R+R],1,&Y2[c*R],1);
+                cblas_zcopy((int)R2,&X[2*c*R],1,&Y1[c*R],1);
+                cblas_zcopy((int)R2,&X[2*c*R+R],1,&Y2[c*R],1);
             }
         }
         else
         {
-            cblas_zcopy(R*C2,X,1,Y1,1);
-            cblas_zcopy(R*C2,&X[R*C],1,Y2,1);
+            cblas_zcopy((int)(R*C2),X,1,Y1,1);
+            cblas_zcopy((int)(R*C2),&X[R*C],1,Y2,1);
         }
     }
     else if (dim==1)
     {
         if (iscolmajor)
         {
-            cblas_zcopy(R*C2,X,1,Y1,1);
-            cblas_zcopy(R*C2,&X[R*C],1,Y2,1);
+            cblas_zcopy((int)(R*C2),X,1,Y1,1);
+            cblas_zcopy((int)(R*C2),&X[R*C],1,Y2,1);
         }
         else
         {
-            for (int r=0; r<R; r++)
+            for (size_t r=0; r<R; r++)
             {
-                cblas_zcopy(C2,&X[2*r*C],1,&Y1[r*C],1);
-                cblas_zcopy(C2,&X[2*r*C+C],1,&Y2[r*C],1);
+                cblas_zcopy((int)C2,&X[2*r*C],1,&Y1[r*C],1);
+                cblas_zcopy((int)C2,&X[2*r*C+C],1,&Y2[r*C],1);
             }
         }
     }

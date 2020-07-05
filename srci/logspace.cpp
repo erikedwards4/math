@@ -5,7 +5,8 @@
 const valarray<uint8_t> oktypes = {1,2,101,102};
 const size_t I = 0, O = 1;
 double a, b;
-int dim, N;
+int dim;
+size_t N;
 
 //Description
 string descr;
@@ -53,9 +54,9 @@ else { dim = a_d->ival[0]; }
 if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Get N
-if (a_n->count==0) { N = 100; }
+if (a_n->count==0) { N = 100u; }
 else if (a_n->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "N (length of Y) must be positive" << endl; return 1; }
-else { N = a_n->ival[0]; }
+else { N = size_t(a_n->ival[0]); }
 
 //Get o1.F
 if (a_ofmt->count==0) { o1.F = 147; }
@@ -77,10 +78,10 @@ if ((o1.T==oktypes).sum()==0)
 //Checks
 
 //Set output header info
-o1.R = (dim==0) ? uint32_t(N) : 1u;
-o1.C = (dim==1) ? uint32_t(N) : 1u;
-o1.S = (dim==2) ? uint32_t(N) : 1u;
-o1.H = (dim==3) ? uint32_t(N) : 1u;
+o1.R = (dim==0) ? N : 1u;
+o1.C = (dim==1) ? N : 1u;
+o1.S = (dim==2) ? N : 1u;
+o1.H = (dim==3) ? N : 1u;
 
 //Other prep
 

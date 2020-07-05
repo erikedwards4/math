@@ -2,11 +2,9 @@
 
 math: basic math functions
 
-Erik Edwards (erik.edwards4@gmail.com)
-
 ================================================
 
-This is a set of C programs, and associated command-line tools in C++,
+C functions, with associated command-line tools in C++,
 that implement many of the usual math function found in NumPy, Octave, etc.
 
 The command-line programs are written in C++ with a consistent style and interface.
@@ -28,13 +26,13 @@ ArrayFire (https://arrayfire.com/), and my own minimal format for Eigen (http://
 ## Dependencies
 Requires argtable2, openBLAS, LAPACKE.
 For Ubuntu, these are available by apt-get:
-```
+```console
 sudo apt-get install libargtable2-0 libblas3 libopenblas-base liblapack3 liblapacke
 ```
 
 
 ## Installation
-```
+```console
 cd /opt/codee
 git clone https://github.com/erikedwards4/math
 cd /opt/codee/math
@@ -43,7 +41,7 @@ make
 
 Each C function can also be compiled separately; see c subdirectory Makefile for details.
 To make an archive library, do:
-```
+```console
 cd /opt/codee/math/c
 make libmath.a CC=clang
 ```
@@ -55,13 +53,55 @@ Change clang to clang++ to compile for use with C++ applications.
 ## Usage
 See each resulting command-line tool for help (use -h or --help option).
 For example:
-```
+```console
 /opt/codee/math/bin/log2 --help
 ```
 
 
+## List of functions
+all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Stats  
+
+Generate: Constants Other_Gen Random  
+    Constants: zeros, ones, twos, e, ln2, ln10, log2e, log10e, sqrt2, isqrt2, pi, ipi, pi_2, pi_4, sqrt2, isqrt2, eps, realmin, realmax, inf, nan, fill  
+    Other_Gen: eye, linspace, logspace, primes, randperm  
+    Random: Uniform Bernoulli Poisson Normal Sampling Randperm  
+        Uniform: uniform_int, uniform_real  
+        Bernouli: bernoulli, binomial, negative_binomial, geometric  
+        Poisson: poisson, exponential, gamma, weibull, extreme_value  
+        Normal: normal, lognormal, chi_squared, cauchy, fisher_f, student_t  
+        Sampling: discrete, piecewise_constant, piecewise_linear  
+
+Construct: diagmat, toeplitz, tril, triu, repmat  
+
+Matsel: diag, row, col  
+
+Rearrange: transpose, ctranspose, flip, sort, shift, cshift  
+
+Split_Join: split2, split3, join2, join3  
+
+Elementwise1: Operators Trig Exp_Log Round Special  
+    Operators: plusplus, minusminus
+    Trig: sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, asinh, acosh, atanh, rad2deg, deg2rad
+    Exp_Log: exp, exp2, exp10, log, log2, log10  
+    Round: floor, ceil, trunc, round  
+    Special: erf, erfc, tgamma, lgamma  
+    Nonlin: abs, square, cube, sqrt, cbrt, pow, deadzone  
+
+Elementwise2: plus, minus, times, rdivide, pow, hypot, atan2  
+
+Complex: complex, polar, real, imag, conj, arg, norm, proj
+
+Stats: Sums Prctiles Ranges Moments Norms Other_Stats
+    Sums: sum, asum, cnt  
+    Prctiles: min, max, amin, amax, median, prctile, prctiles
+    Ranges: range, iqr, interdecile_range  
+    Moments: mean, var, skewness, kurtosis  
+    Norms: norm1, norm2, normp  
+    Other_Stats: std, coeff_var, mad  
+
 ## Contributing
-This is currently only to view the project in progress.
+This is currently for viewing and usage only.  
+Feel free to contact the author (erik.edwards4@gmail.com) if any suggestions!
 
 
 ## License

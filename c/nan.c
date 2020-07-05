@@ -11,55 +11,47 @@ namespace codee {
 extern "C" {
 #endif
 
-int nan_s (float *Y, const int N);
-int nan_d (double *Y, const int N);
-int nan_c (float *Y, const int N);
-int nan_z (double *Y, const int N);
+int nan_s (float *Y, const size_t N);
+int nan_d (double *Y, const size_t N);
+int nan_c (float *Y, const size_t N);
+int nan_z (double *Y, const size_t N);
 
 
-int nan_s (float *Y, const int N)
+int nan_s (float *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in nan_s: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const float v = NAN;
 
-    cblas_scopy(N,&v,0,Y,1);
+    cblas_scopy((int)N,&v,0,Y,1);
 
     return 0;
 }
 
 
-int nan_d (double *Y, const int N)
+int nan_d (double *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in nan_d: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const double v = (double)NAN;
 
-    cblas_dcopy(N,&v,0,Y,1);
+    cblas_dcopy((int)N,&v,0,Y,1);
 
     return 0;
 }
 
 
-int nan_c (float *Y, const int N)
+int nan_c (float *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in nan_c: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const float v[2] = {NAN,0.0f};
 
-    cblas_ccopy(N,v,0,Y,1);
+    cblas_ccopy((int)N,v,0,Y,1);
 
     return 0;
 }
 
 
-int nan_z (double *Y, const int N)
+int nan_z (double *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in nan_z: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const double v[2] = {(double)NAN,0.0};
 
-    cblas_zcopy(N,v,0,Y,1);
+    cblas_zcopy((int)N,v,0,Y,1);
 
     return 0;
 }

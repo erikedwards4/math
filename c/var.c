@@ -12,13 +12,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int var_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int var_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int var_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int var_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int var_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int var_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int var_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int var_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
 
 
-int var_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int var_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     if (R<1) { fprintf(stderr,"error in var_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in var_s: C (ncols X) must be positive\n"); return 1; }
@@ -49,10 +49,10 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
         float *x1;
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in var_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy(N1,&ni,0,x1,1);
-        cblas_sgemv(Ord,Tr,R,C,1.0f,X,ldc,x1,1,0.0f,Y,1);
+        cblas_sgemv(Ord,Tr,(int)R,(int)C,1.0f,X,ldc,x1,1,0.0f,Y,1);
         cblas_scopy(N1,&o,0,x1,1);
-        if (dim==0) { cblas_sgemm(Ord,Tr,Tr,R,C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc); }
-        else { cblas_sgemm(Ord,Tr,Tr,R,C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
+        if (dim==0) { cblas_sgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc); }
+        else { cblas_sgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
             for (int n2=0; n2<N2; n2++) { Y[n2] = cblas_sdot(N1,&X[n2*N1],1,&X[n2*N1],1) * den; }
@@ -60,7 +60,7 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
         else
         {
             for (int n=0; n<N; n++) { X[n] *= X[n]; }
-            cblas_sgemv(Ord,Tr,R,C,den,X,ldc,x1,1,0.0f,Y,1);
+            cblas_sgemv(Ord,Tr,(int)R,(int)C,den,X,ldc,x1,1,0.0f,Y,1);
         }
         free(x1);
     }
@@ -69,14 +69,14 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
         float *x1, *xni;
         if (!(x1=(float *)malloc((size_t)R*sizeof(float)))) { fprintf(stderr,"error in var_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)R*sizeof(float)))) { fprintf(stderr,"error in var_s: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_scopy(R,&o,0,x1,1); cblas_scopy(R,&ni,0,xni,1);
-        for (int h=0, n=0, n2=0; h<H; h++)
+        cblas_scopy((int)R,&o,0,x1,1); cblas_scopy((int)R,&ni,0,xni,1);
+        for (size_t h=0, n=0, n2=0; h<H; h++)
         {
-            for (int s=0; s<S; s++, n+=RC, n2+=C)
+            for (size_t s=0; s<S; s++, n+=RC, n2+=C)
             {
-                cblas_sgemv(CblasColMajor,CblasTrans,R,C,1.0f,&X[n],R,xni,1,0.0f,&Y[n2],1);
-                cblas_sgemm(CblasColMajor,CblasTrans,CblasTrans,R,C,1,-1.0f,x1,1,&Y[n2],C,1.0f,&X[n],R);
-                for (int c=0; c<C; c++) { Y[n2+c] = cblas_sdot(R,&X[n+c*R],1,&X[n+c*R],1) * den; }
+                cblas_sgemv(CblasColMajor,CblasTrans,(int)R,(int)C,1.0f,&X[n],(int)R,xni,1,0.0f,&Y[n2],1);
+                cblas_sgemm(CblasColMajor,CblasTrans,CblasTrans,(int)R,(int)C,1,-1.0f,x1,1,&Y[n2],(int)C,1.0f,&X[n],(int)R);
+                for (size_t c=0; c<C; c++) { Y[n2+c] = cblas_sdot((int)R,&X[n+c*R],1,&X[n+c*R],1) * den; }
             }
         }
         free(x1); free(xni);
@@ -86,14 +86,14 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
         float *x1, *xni;
         if (!(x1=(float *)malloc((size_t)C*sizeof(float)))) { fprintf(stderr,"error in var_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)C*sizeof(float)))) { fprintf(stderr,"error in var_s: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_scopy(C,&o,0,x1,1); cblas_scopy(C,&ni,0,xni,1);
-        for (int h=0, n=0, n2=0; h<H; h++)
+        cblas_scopy((int)C,&o,0,x1,1); cblas_scopy((int)C,&ni,0,xni,1);
+        for (size_t h=0, n=0, n2=0; h<H; h++)
         {
-            for (int s=0; s<S; s++, n+=RC, n2+=R)
+            for (size_t s=0; s<S; s++, n+=RC, n2+=R)
             {
-                cblas_sgemv(CblasColMajor,CblasNoTrans,R,C,1.0f,&X[n],R,xni,1,0.0f,&Y[n2],1);
-                cblas_sgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,R,C,1,-1.0f,&Y[n2],R,x1,1,1.0f,&X[n],R);
-                for (int r=0; r<R; r++) { Y[n2+r] = cblas_sdot(C,&X[n+r],R,&X[n+r],R) * den; }
+                cblas_sgemv(CblasColMajor,CblasNoTrans,(int)R,(int)C,1.0f,&X[n],(int)R,xni,1,0.0f,&Y[n2],1);
+                cblas_sgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,1,-1.0f,&Y[n2],(int)R,x1,1,1.0f,&X[n],(int)R);
+                for (size_t r=0; r<R; r++) { Y[n2+r] = cblas_sdot((int)C,&X[n+r],(int)R,&X[n+r],(int)R) * den; }
             }
         }
         free(x1); free(xni);
@@ -104,11 +104,11 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in var_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in var_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy(N1,&o,0,x1,1); cblas_scopy(N1,&ni,0,xni,1);
-        for (int r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
         {
-            cblas_sgemv(CblasRowMajor,CblasNoTrans,C,S,1.0f,&X[n],S,xni,1,0.0f,&Y[n2],1);
-            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,C,S,1,-1.0f,&Y[n2],1,x1,S,1.0f,&X[n],S);
-            for (int c=0; c<C; c++) { Y[n2+c] = cblas_sdot(N1,&X[n+c*S],1,&X[n+c*S],1) * den; }
+            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,&X[n],(int)S,xni,1,0.0f,&Y[n2],1);
+            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0f,&Y[n2],1,x1,(int)S,1.0f,&X[n],(int)S);
+            for (size_t c=0; c<C; c++) { Y[n2+c] = cblas_sdot(N1,&X[n+c*S],1,&X[n+c*S],1) * den; }
         }
         free(x1); free(xni);
     }
@@ -133,7 +133,7 @@ int var_s (float *Y, float *X, const int R, const int C,const int S, const int H
 }
 
 
-int var_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int var_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     if (R<1) { fprintf(stderr,"error in var_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in var_d: C (ncols X) must be positive\n"); return 1; }
@@ -163,10 +163,10 @@ int var_d (double *Y, double *X, const int R, const int C,const int S, const int
         double *x1;
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in var_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy(N1,&ni,0,x1,1);
-        cblas_dgemv(Ord,Tr,R,C,1.0,X,ldc,x1,1,0.0,Y,1);
+        cblas_dgemv(Ord,Tr,(int)R,(int)C,1.0,X,ldc,x1,1,0.0,Y,1);
         cblas_dcopy(N1,&o,0,x1,1);
-        if (dim==0) { cblas_dgemm(Ord,Tr,Tr,R,C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc); }
-        else { cblas_dgemm(Ord,Tr,Tr,R,C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
+        if (dim==0) { cblas_dgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc); }
+        else { cblas_dgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
             for (int n2=0; n2<N2; n2++) { Y[n2] = cblas_ddot(N1,&X[n2*N1],1,&X[n2*N1],1) * den; }
@@ -174,7 +174,7 @@ int var_d (double *Y, double *X, const int R, const int C,const int S, const int
         else
         {
             for (int n=0; n<N; n++) { X[n] *= X[n]; }
-            cblas_dgemv(Ord,Tr,R,C,den,X,ldc,x1,1,0.0,Y,1);
+            cblas_dgemv(Ord,Tr,(int)R,(int)C,den,X,ldc,x1,1,0.0,Y,1);
         }
         free(x1);
     }
@@ -183,14 +183,14 @@ int var_d (double *Y, double *X, const int R, const int C,const int S, const int
         double *x1, *xni;
         if (!(x1=(double *)malloc((size_t)R*sizeof(double)))) { fprintf(stderr,"error in var_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)R*sizeof(double)))) { fprintf(stderr,"error in var_d: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_dcopy(R,&o,0,x1,1); cblas_dcopy(R,&ni,0,xni,1);
-        for (int h=0, n=0, n2=0; h<H; h++)
+        cblas_dcopy((int)R,&o,0,x1,1); cblas_dcopy((int)R,&ni,0,xni,1);
+        for (size_t h=0, n=0, n2=0; h<H; h++)
         {
-            for (int s=0; s<S; s++, n+=RC, n2+=C)
+            for (size_t s=0; s<S; s++, n+=RC, n2+=C)
             {
-                cblas_dgemv(CblasColMajor,CblasTrans,R,C,1.0,&X[n],R,xni,1,0.0,&Y[n2],1);
-                cblas_dgemm(CblasColMajor,CblasTrans,CblasTrans,R,C,1,-1.0,x1,1,&Y[n2],C,1.0,&X[n],R);
-                for (int c=0; c<C; c++) { Y[n2+c] = cblas_ddot(R,&X[n+c*R],1,&X[n+c*R],1) * den; }
+                cblas_dgemv(CblasColMajor,CblasTrans,(int)R,(int)C,1.0,&X[n],(int)R,xni,1,0.0,&Y[n2],1);
+                cblas_dgemm(CblasColMajor,CblasTrans,CblasTrans,(int)R,(int)C,1,-1.0,x1,1,&Y[n2],(int)C,1.0,&X[n],(int)R);
+                for (size_t c=0; c<C; c++) { Y[n2+c] = cblas_ddot((int)R,&X[n+c*R],1,&X[n+c*R],1) * den; }
             }
         }
         free(x1); free(xni);
@@ -200,14 +200,14 @@ int var_d (double *Y, double *X, const int R, const int C,const int S, const int
         double *x1, *xni;
         if (!(x1=(double *)malloc((size_t)C*sizeof(double)))) { fprintf(stderr,"error in var_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)C*sizeof(double)))) { fprintf(stderr,"error in var_d: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_dcopy(C,&o,0,x1,1); cblas_dcopy(C,&ni,0,xni,1);
-        for (int h=0, n=0, n2=0; h<H; h++)
+        cblas_dcopy((int)C,&o,0,x1,1); cblas_dcopy((int)C,&ni,0,xni,1);
+        for (size_t h=0, n=0, n2=0; h<H; h++)
         {
-            for (int s=0; s<S; s++, n+=RC, n2+=R)
+            for (size_t s=0; s<S; s++, n+=RC, n2+=R)
             {
-                cblas_dgemv(CblasColMajor,CblasNoTrans,R,C,1.0,&X[n],R,xni,1,0.0,&Y[n2],1);
-                cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,R,C,1,-1.0,&Y[n2],R,x1,1,1.0,&X[n],R);
-                for (int r=0; r<R; r++) { Y[n2+r] = cblas_ddot(C,&X[n+r],R,&X[n+r],R) * den; }
+                cblas_dgemv(CblasColMajor,CblasNoTrans,(int)R,(int)C,1.0,&X[n],(int)R,xni,1,0.0,&Y[n2],1);
+                cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,1,-1.0,&Y[n2],(int)R,x1,1,1.0,&X[n],(int)R);
+                for (size_t r=0; r<R; r++) { Y[n2+r] = cblas_ddot((int)C,&X[n+r],(int)R,&X[n+r],(int)R) * den; }
             }
         }
         free(x1); free(xni);
@@ -218,11 +218,11 @@ int var_d (double *Y, double *X, const int R, const int C,const int S, const int
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in var_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in var_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy(N1,&o,0,x1,1); cblas_dcopy(N1,&ni,0,xni,1);
-        for (int r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
         {
-            cblas_dgemv(CblasRowMajor,CblasNoTrans,C,S,1.0,&X[n],S,xni,1,0.0,&Y[n2],1);
-            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,C,S,1,-1.0,&Y[n2],1,x1,S,1.0,&X[n],S);
-            for (int c=0; c<C; c++) { Y[n2+c] = cblas_ddot(N1,&X[n+c*S],1,&X[n+c*S],1) * den; }
+            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,&X[n],(int)S,xni,1,0.0,&Y[n2],1);
+            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0,&Y[n2],1,x1,(int)S,1.0,&X[n],(int)S);
+            for (size_t c=0; c<C; c++) { Y[n2+c] = cblas_ddot(N1,&X[n+c*S],1,&X[n+c*S],1) * den; }
         }
         free(x1); free(xni);
     }
@@ -247,7 +247,7 @@ int var_d (double *Y, double *X, const int R, const int C,const int S, const int
 }
 
 
-int var_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int var_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     if (R<1) { fprintf(stderr,"error in var_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in var_c: C (ncols X) must be positive\n"); return 1; }
@@ -301,7 +301,7 @@ int var_c (float *Y, float *X, const int R, const int C,const int S, const int H
 }
 
 
-int var_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int var_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     if (R<1) { fprintf(stderr,"error in var_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in var_z: C (ncols X) must be positive\n"); return 1; }

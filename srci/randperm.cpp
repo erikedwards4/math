@@ -4,7 +4,7 @@
 //Declarations
 const valarray<uint8_t> oktypes = {1,2};
 const size_t I = 0, O = 1;
-int N;
+size_t N;
 
 //Description
 string descr;
@@ -52,15 +52,15 @@ if ((o1.T==oktypes).sum()==0)
 //Get N
 if (a_n->count==0) { N = 1; }
 else if (a_n->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "N must be nonnegative" << endl; return 1; }
-else { N = a_n->ival[0]; }
+else { N = size_t(a_n->ival[0]); }
 
 //Get o1.C
-if (a_m->count==0) { o1.C = uint32_t(N); }
+if (a_m->count==0) { o1.C = N; }
 else if (a_m->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "M (output length) must be nonnegative" << endl; return 1; }
-else { o1.C = uint32_t(a_m->ival[0]); }
+else { o1.C = size_t(a_m->ival[0]); }
 
 //Checks
-if (int(o1.C)>N) { cerr << progstr+": " << __LINE__ << errstr << "M must be less than or equal to N" << endl; return 1; }
+if (o1.C>N) { cerr << progstr+": " << __LINE__ << errstr << "M must be less than or equal to N" << endl; return 1; }
 
 //Set output header
 o1.R = o1.S = o1.H = 1u;
@@ -73,7 +73,7 @@ if (o1.T==1)
     float *Y;
     try { Y = new float[o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::randperm_s(Y,int(o1.C),N))
+    if (codee::randperm_s(Y,o1.C,N))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

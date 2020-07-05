@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -34,7 +33,7 @@ int main(int argc, char *argv[])
     ifstream ifs1; ofstream ofs1;
     int8_t stdi1, stdo1, wo1;
     ioinfo i1, o1;
-    uint32_t Nr, Nc, Ns, Nh;
+    size_t Nr, Nc, Ns, Nh;
 
 
     //Description
@@ -107,22 +106,22 @@ int main(int argc, char *argv[])
     //Get Nr
     if (a_nr->count==0) { Nr = 1u; }
     else if (a_nr->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "Nr (num row reps) must be positive" << endl; return 1; }
-    else { Nr = uint32_t(a_nr->ival[0]); }
+    else { Nr = size_t(a_nr->ival[0]); }
 
     //Get Nc
     if (a_nc->count==0) { Nc = 1u; }
     else if (a_nc->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "Nc (num col reps) must be positive" << endl; return 1; }
-    else { Nc = uint32_t(a_nc->ival[0]); }
+    else { Nc = size_t(a_nc->ival[0]); }
 
     //Get Ns
     if (a_ns->count==0) { Ns = 1u; }
     else if (a_ns->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "Ns (num slice reps) must be positive" << endl; return 1; }
-    else { Ns = uint32_t(a_ns->ival[0]); }
+    else { Ns = size_t(a_ns->ival[0]); }
 
     //Get Nh
     if (a_nh->count==0) { Nh = 1u; }
     else if (a_nh->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "Nh (num hyperslice reps) must be positive" << endl; return 1; }
-    else { Nh = uint32_t(a_nh->ival[0]); }
+    else { Nh = size_t(a_nh->ival[0]); }
 
 
     //Checks
@@ -160,7 +159,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::repmat_s(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(Nr),int(Nc),int(Ns),int(Nh),i1.iscolmajor()))
+        if (codee::repmat_s(Y,X,i1.R,i1.C,i1.S,i1.H,Nr,Nc,Ns,Nh,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -178,7 +177,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::repmat_d(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(Nr),int(Nc),int(Ns),int(Nh),i1.iscolmajor()))
+        if (codee::repmat_d(Y,X,i1.R,i1.C,i1.S,i1.H,Nr,Nc,Ns,Nh,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -196,7 +195,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::repmat_c(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(Nr),int(Nc),int(Ns),int(Nh),i1.iscolmajor()))
+        if (codee::repmat_c(Y,X,i1.R,i1.C,i1.S,i1.H,Nr,Nc,Ns,Nh,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -214,7 +213,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::repmat_z(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),int(Nr),int(Nc),int(Ns),int(Nh),i1.iscolmajor()))
+        if (codee::repmat_z(Y,X,i1.R,i1.C,i1.S,i1.H,Nr,Nc,Ns,Nh,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

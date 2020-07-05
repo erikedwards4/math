@@ -51,12 +51,12 @@ if ((o1.T==oktypes).sum()==0)
 //Get o1.R
 if (a_nr->count==0) { o1.R = 1u; }
 else if (a_nr->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "R (nrows) must be nonnegative" << endl; return 1; }
-else { o1.R = uint32_t(a_nr->ival[0]); }
+else { o1.R = size_t(a_nr->ival[0]); }
 
 //Get o1.C
 if (a_nc->count==0) { o1.C = 1u; }
 else if (a_nc->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "C (ncols) must be nonnegative" << endl; return 1; }
-else { o1.C = uint32_t(a_nc->ival[0]); }
+else { o1.C = size_t(a_nc->ival[0]); }
 
 //Checks
 
@@ -71,7 +71,7 @@ if (o1.T==1)
     float *Y;
     try { Y = new float[o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::eye_s(Y,int(o1.R),int(o1.C),o1.iscolmajor()))
+    if (codee::eye_s(Y,o1.R,o1.C,o1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -85,7 +85,7 @@ else if (o1.T==101)
     float *Y;
     try { Y = new float[2u*o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::eye_c(Y,int(o1.R),int(o1.C),o1.iscolmajor()))
+    if (codee::eye_c(Y,o1.R,o1.C,o1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

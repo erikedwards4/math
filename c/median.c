@@ -12,8 +12,8 @@ extern "C" {
 int cmp_ascend_s (const void *a, const void *b);
 int cmp_ascend_d (const void *a, const void *b);
 
-int median_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int median_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int median_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int median_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
 
 
 int cmp_ascend_s (const void *a, const void *b)
@@ -38,7 +38,7 @@ int cmp_ascend_d (const void *a, const void *b)
 }
 
 
-int median_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int median_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
     float *X1; //1 row or col of X
@@ -53,7 +53,7 @@ int median_s (float *Y, const float *X, const int R, const int C,const int S, co
         {
             for (c=0; c<C; c++)
             {
-                cblas_scopy(R,&X[c*R],1,X1,1);
+                cblas_scopy((int)R,&X[c*R],1,X1,1);
                 qsort(X1,(size_t)(R),sizeof(float),cmp_ascend_s);
                 Y[c] = (R%2) ? X1[R/2] : 0.5f*(X1[R/2]+X1[R/2-1]);
             }
@@ -62,7 +62,7 @@ int median_s (float *Y, const float *X, const int R, const int C,const int S, co
         {
             for (c=0; c<C; c++)
             {
-                cblas_scopy(R,&X[c],C,X1,1);
+                cblas_scopy((int)R,&X[c],(int)C,X1,1);
                 qsort(X1,(size_t)(R),sizeof(float),cmp_ascend_s);
                 Y[c] = (R%2) ? X1[R/2] : 0.5f*(X1[R/2]+X1[R/2-1]);
             }
@@ -75,7 +75,7 @@ int median_s (float *Y, const float *X, const int R, const int C,const int S, co
         {
             for (r=0; r<R; r++)
             {
-                cblas_scopy(C,&X[r],R,X1,1);
+                cblas_scopy((int)C,&X[r],(int)R,X1,1);
                 qsort(X1,(size_t)(C),sizeof(float),cmp_ascend_s);
                 Y[r] = (C%2) ? X1[C/2] : 0.5f*(X1[C/2]+X1[C/2-1]);
             }
@@ -84,7 +84,7 @@ int median_s (float *Y, const float *X, const int R, const int C,const int S, co
         {
             for (r=0; r<R; r++)
             {
-                cblas_scopy(C,&X[r*C],1,X1,1);
+                cblas_scopy((int)C,&X[r*C],1,X1,1);
                 qsort(X1,(size_t)(C),sizeof(float),cmp_ascend_s);
                 Y[r] = (C%2) ? X1[C/2] : 0.5f*(X1[C/2]+X1[C/2-1]);
             }
@@ -100,7 +100,7 @@ int median_s (float *Y, const float *X, const int R, const int C,const int S, co
 }
 
 
-int median_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int median_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
     double *X1; //1 row or col of X
@@ -115,7 +115,7 @@ int median_d (double *Y, const double *X, const int R, const int C,const int S, 
         {
             for (c=0; c<C; c++)
             {
-                cblas_dcopy(R,&X[c*R],1,X1,1);
+                cblas_dcopy((int)R,&X[c*R],1,X1,1);
                 qsort(X1,(size_t)(R),sizeof(double),cmp_ascend_s);
                 Y[c] = (R%2) ? X1[R/2] : 0.5*(X1[R/2]+X1[R/2-1]);
             }
@@ -124,7 +124,7 @@ int median_d (double *Y, const double *X, const int R, const int C,const int S, 
         {
             for (c=0; c<C; c++)
             {
-                cblas_dcopy(R,&X[c],C,X1,1);
+                cblas_dcopy((int)R,&X[c],(int)C,X1,1);
                 qsort(X1,(size_t)(R),sizeof(double),cmp_ascend_s);
                 Y[c] = (R%2) ? X1[R/2] : 0.5*(X1[R/2]+X1[R/2-1]);
             }
@@ -137,7 +137,7 @@ int median_d (double *Y, const double *X, const int R, const int C,const int S, 
         {
             for (r=0; r<R; r++)
             {
-                cblas_dcopy(C,&X[r],R,X1,1);
+                cblas_dcopy((int)C,&X[r],(int)R,X1,1);
                 qsort(X1,(size_t)(C),sizeof(double),cmp_ascend_s);
                 Y[r] = (C%2) ? X1[C/2] : 0.5*(X1[C/2]+X1[C/2-1]);
             }
@@ -146,7 +146,7 @@ int median_d (double *Y, const double *X, const int R, const int C,const int S, 
         {
             for (r=0; r<R; r++)
             {
-                cblas_dcopy(C,&X[r*C],1,X1,1);
+                cblas_dcopy((int)C,&X[r*C],1,X1,1);
                 qsort(X1,(size_t)(C),sizeof(double),cmp_ascend_s);
                 Y[r] = (C%2) ? X1[C/2] : 0.5*(X1[C/2]+X1[C/2-1]);
             }

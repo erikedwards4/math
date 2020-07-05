@@ -8,20 +8,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cblas.h>
-//#include <time.h>
+#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
 
-int sum_s (float *Y, const float *X, const int R, const int C, const int S, const int H, const int dim, const char iscolmajor);
-int sum_d (double *Y, const double *X, const int R, const int C, const int S, const int H, const int dim, const char iscolmajor);
-int sum_c (float *Y, const float *X, const int R, const int C, const int S, const int H, const int dim, const char iscolmajor);
-int sum_z (double *Y, const double *X, const int R, const int C, const int S, const int H, const int dim, const char iscolmajor);
+int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int sum_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int sum_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
 
 
-int sum_s (float *Y, const float *X, const int R, const int C, const int S, const int H, const int dim, const char iscolmajor)
+int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in sum_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in sum_s: C (ncols X) must be positive\n"); return 1; }
@@ -30,14 +30,16 @@ int sum_s (float *Y, const float *X, const int R, const int C, const int S, cons
 
     const int RC = R*C, SH = S*H, N = RC*SH;
     const int N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
+    struct timespec tic, toc;
+    clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N1==1) { cblas_scopy(N,X,1,Y,1); }
     else if (N1==N)
     {
-        Y[0] = 0.0f;
-        for (int n=0; n<N; n++) { Y[0] += X[n]; }
+        //Y[0] = 0.0f;
+        //for (int n=0; n<N; n++) { Y[0] += X[n]; }
+        *Y = 0.0f;
+        for (int n=0; n<N; n++, X++) { *Y += *X; }
     }
     else if (SH==1)
     {
@@ -48,8 +50,8 @@ int sum_s (float *Y, const float *X, const int R, const int C, const int S, cons
         float *x1;
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy(N1,&o,0,x1,1);
-        cblas_sgemv(Ord,Tr,R,C,1.0f,X,lda,x1,1,0.0f,Y,1);
-        //for (int c=0; c<C; c++) { Y[c] = cblas_sdot(R,&X[c*R],1,&o,0); }
+        cblas_sgemv(Ord,Tr,(int)R,(int)C,1.0f,X,lda,x1,1,0.0f,Y,1);
+        //for (size_t c=0; c<C; c++) { Y[c] = cblas_sdot((int)R,&X[c*R],1,&o,0); }
         free(x1);
     }
     else if (iscolmajor && dim<2)
@@ -59,11 +61,11 @@ int sum_s (float *Y, const float *X, const int R, const int C, const int S, cons
         float *x1;
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy(N1,&o,0,x1,1);
-        for (int h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0, n=0, n2=0; h<H; h++)
         {
-            for (int s=0; s<S; s++, n+=RC, n2+=RC/N1)
+            for (size_t s=0; s<S; s++, n+=RC, n2+=RC/N1)
             {
-                cblas_sgemv(CblasColMajor,Tr,R,C,1.0f,&X[n],R,x1,1,0.0f,&Y[n2],1);
+                cblas_sgemv(CblasColMajor,Tr,(int)R,(int)C,1.0f,&X[n],(int)R,x1,1,0.0f,&Y[n2],1);
             }
         }
         free(x1);
@@ -74,9 +76,9 @@ int sum_s (float *Y, const float *X, const int R, const int C, const int S, cons
         float *x1;
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy(N1,&o,0,x1,1);
-        for (int r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
         {
-            cblas_sgemv(CblasRowMajor,CblasNoTrans,C,S,1.0f,&X[n],S,x1,1,0.0f,&Y[n2],1);
+            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,&X[n],(int)S,x1,1,0.0f,&Y[n2],1);
         }
         free(x1);
     }
@@ -95,14 +97,14 @@ int sum_s (float *Y, const float *X, const int R, const int C, const int S, cons
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+    clock_gettime(CLOCK_REALTIME,&toc);
+    fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
     
     return 0;
 }
 
 
-int sum_d (double *Y, const double *X, const int R, const int C, const int S, const int H, const int dim, const char iscolmajor)
+int sum_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in sum_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in sum_d: C (ncols X) must be positive\n"); return 1; }
@@ -127,7 +129,7 @@ int sum_d (double *Y, const double *X, const int R, const int C, const int S, co
         double *x1;
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy(N1,&o,0,x1,1);
-        cblas_dgemv(Ord,Tr,R,C,1.0,X,lda,x1,1,0.0,Y,1);
+        cblas_dgemv(Ord,Tr,(int)R,(int)C,1.0,X,lda,x1,1,0.0,Y,1);
         free(x1);
     }
     else if (iscolmajor && dim<2)
@@ -137,11 +139,11 @@ int sum_d (double *Y, const double *X, const int R, const int C, const int S, co
         double *x1;
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy(N1,&o,0,x1,1);
-        for (int h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0, n=0, n2=0; h<H; h++)
         {
-            for (int s=0; s<S; s++, n+=RC, n2+=RC/N1)
+            for (size_t s=0; s<S; s++, n+=RC, n2+=RC/N1)
             {
-                cblas_dgemv(CblasColMajor,Tr,R,C,1.0,&X[n],R,x1,1,0.0,&Y[n2],1);
+                cblas_dgemv(CblasColMajor,Tr,(int)R,(int)C,1.0,&X[n],(int)R,x1,1,0.0,&Y[n2],1);
             }
         }
         free(x1);
@@ -152,9 +154,9 @@ int sum_d (double *Y, const double *X, const int R, const int C, const int S, co
         double *x1;
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy(N1,&o,0,x1,1);
-        for (int r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
         {
-            cblas_dgemv(CblasRowMajor,CblasNoTrans,C,S,1.0,&X[n],S,x1,1,0.0,&Y[n2],1);
+            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,&X[n],(int)S,x1,1,0.0,&Y[n2],1);
         }
         free(x1);
     }
@@ -178,7 +180,7 @@ int sum_d (double *Y, const double *X, const int R, const int C, const int S, co
 }
 
 
-int sum_c (float *Y, const float *X, const int R, const int C, const int S, const int H, const int dim, const char iscolmajor)
+int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in sum_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in sum_c: C (ncols X) must be positive\n"); return 1; }
@@ -203,7 +205,7 @@ int sum_c (float *Y, const float *X, const int R, const int C, const int S, cons
         float *x1;
         if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in sum_c: problem with malloc. "); perror("malloc"); return 1; }
         cblas_ccopy(N1,o,0,x1,1);
-        cblas_cgemv(Ord,Tr,R,C,o,X,lda,x1,1,z,Y,1);
+        cblas_cgemv(Ord,Tr,(int)R,(int)C,o,X,lda,x1,1,z,Y,1);
         free(x1);
     }
     else if (iscolmajor && dim<2)
@@ -213,11 +215,11 @@ int sum_c (float *Y, const float *X, const int R, const int C, const int S, cons
         float *x1;
         if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in sum_c: problem with malloc. "); perror("malloc"); return 1; }
         cblas_ccopy(N1,o,0,x1,1);
-        for (int h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0, n=0, n2=0; h<H; h++)
         {
-            for (int s=0; s<S; s++, n+=2*RC, n2+=2*RC/N1)
+            for (size_t s=0; s<S; s++, n+=2*RC, n2+=2*RC/N1)
             {
-                cblas_cgemv(CblasColMajor,Tr,R,C,o,&X[n],R,x1,1,z,&Y[n2],1);
+                cblas_cgemv(CblasColMajor,Tr,(int)R,(int)C,o,&X[n],(int)R,x1,1,z,&Y[n2],1);
             }
         }
         free(x1);
@@ -228,9 +230,9 @@ int sum_c (float *Y, const float *X, const int R, const int C, const int S, cons
         float *x1;
         if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in sum_c: problem with malloc. "); perror("malloc"); return 1; }
         cblas_ccopy(N1,o,0,x1,1);
-        for (int r=0, n=0, n2=0; r<R; r++, n+=2*C*SH, n2+=2*C)
+        for (size_t r=0, n=0, n2=0; r<R; r++, n+=2*C*SH, n2+=2*C)
         {
-            cblas_cgemv(CblasRowMajor,CblasNoTrans,C,S,o,&X[n],S,x1,1,z,&Y[n2],1);
+            cblas_cgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,o,&X[n],(int)S,x1,1,z,&Y[n2],1);
         }
         free(x1);
     }
@@ -254,7 +256,7 @@ int sum_c (float *Y, const float *X, const int R, const int C, const int S, cons
 }
 
 
-int sum_z (double *Y, const double *X, const int R, const int C, const int S, const int H, const int dim, const char iscolmajor)
+int sum_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     if (R<1) { fprintf(stderr,"error in sum_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in sum_z: C (ncols X) must be positive\n"); return 1; }
@@ -279,7 +281,7 @@ int sum_z (double *Y, const double *X, const int R, const int C, const int S, co
         double *x1;
         if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in sum_z: problem with malloc. "); perror("malloc"); return 1; }
         cblas_zcopy(N1,o,0,x1,1);
-        cblas_zgemv(Ord,Tr,R,C,o,X,lda,x1,1,z,Y,1);
+        cblas_zgemv(Ord,Tr,(int)R,(int)C,o,X,lda,x1,1,z,Y,1);
         free(x1);
     }
     else if (iscolmajor && dim<2)
@@ -289,11 +291,11 @@ int sum_z (double *Y, const double *X, const int R, const int C, const int S, co
         double *x1;
         if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in sum_z: problem with malloc. "); perror("malloc"); return 1; }
         cblas_zcopy(N1,o,0,x1,1);
-        for (int h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0, n=0, n2=0; h<H; h++)
         {
-            for (int s=0; s<S; s++, n+=2*RC, n2+=2*RC/N1)
+            for (size_t s=0; s<S; s++, n+=2*RC, n2+=2*RC/N1)
             {
-                cblas_zgemv(CblasColMajor,Tr,R,C,o,&X[n],R,x1,1,z,&Y[n2],1);
+                cblas_zgemv(CblasColMajor,Tr,(int)R,(int)C,o,&X[n],(int)R,x1,1,z,&Y[n2],1);
             }
         }
         free(x1);
@@ -304,9 +306,9 @@ int sum_z (double *Y, const double *X, const int R, const int C, const int S, co
         double *x1;
         if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in sum_z: problem with malloc. "); perror("malloc"); return 1; }
         cblas_zcopy(N1,o,0,x1,1);
-        for (int r=0, n=0, n2=0; r<R; r++, n+=2*C*SH, n2+=2*C)
+        for (size_t r=0, n=0, n2=0; r<R; r++, n+=2*C*SH, n2+=2*C)
         {
-            cblas_zgemv(CblasRowMajor,CblasNoTrans,C,S,o,&X[n],S,x1,1,z,&Y[n2],1);
+            cblas_zgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,o,&X[n],(int)S,x1,1,z,&Y[n2],1);
         }
         free(x1);
     }

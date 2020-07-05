@@ -61,8 +61,8 @@ if (i1.T==1)
     //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    //if (codee::sort_s(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),dim))
-    if (codee::sort_inplace_s(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),dim,a))
+    //if (codee::sort_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+    if (codee::sort_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -80,8 +80,8 @@ else if (i1.T==101)
     //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    //if (codee::sort_c(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),dim))
-    if (codee::sort_inplace_c(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),dim,a))
+    //if (codee::sort_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+    if (codee::sort_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

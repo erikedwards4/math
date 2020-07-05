@@ -9,50 +9,44 @@ namespace codee {
 extern "C" {
 #endif
 
-int repmat_s (float *Y, const float *X, const int R, const int C, const int S, const int H, const int Nr, const int Nc, const int Ns, const int Nh, const char iscolmajor);
-int repmat_d (double *Y, const double *X, const int R, const int C, const int S, const int H, const int Nr, const int Nc, const int Ns, const int Nh, const char iscolmajor);
-int repmat_c (float *Y, const float *X, const int R, const int C, const int S, const int H, const int Nr, const int Nc, const int Ns, const int Nh, const char iscolmajor);
-int repmat_z (double *Y, const double *X, const int R, const int C, const int S, const int H, const int Nr, const int Nc, const int Ns, const int Nh, const char iscolmajor);
+int repmat_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Nr, const size_t Nc, const size_t Ns, const size_t Nh, const char iscolmajor);
+int repmat_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Nr, const size_t Nc, const size_t Ns, const size_t Nh, const char iscolmajor);
+int repmat_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Nr, const size_t Nc, const size_t Ns, const size_t Nh, const char iscolmajor);
+int repmat_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Nr, const size_t Nc, const size_t Ns, const size_t Nh, const char iscolmajor);
 
 
-int repmat_s (float *Y, const float *X, const int R, const int C, const int S, const int H, const int Nr, const int Nc, const int Ns, const int Nh, const char iscolmajor)
+int repmat_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Nr, const size_t Nc, const size_t Ns, const size_t Nh, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in repmat_s: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in repmat_s: C (ncols X) must be positive\n"); return 1; }
-    if (S<1) { fprintf(stderr,"error in repmat_s: S (num slices X) must be positive\n"); return 1; }
-    if (H<1) { fprintf(stderr,"error in repmat_s: H (num hyperslices X) must be positive\n"); return 1; }
-    if (Nr<1) { fprintf(stderr,"error in repmat_s: Nr (num row reps) must be positive\n"); return 1; }
-    if (Nc<1) { fprintf(stderr,"error in repmat_s: Nc (num col reps) must be positive\n"); return 1; }
-    if (Ns<1) { fprintf(stderr,"error in repmat_s: Ns (num slice reps) must be positive\n"); return 1; }
-    if (Nh<1) { fprintf(stderr,"error in repmat_s: Nh (num hyperslice reps) must be positive\n"); return 1; }
+    const size_t CR = C*R, SCR = S*CR;
+    const size_t SH = S*H, CSH = C*SH;
 
-    const int CR = C*R, SCR = S*CR;
-    const int SH = S*H, CSH = C*SH;
-    int n, n2 = 0;
-
-    if (iscolmajor)
+    if (Nr*Nc*Ns*Nh==1)
+    {
+        cblas_scopy((int)(CR*SH),X,1,Y,1);
+    }
+    else if (iscolmajor)
     {
         if (R*Nr==1)
         {
-            for (int h=0; h<H*Nh; h++)
+            for (size_t h=0, n2=0; h<H*Nh; h++)
             {
-                for (int s=0; s<S*Ns; s++)
+                for (size_t s=0; s<S*Ns; s++)
                 {
-                    n = SCR*h%H + CR*s%S;
-                    for (int c=0; c<Nc; c++, n2+=C) { cblas_scopy(C,&X[n],1,&Y[n2],1); }
+                    size_t n = SCR*h%H + CR*s%S;
+                    for (size_t c=0; c<Nc; c++, n2+=C) { cblas_scopy((int)C,&X[n],1,&Y[n2],1); }
                 }
             }
         }
         else
         {
-            for (int h=0; h<H*Nh; h++)
+            for (size_t h=0, n2=0; h<H*Nh; h++)
             {
-                for (int s=0; s<S*Ns; s++)
+                for (size_t s=0; s<S*Ns; s++)
                 {
-                    for (int c=0; c<C*Nc; c++)
+                    for (size_t c=0; c<C*Nc; c++)
                     {
-                        n = SCR*h%H + CR*s%S + R*c%C;
-                        for (int r=0; r<Nr; r++, n2+=R) { cblas_scopy(R,&X[n],1,&Y[n2],1); }
+                        size_t n = SCR*h%H + CR*s%S + R*c%C;
+                        for (size_t r=0; r<Nr; r++, n2+=R) { cblas_scopy((int)R,&X[n],1,&Y[n2],1); }
                     }
                 }
             }
@@ -62,26 +56,26 @@ int repmat_s (float *Y, const float *X, const int R, const int C, const int S, c
     {
         if (CSH*Nc*Ns*Nh==1)
         {
-            for (int r=0; r<Nr; r++, n2+=R) { cblas_scopy(R,X,1,&Y[n2],1); }
+            for (size_t r=0, n2=0; r<Nr; r++, n2+=R) { cblas_scopy((int)R,X,1,&Y[n2],1); }
         }
         else if (SH*Ns*Nh==1)
         {
-            for (int r=0; r<R*Nr; r++)
+            for (size_t r=0, n2=0; r<R*Nr; r++)
             {
-                n = CSH*r%R;
-                for (int c=0; c<Nc; c++, n2+=C) { cblas_scopy(C,&X[n],1,&Y[n2],1); }
+                size_t n = CSH*r%R;
+                for (size_t c=0; c<Nc; c++, n2+=C) { cblas_scopy((int)C,&X[n],1,&Y[n2],1); }
             }
         }
         else
         {
-            for (int r=0; r<R*Nr; r++)
+            for (size_t r=0, n2=0; r<R*Nr; r++)
             {
-                for (int c=0; c<C*Nc; c++)
+                for (size_t c=0; c<C*Nc; c++)
                 {
-                    for (int s=0; s<S*Ns; s++)
+                    for (size_t s=0; s<S*Ns; s++)
                     {
-                        n = CSH*r%R + SH*c%C + H*s%S;
-                        for (int h=0; h<Nh; h++, n2+=H) { cblas_scopy(H,&X[n],1,&Y[n2],1); }
+                        size_t n = CSH*r%R + SH*c%C + H*s%S;
+                        for (size_t h=0; h<Nh; h++, n2+=H) { cblas_scopy((int)H,&X[n],1,&Y[n2],1); }
                     }
                 }
             }
@@ -92,44 +86,38 @@ int repmat_s (float *Y, const float *X, const int R, const int C, const int S, c
 }
 
 
-int repmat_d (double *Y, const double *X, const int R, const int C, const int S, const int H, const int Nr, const int Nc, const int Ns, const int Nh, const char iscolmajor)
+int repmat_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Nr, const size_t Nc, const size_t Ns, const size_t Nh, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in repmat_d: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in repmat_d: C (ncols X) must be positive\n"); return 1; }
-    if (S<1) { fprintf(stderr,"error in repmat_d: S (num slices X) must be positive\n"); return 1; }
-    if (H<1) { fprintf(stderr,"error in repmat_d: H (num hyperslices X) must be positive\n"); return 1; }
-    if (Nr<1) { fprintf(stderr,"error in repmat_d: Nr (num row reps) must be positive\n"); return 1; }
-    if (Nc<1) { fprintf(stderr,"error in repmat_d: Nc (num col reps) must be positive\n"); return 1; }
-    if (Ns<1) { fprintf(stderr,"error in repmat_d: Ns (num slice reps) must be positive\n"); return 1; }
-    if (Nh<1) { fprintf(stderr,"error in repmat_d: Nh (num hyperslice reps) must be positive\n"); return 1; }
+    const size_t CR = C*R, SCR = S*CR;
+    const size_t SH = S*H, CSH = C*SH;
 
-    const int CR = C*R, SCR = S*CR;
-    const int SH = S*H, CSH = C*SH;
-    int n, n2 = 0;
-
-    if (iscolmajor)
+    if (Nr*Nc*Ns*Nh==1)
+    {
+        cblas_dcopy((int)(CR*SH),X,1,Y,1);
+    }
+    else if (iscolmajor)
     {
         if (R*Nr==1)
         {
-            for (int h=0; h<H*Nh; h++)
+            for (size_t h=0, n2=0; h<H*Nh; h++)
             {
-                for (int s=0; s<S*Ns; s++)
+                for (size_t s=0; s<S*Ns; s++)
                 {
-                    n = SCR*h%H + CR*s%S;
-                    for (int c=0; c<Nc; c++, n2+=C) { cblas_dcopy(C,&X[n],1,&Y[n2],1); }
+                    size_t n = SCR*h%H + CR*s%S;
+                    for (size_t c=0; c<Nc; c++, n2+=C) { cblas_dcopy((int)C,&X[n],1,&Y[n2],1); }
                 }
             }
         }
         else
         {
-            for (int h=0; h<H*Nh; h++)
+            for (size_t h=0, n2=0; h<H*Nh; h++)
             {
-                for (int s=0; s<S*Ns; s++)
+                for (size_t s=0; s<S*Ns; s++)
                 {
-                    for (int c=0; c<C*Nc; c++)
+                    for (size_t c=0; c<C*Nc; c++)
                     {
-                        n = SCR*h%H + CR*s%S + R*c%C;
-                        for (int r=0; r<Nr; r++, n2+=R) { cblas_dcopy(R,&X[n],1,&Y[n2],1); }
+                        size_t n = SCR*h%H + CR*s%S + R*c%C;
+                        for (size_t r=0; r<Nr; r++, n2+=R) { cblas_dcopy((int)R,&X[n],1,&Y[n2],1); }
                     }
                 }
             }
@@ -139,26 +127,26 @@ int repmat_d (double *Y, const double *X, const int R, const int C, const int S,
     {
         if (CSH*Nc*Ns*Nh==1)
         {
-            for (int r=0; r<Nr; r++, n2+=R) { cblas_dcopy(R,X,1,&Y[n2],1); }
+            for (size_t r=0, n2=0; r<Nr; r++, n2+=R) { cblas_dcopy((int)R,X,1,&Y[n2],1); }
         }
         else if (SH*Ns*Nh==1)
         {
-            for (int r=0; r<R*Nr; r++)
+            for (size_t r=0, n2=0; r<R*Nr; r++)
             {
-                n = CSH*r%R;
-                for (int c=0; c<Nc; c++, n2+=C) { cblas_dcopy(C,&X[n],1,&Y[n2],1); }
+                size_t n = CSH*r%R;
+                for (size_t c=0; c<Nc; c++, n2+=C) { cblas_dcopy((int)C,&X[n],1,&Y[n2],1); }
             }
         }
         else
         {
-            for (int r=0; r<R*Nr; r++)
+            for (size_t r=0, n2=0; r<R*Nr; r++)
             {
-                for (int c=0; c<C*Nc; c++)
+                for (size_t c=0; c<C*Nc; c++)
                 {
-                    for (int s=0; s<S*Ns; s++)
+                    for (size_t s=0; s<S*Ns; s++)
                     {
-                        n = CSH*r%R + SH*c%C + H*s%S;
-                        for (int h=0; h<Nh; h++, n2+=H) { cblas_dcopy(H,&X[n],1,&Y[n2],1); }
+                        size_t n = CSH*r%R + SH*c%C + H*s%S;
+                        for (size_t h=0; h<Nh; h++, n2+=H) { cblas_dcopy((int)H,&X[n],1,&Y[n2],1); }
                     }
                 }
             }
@@ -169,44 +157,38 @@ int repmat_d (double *Y, const double *X, const int R, const int C, const int S,
 }
 
 
-int repmat_c (float *Y, const float *X, const int R, const int C, const int S, const int H, const int Nr, const int Nc, const int Ns, const int Nh, const char iscolmajor)
+int repmat_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Nr, const size_t Nc, const size_t Ns, const size_t Nh, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in repmat_c: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in repmat_c: C (ncols X) must be positive\n"); return 1; }
-    if (S<1) { fprintf(stderr,"error in repmat_c: S (num slices X) must be positive\n"); return 1; }
-    if (H<1) { fprintf(stderr,"error in repmat_c: H (num hyperslices X) must be positive\n"); return 1; }
-    if (Nr<1) { fprintf(stderr,"error in repmat_c: Nr (num row reps) must be positive\n"); return 1; }
-    if (Nc<1) { fprintf(stderr,"error in repmat_c: Nc (num col reps) must be positive\n"); return 1; }
-    if (Ns<1) { fprintf(stderr,"error in repmat_c: Ns (num slice reps) must be positive\n"); return 1; }
-    if (Nh<1) { fprintf(stderr,"error in repmat_c: Nh (num hyperslice reps) must be positive\n"); return 1; }
+    const size_t CR = C*R, SCR = S*CR;
+    const size_t SH = S*H, CSH = C*SH;
 
-    const int CR = C*R, SCR = S*CR;
-    const int SH = S*H, CSH = C*SH;
-    int n, n2 = 0;
-
-    if (iscolmajor)
+    if (Nr*Nc*Ns*Nh==1)
+    {
+        cblas_ccopy((int)(CR*SH),X,1,Y,1);
+    }
+    else if (iscolmajor)
     {
         if (R*Nr==1)
         {
-            for (int h=0; h<H*Nh; h++)
+            for (size_t h=0, n2=0; h<H*Nh; h++)
             {
-                for (int s=0; s<S*Ns; s++)
+                for (size_t s=0; s<S*Ns; s++)
                 {
-                    n = 2*(SCR*h%H + CR*s%S);
-                    for (int c=0; c<Nc; c++, n2+=2*C) { cblas_ccopy(C,&X[n],1,&Y[n2],1); }
+                    size_t n = 2*(SCR*h%H + CR*s%S);
+                    for (size_t c=0; c<Nc; c++, n2+=2*C) { cblas_ccopy((int)C,&X[n],1,&Y[n2],1); }
                 }
             }
         }
         else
         {
-            for (int h=0; h<H*Nh; h++)
+            for (size_t h=0, n2=0; h<H*Nh; h++)
             {
-                for (int s=0; s<S*Ns; s++)
+                for (size_t s=0; s<S*Ns; s++)
                 {
-                    for (int c=0; c<C*Nc; c++)
+                    for (size_t c=0; c<C*Nc; c++)
                     {
-                        n = 2*(SCR*h%H + CR*s%S + R*c%C);
-                        for (int r=0; r<Nr; r++, n2+=2*R) { cblas_ccopy(R,&X[n],1,&Y[n2],1); }
+                        size_t n = 2*(SCR*h%H + CR*s%S + R*c%C);
+                        for (size_t r=0; r<Nr; r++, n2+=2*R) { cblas_ccopy((int)R,&X[n],1,&Y[n2],1); }
                     }
                 }
             }
@@ -216,26 +198,26 @@ int repmat_c (float *Y, const float *X, const int R, const int C, const int S, c
     {
         if (CSH*Nc*Ns*Nh==1)
         {
-            for (int r=0; r<Nr; r++, n2+=2*R) { cblas_ccopy(R,X,1,&Y[n2],1); }
+            for (size_t r=0, n2=0; r<Nr; r++, n2+=2*R) { cblas_ccopy((int)R,X,1,&Y[n2],1); }
         }
         else if (SH*Ns*Nh==1)
         {
-            for (int r=0; r<R*Nr; r++)
+            for (size_t r=0, n2=0; r<R*Nr; r++)
             {
-                n = 2*(CSH*r%R);
-                for (int c=0; c<Nc; c++, n2+=2*C) { cblas_ccopy(C,&X[n],1,&Y[n2],1); }
+                size_t n = 2*(CSH*r%R);
+                for (size_t c=0; c<Nc; c++, n2+=2*C) { cblas_ccopy((int)C,&X[n],1,&Y[n2],1); }
             }
         }
         else
         {
-            for (int r=0; r<R*Nr; r++)
+            for (size_t r=0, n2=0; r<R*Nr; r++)
             {
-                for (int c=0; c<C*Nc; c++)
+                for (size_t c=0; c<C*Nc; c++)
                 {
-                    for (int s=0; s<S*Ns; s++)
+                    for (size_t s=0; s<S*Ns; s++)
                     {
-                        n = 2*(CSH*r%R + SH*c%C + H*s%S);
-                        for (int h=0; h<Nh; h++, n2+=2*H) { cblas_ccopy(H,&X[n],1,&Y[n2],1); }
+                        size_t n = 2*(CSH*r%R + SH*c%C + H*s%S);
+                        for (size_t h=0; h<Nh; h++, n2+=2*H) { cblas_ccopy((int)H,&X[n],1,&Y[n2],1); }
                     }
                 }
             }
@@ -246,44 +228,38 @@ int repmat_c (float *Y, const float *X, const int R, const int C, const int S, c
 }
 
 
-int repmat_z (double *Y, const double *X, const int R, const int C, const int S, const int H, const int Nr, const int Nc, const int Ns, const int Nh, const char iscolmajor)
+int repmat_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Nr, const size_t Nc, const size_t Ns, const size_t Nh, const char iscolmajor)
 {
-    if (R<1) { fprintf(stderr,"error in repmat_z: R (nrows X) must be positive\n"); return 1; }
-    if (C<1) { fprintf(stderr,"error in repmat_z: C (ncols X) must be positive\n"); return 1; }
-    if (S<1) { fprintf(stderr,"error in repmat_z: S (num slices X) must be positive\n"); return 1; }
-    if (H<1) { fprintf(stderr,"error in repmat_z: H (num hyperslices X) must be positive\n"); return 1; }
-    if (Nr<1) { fprintf(stderr,"error in repmat_z: Nr (num row reps) must be positive\n"); return 1; }
-    if (Nc<1) { fprintf(stderr,"error in repmat_z: Nc (num col reps) must be positive\n"); return 1; }
-    if (Ns<1) { fprintf(stderr,"error in repmat_z: Ns (num slice reps) must be positive\n"); return 1; }
-    if (Nh<1) { fprintf(stderr,"error in repmat_z: Nh (num hyperslice reps) must be positive\n"); return 1; }
+    const size_t CR = C*R, SCR = S*CR;
+    const size_t SH = S*H, CSH = C*SH;
 
-    const int CR = C*R, SCR = S*CR;
-    const int SH = S*H, CSH = C*SH;
-    int n, n2 = 0;
-
-    if (iscolmajor)
+    if (Nr*Nc*Ns*Nh==1)
+    {
+        cblas_zcopy((int)(CR*SH),X,1,Y,1);
+    }
+    else if (iscolmajor)
     {
         if (R*Nr==1)
         {
-            for (int h=0; h<H*Nh; h++)
+            for (size_t h=0, n2=0; h<H*Nh; h++)
             {
-                for (int s=0; s<S*Ns; s++)
+                for (size_t s=0; s<S*Ns; s++)
                 {
-                    n = 2*(SCR*h%H + CR*s%S);
-                    for (int c=0; c<Nc; c++, n2+=2*C) { cblas_zcopy(C,&X[n],1,&Y[n2],1); }
+                    size_t n = 2*(SCR*h%H + CR*s%S);
+                    for (size_t c=0; c<Nc; c++, n2+=2*C) { cblas_zcopy((int)C,&X[n],1,&Y[n2],1); }
                 }
             }
         }
         else
         {
-            for (int h=0; h<H*Nh; h++)
+            for (size_t h=0, n2=0; h<H*Nh; h++)
             {
-                for (int s=0; s<S*Ns; s++)
+                for (size_t s=0; s<S*Ns; s++)
                 {
-                    for (int c=0; c<C*Nc; c++)
+                    for (size_t c=0; c<C*Nc; c++)
                     {
-                        n = 2*(SCR*h%H + CR*s%S + R*c%C);
-                        for (int r=0; r<Nr; r++, n2+=2*R) { cblas_zcopy(R,&X[n],1,&Y[n2],1); }
+                        size_t n = 2*(SCR*h%H + CR*s%S + R*c%C);
+                        for (size_t r=0; r<Nr; r++, n2+=2*R) { cblas_zcopy((int)R,&X[n],1,&Y[n2],1); }
                     }
                 }
             }
@@ -293,26 +269,26 @@ int repmat_z (double *Y, const double *X, const int R, const int C, const int S,
     {
         if (CSH*Nc*Ns*Nh==1)
         {
-            for (int r=0; r<Nr; r++, n2+=2*R) { cblas_zcopy(R,X,1,&Y[n2],1); }
+            for (size_t r=0, n2=0; r<Nr; r++, n2+=2*R) { cblas_zcopy((int)R,X,1,&Y[n2],1); }
         }
         else if (SH*Ns*Nh==1)
         {
-            for (int r=0; r<R*Nr; r++)
+            for (size_t r=0, n2=0; r<R*Nr; r++)
             {
-                n = 2*(CSH*r%R);
-                for (int c=0; c<Nc; c++, n2+=2*C) { cblas_zcopy(C,&X[n],1,&Y[n2],1); }
+                size_t n = 2*(CSH*r%R);
+                for (size_t c=0; c<Nc; c++, n2+=2*C) { cblas_zcopy((int)C,&X[n],1,&Y[n2],1); }
             }
         }
         else
         {
-            for (int r=0; r<R*Nr; r++)
+            for (size_t r=0, n2=0; r<R*Nr; r++)
             {
-                for (int c=0; c<C*Nc; c++)
+                for (size_t c=0; c<C*Nc; c++)
                 {
-                    for (int s=0; s<S*Ns; s++)
+                    for (size_t s=0; s<S*Ns; s++)
                     {
-                        n = 2*(CSH*r%R + SH*c%C + H*s%S);
-                        for (int h=0; h<Nh; h++, n2+=2*H) { cblas_zcopy(H,&X[n],1,&Y[n2],1); }
+                        size_t n = 2*(CSH*r%R + SH*c%C + H*s%S);
+                        for (size_t h=0; h<Nh; h++, n2+=2*H) { cblas_zcopy((int)H,&X[n],1,&Y[n2],1); }
                     }
                 }
             }

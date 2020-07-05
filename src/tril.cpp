@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -143,8 +142,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::tril_s(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
-        if (codee::tril_inplace_s(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
+        //if (codee::tril_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),k))
+        if (codee::tril_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -162,8 +161,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::tril_d(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
-        if (codee::tril_inplace_d(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
+        //if (codee::tril_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),k))
+        if (codee::tril_inplace_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -181,8 +180,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::tril_c(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
-        if (codee::tril_inplace_c(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
+        //if (codee::tril_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),k))
+        if (codee::tril_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -200,8 +199,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::tril_z(Y,X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
-        if (codee::tril_inplace_z(X,int(i1.R),int(i1.C),int(i1.S),int(i1.H),i1.iscolmajor(),k))
+        //if (codee::tril_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),k))
+        if (codee::tril_inplace_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

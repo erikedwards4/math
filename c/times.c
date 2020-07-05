@@ -11,18 +11,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int times_s (float *Y, const float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
-int times_d (double *Y, const double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
-int times_c (float *Y, const float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
-int times_z (double *Y, const double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
+int times_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int times_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int times_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int times_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
 
-int times_inplace_s (float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
-int times_inplace_d (double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
-int times_inplace_c (float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
-int times_inplace_z (double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
+int times_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int times_inplace_d (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int times_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int times_inplace_z (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
 
 
-int times_s (float *Y, const float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int times_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in times_s: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in times_s: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -58,15 +58,15 @@ int times_s (float *Y, const float *X1, const float *X2, const int R1, const int
         const int RC1 = R1*(C1>1), RC2 = R2*(C2>1);
         const int r1i = (R1>1), r2i = (R2>1);
         int n1, n2, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n1 = h*RCSH1 + s*RCS1 + c*RC1;
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         Y[n] = X1[n1] * X2[n2];
                         n++; n1 += r1i; n2 += r2i;
@@ -82,15 +82,15 @@ int times_s (float *Y, const float *X1, const float *X2, const int R1, const int
         const int HS1 = H1*(S1>1), HS2 = H2*(S2>1);
         const int h1i = (H1>1), h2i = (H2>1);
         int n1, n2, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n1 = r*HSCR1 + c*HSC1 + s*HS1;
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         Y[n] = X1[n1] * X2[n2];
                         n++; n1 += h1i; n2 += h2i;
@@ -104,7 +104,7 @@ int times_s (float *Y, const float *X1, const float *X2, const int R1, const int
 }
 
 
-int times_d (double *Y, const double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int times_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in times_d: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in times_d: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -140,15 +140,15 @@ int times_d (double *Y, const double *X1, const double *X2, const int R1, const 
         const int RC1 = R1*(C1>1), RC2 = R2*(C2>1);
         const int r1i = (R1>1), r2i = (R2>1);
         int n1, n2, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n1 = h*RCSH1 + s*RCS1 + c*RC1;
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         Y[n] = X1[n1] * X2[n2];
                         n++; n1 += r1i; n2 += r2i;
@@ -164,15 +164,15 @@ int times_d (double *Y, const double *X1, const double *X2, const int R1, const 
         const int HS1 = H1*(S1>1), HS2 = H2*(S2>1);
         const int h1i = (H1>1), h2i = (H2>1);
         int n1, n2, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n1 = r*HSCR1 + c*HSC1 + s*HS1;
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         Y[n] = X1[n1] * X2[n2];
                         n++; n1 += h1i; n2 += h2i;
@@ -186,7 +186,7 @@ int times_d (double *Y, const double *X1, const double *X2, const int R1, const 
 }
 
 
-int times_c (float *Y, const float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int times_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in times_c: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in times_c: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -222,15 +222,15 @@ int times_c (float *Y, const float *X1, const float *X2, const int R1, const int
         const int RC1 = 2*R1*(C1>1), RC2 = 2*R2*(C2>1);
         const int r1i = 2*(R1>1), r2i = 2*(R2>1);
         int n1, n2 = 0, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n1 = h*RCSH1 + s*RCS1 + c*RC1;
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         Y[n] = X1[n1]*X2[n2] - X1[n1+1]*X2[n2+1];
                         Y[n+1] = X1[n1]*X2[n2+1] + X1[n1+1]*X2[n2];
@@ -247,15 +247,15 @@ int times_c (float *Y, const float *X1, const float *X2, const int R1, const int
         const int HS1 = 2*H1*(S1>1), HS2 = 2*H2*(S2>1);
         const int h1i = 2*(H1>1), h2i = 2*(H2>1);
         int n1, n2 = 0, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n1 = r*HSCR1 + c*HSC1 + s*HS1;
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         Y[n] = X1[n1]*X2[n2] - X1[n1+1]*X2[n2+1];
                         Y[n+1] = X1[n1]*X2[n2+1] + X1[n1+1]*X2[n2];
@@ -270,7 +270,7 @@ int times_c (float *Y, const float *X1, const float *X2, const int R1, const int
 }
 
 
-int times_z (double *Y, const double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int times_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in times_z: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in times_z: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -309,15 +309,15 @@ int times_z (double *Y, const double *X1, const double *X2, const int R1, const 
         const int RC1 = 2*R1*(C1>1), RC2 = 2*R2*(C2>1);
         const int r1i = 2*(R1>1), r2i = 2*(R2>1);
         int n1, n2 = 0, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n1 = h*RCSH1 + s*RCS1 + c*RC1;
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         Y[n] = X1[n1]*X2[n2] - X1[n1+1]*X2[n2+1];
                         Y[n+1] = X1[n1]*X2[n2+1] + X1[n1+1]*X2[n2];
@@ -334,15 +334,15 @@ int times_z (double *Y, const double *X1, const double *X2, const int R1, const 
         const int HS1 = 2*H1*(S1>1), HS2 = 2*H2*(S2>1);
         const int h1i = 2*(H1>1), h2i = 2*(H2>1);
         int n1, n2 = 0, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n1 = r*HSCR1 + c*HSC1 + s*HS1;
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         Y[n] = X1[n1]*X2[n2] - X1[n1+1]*X2[n2+1];
                         Y[n+1] = X1[n1]*X2[n2+1] + X1[n1+1]*X2[n2];
@@ -359,7 +359,7 @@ int times_z (double *Y, const double *X1, const double *X2, const int R1, const 
 }
 
 
-int times_inplace_s (float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int times_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in times_inplace_s: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in times_inplace_s: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -393,14 +393,14 @@ int times_inplace_s (float *X1, const float *X2, const int R1, const int C1, con
     {
         const int RCSH2 = R2*C2*S2*(H2>1), RCS2 = R2*C2*(S2>1), RC2 = R2*(C2>1), r2i = (R2>1);
         int n2, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         X1[n] *= X2[n2];
                         n++; n2 += r2i;
@@ -413,14 +413,14 @@ int times_inplace_s (float *X1, const float *X2, const int R1, const int C1, con
     {
         const int HSCR2 = H2*S2*C2*(R2>1), HSC2 = H2*S2*(C2>1), HS2 = H2*(S2>1), h2i = (H2>1);
         int n2, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         X1[n] *= X2[n2];
                         n++; n2 += h2i;
@@ -436,7 +436,7 @@ int times_inplace_s (float *X1, const float *X2, const int R1, const int C1, con
 }
 
 
-int times_inplace_d (double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int times_inplace_d (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in times_inplace_d: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in times_inplace_d: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -467,14 +467,14 @@ int times_inplace_d (double *X1, const double *X2, const int R1, const int C1, c
     {
         const int RCSH2 = R2*C2*S2*(H2>1), RCS2 = R2*C2*(S2>1), RC2 = R2*(C2>1), r2i = (R2>1);
         int n2, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         X1[n] *= X2[n2];
                         n++; n2 += r2i;
@@ -487,14 +487,14 @@ int times_inplace_d (double *X1, const double *X2, const int R1, const int C1, c
     {
         const int HSCR2 = H2*S2*C2*(R2>1), HSC2 = H2*S2*(C2>1), HS2 = H2*(S2>1), h2i = (H2>1);
         int n2, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         X1[n] *= X2[n2];
                         n++; n2 += h2i;
@@ -508,7 +508,7 @@ int times_inplace_d (double *X1, const double *X2, const int R1, const int C1, c
 }
 
 
-int times_inplace_c (float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int times_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in times_inplace_c: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in times_inplace_c: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -539,14 +539,14 @@ int times_inplace_c (float *X1, const float *X2, const int R1, const int C1, con
     {
         const int RCSH2 = 2*R2*C2*S2*(H2>1), RCS2 = 2*R2*C2*(S2>1), RC2 = 2*R2*(C2>1), r2i = 2*(R2>1);
         int n2 = 0, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         tmp = X1[n]*X2[n2] - X1[n+1]*X2[n2+1];
                         X1[n+1] = X1[n]*X2[n2+1] + X1[n+1]*X2[n2];
@@ -560,14 +560,14 @@ int times_inplace_c (float *X1, const float *X2, const int R1, const int C1, con
     {
         const int HSCR2 = 2*H2*S2*C2*(R2>1), HSC2 = 2*H2*S2*(C2>1), HS2 = 2*H2*(S2>1), h2i = 2*(H2>1);
         int n2 = 0, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         tmp = X1[n]*X2[n2] - X1[n+1]*X2[n2+1];
                         X1[n+1] = X1[n]*X2[n2+1] + X1[n+1]*X2[n2];
@@ -582,7 +582,7 @@ int times_inplace_c (float *X1, const float *X2, const int R1, const int C1, con
 }
 
 
-int times_inplace_z (double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int times_inplace_z (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in times_inplace_z: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in times_inplace_z: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -613,14 +613,14 @@ int times_inplace_z (double *X1, const double *X2, const int R1, const int C1, c
     {
         const int RCSH2 = 2*R2*C2*S2*(H2>1), RCS2 = 2*R2*C2*(S2>1), RC2 = 2*R2*(C2>1), r2i = 2*(R2>1);
         int n2 = 0, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         tmp = X1[n]*X2[n2] - X1[n+1]*X2[n2+1];
                         X1[n+1] = X1[n]*X2[n2+1] + X1[n+1]*X2[n2];
@@ -634,14 +634,14 @@ int times_inplace_z (double *X1, const double *X2, const int R1, const int C1, c
     {
         const int HSCR2 = 2*H2*S2*C2*(R2>1), HSC2 = 2*H2*S2*(C2>1), HS2 = 2*H2*(S2>1), h2i = 2*(H2>1);
         int n2 = 0, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         tmp = X1[n]*X2[n2] - X1[n+1]*X2[n2+1];
                         X1[n+1] = X1[n]*X2[n2+1] + X1[n+1]*X2[n2];

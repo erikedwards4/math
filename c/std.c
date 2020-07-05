@@ -11,13 +11,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int std_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int std_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int std_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int std_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int std_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int std_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
 
 
-int std_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const float o = 1.0f;
     float m, den;
@@ -33,18 +33,18 @@ int std_s (float *Y, float *X, const int R, const int C,const int S, const int H
         {
             for (c=0; c<C; c++)
             {
-                m = -cblas_sdot(R,&X[c*R],1,&o,0) / R;
-                cblas_saxpy(R,m,&o,0,&X[c*R],1);
-                Y[c] = sqrtf(cblas_snrm2(R,&X[c*R],1)/den);
+                m = -cblas_sdot((int)R,&X[c*R],1,&o,0) / R;
+                cblas_saxpy((int)R,m,&o,0,&X[c*R],1);
+                Y[c] = sqrtf(cblas_snrm2((int)R,&X[c*R],1)/den);
             }
         }
         else
         {
             for (c=0; c<C; c++)
             {
-                m = -cblas_sdot(R,&X[c],C,&o,0) / R;
-                cblas_saxpy(R,m,&o,0,&X[c],C);
-                Y[c] = sqrtf(cblas_snrm2(R,&X[c],C)/den);
+                m = -cblas_sdot((int)R,&X[c],(int)C,&o,0) / R;
+                cblas_saxpy((int)R,m,&o,0,&X[c],(int)C);
+                Y[c] = sqrtf(cblas_snrm2((int)R,&X[c],(int)C)/den);
             }
         }
     }
@@ -55,18 +55,18 @@ int std_s (float *Y, float *X, const int R, const int C,const int S, const int H
         {
             for (r=0; r<R; r++)
             {
-                m = -cblas_sdot(C,&X[r],R,&o,0) / C;
-                cblas_saxpy(C,m,&o,0,&X[r],R);
-                Y[r] = sqrtf(cblas_snrm2(C,&X[r],R)/den);
+                m = -cblas_sdot((int)C,&X[r],(int)R,&o,0) / C;
+                cblas_saxpy((int)C,m,&o,0,&X[r],(int)R);
+                Y[r] = sqrtf(cblas_snrm2((int)C,&X[r],(int)R)/den);
             }
         }
         else
         {
             for (r=0; r<R; r++)
             {
-                m = -cblas_sdot(C,&X[r*C],1,&o,0) / C;
-                cblas_saxpy(C,m,&o,0,&X[r*C],1);
-                Y[r] = sqrtf(cblas_snrm2(C,&X[r*C],1)/den);
+                m = -cblas_sdot((int)C,&X[r*C],1,&o,0) / C;
+                cblas_saxpy((int)C,m,&o,0,&X[r*C],1);
+                Y[r] = sqrtf(cblas_snrm2((int)C,&X[r*C],1)/den);
             }
         }
     }
@@ -79,7 +79,7 @@ int std_s (float *Y, float *X, const int R, const int C,const int S, const int H
 }
 
 
-int std_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const double o = 1.0;
     double m, den;
@@ -95,18 +95,18 @@ int std_d (double *Y, double *X, const int R, const int C,const int S, const int
         {
             for (c=0; c<C; c++)
             {
-                m = -cblas_ddot(R,&X[c*R],1,&o,0) / R;
-                cblas_daxpy(R,m,&o,0,&X[c*R],1);
-                Y[c] = sqrt(cblas_dnrm2(R,&X[c*R],1)/den);
+                m = -cblas_ddot((int)R,&X[c*R],1,&o,0) / R;
+                cblas_daxpy((int)R,m,&o,0,&X[c*R],1);
+                Y[c] = sqrt(cblas_dnrm2((int)R,&X[c*R],1)/den);
             }
         }
         else
         {
             for (c=0; c<C; c++)
             {
-                m = -cblas_ddot(R,&X[c],C,&o,0) / R;
-                cblas_daxpy(R,m,&o,0,&X[c],C);
-                Y[c] = sqrt(cblas_dnrm2(R,&X[c],C)/den);
+                m = -cblas_ddot((int)R,&X[c],(int)C,&o,0) / R;
+                cblas_daxpy((int)R,m,&o,0,&X[c],(int)C);
+                Y[c] = sqrt(cblas_dnrm2((int)R,&X[c],(int)C)/den);
             }
         }
     }
@@ -117,18 +117,18 @@ int std_d (double *Y, double *X, const int R, const int C,const int S, const int
         {
             for (r=0; r<R; r++)
             {
-                m = -cblas_ddot(C,&X[r],R,&o,0) / C;
-                cblas_daxpy(C,m,&o,0,&X[r],R);
-                Y[r] = sqrt(cblas_dnrm2(C,&X[r],R)/den);
+                m = -cblas_ddot((int)C,&X[r],(int)R,&o,0) / C;
+                cblas_daxpy((int)C,m,&o,0,&X[r],(int)R);
+                Y[r] = sqrt(cblas_dnrm2((int)C,&X[r],(int)R)/den);
             }
         }
         else
         {
             for (r=0; r<R; r++)
             {
-                m = -cblas_ddot(C,&X[r*C],1,&o,0) / C;
-                cblas_daxpy(C,m,&o,0,&X[r*C],1);
-                Y[r] = sqrt(cblas_dnrm2(C,&X[r*C],1)/den);
+                m = -cblas_ddot((int)C,&X[r*C],1,&o,0) / C;
+                cblas_daxpy((int)C,m,&o,0,&X[r*C],1);
+                Y[r] = sqrt(cblas_dnrm2((int)C,&X[r*C],1)/den);
             }
         }
     }
@@ -141,7 +141,7 @@ int std_d (double *Y, double *X, const int R, const int C,const int S, const int
 }
 
 
-int std_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int std_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const float o[2] =  {1.0f,0.0f};
     _Complex float m;
@@ -158,18 +158,18 @@ int std_c (float *Y, float *X, const int R, const int C,const int S, const int H
         {
             for (c=0; c<C; c++)
             {
-                m = -cblas_cdotu(R,&X[2*c*R],1,&o[0],0) / R;
-                cblas_caxpy(R,(float *)&m,&o[0],0,&X[2*c*R],1);
-                Y[c] = sqrtf(cblas_scnrm2(R,&X[2*c*R],1)/den);
+                m = -cblas_cdotu((int)R,&X[2*c*R],1,&o[0],0) / R;
+                cblas_caxpy((int)R,(float *)&m,&o[0],0,&X[2*c*R],1);
+                Y[c] = sqrtf(cblas_scnrm2((int)R,&X[2*c*R],1)/den);
             }
         }
         else
         {
             for (c=0; c<C; c++)
             {
-                m = -cblas_cdotu(R,&X[2*c],C,&o[0],0) / R;
-                cblas_caxpy(R,(float *)&m,&o[0],0,&X[2*c],C);
-                Y[c] = sqrtf(cblas_scnrm2(R,&X[2*c],C)/den);
+                m = -cblas_cdotu((int)R,&X[2*c],(int)C,&o[0],0) / R;
+                cblas_caxpy((int)R,(float *)&m,&o[0],0,&X[2*c],(int)C);
+                Y[c] = sqrtf(cblas_scnrm2((int)R,&X[2*c],(int)C)/den);
             }
         }
     }
@@ -180,18 +180,18 @@ int std_c (float *Y, float *X, const int R, const int C,const int S, const int H
         {
             for (r=0; r<R; r++)
             {
-                m = -cblas_cdotu(C,&X[2*r],R,&o[0],0) / C;
-                cblas_caxpy(C,(float *)&m,&o[0],0,&X[2*r],R);
-                Y[r] = sqrtf(cblas_scnrm2(C,&X[2*r],R)/den);
+                m = -cblas_cdotu((int)C,&X[2*r],(int)R,&o[0],0) / C;
+                cblas_caxpy((int)C,(float *)&m,&o[0],0,&X[2*r],(int)R);
+                Y[r] = sqrtf(cblas_scnrm2((int)C,&X[2*r],(int)R)/den);
             }
         }
         else
         {
             for (r=0; r<R; r++)
             {
-                m = -cblas_cdotu(C,&X[2*r*C],1,&o[0],0) / C;
-                cblas_caxpy(C,(float *)&m,&o[0],0,&X[2*r*C],1);
-                Y[r] = sqrtf(cblas_scnrm2(C,&X[2*r*C],1)/den);
+                m = -cblas_cdotu((int)C,&X[2*r*C],1,&o[0],0) / C;
+                cblas_caxpy((int)C,(float *)&m,&o[0],0,&X[2*r*C],1);
+                Y[r] = sqrtf(cblas_scnrm2((int)C,&X[2*r*C],1)/den);
             }
         }
     }
@@ -204,7 +204,7 @@ int std_c (float *Y, float *X, const int R, const int C,const int S, const int H
 }
 
 
-int std_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int std_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const double o[2] =  {1.0,0.0};
     _Complex double m;
@@ -221,18 +221,18 @@ int std_z (double *Y, double *X, const int R, const int C,const int S, const int
         {
             for (c=0; c<C; c++)
             {
-                m = -cblas_zdotu(R,&X[2*c*R],1,&o[0],0) / R;
-                cblas_zaxpy(R,(double *)&m,&o[0],0,&X[2*c*R],1);
-                Y[c] = sqrt(cblas_dznrm2(R,&X[2*c*R],1)/den);
+                m = -cblas_zdotu((int)R,&X[2*c*R],1,&o[0],0) / R;
+                cblas_zaxpy((int)R,(double *)&m,&o[0],0,&X[2*c*R],1);
+                Y[c] = sqrt(cblas_dznrm2((int)R,&X[2*c*R],1)/den);
             }
         }
         else
         {
             for (c=0; c<C; c++)
             {
-                m = -cblas_zdotu(R,&X[2*c],C,&o[0],0) / R;
-                cblas_zaxpy(R,(double *)&m,&o[0],0,&X[2*c],C);
-                Y[c] = sqrt(cblas_dznrm2(R,&X[2*c],C)/den);
+                m = -cblas_zdotu((int)R,&X[2*c],(int)C,&o[0],0) / R;
+                cblas_zaxpy((int)R,(double *)&m,&o[0],0,&X[2*c],(int)C);
+                Y[c] = sqrt(cblas_dznrm2((int)R,&X[2*c],(int)C)/den);
             }
         }
     }
@@ -243,18 +243,18 @@ int std_z (double *Y, double *X, const int R, const int C,const int S, const int
         {
             for (r=0; r<R; r++)
             {
-                m = -cblas_zdotu(C,&X[2*r],R,&o[0],0) / C;
-                cblas_zaxpy(C,(double *)&m,&o[0],0,&X[2*r],R);
-                Y[r] = sqrt(cblas_dznrm2(C,&X[2*r],R)/den);
+                m = -cblas_zdotu((int)C,&X[2*r],(int)R,&o[0],0) / C;
+                cblas_zaxpy((int)C,(double *)&m,&o[0],0,&X[2*r],(int)R);
+                Y[r] = sqrt(cblas_dznrm2((int)C,&X[2*r],(int)R)/den);
             }
         }
         else
         {
             for (r=0; r<R; r++)
             {
-                m = -cblas_zdotu(C,&X[2*r*C],1,&o[0],0) / C;
-                cblas_zaxpy(C,(double *)&m,&o[0],0,&X[2*r*C],1);
-                Y[r] = sqrt(cblas_dznrm2(C,&X[2*r*C],1)/den);
+                m = -cblas_zdotu((int)C,&X[2*r*C],1,&o[0],0) / C;
+                cblas_zaxpy((int)C,(double *)&m,&o[0],0,&X[2*r*C],1);
+                Y[r] = sqrt(cblas_dznrm2((int)C,&X[2*r*C],1)/den);
             }
         }
     }

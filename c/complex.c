@@ -11,11 +11,11 @@ namespace codee {
 extern "C" {
 #endif
 
-int complex_s (float *Y, const float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
-int complex_d (double *Y, const double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor);
+int complex_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int complex_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
 
 
-int complex_s (float *Y, const float *X1, const float *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int complex_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in complex_s: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in complex_s: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -54,15 +54,15 @@ int complex_s (float *Y, const float *X1, const float *X2, const int R1, const i
         const int RC1 = R1*(C1>1), RC2 = R2*(C2>1);
         const int r1i = (R1>1), r2i = (R2>1);
         int n1, n2, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n1 = h*RCSH1 + s*RCS1 + c*RC1;
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         Y[n] = X1[n1]; Y[n+1] = X2[n2];
                         n+=2; n1 += r1i; n2 += r2i;
@@ -78,15 +78,15 @@ int complex_s (float *Y, const float *X1, const float *X2, const int R1, const i
         const int HS1 = H1*(S1>1), HS2 = H2*(S2>1);
         const int h1i = (H1>1), h2i = (H2>1);
         int n1, n2, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n1 = r*HSCR1 + c*HSC1 + s*HS1;
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         Y[n] = X1[n1]; Y[n+1] = X2[n2];
                         n+=2; n1 += h1i; n2 += h2i;
@@ -100,7 +100,7 @@ int complex_s (float *Y, const float *X1, const float *X2, const int R1, const i
 }
 
 
-int complex_d (double *Y, const double *X1, const double *X2, const int R1, const int C1, const int S1, const int H1, const int R2, const int C2, const int S2, const int H2, const char iscolmajor)
+int complex_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     if (R1<0) { fprintf(stderr,"error in complex_d: R1 (num rows X1) must be nonnegative\n"); return 1; }
     if (C1<0) { fprintf(stderr,"error in complex_d: C1 (num cols X1) must be nonnegative\n"); return 1; }
@@ -139,15 +139,15 @@ int complex_d (double *Y, const double *X1, const double *X2, const int R1, cons
         const int RC1 = R1*(C1>1), RC2 = R2*(C2>1);
         const int r1i = (R1>1), r2i = (R2>1);
         int n1, n2, n = 0;
-        for (int h=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (int s=0; s<S; s++)
+            for (size_t s=0; s<S; s++)
             {
-                for (int c=0; c<C; c++)
+                for (size_t c=0; c<C; c++)
                 {
                     n1 = h*RCSH1 + s*RCS1 + c*RC1;
                     n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (int r=0; r<R; r++)
+                    for (size_t r=0; r<R; r++)
                     {
                         Y[n] = X1[n1]; Y[n+1] = X2[n2];
                         n+=2; n1 += r1i; n2 += r2i;
@@ -163,15 +163,15 @@ int complex_d (double *Y, const double *X1, const double *X2, const int R1, cons
         const int HS1 = H1*(S1>1), HS2 = H2*(S2>1);
         const int h1i = (H1>1), h2i = (H2>1);
         int n1, n2, n = 0;
-        for (int r=0; r<R; r++)
+        for (size_t r=0; r<R; r++)
         {
-            for (int c=0; c<C; c++)
+            for (size_t c=0; c<C; c++)
             {
-                for (int s=0; s<S; s++)
+                for (size_t s=0; s<S; s++)
                 {
                     n1 = r*HSCR1 + c*HSC1 + s*HS1;
                     n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (int h=0; h<H; h++)
+                    for (size_t h=0; h<H; h++)
                     {
                         Y[n] = X1[n1]; Y[n+1] = X2[n2];
                         n+=2; n1 += h1i; n2 += h2i;

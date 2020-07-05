@@ -11,55 +11,47 @@ namespace codee {
 extern "C" {
 #endif
 
-int realmax_s (float *Y, const int N);
-int realmax_d (double *Y, const int N);
-int realmax_c (float *Y, const int N);
-int realmax_z (double *Y, const int N);
+int realmax_s (float *Y, const size_t N);
+int realmax_d (double *Y, const size_t N);
+int realmax_c (float *Y, const size_t N);
+int realmax_z (double *Y, const size_t N);
 
 
-int realmax_s (float *Y, const int N)
+int realmax_s (float *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in realmax_s: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const float v = FLT_MAX;
 
-    cblas_scopy(N,&v,0,Y,1);
+    cblas_scopy((int)N,&v,0,Y,1);
 
     return 0;
 }
 
 
-int realmax_d (double *Y, const int N)
+int realmax_d (double *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in realmax_d: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const double v = DBL_MAX;
 
-    cblas_dcopy(N,&v,0,Y,1);
+    cblas_dcopy((int)N,&v,0,Y,1);
 
     return 0;
 }
 
 
-int realmax_c (float *Y, const int N)
+int realmax_c (float *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in realmax_c: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const float v[2] = {FLT_MAX,0.0f};
 
-    cblas_ccopy(N,v,0,Y,1);
+    cblas_ccopy((int)N,v,0,Y,1);
 
     return 0;
 }
 
 
-int realmax_z (double *Y, const int N)
+int realmax_z (double *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in realmax_z: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const double v[2] = {DBL_MAX,0.0};
 
-    cblas_zcopy(N,v,0,Y,1);
+    cblas_zcopy((int)N,v,0,Y,1);
 
     return 0;
 }

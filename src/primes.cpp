@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -34,8 +33,8 @@ int main(int argc, char *argv[])
     ofstream ofs1;
     int8_t stdo1, wo1;
     ioinfo o1;
-    int P, cnt;
-    int *X;
+    size_t P, cnt;
+    size_t *X;
 
 
     //Description
@@ -47,7 +46,7 @@ int main(int argc, char *argv[])
     descr += "\n";
     descr += "Use -t (--type) to specify output data type [default=1 -> float].\n";
     descr += "Data type can also be 2 (double).\n";
-    descr += "Internally, the Sieve of Eratosthanes uses integers.\n";
+    descr += "Internally, the Sieve of Eratosthanes uses size_t integers.\n";
     descr += "\n";
     descr += "Use -f (--fmt) to specify output file format [default=147 -> NumPy].\n";
     descr += "File format can also be 1 (ArrayFire), 65 (Armadillo),\n";
@@ -88,9 +87,9 @@ int main(int argc, char *argv[])
     //Get options
 
     //Get P
-    if (a_p->count==0) { P = 2; }
+    if (a_p->count==0) { P = 2u; }
     else if (a_p->ival[0]<2) { cerr << progstr+": " << __LINE__ << errstr << "P must be greater than 1" << endl; return 1; }
-    else { P = a_p->ival[0]; }
+    else { P = size_t(a_p->ival[0]); }
 
     //Get o1.F
     if (a_ofmt->count==0) { o1.F = 147; }
@@ -111,11 +110,11 @@ int main(int argc, char *argv[])
 
 
     //Set output header info
-    try { X = new int[(P-1)/2]; }
+    try { X = new size_t[(P-1)/2]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for integer file (X)" << endl; return 1; }
     if (codee::primes_i(X,&cnt,(P-1)/2))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-    o1.C = uint32_t(cnt);
+    o1.C = size_t(cnt);
     o1.R = o1.S = o1.H = 1u;
 
 
@@ -140,7 +139,7 @@ int main(int argc, char *argv[])
         float *Y;
         try { Y = new float[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        for (uint32_t c=0u; c<o1.C; c++) { Y[c] = float(X[c]); }
+        for (size_t c=0u; c<o1.C; c++) { Y[c] = float(X[c]); }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
@@ -153,7 +152,7 @@ int main(int argc, char *argv[])
         double *Y;
         try { Y = new double[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        for (uint32_t c=0u; c<o1.C; c++) { Y[c] = double(X[c]); }
+        for (size_t c=0u; c<o1.C; c++) { Y[c] = double(X[c]); }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }

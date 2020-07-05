@@ -53,22 +53,22 @@ if ((o1.T==oktypes).sum()==0)
 //Get o1.R
 if (a_nr->count==0) { o1.R = 1u; }
 else if (a_nr->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "R (nrows) must be nonnegative" << endl; return 1; }
-else { o1.R = uint32_t(a_nr->ival[0]); }
+else { o1.R = size_t(a_nr->ival[0]); }
 
 //Get o1.C
 if (a_nc->count==0) { o1.C = 1u; }
 else if (a_nc->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "C (ncols) must be nonnegative" << endl; return 1; }
-else { o1.C = uint32_t(a_nc->ival[0]); }
+else { o1.C = size_t(a_nc->ival[0]); }
 
 //Get o1.S
 if (a_ns->count==0) { o1.S = 1u; }
 else if (a_ns->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "S (nslices) must be nonnegative" << endl; return 1; }
-else { o1.S = uint32_t(a_ns->ival[0]); }
+else { o1.S = size_t(a_ns->ival[0]); }
 
 //Get o1.H
 if (a_nh->count==0) { o1.H = 1u; }
 else if (a_nh->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "H (nhyperslices) must be nonnegative" << endl; return 1; }
-else { o1.H = uint32_t(a_nh->ival[0]); }
+else { o1.H = size_t(a_nh->ival[0]); }
 
 //Checks
 if (o1.H!=1u && o1.only_3D()) { cerr << progstr+": " << __LINE__ << errstr << "4D (hypercubes) not supported for Armadillo file format" << endl; return 1; }
@@ -83,7 +83,7 @@ if (o1.T==1)
     float *Y;
     try { Y = new float[o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::pi_4_s(Y,int(o1.N())))
+    if (codee::pi_4_s(Y,o1.N()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -97,7 +97,7 @@ else if (o1.T==101)
     float *Y;
     try { Y = new float[2u*o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::pi_4_c(Y,int(o1.N())))
+    if (codee::pi_4_c(Y,o1.N()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

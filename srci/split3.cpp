@@ -66,7 +66,7 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 3 (Y3)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::split3_s(Y1,Y2,Y3,X,int(i1.R),int(i1.C),dim,i1.iscolmajor()))
+    if (codee::split3_s(Y1,Y2,Y3,X,i1.R,i1.C,dim,i1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -92,7 +92,7 @@ else if (i1.T==101)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 3 (Y3)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::split3_c(Y1,Y2,Y3,X,int(i1.R),int(i1.C),dim,i1.iscolmajor()))
+    if (codee::split3_c(Y1,Y2,Y3,X,i1.R,i1.C,dim,i1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

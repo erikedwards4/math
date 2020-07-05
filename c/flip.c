@@ -12,76 +12,40 @@ namespace codee {
 extern "C" {
 #endif
 
-int flip_s (float *Y, const float *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim);
-int flip_d (double *Y, const double *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim);
-int flip_c (float *Y, const float *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim);
-int flip_z (double *Y, const double *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim);
+int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
+int flip_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
+int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
+int flip_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
 
-int flip_inplace_s (float *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim);
-int flip_inplace_d (double *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim);
-int flip_inplace_c (float *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim);
-int flip_inplace_z (double *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim);
+int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
+int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
+int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
+int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
 
 
-int flip_s (float *Y, const float *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim)
+int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
 {
-    if (R<0) { fprintf(stderr,"error in flip_s: R (num rows X) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in flip_s: C (num cols X) must be nonnegative\n"); return 1; }
-    if (S<0) { fprintf(stderr,"error in flip_s: S (num slices X) must be nonnegative\n"); return 1; }
-    if (H<0) { fprintf(stderr,"error in flip_s: H (num hyperslices X) must be nonnegative\n"); return 1; }
     if (dim<0 || dim>3) { fprintf(stderr,"error in flip_s: dim must be in [0 3].\n"); return 1; }
 
-    const int L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
-    const int M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
-    const int N = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
+    const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
-    // if (dim==0)
-    // {
-    //     if (iscolmajor) { L = C*S*H; M = R; N = 1; }
-    //     else { L = 1; M = R*C*S*H; N = C*S*H; }
-    // }
-    // else if (dim==1)
-    // {
-    //     if (iscolmajor) { L = S*H; M = R*C; N = R; }
-    //     else { L = R; M = C*S*H; N = S*H; }
-    // }
-    // else if (dim==2)
-    // {
-    //     if (iscolmajor) { L = H; M = R*C*S; N = R*C; }
-    //     else { L = R*C; M = S*H; N = H; }
-    // }
-    // else if (dim==3)
-    // {
-    //     if (iscolmajor) { L = 1; M = R*C*S*H; N = R*C*S; }
-    //     else { L = R*C*S; M = H; N = 1; }
-    // }
-    // else
-    // {
-    //     fprintf(stderr,"error in flip_inplace_s: dim must be in [0 3].\n"); return 1;
-    // }
-
-    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_scopy(R*C*S*H,X,1,Y,1); }
-    else if (N==1)
+    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_scopy((int)(R*C*S*H),X,1,Y,1); }
+    else if (K==1)
     {
-        int n1 = 0, n2;
-        for (int l=0; l<L; l++)
+        for (size_t l=0, n1=0; l<L; l++)
         {
-            n2 = n1 + M - 1;
-            for (int m=0; m<M; m++) { Y[n2] = X[n1]; n1++; n2--; }
+            for (size_t m=0, n2=n1+M-1; m<M; m++, n1++, n2--) { Y[n2] = X[n1]; }
         }
     }
     else
     {
-        int n1 = 0, n2;
-        for (int l=0; l<L; l++)
+        for (size_t l=0, n1=0; l<L; l++)
         {
-            n2 = n1 + M - N;
-            for (int m=0; m<M/N; m++)
+            for (size_t m=0, n2=n1+M-K; m<M/K; m++, n1+=K, n2-=K)
             {
-                cblas_scopy(N,&X[n1],1,&Y[n2],1);
-                n1 += N; n2 -= N;
+                cblas_scopy((int)K,&X[n1],1,&Y[n2],1);
             }
         }
     }
@@ -92,38 +56,29 @@ int flip_s (float *Y, const float *X, const int R, const int C, const int S, con
 }
 
 
-int flip_d (double *Y, const double *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim)
+int flip_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
 {
-    if (R<0) { fprintf(stderr,"error in flip_d: R (num rows X) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in flip_d: C (num cols X) must be nonnegative\n"); return 1; }
-    if (S<0) { fprintf(stderr,"error in flip_d: S (num slices X) must be nonnegative\n"); return 1; }
-    if (H<0) { fprintf(stderr,"error in flip_d: H (num hyperslices X) must be nonnegative\n"); return 1; }
     if (dim<0 || dim>3) { fprintf(stderr,"error in flip_d: dim must be in [0 3].\n"); return 1; }
 
-    const int L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
-    const int M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
-    const int N = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
+    const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
-    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_dcopy(R*C*S*H,X,1,Y,1); }
-    else if (N==1)
+    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_dcopy((int)(R*C*S*H),X,1,Y,1); }
+    else if (K==1)
     {
-        int n1 = 0, n2;
-        for (int l=0; l<L; l++)
+        for (size_t l=0, n1=0; l<L; l++)
         {
-            n2 = n1 + M - 1;
-            for (int m=0; m<M; m++) { Y[n2] = X[n1]; n1++; n2--; }
+            for (size_t m=0, n2=n1+M-1; m<M; m++, n1++, n2--) { Y[n2] = X[n1]; }
         }
     }
     else
     {
-        int n1 = 0, n2;
-        for (int l=0; l<L; l++)
+        for (size_t l=0, n1=0; l<L; l++)
         {
-            n2 = n1 + M - N;
-            for (int m=0; m<M/N; m++)
+            for (size_t m=0, n2=n1+M-K; m<M/K; m++, n1+=K, n2-=K)
             {
-                cblas_dcopy(N,&X[n1],1,&Y[n2],1);
-                n1 += N; n2 -= N;
+                cblas_dcopy((int)K,&X[n1],1,&Y[n2],1);
             }
         }
     }
@@ -132,38 +87,29 @@ int flip_d (double *Y, const double *X, const int R, const int C, const int S, c
 }
 
 
-int flip_c (float *Y, const float *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim)
+int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
 {
-    if (R<0) { fprintf(stderr,"error in flip_c: R (num rows X) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in flip_c: C (num cols X) must be nonnegative\n"); return 1; }
-    if (S<0) { fprintf(stderr,"error in flip_c: S (num slices X) must be nonnegative\n"); return 1; }
-    if (H<0) { fprintf(stderr,"error in flip_c: H (num hyperslices X) must be nonnegative\n"); return 1; }
     if (dim<0 || dim>3) { fprintf(stderr,"error in flip_c: dim must be in [0 3].\n"); return 1; }
 
-    const int L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
-    const int M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
-    const int N = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
+    const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
-    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_ccopy(R*C*S*H,X,1,Y,1); }
-    else if (N==1)
+    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_ccopy((int)(R*C*S*H),X,1,Y,1); }
+    else if (K==1)
     {
-        int n1 = 0, n2;
-        for (int l=0; l<L; l++)
+        for (size_t l=0, n1=0; l<L; l++)
         {
-            n2 = n1 + M - 1;
-            for (int m=0; m<M; m++) { Y[2*n2] = X[2*n1]; Y[2*n2+1] = X[2*n1+1]; n1++; n2--; }
+            for (size_t m=0, n2=n1+2*M-2; m<M; m++, n1+=2, n2-=2) { Y[n2] = X[n1]; Y[n2+1] = X[n1+1]; }
         }
     }
     else
     {
-        int n1 = 0, n2;
-        for (int l=0; l<L; l++)
+        for (size_t l=0, n1=0; l<L; l++)
         {
-            n2 = n1 + M - N;
-            for (int m=0; m<M/N; m++)
+            for (size_t m=0, n2=n1+2*(M-K); m<M/K; m++, n1+=2*K, n2-=2*K)
             {
-                cblas_ccopy(N,&X[2*n1],1,&Y[2*n2],1);
-                n1 += N; n2 -= N;
+                cblas_ccopy((int)K,&X[n1],1,&Y[n2],1);
             }
         }
     }
@@ -172,38 +118,29 @@ int flip_c (float *Y, const float *X, const int R, const int C, const int S, con
 }
 
 
-int flip_z (double *Y, const double *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim)
+int flip_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
 {
-    if (R<0) { fprintf(stderr,"error in flip_z: R (num rows X) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in flip_z: C (num cols X) must be nonnegative\n"); return 1; }
-    if (S<0) { fprintf(stderr,"error in flip_z: S (num slices X) must be nonnegative\n"); return 1; }
-    if (H<0) { fprintf(stderr,"error in flip_z: H (num hyperslices X) must be nonnegative\n"); return 1; }
     if (dim<0 || dim>3) { fprintf(stderr,"error in flip_z: dim must be in [0 3].\n"); return 1; }
 
-    const int L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
-    const int M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
-    const int N = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
+    const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
     
-    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_zcopy(R*C*S*H,X,1,Y,1); }
-    else if (N==1)
+    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_zcopy((int)(R*C*S*H),X,1,Y,1); }
+    else if (K==1)
     {
-        int n1 = 0, n2;
-        for (int l=0; l<L; l++)
+        for (size_t l=0, n1=0; l<L; l++)
         {
-            n2 = n1 + M - 1;
-            for (int m=0; m<M; m++) { Y[2*n2] = X[2*n1]; Y[2*n2+1] = X[2*n1+1]; n1++; n2--; }
+            for (size_t m=0, n2=n1+2*M-2; m<M; m++, n1+=2, n2-=2) { Y[n2] = X[n1]; Y[n2+1] = X[n1+1]; }
         }
     }
     else
     {
-        int n1 = 0, n2;
-        for (int l=0; l<L; l++)
+        for (size_t l=0, n1=0; l<L; l++)
         {
-            n2 = n1 + M - N;
-            for (int m=0; m<M/N; m++)
+            for (size_t m=0, n2=n1+2*(M-K); m<M/K; m++, n1+=2*K, n2-=2*K)
             {
-                cblas_zcopy(N,&X[2*n1],1,&Y[2*n2],1);
-                n1 += N; n2 -= N;
+                cblas_zcopy((int)K,&X[n1],1,&Y[n2],1);
             }
         }
     }
@@ -212,52 +149,40 @@ int flip_z (double *Y, const double *X, const int R, const int C, const int S, c
 }
 
 
-int flip_inplace_s (float *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim)
+int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
 {
-    if (R<0) { fprintf(stderr,"error in flip_inplace_s: R (num rows X) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in flip_inplace_s: C (num cols X) must be nonnegative\n"); return 1; }
-    if (S<0) { fprintf(stderr,"error in flip_inplace_s: S (num slices X) must be nonnegative\n"); return 1; }
-    if (H<0) { fprintf(stderr,"error in flip_inplace_s: H (num hyperslices X) must be nonnegative\n"); return 1; }
     if (dim<0 || dim>3) { fprintf(stderr,"error in flip_inplace_s: dim must be in [0 3].\n"); return 1; }
 
-    const int L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
-    const int M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
-    const int N = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
+    const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
 
     if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) {}
-    else if (N==1)
+    else if (K==1)
     {
-        int n1, n2;
         float x1;
-        for (int l=0; l<L; l++)
+        for (size_t l=0; l<L; l++)
         {
-            n1 = l * M;
-            n2 = n1 + M - 1;
-            for (int m=0; m<M/2; m++)
+            for (size_t m=0, n1=l*M, n2=n1+M-1; m<M/2; m++, n1++, n2--)
             {
                 x1 = X[n1]; X[n1] = X[n2]; X[n2] = x1;
-                n1++; n2--;
             }
         }
     }
     else
     {
-        int n1, n2;
         float *X1;
-        if (!(X1=(float *)malloc((size_t)N*sizeof(float)))) { fprintf(stderr,"error in flip_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-        for (int l=0; l<L; l++)
+        if (!(X1=(float *)malloc(K*sizeof(float)))) { fprintf(stderr,"error in flip_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t l=0; l<L; l++)
         {
-            n1 = l * M;
-            n2 = n1 + M - N;
-            for (int m=0; m<M/N/2; m++)
+            for (size_t m=0, n1=l*M, n2=n1+M-K; m<M/K/2; m++, n1+=K, n2-=K)
             {
-                //for (n=0; n<N; n++, n1++, n2--) { x1 = X[n1]; X[n1] = X[n2]; X[n2] = x1; }
-                cblas_scopy(N,&X[n1],1,X1,1);
-                cblas_scopy(N,&X[n2],1,&X[n1],1);
-                cblas_scopy(N,X1,1,&X[n2],1);
-                n1 += N; n2 -= N;
+                //for (n=0; n<K; n++, n1++, n2--) { x1 = X[n1]; X[n1] = X[n2]; X[n2] = x1; }
+                cblas_scopy((int)K,&X[n1],1,X1,1);
+                cblas_scopy((int)K,&X[n2],1,&X[n1],1);
+                cblas_scopy((int)K,X1,1,&X[n2],1);
             }
         }
     }
@@ -268,49 +193,37 @@ int flip_inplace_s (float *X, const int R, const int C, const int S, const int H
 }
 
 
-int flip_inplace_d (double *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim)
+int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
 {
-    if (R<0) { fprintf(stderr,"error in flip_inplace_d: R (num rows X) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in flip_inplace_d: C (num cols X) must be nonnegative\n"); return 1; }
-    if (S<0) { fprintf(stderr,"error in flip_inplace_d: S (num slices X) must be nonnegative\n"); return 1; }
-    if (H<0) { fprintf(stderr,"error in flip_inplace_d: H (num hyperslices X) must be nonnegative\n"); return 1; }
     if (dim<0 || dim>3) { fprintf(stderr,"error in flip_inplace_d: dim must be in [0 3].\n"); return 1; }
 
-    const int L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
-    const int M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
-    const int N = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
+    const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
     if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) {}
-    else if (N==1)
+    else if (K==1)
     {
-        int n1, n2;
         double x1;
-        for (int l=0; l<L; l++)
+        for (size_t l=0; l<L; l++)
         {
-            n1 = l * M;
-            n2 = n1 + M - 1;
-            for (int m=0; m<M/2; m++)
+            for (size_t m=0, n1=l*M, n2=n1+M-1; m<M/2; m++, n1++, n2--)
             {
                 x1 = X[n1]; X[n1] = X[n2]; X[n2] = x1;
-                n1++; n2--;
             }
         }
     }
     else
     {
-        int n1, n2;
         double *X1;
-        if (!(X1=(double *)malloc((size_t)N*sizeof(double)))) { fprintf(stderr,"error in flip_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-        for (int l=0; l<L; l++)
+        if (!(X1=(double *)malloc(K*sizeof(double)))) { fprintf(stderr,"error in flip_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t l=0; l<L; l++)
         {
-            n1 = l * M;
-            n2 = n1 + M - N;
-            for (int m=0; m<M/N/2; m++)
+            for (size_t m=0, n1=l*M, n2=n1+M-K; m<M/K/2; m++, n1+=K, n2-=K)
             {
-                cblas_dcopy(N,&X[n1],1,X1,1);
-                cblas_dcopy(N,&X[n2],1,&X[n1],1);
-                cblas_dcopy(N,X1,1,&X[n2],1);
-                n1 += N; n2 -= N;
+                cblas_dcopy((int)K,&X[n1],1,X1,1);
+                cblas_dcopy((int)K,&X[n2],1,&X[n1],1);
+                cblas_dcopy((int)K,X1,1,&X[n2],1);
             }
         }
     }
@@ -319,50 +232,38 @@ int flip_inplace_d (double *X, const int R, const int C, const int S, const int 
 }
 
 
-int flip_inplace_c (float *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim)
+int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
 {
-    if (R<0) { fprintf(stderr,"error in flip_inplace_c: R (num rows X) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in flip_inplace_c: C (num cols X) must be nonnegative\n"); return 1; }
-    if (S<0) { fprintf(stderr,"error in flip_inplace_c: S (num slices X) must be nonnegative\n"); return 1; }
-    if (H<0) { fprintf(stderr,"error in flip_inplace_c: H (num hyperslices X) must be nonnegative\n"); return 1; }
     if (dim<0 || dim>3) { fprintf(stderr,"error in flip_inplace_c: dim must be in [0 3].\n"); return 1; }
 
-    const int L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
-    const int M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
-    const int N = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
+    const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
     if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) {}
-    else if (N==1)
+    else if (K==1)
     {
-        int n1, n2;
         float x1;
-        for (int l=0; l<L; l++)
+        for (size_t l=0; l<L; l++)
         {
-            n1 = l * M;
-            n2 = n1 + M - 1;
-            for (int m=0; m<M/2; m++)
+            for (size_t m=0, n1=2*l*M, n2=n1+2*M-2; m<M/2; m++, n1+=2, n2-=2)
             {
-                x1 = X[2*n1]; X[2*n1] = X[2*n2]; X[2*n2] = x1;
-                x1 = X[2*n1+1]; X[2*n1+1] = X[2*n2+1]; X[2*n2+1] = x1;
-                n1++; n2--;
+                x1 = X[n1]; X[n1] = X[n2]; X[n2] = x1;
+                x1 = X[n1+1]; X[n1+1] = X[n2+1]; X[n2+1] = x1;
             }
         }
     }
     else
     {
-        int n1, n2;
         float *X1;
-        if (!(X1=(float *)malloc((size_t)N*sizeof(float)))) { fprintf(stderr,"error in flip_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
-        for (int l=0; l<L; l++)
+        if (!(X1=(float *)malloc(K*sizeof(float)))) { fprintf(stderr,"error in flip_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t l=0; l<L; l++)
         {
-            n1 = l * M;
-            n2 = n1 + M - N;
-            for (int m=0; m<M/N/2; m++)
+            for (size_t m=0, n1=2*l*M, n2=n1+2*(M-K); m<M/K/2; m++, n1+=2*K, n2-=2*K)
             {
-                cblas_ccopy(N,&X[2*n1],1,X1,1);
-                cblas_ccopy(N,&X[2*n2],1,&X[2*n1],1);
-                cblas_ccopy(N,X1,1,&X[2*n2],1);
-                n1 += N; n2 -= N;
+                cblas_ccopy((int)K,&X[n1],1,X1,1);
+                cblas_ccopy((int)K,&X[n2],1,&X[n1],1);
+                cblas_ccopy((int)K,X1,1,&X[n2],1);
             }
         }
     }
@@ -371,50 +272,38 @@ int flip_inplace_c (float *X, const int R, const int C, const int S, const int H
 }
 
 
-int flip_inplace_z (double *X, const int R, const int C, const int S, const int H, const char iscolmajor, const int dim)
+int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
 {
-    if (R<0) { fprintf(stderr,"error in flip_inplace_z: R (num rows X) must be nonnegative\n"); return 1; }
-    if (C<0) { fprintf(stderr,"error in flip_inplace_z: C (num cols X) must be nonnegative\n"); return 1; }
-    if (S<0) { fprintf(stderr,"error in flip_inplace_z: S (num slices X) must be nonnegative\n"); return 1; }
-    if (H<0) { fprintf(stderr,"error in flip_inplace_z: H (num hyperslices X) must be nonnegative\n"); return 1; }
     if (dim<0 || dim>3) { fprintf(stderr,"error in flip_inplace_z: dim must be in [0 3].\n"); return 1; }
 
-    const int L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
-    const int M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
-    const int N = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+    const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
+    const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
     if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) {}
-    else if (N==1)
+    else if (K==1)
     {
-        int n1, n2;
         double x1;
-        for (int l=0; l<L; l++)
+        for (size_t l=0; l<L; l++)
         {
-            n1 = l * M;
-            n2 = n1 + M - 1;
-            for (int m=0; m<M/2; m++)
+            for (size_t m=0, n1=2*l*M, n2=n1+2*M-2; m<M/2; m++, n1+=2, n2-=2)
             {
-                x1 = X[2*n1]; X[2*n1] = X[2*n2]; X[2*n2] = x1;
-                x1 = X[2*n1+1]; X[2*n1+1] = X[2*n2+1]; X[2*n2+1] = x1;
-                n1++; n2--;
+                x1 = X[n1]; X[n1] = X[n2]; X[n2] = x1;
+                x1 = X[n1+1]; X[n1+1] = X[n2+1]; X[n2+1] = x1;
             }
         }
     }
     else
     {
-        int n1, n2;
         double *X1;
-        if (!(X1=(double *)malloc((size_t)N*sizeof(double)))) { fprintf(stderr,"error in flip_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
-        for (int l=0; l<L; l++)
+        if (!(X1=(double *)malloc(K*sizeof(double)))) { fprintf(stderr,"error in flip_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t l=0; l<L; l++)
         {
-            n1 = l * M;
-            n2 = n1 + M - N;
-            for (int m=0; m<M/N/2; m++)
+            for (size_t m=0, n1=2*l*M, n2=n1+2*(M-K); m<M/K/2; m++, n1+=2*K, n2-=2*K)
             {
-                cblas_zcopy(N,&X[2*n1],1,X1,1);
-                cblas_zcopy(N,&X[2*n2],1,&X[2*n1],1);
-                cblas_zcopy(N,X1,1,&X[2*n2],1);
-                n1 += N; n2 -= N;
+                cblas_zcopy((int)K,&X[n1],1,X1,1);
+                cblas_zcopy((int)K,&X[n2],1,&X[n1],1);
+                cblas_zcopy((int)K,X1,1,&X[n2],1);
             }
         }
     }

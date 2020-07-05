@@ -69,7 +69,7 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
     try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-    if (codee::join2_s(Y,X1,X2,int(i1.R),int(i2.R),int(i1.C),int(i2.C),dim,i1.iscolmajor()))
+    if (codee::join2_s(Y,X1,X2,i1.R,i2.R,i1.C,i2.C,dim,i1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -91,7 +91,7 @@ else if (i1.T==101)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
     try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-    if (codee::join2_c(Y,X1,X2,int(i1.R),int(i2.R),int(i1.C),int(i2.C),dim,i1.iscolmajor()))
+    if (codee::join2_c(Y,X1,X2,i1.R,i2.R,i1.C,i2.C,dim,i1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

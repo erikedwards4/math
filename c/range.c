@@ -10,13 +10,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int range_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int range_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int range_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int range_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int range_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int range_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int range_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int range_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
 
 
-int range_s (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int range_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
     float mn, mx;
@@ -91,7 +91,7 @@ int range_s (float *Y, const float *X, const int R, const int C,const int S, con
 }
 
 
-int range_d (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int range_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
     double mn, mx;
@@ -166,7 +166,7 @@ int range_d (double *Y, const double *X, const int R, const int C,const int S, c
 }
 
 
-int range_c (float *Y, const float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int range_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
     float mn, mx, a2;
@@ -241,7 +241,7 @@ int range_c (float *Y, const float *X, const int R, const int C,const int S, con
 }
 
 
-int range_z (double *Y, const double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int range_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
     double mn, mx, a2;

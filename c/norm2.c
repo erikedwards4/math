@@ -10,13 +10,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int norm2_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int norm2_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int norm2_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
-int norm2_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor);
+int norm2_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int norm2_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int norm2_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int norm2_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
 
 
-int norm2_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int norm2_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -29,14 +29,14 @@ int norm2_s (float *Y, float *X, const int R, const int C,const int S, const int
         {
             for (c=0; c<C; c++)
             {
-                Y[c] = cblas_snrm2(R,&X[c*R],1);
+                Y[c] = cblas_snrm2((int)R,&X[c*R],1);
             }
         }
         else
         {
             for (c=0; c<C; c++)
             {
-                Y[c] = cblas_snrm2(R,&X[c],C);
+                Y[c] = cblas_snrm2((int)R,&X[c],(int)C);
             }
         }
     }
@@ -46,14 +46,14 @@ int norm2_s (float *Y, float *X, const int R, const int C,const int S, const int
         {
             for (r=0; r<R; r++)
             {
-                Y[r] = cblas_snrm2(C,&X[r],R);
+                Y[r] = cblas_snrm2((int)C,&X[r],(int)R);
             }
         }
         else
         {
             for (r=0; r<R; r++)
             {
-                Y[r] = cblas_snrm2(C,&X[r*C],1);
+                Y[r] = cblas_snrm2((int)C,&X[r*C],1);
             }
         }
     }
@@ -66,7 +66,7 @@ int norm2_s (float *Y, float *X, const int R, const int C,const int S, const int
 }
 
 
-int norm2_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int norm2_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -79,14 +79,14 @@ int norm2_d (double *Y, double *X, const int R, const int C,const int S, const i
         {
             for (c=0; c<C; c++)
             {
-                Y[c] = cblas_dnrm2(R,&X[c*R],1);
+                Y[c] = cblas_dnrm2((int)R,&X[c*R],1);
             }
         }
         else
         {
             for (c=0; c<C; c++)
             {
-                Y[c] = cblas_dnrm2(R,&X[c],C);
+                Y[c] = cblas_dnrm2((int)R,&X[c],(int)C);
             }
         }
     }
@@ -96,14 +96,14 @@ int norm2_d (double *Y, double *X, const int R, const int C,const int S, const i
         {
             for (r=0; r<R; r++)
             {
-                Y[r] = cblas_dnrm2(C,&X[r],R);
+                Y[r] = cblas_dnrm2((int)C,&X[r],(int)R);
             }
         }
         else
         {
             for (r=0; r<R; r++)
             {
-                Y[r] = cblas_dnrm2(C,&X[r*C],1);
+                Y[r] = cblas_dnrm2((int)C,&X[r*C],1);
             }
         }
     }
@@ -116,7 +116,7 @@ int norm2_d (double *Y, double *X, const int R, const int C,const int S, const i
 }
 
 
-int norm2_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int norm2_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -129,14 +129,14 @@ int norm2_c (float *Y, float *X, const int R, const int C,const int S, const int
         {
             for (c=0; c<C; c++)
             {
-                Y[c] = cblas_scnrm2(R,&X[2*c*R],1);
+                Y[c] = cblas_scnrm2((int)R,&X[2*c*R],1);
             }
         }
         else
         {
             for (c=0; c<C; c++)
             {
-                Y[c] = cblas_scnrm2(R,&X[2*c],C);
+                Y[c] = cblas_scnrm2((int)R,&X[2*c],(int)C);
             }
         }
     }
@@ -146,14 +146,14 @@ int norm2_c (float *Y, float *X, const int R, const int C,const int S, const int
         {
             for (r=0; r<R; r++)
             {
-                Y[r] = cblas_scnrm2(C,&X[2*r],R);
+                Y[r] = cblas_scnrm2((int)C,&X[2*r],(int)R);
             }
         }
         else
         {
             for (r=0; r<R; r++)
             {
-                Y[r] = cblas_scnrm2(C,&X[2*r*C],1);
+                Y[r] = cblas_scnrm2((int)C,&X[2*r*C],1);
             }
         }
     }
@@ -166,7 +166,7 @@ int norm2_c (float *Y, float *X, const int R, const int C,const int S, const int
 }
 
 
-int norm2_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor)
+int norm2_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     int r, c;
 
@@ -179,14 +179,14 @@ int norm2_z (double *Y, double *X, const int R, const int C,const int S, const i
         {
             for (c=0; c<C; c++)
             {
-                Y[c] = cblas_dznrm2(R,&X[2*c*R],1);
+                Y[c] = cblas_dznrm2((int)R,&X[2*c*R],1);
             }
         }
         else
         {
             for (c=0; c<C; c++)
             {
-                Y[c] = cblas_dznrm2(R,&X[2*c],C);
+                Y[c] = cblas_dznrm2((int)R,&X[2*c],(int)C);
             }
         }
     }
@@ -196,14 +196,14 @@ int norm2_z (double *Y, double *X, const int R, const int C,const int S, const i
         {
             for (r=0; r<R; r++)
             {
-                Y[r] = cblas_dznrm2(C,&X[2*r],R);
+                Y[r] = cblas_dznrm2((int)C,&X[2*r],(int)R);
             }
         }
         else
         {
             for (r=0; r<R; r++)
             {
-                Y[r] = cblas_dznrm2(C,&X[2*r*C],1);
+                Y[r] = cblas_dznrm2((int)C,&X[2*r*C],1);
             }
         }
     }

@@ -11,55 +11,47 @@ namespace codee {
 extern "C" {
 #endif
 
-int eps_s (float *Y, const int N);
-int eps_d (double *Y, const int N);
-int eps_c (float *Y, const int N);
-int eps_z (double *Y, const int N);
+int eps_s (float *Y, const size_t N);
+int eps_d (double *Y, const size_t N);
+int eps_c (float *Y, const size_t N);
+int eps_z (double *Y, const size_t N);
 
 
-int eps_s (float *Y, const int N)
+int eps_s (float *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in eps_s: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const float v = FLT_EPSILON;
 
-    cblas_scopy(N,&v,0,Y,1);
+    cblas_scopy((int)N,&v,0,Y,1);
 
     return 0;
 }
 
 
-int eps_d (double *Y, const int N)
+int eps_d (double *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in eps_d: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const double v = DBL_EPSILON;
 
-    cblas_dcopy(N,&v,0,Y,1);
+    cblas_dcopy((int)N,&v,0,Y,1);
 
     return 0;
 }
 
 
-int eps_c (float *Y, const int N)
+int eps_c (float *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in eps_c: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const float v[2] = {FLT_EPSILON,0.0f};
 
-    cblas_ccopy(N,v,0,Y,1);
+    cblas_ccopy((int)N,v,0,Y,1);
 
     return 0;
 }
 
 
-int eps_z (double *Y, const int N)
+int eps_z (double *Y, const size_t N)
 {
-    if (N<0) { fprintf(stderr,"error in eps_z: N (num elements Y) must be nonnegative\n"); return 1; }
-
     const double v[2] = {DBL_EPSILON,0.0};
 
-    cblas_zcopy(N,v,0,Y,1);
+    cblas_zcopy((int)N,v,0,Y,1);
 
     return 0;
 }

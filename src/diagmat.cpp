@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -114,8 +113,8 @@ int main(int argc, char *argv[])
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    if (k>0) { o1.R = i1.N(); o1.C = i1.N()+uint(k); }
-    else { o1.R = i1.N()+uint(-k); o1.C = i1.N(); }
+    if (k>0) { o1.R = i1.N(); o1.C = i1.N()+size_t(k); }
+    else { o1.R = i1.N()+size_t(-k); o1.C = i1.N(); }
     o1.S = i1.S; o1.H = i1.H;
 
 
@@ -144,7 +143,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_s(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        if (codee::diagmat_s(Y,X,o1.R,o1.C,o1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -162,7 +161,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_d(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        if (codee::diagmat_d(Y,X,o1.R,o1.C,o1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -180,7 +179,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_c(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        if (codee::diagmat_c(Y,X,o1.R,o1.C,o1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -198,7 +197,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::diagmat_z(Y,X,int(o1.R),int(o1.C),o1.iscolmajor(),k))
+        if (codee::diagmat_z(Y,X,o1.R,o1.C,o1.iscolmajor(),k))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

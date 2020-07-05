@@ -1,5 +1,6 @@
 //Includes
 #include <random>
+#include <complex>
 
 //Declarations
 const valarray<uint8_t> oktypes = {1,2,101,102};
@@ -53,22 +54,22 @@ if ((o1.T==oktypes).sum()==0)
 //Get o1.R
 if (a_nr->count==0) { o1.R = 1u; }
 else if (a_nr->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "R (nrows) must be nonnegative" << endl; return 1; }
-else { o1.R = uint32_t(a_nr->ival[0]); }
+else { o1.R = size_t(a_nr->ival[0]); }
 
 //Get o1.C
 if (a_nc->count==0) { o1.C = 1u; }
 else if (a_nc->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "C (ncols) must be nonnegative" << endl; return 1; }
-else { o1.C = uint32_t(a_nc->ival[0]); }
+else { o1.C = size_t(a_nc->ival[0]); }
 
 //Get o1.S
 if (a_ns->count==0) { o1.S = 1u; }
 else if (a_ns->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "S (nslices) must be nonnegative" << endl; return 1; }
-else { o1.S = uint32_t(a_ns->ival[0]); }
+else { o1.S = size_t(a_ns->ival[0]); }
 
 //Get o1.H
 if (a_nh->count==0) { o1.H = 1u; }
 else if (a_nh->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "H (nhyperslices) must be nonnegative" << endl; return 1; }
-else { o1.H = uint32_t(a_nh->ival[0]); }
+else { o1.H = size_t(a_nh->ival[0]); }
 
 //Get lam (lam<0.0.gives negative output)
 lam = (a_lam->count>0) ? a_lam->dval[0] : 1.0;

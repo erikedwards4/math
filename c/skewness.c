@@ -20,13 +20,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int skewness_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int skewness_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int skewness_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
-int skewness_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased);
+int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int skewness_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
 
 
-int skewness_s (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     if (R<1) { fprintf(stderr,"error in skewness_s: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in skewness_s: C (ncols X) must be positive\n"); return 1; }
@@ -59,10 +59,10 @@ int skewness_s (float *Y, float *X, const int R, const int C,const int S, const 
         float *x1;
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy(N1,&ni,0,x1,1);
-        cblas_sgemv(Ord,Tr,R,C,1.0f,X,ldc,x1,1,0.0f,Y,1);
+        cblas_sgemv(Ord,Tr,(int)R,(int)C,1.0f,X,ldc,x1,1,0.0f,Y,1);
         cblas_scopy(N1,&o,0,x1,1);
-        if (dim==0) { cblas_sgemm(Ord,Tr,Tr,R,C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc); }
-        else { cblas_sgemm(Ord,Tr,Tr,R,C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
+        if (dim==0) { cblas_sgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0f,x1,lda,Y,ldb,1.0f,X,ldc); }
+        else { cblas_sgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
             for (int n2=0; n2<N2; n2++) { Y[n2] = cblas_sdot(N1,&X[n2*N1],1,&X[n2*N1],1); }
@@ -88,10 +88,10 @@ int skewness_s (float *Y, float *X, const int R, const int C,const int S, const 
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy(N1,&o,0,x1,1); cblas_scopy(N1,&ni,0,xni,1);
-        for (int r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
+        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
         {
-            cblas_sgemv(CblasRowMajor,CblasNoTrans,C,S,1.0f,&X[n],S,xni,1,0.0f,&Y[n2],1);
-            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,C,S,1,-1.0f,&Y[n2],1,x1,S,1.0f,&X[n],S);
+            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,&X[n],(int)S,xni,1,0.0f,&Y[n2],1);
+            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0f,&Y[n2],1,x1,(int)S,1.0f,&X[n],(int)S);
         }
         for (int n=0; n<N; n++) { float x = X[n]*X[n]; sm2[n/N1] += x; sm3[n/N1] += x*X[n]; }
         for (int n2=0; n2<N2; n2++) { Y[n2] = w * sm3[n2] / (sm2[n2]*sqrtf(sm2[n2])); }
@@ -124,7 +124,7 @@ int skewness_s (float *Y, float *X, const int R, const int C,const int S, const 
 }
 
 
-int skewness_d (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     if (R<1) { fprintf(stderr,"error in skewness_d: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in skewness_d: C (ncols X) must be positive\n"); return 1; }
@@ -157,10 +157,10 @@ int skewness_d (double *Y, double *X, const int R, const int C,const int S, cons
         double *x1;
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy(N1,&ni,0,x1,1);
-        cblas_dgemv(Ord,Tr,R,C,1.0,X,ldc,x1,1,0.0,Y,1);
+        cblas_dgemv(Ord,Tr,(int)R,(int)C,1.0,X,ldc,x1,1,0.0,Y,1);
         cblas_dcopy(N1,&o,0,x1,1);
-        if (dim==0) { cblas_dgemm(Ord,Tr,Tr,R,C,1,-1.0,x1,lda,Y,ldb,1.0,X,ldc); }
-        else { cblas_dgemm(Ord,Tr,Tr,R,C,1,-1.0,Y,ldb,x1,lda,1.0,X,ldc); }
+        if (dim==0) { cblas_dgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0,x1,lda,Y,ldb,1.0,X,ldc); }
+        else { cblas_dgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0,Y,ldb,x1,lda,1.0,X,ldc); }
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
             for (int n2=0; n2<N2; n2++) { Y[n2] = cblas_ddot(N1,&X[n2*N1],1,&X[n2*N1],1); }
@@ -186,10 +186,10 @@ int skewness_d (double *Y, double *X, const int R, const int C,const int S, cons
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy(N1,&o,0,x1,1); cblas_dcopy(N1,&ni,0,xni,1);
-        for (int r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
+        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
         {
-            cblas_dgemv(CblasRowMajor,CblasNoTrans,C,S,1.0,&X[n],S,xni,1,0.0,&Y[n2],1);
-            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,C,S,1,-1.0,&Y[n2],1,x1,S,1.0,&X[n],S);
+            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,&X[n],(int)S,xni,1,0.0,&Y[n2],1);
+            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0,&Y[n2],1,x1,(int)S,1.0,&X[n],(int)S);
         }
         for (int n=0; n<N; n++) { double x = X[n]*X[n]; sm2[n/N1] += x; sm3[n/N1] += x*X[n]; }
         for (int n2=0; n2<N2; n2++) { Y[n2] = w * sm3[n2] / (sm2[n2]*sqrt(sm2[n2])); }
@@ -222,7 +222,7 @@ int skewness_d (double *Y, double *X, const int R, const int C,const int S, cons
 }
 
 
-int skewness_c (float *Y, float *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     if (R<1) { fprintf(stderr,"error in skewness_c: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in skewness_c: C (ncols X) must be positive\n"); return 1; }
@@ -287,7 +287,7 @@ int skewness_c (float *Y, float *X, const int R, const int C,const int S, const 
 }
 
 
-int skewness_z (double *Y, double *X, const int R, const int C,const int S, const int H, const int dim, const char iscolmajor, const char biased)
+int skewness_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     if (R<1) { fprintf(stderr,"error in skewness_z: R (nrows X) must be positive\n"); return 1; }
     if (C<1) { fprintf(stderr,"error in skewness_z: C (ncols X) must be positive\n"); return 1; }

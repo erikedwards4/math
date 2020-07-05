@@ -8,7 +8,6 @@
 #include <string>
 #include <cstring>
 #include <valarray>
-#include <complex>
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
@@ -172,7 +171,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (openn::join3_s(Y,X1,X2,X3,int(i1.R),int(i2.R),int(i3.R),int(i1.C),int(i2.C),int(i3.C),dim,i1.iscolmajor()))
+        if (codee::join3_s(Y,X1,X2,X3,i1.R,i2.R,i3.R,i1.C,i2.C,i3.C,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -198,7 +197,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (openn::join3_d(Y,X1,X2,X3,int(i1.R),int(i2.R),int(i3.R),int(i1.C),int(i2.C),int(i3.C),dim,i1.iscolmajor()))
+        if (codee::join3_d(Y,X1,X2,X3,i1.R,i2.R,i3.R,i1.C,i2.C,i3.C,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -224,7 +223,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (openn::join3_c(Y,X1,X2,X3,int(i1.R),int(i2.R),int(i3.R),int(i1.C),int(i2.C),int(i3.C),dim,i1.iscolmajor()))
+        if (codee::join3_c(Y,X1,X2,X3,i1.R,i2.R,i3.R,i1.C,i2.C,i3.C,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -250,7 +249,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (openn::join3_z(Y,X1,X2,X3,int(i1.R),int(i2.R),int(i3.R),int(i1.C),int(i2.C),int(i3.C),dim,i1.iscolmajor()))
+        if (codee::join3_z(Y,X1,X2,X3,i1.R,i2.R,i3.R,i1.C,i2.C,i3.C,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
