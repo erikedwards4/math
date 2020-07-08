@@ -34,8 +34,6 @@ int hypot_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
     const size_t H = (H1>H2) ? H1 : H2;
     const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
     
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
     if (N1==1)
     {
         for (size_t n=0; n<N; n++) { Y[n] = hypotf(X1[0],X2[n]); }
@@ -44,27 +42,25 @@ int hypot_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
     {
         for (size_t n=0; n<N; n++) { Y[n] = hypotf(X1[n],X2[0]); }
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
         for (size_t n=0; n<N; n++) { Y[n] = hypotf(X1[n],X2[n]); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = R1*C1*S1*(H1>1), RCSH2 = R2*C2*S2*(H2>1);
-        const size_t RCS1 = R1*C1*(S1>1), RCS2 = R2*C2*(S2>1);
-        const size_t RC1 = R1*(C1>1), RC2 = R2*(C2>1);
-        const size_t r1i = (R1>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = (int)(R1>1), r2i = (int)(R2>1);
+        const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        Y[n] = hypotf(X1[n1],X2[n2]);
+                        *Y++ = hypotf(*X1,*X2);
                     }
                 }
             }
@@ -72,28 +68,24 @@ int hypot_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
     }
     else
     {
-        const size_t HSCR1 = H1*S1*C1*(R1>1), HSCR2 = H2*S2*C2*(R2>1);
-        const size_t HSC1 = H1*S1*(C1>1), HSC2 = H2*S2*(C2>1);
-        const size_t HS1 = H1*(S1>1), HS2 = H2*(S2>1);
-        const size_t h1i = (H1>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = (int)(H1>1), h2i = (int)(H2>1);
+        const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        Y[n] = hypotf(X1[n1],X2[n2]);
+                        *Y++ = hypotf(*X1,*X2);
                     }
                 }
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -115,27 +107,25 @@ int hypot_d (double *Y, const double *X1, const double *X2, const size_t R1, con
     {
         for (size_t n=0; n<N; n++) { Y[n] = hypot(X1[n],X2[0]); }
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
         for (size_t n=0; n<N; n++) { Y[n] = hypot(X1[n],X2[n]); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = R1*C1*S1*(H1>1), RCSH2 = R2*C2*S2*(H2>1);
-        const size_t RCS1 = R1*C1*(S1>1), RCS2 = R2*C2*(S2>1);
-        const size_t RC1 = R1*(C1>1), RC2 = R2*(C2>1);
-        const size_t r1i = (R1>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = (int)(R1>1), r2i = (int)(R2>1);
+        const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        Y[n] = hypot(X1[n1],X2[n2]);
+                        *Y++ = hypot(*X1,*X2);
                     }
                 }
             }
@@ -143,21 +133,19 @@ int hypot_d (double *Y, const double *X1, const double *X2, const size_t R1, con
     }
     else
     {
-        const size_t HSCR1 = H1*S1*C1*(R1>1), HSCR2 = H2*S2*C2*(R2>1);
-        const size_t HSC1 = H1*S1*(C1>1), HSC2 = H2*S2*(C2>1);
-        const size_t HS1 = H1*(S1>1), HS2 = H2*(S2>1);
-        const size_t h1i = (H1>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = (int)(H1>1), h2i = (int)(H2>1);
+        const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        Y[n] = hypot(X1[n1],X2[n2]);
+                        *Y++ = hypot(*X1,*X2);
                     }
                 }
             }
@@ -179,34 +167,32 @@ int hypot_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
     if (N1==1)
     {
         const float x1 = X1[0]*X1[0] + X1[1]*X1[1];
-        for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = sqrtf(x1 + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]); }
+        for (size_t n=0; n<N; n++, X2+=2) { *Y++ = sqrtf(x1 + *X2**X2 + *(X2+1)**(X2+1)); }
     }    
     else if (N2==1)
     {
         const float x2 = X2[0]*X2[0] + X2[1]*X2[1];
-        for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = sqrtf(X1[n2]*X1[n2]+X1[n2+1]*X1[n2+1] + x2); }
+        for (size_t n=0; n<N; n++, X1+=2) { *Y++ = sqrtf(*X1**X1 + *(X1+1)**(X1+1) + x2); }
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = sqrtf(X1[n2]*X1[n2]+X1[n2+1]*X1[n2+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]); }
+        for (size_t n=0; n<N; n++, X1+=2, X2+=2) { *Y++ = sqrtf(*X1**X1 + *(X1+1)**(X1+1) + *X2**X2 + *(X2+1)**(X2+1)); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = 2*R1*C1*S1*(H1>1), RCSH2 = 2*R2*C2*S2*(H2>1);
-        const size_t RCS1 = 2*R1*C1*(S1>1), RCS2 = 2*R2*C2*(S2>1);
-        const size_t RC1 = 2*R1*(C1>1), RC2 = 2*R2*(C2>1);
-        const size_t r1i = 2*(R1>1), r2i = 2*(R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = 2*(int)(R1>1), r2i = 2*(int)(R2>1);
+        const int c1i = 2*(int)R1*((int)(C1>1)-(int)(R1>1)), c2i = 2*(int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = 2*(int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = 2*(int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = 2*(int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = 2*(int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        Y[n] = sqrtf(X1[n1]*X1[n1]+X1[n1+1]*X1[n1+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]);
+                        *Y++ = sqrtf(*X1**X1 + *(X1+1)**(X1+1) + *X2**X2 + *(X2+1)**(X2+1));
                     }
                 }
             }
@@ -214,21 +200,19 @@ int hypot_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
     }
     else
     {
-        const size_t HSCR1 = 2*H1*S1*C1*(R1>1), HSCR2 = 2*H2*S2*C2*(R2>1);
-        const size_t HSC1 = 2*H1*S1*(C1>1), HSC2 = 2*H2*S2*(C2>1);
-        const size_t HS1 = 2*H1*(S1>1), HS2 = 2*H2*(S2>1);
-        const size_t h1i = 2*(H1>1), h2i = 2*(H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = 2*(int)(H1>1), h2i = 2*(int)(H2>1);
+        const int s1i = 2*(int)H1*((int)(S1>1)-(int)(H1>1)), s2i = 2*(int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = 2*(int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = 2*(int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = 2*(int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = 2*(int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        Y[n] = sqrtf(X1[n1]*X1[n1]+X1[n1+1]*X1[n1+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]);
+                        *Y++ = sqrtf(*X1**X1 + *(X1+1)**(X1+1) + *X2**X2 + *(X2+1)**(X2+1));
                     }
                 }
             }
@@ -249,35 +233,33 @@ int hypot_z (double *Y, const double *X1, const double *X2, const size_t R1, con
 
     if (N1==1)
     {
-        const double x1 = X1[0]*X1[0] + X1[1]*X1[1];
-        for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = sqrt(x1 + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]); }
+        const float x1 = X1[0]*X1[0] + X1[1]*X1[1];
+        for (size_t n=0; n<N; n++, X2+=2) { *Y++ = sqrt(x1 + *X2**X2 + *(X2+1)**(X2+1)); }
     }    
     else if (N2==1)
     {
-        const double x2 = X2[0]*X2[0] + X2[1]*X2[1];
-        for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = sqrt(X1[n2]*X1[n2]+X1[n2+1]*X1[n2+1] + x2); }
+        const float x2 = X2[0]*X2[0] + X2[1]*X2[1];
+        for (size_t n=0; n<N; n++, X1+=2) { *Y++ = sqrt(*X1**X1 + *(X1+1)**(X1+1) + x2); }
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = sqrt(X1[n2]*X1[n2]+X1[n2+1]*X1[n2+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]); }
+        for (size_t n=0; n<N; n++, X1+=2, X2+=2) { *Y++ = sqrt(*X1**X1 + *(X1+1)**(X1+1) + *X2**X2 + *(X2+1)**(X2+1)); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = 2*R1*C1*S1*(H1>1), RCSH2 = 2*R2*C2*S2*(H2>1);
-        const size_t RCS1 = 2*R1*C1*(S1>1), RCS2 = 2*R2*C2*(S2>1);
-        const size_t RC1 = 2*R1*(C1>1), RC2 = 2*R2*(C2>1);
-        const size_t r1i = 2*(R1>1), r2i = 2*(R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = 2*(int)(R1>1), r2i = 2*(int)(R2>1);
+        const int c1i = 2*(int)R1*((int)(C1>1)-(int)(R1>1)), c2i = 2*(int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = 2*(int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = 2*(int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = 2*(int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = 2*(int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        Y[n] = sqrt(X1[n1]*X1[n1]+X1[n1+1]*X1[n1+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]);
+                        *Y++ = sqrt(*X1**X1 + *(X1+1)**(X1+1) + *X2**X2 + *(X2+1)**(X2+1));
                     }
                 }
             }
@@ -285,21 +267,19 @@ int hypot_z (double *Y, const double *X1, const double *X2, const size_t R1, con
     }
     else
     {
-        const size_t HSCR1 = 2*H1*S1*C1*(R1>1), HSCR2 = 2*H2*S2*C2*(R2>1);
-        const size_t HSC1 = 2*H1*S1*(C1>1), HSC2 = 2*H2*S2*(C2>1);
-        const size_t HS1 = 2*H1*(S1>1), HS2 = 2*H2*(S2>1);
-        const size_t h1i = 2*(H1>1), h2i = 2*(H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = 2*(int)(H1>1), h2i = 2*(int)(H2>1);
+        const int s1i = 2*(int)H1*((int)(S1>1)-(int)(H1>1)), s2i = 2*(int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = 2*(int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = 2*(int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = 2*(int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = 2*(int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        Y[n] = sqrt(X1[n1]*X1[n1]+X1[n1+1]*X1[n1+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]);
+                        *Y++ = sqrt(*X1**X1 + *(X1+1)**(X1+1) + *X2**X2 + *(X2+1)**(X2+1));
                     }
                 }
             }
@@ -319,8 +299,6 @@ int hypot_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C
     const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
     if (N1!=N) { fprintf(stderr,"error in hypot_inplace_s: first input (X1) cannot be broadcast for inplace version\n"); return 1; }
     
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
     if (N2==1)
     {
         for (size_t n=0; n<N; n++) { X1[n] = hypotf(X1[n],X2[0]); }
@@ -332,17 +310,19 @@ int hypot_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C
     }
     else if (iscolmajor)
     {
-        const size_t RCSH2 = R2*C2*S2*(H2>1), RCS2 = R2*C2*(S2>1), RC2 = R2*(C2>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r2i = (int)(R2>1);
+        const int c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X2+=c2i)
                 {
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1++, X2+=r2i)
                     {
-                        X1[n] = hypotf(X1[n],X2[n2]);
+                        *X1 = hypotf(*X1,*X2);
                     }
                 }
             }
@@ -350,24 +330,24 @@ int hypot_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C
     }
     else
     {
-        const size_t HSCR2 = H2*S2*C2*(R2>1), HSC2 = H2*S2*(C2>1), HS2 = H2*(S2>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h2i = (int)(H2>1);
+        const int s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X2+=s2i)
                 {
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1++, X2+=h2i)
                     {
-                        X1[n] = hypotf(X1[n],X2[n2]);
+                        *X1 = hypotf(*X1,*X2);
                     }
                 }
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -392,17 +372,19 @@ int hypot_inplace_d (double *X1, const double *X2, const size_t R1, const size_t
     }
     else if (iscolmajor)
     {
-        const size_t RCSH2 = R2*C2*S2*(H2>1), RCS2 = R2*C2*(S2>1), RC2 = R2*(C2>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r2i = (int)(R2>1);
+        const int c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X2+=c2i)
                 {
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1++, X2+=r2i)
                     {
-                        X1[n] = hypot(X1[n],X2[n2]);
+                        *X1 = hypot(*X1,*X2);
                     }
                 }
             }
@@ -410,17 +392,19 @@ int hypot_inplace_d (double *X1, const double *X2, const size_t R1, const size_t
     }
     else
     {
-        const size_t HSCR2 = H2*S2*C2*(R2>1), HSC2 = H2*S2*(C2>1), HS2 = H2*(S2>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h2i = (int)(H2>1);
+        const int s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X2+=s2i)
                 {
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1++, X2+=h2i)
                     {
-                        X1[n] = hypot(X1[n],X2[n2]);
+                        *X1 = hypot(*X1,*X2);
                     }
                 }
             }
@@ -445,23 +429,27 @@ int hypot_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C
         const float x2 = X2[0]*X2[0] + X2[1]*X2[1];
         for (size_t n=0, n2=0; n<N; n++, n2+=2) { X1[n] = sqrtf(X1[n2]*X1[n2]+X1[n2+1]*X1[n2+1] + x2); }
     }
-    else if (N==N1 && N==N2)
+    else if (N==N2)
     {
         for (size_t n=0, n2=0; n<N; n++, n2+=2) { X1[n] = sqrtf(X1[n2]*X1[n2]+X1[n2+1]*X1[n2+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH2 = 2*R2*C2*S2*(H2>1), RCS2 = 2*R2*C2*(S2>1), RC2 = 2*R2*(C2>1), r2i = 2*(R2>1);
-        for (size_t h=0, n=0, n1=0; h<H; h++)
+        const int r1i = (int)(R1>1), r2i = 2*(int)(R2>1);
+        const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = 2*(int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = 2*(int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = 2*(int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t n=0; n<2*N1; n++) { X1[n] *= X1[n]; }
+        for (size_t n=0; n<2*N1; n+=2) { X1[n/2] = X1[n] + X1[n+1]; }
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n1+=2, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        X1[n] = sqrtf(X1[n1]*X1[n1]+X1[n1+1]*X1[n1+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]);
+                        *X1 = sqrt(*X1 + *X2**X2 + *(X2+1)**(X2+1));
                     }
                 }
             }
@@ -469,17 +457,21 @@ int hypot_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C
     }
     else
     {
-        const size_t HSCR2 = 2*H2*S2*C2*(R2>1), HSC2 = 2*H2*S2*(C2>1), HS2 = 2*H2*(S2>1), h2i = 2*(H2>1);
-        for (size_t r=0, n=0, n1=0; r<R; r++)
+        const int h1i = (int)(H1>1), h2i = 2*(int)(H2>1);
+        const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = 2*(int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = 2*(int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = 2*(int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t n=0; n<2*N1; n++) { X1[n] *= X1[n]; }
+        for (size_t n=0; n<2*N1; n+=2) { X1[n/2] = X1[n] + X1[n+1]; }
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n1+=2, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        X1[n] = sqrtf(X1[n1]*X1[n1]+X1[n1+1]*X1[n1+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]);
+                        *X1 = sqrt(*X1 + *X2**X2 + *(X2+1)**(X2+1));
                     }
                 }
             }
@@ -504,23 +496,27 @@ int hypot_inplace_z (double *X1, const double *X2, const size_t R1, const size_t
         const double x2 = X2[0]*X2[0] + X2[1]*X2[1];
         for (size_t n=0, n2=0; n<N; n++, n2+=2) { X1[n] = sqrt(X1[n2]*X1[n2]+X1[n2+1]*X1[n2+1] + x2); }
     }
-    else if (N==N1 && N==N2)
+    else if (N==N2)
     {
         for (size_t n=0, n2=0; n<N; n++, n2+=2) { X1[n] = sqrt(X1[n2]*X1[n2]+X1[n2+1]*X1[n2+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH2 = 2*R2*C2*S2*(H2>1), RCS2 = 2*R2*C2*(S2>1), RC2 = 2*R2*(C2>1), r2i = 2*(R2>1);
-        for (size_t h=0, n=0, n1=0; h<H; h++)
+        const int r1i = (int)(R1>1), r2i = 2*(int)(R2>1);
+        const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = 2*(int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = 2*(int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = 2*(int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t n=0; n<2*N1; n++) { X1[n] *= X1[n]; }
+        for (size_t n=0; n<2*N1; n+=2) { X1[n/2] = X1[n] + X1[n+1]; }
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n1+=2, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        X1[n] = sqrt(X1[n1]*X1[n1]+X1[n1+1]*X1[n1+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]);
+                        *X1 = sqrt(*X1 + *X2**X2 + *(X2+1)**(X2+1));
                     }
                 }
             }
@@ -528,17 +524,21 @@ int hypot_inplace_z (double *X1, const double *X2, const size_t R1, const size_t
     }
     else
     {
-        const size_t HSCR2 = 2*H2*S2*C2*(R2>1), HSC2 = 2*H2*S2*(C2>1), HS2 = 2*H2*(S2>1), h2i = 2*(H2>1);
-        for (size_t r=0, n=0, n1=0; r<R; r++)
+        const int h1i = (int)(H1>1), h2i = 2*(int)(H2>1);
+        const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = 2*(int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = 2*(int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = 2*(int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t n=0; n<2*N1; n++) { X1[n] *= X1[n]; }
+        for (size_t n=0; n<2*N1; n+=2) { X1[n/2] = X1[n] + X1[n+1]; }
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n1+=2, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        X1[n] = sqrt(X1[n1]*X1[n1]+X1[n1+1]*X1[n1+1] + X2[n2]*X2[n2]+X2[n2+1]*X2[n2+1]);
+                        *X1 = sqrt(*X1 + *X2**X2 + *(X2+1)**(X2+1));
                     }
                 }
             }

@@ -29,7 +29,7 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
     const size_t N2 = N/N1;
     const float o = 1.0f, ni = 1.0f / N1;
 
-    if (N1<2) { fprintf(stderr,"error in kurtosis_s: N must be > 1 \n"); return 1; }
+    if (N1<4) { fprintf(stderr,"error in kurtosis_s: N1 must be > 3 \n"); return 1; }
     else if (N1==N)
     {
         float sm2 = 0.0f, sm4 = 0.0f;
@@ -57,10 +57,10 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
             for (size_t n=0; n<N; n++) { X[n] *= X[n]; }
-            for (size_t n2=0; n2<N2; n2++)
+            for (size_t n2=0; n2<N2; n2++, X+=N1)
             {
-                Y[n2] = cblas_sdot((int)N1,&X[n2*N1],1,x1,1);
-                Y[n2] = N1 * cblas_sdot((int)N1,&X[n2*N1],1,&X[n2*N1],1) / (Y[n2]*Y[n2]);
+                Y[n2] = cblas_sdot((int)N1,X,1,x1,1);
+                Y[n2] = N1 * cblas_sdot((int)N1,X,1,X,1) / (Y[n2]*Y[n2]);
             }
         }
         else
@@ -84,22 +84,24 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&o,0,x1,1); cblas_scopy((int)N1,&ni,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
+        for (size_t r=0; r<R; r++, X+=C*S, Y+=C)
         {
-            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,&X[n],(int)S,xni,1,0.0f,&Y[n2],1);
-            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0f,&Y[n2],1,x1,(int)S,1.0f,&X[n],(int)S);
+            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,X,(int)S,xni,1,0.0f,Y,1);
+            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0f,Y,1,x1,(int)S,1.0f,X,(int)S);
         }
+        X -= N; Y -= RC;
         for (size_t n=0; n<N; n++) { X[n] *= X[n]; }
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
+        for (size_t r=0; r<R; r++)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X+=S, Y++)
             {
-                Y[n2+c] = cblas_sdot((int)N1,&X[n+c*S],1,x1,1);
-                Y[n2+c] = N1 * cblas_sdot((int)N1,&X[n+c*S],1,&X[n+c*S],1) / (Y[n2+c]*Y[n2+c]);
+                *Y = cblas_sdot((int)N1,X,1,x1,1);
+                *Y = N1 * cblas_sdot((int)N1,X,1,X,1) / (*Y**Y);
             }
         }
         if (!biased)
         {
+            Y -= RC;
             for (size_t n2=0; n2<N2; n2++) { Y[n2] =  3.0f + (Y[n2]*(N1+1)-3*(N1-1)) * (N1-1)/((N1-2)*(N1-3)); }
         }
         free(x1); free(xni);
@@ -112,20 +114,21 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         float sm1, sm2, sm4, *x1;
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, X+=J, Y++)
             {
-                cblas_scopy((int)N1,&X[n],(int)K,x1,1);
+                cblas_scopy((int)N1,X,(int)K,x1,1);
                 sm1 = cblas_sdot((int)N1,x1,1,&o,0);
                 cblas_saxpy((int)N1,-sm1,&ni,0,x1,1);
                 sm2 = sm4 = 0.0f;
                 for (size_t n1=0; n1<N1; n1++) { float x = x1[n1]*x1[n1]; sm2 += x; sm4 += x*x; }
-                Y[n2] = N1 * sm4 / (sm2*sm2);
+                *Y = N1 * sm4 / (sm2*sm2);
             }
         }
         if (!biased)
         {
+            Y -= L*M;
             for (size_t n=0; n<N/N1; n++) { Y[n] = 3.0f + (Y[n]*(N1+1)-3*(N1-1)) * (N1-1)/((N1-2)*(N1-3)); }
         }
         free(x1);
@@ -142,7 +145,7 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C,const size_
     const size_t N2 = N/N1;
     const double o = 1.0, ni = 1.0 / N1;
 
-    if (N1<2) { fprintf(stderr,"error in kurtosis_d: N must be > 1 \n"); return 1; }
+    if (N1<4) { fprintf(stderr,"error in kurtosis_d: N1 must be > 3 \n"); return 1; }
     else if (N1==N)
     {
         double sm2 = 0.0, sm4 = 0.0;
@@ -170,10 +173,10 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C,const size_
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
             for (size_t n=0; n<N; n++) { X[n] *= X[n]; }
-            for (size_t n2=0; n2<N2; n2++)
+            for (size_t n2=0; n2<N2; n2++, X+=N1)
             {
-                Y[n2] = cblas_ddot((int)N1,&X[n2*N1],1,x1,1);
-                Y[n2] = N1 * cblas_ddot((int)N1,&X[n2*N1],1,&X[n2*N1],1) / (Y[n2]*Y[n2]);
+                Y[n2] = cblas_ddot((int)N1,X,1,x1,1);
+                Y[n2] = N1 * cblas_ddot((int)N1,X,1,X,1) / (Y[n2]*Y[n2]);
             }
         }
         else
@@ -197,23 +200,25 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C,const size_
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&o,0,x1,1); cblas_dcopy((int)N1,&ni,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
+        for (size_t r=0; r<R; r++, X+=C*S, Y+=C)
         {
-            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,&X[n],(int)S,xni,1,0.0,&Y[n2],1);
-            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0,&Y[n2],1,x1,(int)S,1.0,&X[n],(int)S);
+            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,X,(int)S,xni,1,0.0,Y,1);
+            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0,Y,1,x1,(int)S,1.0,X,(int)S);
         }
+        X -= N; Y -= RC;
         for (size_t n=0; n<N; n++) { X[n] *= X[n]; }
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
+        for (size_t r=0; r<R; r++)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X+=S, Y++)
             {
-                Y[n2+c] = cblas_ddot((int)N1,&X[n+c*S],1,x1,1);
-                Y[n2+c] = N1 * cblas_ddot((int)N1,&X[n+c*S],1,&X[n+c*S],1) / (Y[n2+c]*Y[n2+c]);
+                *Y = cblas_ddot((int)N1,X,1,x1,1);
+                *Y = N1 * cblas_ddot((int)N1,X,1,X,1) / (*Y**Y);
             }
         }
         if (!biased)
         {
-            for (size_t n2=0; n2<N2; n2++) { Y[n2] = 3.0 + (Y[n2]*(N1+1)-3*(N1-1)) * (N1-1)/((N1-2)*(N1-3)); }
+            Y -= RC;
+            for (size_t n2=0; n2<N2; n2++) { Y[n2] =  3.0 + (Y[n2]*(N1+1)-3*(N1-1)) * (N1-1)/((N1-2)*(N1-3)); }
         }
         free(x1); free(xni);
     }
@@ -225,20 +230,21 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C,const size_
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         double sm1, sm2, sm4, *x1;
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, X+=J, Y++)
             {
-                cblas_dcopy((int)N1,&X[n],(int)K,x1,1);
+                cblas_dcopy((int)N1,X,(int)K,x1,1);
                 sm1 = cblas_ddot((int)N1,x1,1,&o,0);
                 cblas_daxpy((int)N1,-sm1,&ni,0,x1,1);
                 sm2 = sm4 = 0.0;
                 for (size_t n1=0; n1<N1; n1++) { double x = x1[n1]*x1[n1]; sm2 += x; sm4 += x*x; }
-                Y[n2] = N1 * sm4 / (sm2*sm2);
+                *Y = N1 * sm4 / (sm2*sm2);
             }
         }
         if (!biased)
         {
+            Y -= L*M;
             for (size_t n=0; n<N/N1; n++) { Y[n] =  3.0 + (Y[n]*(N1+1)-3*(N1-1)) * (N1-1)/((N1-2)*(N1-3)); }
         }
         free(x1);
@@ -254,11 +260,7 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float ni[2] = {-1.0f/N1,0.0f};
 
-    if (N1==1)
-    {
-        const float z[2] =  {0.0f,0.0f};
-        cblas_ccopy((int)N,z,0,Y,1);
-    }
+    if (N1<4)  { fprintf(stderr,"error in kurtosis_c: N1 must be > 3 \n"); return 1; }
     else if (N1==N)
     {
         float sm1[2] = {0.0f,0.0f}, sm2[2] = {0.0f,0.0f}, sm4[2] = {0.0f,0.0f};
@@ -293,11 +295,11 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
         float tmp, sm1[2], sm2[2], sm4[2], *x1, *x2;
         if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in kurtosis_c: problem with malloc. "); perror("malloc"); return 1; }
         if (!(x2=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in kurtosis_c: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=2*J, n2+=2)
+            for (size_t m=0; m<M; m++, X+=2*J)
             {
-                cblas_ccopy((int)N1,&X[n],(int)K,x1,1);
+                cblas_ccopy((int)N1,X,(int)K,x1,1);
                 sm1[0] = sm1[1] = sm2[0] = sm2[1] = sm4[0] = sm4[1] = 0.0f;
                 for (size_t n1=0; n1<2*N1; n1+=2) { sm1[0] += x1[n1]; sm1[1] += x1[n1+1]; }
                 cblas_caxpy((int)N1,sm1,ni,0,x1,1);
@@ -311,11 +313,13 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
                     x2[n1] = tmp;
                 }
                 cblas_cdotu_sub((int)N1,x2,1,x1,1,(_Complex float *)sm4);
-                Y[n2] = N1*sm4[0]/(sm2[0]*sm2[0]); Y[n2+1] = N1*sm4[1]/(sm2[0]*sm2[0]);
+                *Y++ = N1*sm4[0]/(sm2[0]*sm2[0]);
+                *Y++ = N1*sm4[1]/(sm2[0]*sm2[0]);
             }
         }
         if (!biased)
         {
+            Y -= 2*L*M;
             for (size_t n2=0; n2<2*N/N1; n2+=2)
             {
                 Y[n2] = 3.0f + (Y[n2]*(N1+1)-3*(N1-1)) * (N1-1)/((N1-2)*(N1-3));
@@ -335,11 +339,7 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C,const size_
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double ni[2] = {-1.0/N1,0.0};
 
-    if (N1==1)
-    {
-        const double z[2] =  {0.0,0.0};
-        cblas_zcopy((int)N,z,0,Y,1);
-    }
+    if (N1<4)  { fprintf(stderr,"error in kurtosis_z: N1 must be > 3 \n"); return 1; }
     else if (N1==N)
     {
         double sm1[2] = {0.0,0.0}, sm2[2] = {0.0,0.0}, sm4[2] = {0.0,0.0};
@@ -374,11 +374,11 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C,const size_
         double tmp, sm1[2], sm2[2], sm4[2], *x1, *x2;
         if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in kurtosis_z: problem with malloc. "); perror("malloc"); return 1; }
         if (!(x2=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in kurtosis_z: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=2*J, n2+=2)
+            for (size_t m=0; m<M; m++, X+=2*J)
             {
-                cblas_zcopy((int)N1,&X[n],(int)K,x1,1);
+                cblas_zcopy((int)N1,X,(int)K,x1,1);
                 sm1[0] = sm1[1] = sm2[0] = sm2[1] = sm4[0] = sm4[1] = 0.0;
                 for (size_t n1=0; n1<2*N1; n1+=2) { sm1[0] += x1[n1]; sm1[1] += x1[n1+1]; }
                 cblas_zaxpy((int)N1,sm1,ni,0,x1,1);
@@ -392,11 +392,13 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C,const size_
                     x2[n1] = tmp;
                 }
                 cblas_zdotu_sub((int)N1,x2,1,x1,1,(_Complex double *)sm4);
-                Y[n2] = N1*sm4[0]/(sm2[0]*sm2[0]); Y[n2+1] = N1*sm4[1]/(sm2[0]*sm2[0]);
+                *Y++ = N1*sm4[0]/(sm2[0]*sm2[0]);
+                *Y++ = N1*sm4[1]/(sm2[0]*sm2[0]);
             }
         }
         if (!biased)
         {
+            Y -= 2*L*M;
             for (size_t n2=0; n2<2*N/N1; n2+=2)
             {
                 Y[n2] = 3.0 + (Y[n2]*(N1+1)-3*(N1-1)) * (N1-1)/((N1-2)*(N1-3));

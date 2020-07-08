@@ -2,7 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 #include <complex.h>
 
@@ -48,11 +47,13 @@ int cosh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float y, xp, xm;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
         //y = ccoshf(X[n2]+1.0if*X[n2+1]);
-        xp = cexpf(X[n2]+1.0if*X[n2+1]); xm = cexpf(-X[n2]-1.0if*X[n2+1]); y = 0.5f*(xp+xm);
-        memcpy(&Y[n2],(float *)&y,2*sizeof(float));
+        xp = cexpf(*X + 1.0if**(X+1));
+        xm = cexpf(-*X - 1.0if**(X+1));
+        y = 0.5f * (xp+xm);
+        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
     }
     
     return 0;
@@ -62,12 +63,13 @@ int cosh_c (float *Y, const float *X, const size_t N)
 int cosh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double y, xp, xm;
-
-    for (size_t n2=0; n2<2*N; n2+=2)
+    
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        //y = ccosh(X[n2]+1.0i*X[n2+1]);
-        xp = cexp(X[n2]+1.0i*X[n2+1]); xm = cexp(-X[n2]-1.0i*X[n2+1]); y = 0.5*(xp+xm);
-        memcpy(&Y[n2],(double *)&y,2*sizeof(double));
+        xp = cexp(*X + 1.0i**(X+1));
+        xm = cexp(-*X - 1.0i**(X+1));
+        y = 0.5 * (xp+xm);
+        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
     }
     
     return 0;
@@ -98,13 +100,15 @@ int cosh_inplace_d (double *X, const size_t N)
 
 int cosh_inplace_c (float *X, const size_t N)
 {
-    _Complex float x, xp, xm;
+    _Complex float y, xp, xm;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        //x = ccoshf(X[n2]+1.0if*X[n2+1]);
-        xp = cexpf(X[n2]+1.0if*X[n2+1]); xm = cexpf(-X[n2]-1.0if*X[n2+1]); x = 0.5f*(xp+xm);
-        memcpy(&X[n2],(float *)&x,2*sizeof(float));
+        //y = ccoshf(*X + 1.0if**(X+1));
+        xp = cexpf(*X + 1.0if**(X+1));
+        xm = cexpf(-*X - 1.0if**(X+1));
+        y = 0.5f * (xp+xm);
+        *X++ = *(float *)&y; *X++ = *((float *)&y+1);
     }
     
     return 0;
@@ -113,13 +117,14 @@ int cosh_inplace_c (float *X, const size_t N)
 
 int cosh_inplace_z (double *X, const size_t N)
 {
-    _Complex double x, xp, xm;
-
-    for (size_t n2=0; n2<2*N; n2+=2)
+    _Complex double y, xp, xm;
+    
+    for (size_t n=0; n<N; n++)
     {
-        //x = ccosh(X[n2]+1.0i*X[n2+1]);
-        xp = cexp(X[n2]+1.0i*X[n2+1]); xm = cexp(-X[n2]-1.0i*X[n2+1]); x = 0.5*(xp+xm);
-        memcpy(&X[n2],(double *)&x,2*sizeof(double));
+        xp = cexp(*X + 1.0i**(X+1));
+        xm = cexp(-*X - 1.0i**(X+1));
+        y = 0.5 * (xp+xm);
+        *X++ = *(double *)&y; *X++ = *((double *)&y+1);
     }
     
     return 0;

@@ -30,7 +30,7 @@ int arg_inplace_z (double *X, const size_t N);
 int arg_s (float *Y, const float *X, const size_t N)
 {
     //for (size_t n=0; n<N; n++) { Y[n] = atan2f(0.0f,X[n]); }
-    for (size_t n=0; n<N; n++) { Y[n] = (X[n]<0.0f) ? (float)M_PI : 0.0f; }
+    for (size_t n=0; n<N; n++) { Y[n] = (float)(X[n]<0.0f) * (float)M_PI; }
 
     return 0;
 }
@@ -38,7 +38,7 @@ int arg_s (float *Y, const float *X, const size_t N)
 
 int arg_d (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { Y[n] = (X[n]<0.0) ? M_PI : 0.0; }
+    for (size_t n=0; n<N; n++) { Y[n] = (double)(X[n]<0.0) * M_PI; }
     
     return 0;
 }
@@ -46,7 +46,7 @@ int arg_d (double *Y, const double *X, const size_t N)
 
 int arg_c (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = atan2f(X[n2+1],X[n2]); }
+    for (size_t n=0; n<N; n++, X+=2) { *Y++ = atan2f(*(X+1),*X); }
     //for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = cargf(X[n2]+1.0if*X[n2+1]); }
     
     return 0;
@@ -55,7 +55,7 @@ int arg_c (float *Y, const float *X, const size_t N)
 
 int arg_z (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = atan2(X[n2+1],X[n2]); }
+    for (size_t n=0; n<N; n++, X+=2) { *Y++ = atan2(*(X+1),*X); }
     
     return 0;
 }
@@ -63,7 +63,7 @@ int arg_z (double *Y, const double *X, const size_t N)
 
 int arg_inplace_s (float *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { X[n] = (X[n]<0.0f) ? (float)M_PI : 0.0f; }
+    for (size_t n=0; n<N; n++) { X[n] = (float)(X[n]<0.0f) * (float)M_PI; }
     //for (size_t n=0; n<N; n++) { X[n] = (X[n]>0.0f)*(float)M_PI; }
 
     return 0;
@@ -72,7 +72,7 @@ int arg_inplace_s (float *X, const size_t N)
 
 int arg_inplace_d (double *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { X[n] = (X[n]<0.0) ? M_PI : 0.0; }
+    for (size_t n=0; n<N; n++) { X[n] = (double)(X[n]<0.0) * M_PI; }
     
     return 0;
 }

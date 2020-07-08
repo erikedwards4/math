@@ -33,28 +33,26 @@ int complex_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
         cblas_scopy((int)N,X1,1,Y,2);
         cblas_scopy((int)N,X2,0,&Y[1],2);
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
         cblas_scopy((int)N,X1,1,Y,2);
         cblas_scopy((int)N,X2,1,&Y[1],2);
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = R1*C1*S1*(H1>1), RCSH2 = R2*C2*S2*(H2>1);
-        const size_t RCS1 = R1*C1*(S1>1), RCS2 = R2*C2*(S2>1);
-        const size_t RC1 = R1*(C1>1), RC2 = R2*(C2>1);
-        const size_t r1i = (R1>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = (int)(R1>1), r2i = (int)(R2>1);
+        const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n+=2, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        Y[n] = X1[n1]; Y[n+1] = X2[n2];
+                        *Y++ = *X1; *Y++ = *X2;
                     }
                 }
             }
@@ -62,21 +60,19 @@ int complex_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
     }
     else
     {
-        const size_t HSCR1 = H1*S1*C1*(R1>1), HSCR2 = H2*S2*C2*(R2>1);
-        const size_t HSC1 = H1*S1*(C1>1), HSC2 = H2*S2*(C2>1);
-        const size_t HS1 = H1*(S1>1), HS2 = H2*(S2>1);
-        const size_t h1i = (H1>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = (int)(H1>1), h2i = (int)(H2>1);
+        const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n+=2, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        Y[n] = X1[n1]; Y[n+1] = X2[n2];
+                        *Y++ = *X1; *Y++ = *X2;
                     }
                 }
             }
@@ -105,28 +101,26 @@ int complex_d (double *Y, const double *X1, const double *X2, const size_t R1, c
         cblas_dcopy((int)N,X1,1,Y,2);
         cblas_dcopy((int)N,X2,0,&Y[1],2);
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
         cblas_dcopy((int)N,X1,1,Y,2);
         cblas_dcopy((int)N,X2,1,&Y[1],2);
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = R1*C1*S1*(H1>1), RCSH2 = R2*C2*S2*(H2>1);
-        const size_t RCS1 = R1*C1*(S1>1), RCS2 = R2*C2*(S2>1);
-        const size_t RC1 = R1*(C1>1), RC2 = R2*(C2>1);
-        const size_t r1i = (R1>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = (int)(R1>1), r2i = (int)(R2>1);
+        const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n+=2, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        Y[n] = X1[n1]; Y[n+1] = X2[n2];
+                        *Y++ = *X1; *Y++ = *X2;
                     }
                 }
             }
@@ -134,21 +128,19 @@ int complex_d (double *Y, const double *X1, const double *X2, const size_t R1, c
     }
     else
     {
-        const size_t HSCR1 = H1*S1*C1*(R1>1), HSCR2 = H2*S2*C2*(R2>1);
-        const size_t HSC1 = H1*S1*(C1>1), HSC2 = H2*S2*(C2>1);
-        const size_t HS1 = H1*(S1>1), HS2 = H2*(S2>1);
-        const size_t h1i = (H1>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = (int)(H1>1), h2i = (int)(H2>1);
+        const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n+=2, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        Y[n] = X1[n1]; Y[n+1] = X2[n2];
+                        *Y++ = *X1; *Y++ = *X2;
                     }
                 }
             }

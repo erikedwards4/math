@@ -48,7 +48,7 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C,const size_t
         else { cblas_sgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0f,Y,ldb,x1,lda,1.0f,X,ldc); }
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++) { Y[n2] = sqrtf(cblas_sdot((int)N1,&X[n2*N1],1,&X[n2*N1],1)*den) / Y[n2]; }
+            for (size_t n2=0; n2<N2; n2++, X+=N1) { Y[n2] = sqrtf(cblas_sdot((int)N1,X,1,X,1)*den) / Y[n2]; }
         }
         else
         {
@@ -67,13 +67,13 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C,const size_t
         if (!(x1=(float *)malloc((size_t)R*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)R*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)R,&o,0,x1,1); cblas_scopy((int)R,&ni,0,xni,1);
-        for (size_t h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, n+=RC, n2+=C)
+            for (size_t s=0; s<S; s++, X+=RC, Y+=C)
             {
-                cblas_sgemv(CblasColMajor,CblasTrans,(int)R,(int)C,1.0f,&X[n],(int)R,xni,1,0.0f,&Y[n2],1);
-                cblas_sgemm(CblasColMajor,CblasTrans,CblasTrans,(int)R,(int)C,1,-1.0f,x1,1,&Y[n2],(int)C,1.0f,&X[n],(int)R);
-                for (size_t c=0; c<C; c++) { Y[n2+c] = sqrtf(cblas_sdot((int)R,&X[n+c*R],1,&X[n+c*R],1)*den) / Y[n2+c]; }
+                cblas_sgemv(CblasColMajor,CblasTrans,(int)R,(int)C,1.0f,X,(int)R,xni,1,0.0f,Y,1);
+                cblas_sgemm(CblasColMajor,CblasTrans,CblasTrans,(int)R,(int)C,1,-1.0f,x1,1,Y,(int)C,1.0f,X,(int)R);
+                for (size_t c=0; c<C; c++, X+=R, Y++) { *Y = sqrtf(cblas_sdot((int)R,X,1,X,1)*den) / *Y; }
             }
         }
         free(x1); free(xni);
@@ -84,13 +84,13 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C,const size_t
         if (!(x1=(float *)malloc((size_t)C*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)C*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)C,&o,0,x1,1); cblas_scopy((int)C,&ni,0,xni,1);
-        for (size_t h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, n+=RC, n2+=R)
+            for (size_t s=0; s<S; s++, X+=(R-1)*C)
             {
-                cblas_sgemv(CblasColMajor,CblasNoTrans,(int)R,(int)C,1.0f,&X[n],(int)R,xni,1,0.0f,&Y[n2],1);
-                cblas_sgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,1,-1.0f,&Y[n2],(int)R,x1,1,1.0f,&X[n],(int)R);
-                for (size_t r=0; r<R; r++) { Y[n2+r] = sqrtf(cblas_sdot((int)C,&X[n+r],(int)R,&X[n+r],(int)R)*den) / Y[n2+r]; }
+                cblas_sgemv(CblasColMajor,CblasNoTrans,(int)R,(int)C,1.0f,X,(int)R,xni,1,0.0f,Y,1);
+                cblas_sgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,1,-1.0f,Y,(int)R,x1,1,1.0f,X,(int)R);
+                for (size_t r=0; r<R; r++, X++, Y++) { *Y = sqrtf(cblas_sdot((int)C,X,(int)R,X,(int)R)*den) / *Y; }
             }
         }
         free(x1); free(xni);
@@ -101,11 +101,11 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C,const size_t
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&o,0,x1,1); cblas_scopy((int)N1,&ni,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        for (size_t r=0; r<R; r++)
         {
-            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,&X[n],(int)S,xni,1,0.0f,&Y[n2],1);
-            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0f,&Y[n2],1,x1,(int)S,1.0f,&X[n],(int)S);
-            for (size_t c=0; c<C; c++) { Y[n2+c] = sqrtf(cblas_sdot((int)N1,&X[n+c*S],1,&X[n+c*S],1)*den) / Y[n2+c]; }
+            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,X,(int)S,xni,1,0.0f,Y,1);
+            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0f,Y,1,x1,(int)S,1.0f,X,(int)S);
+            for (size_t c=0; c<C; c++, X+=S, Y++) { *Y = sqrtf(cblas_sdot((int)N1,X,1,X,1)*den) / *Y; }
         }
         free(x1); free(xni);
     }
@@ -115,13 +115,13 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C,const size_t
         const size_t L = N/(M*N1);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, X+=J, Y++)
             {
-                Y[n2] = cblas_sdot((int)N1,&X[n],(int)K,&ni,0);
-                cblas_saxpy((int)N1,-Y[n2],&o,0,&X[n],(int)K);
-                Y[n2] = sqrtf(cblas_sdot((int)N1,&X[n],(int)K,&X[n],(int)K)*den) / Y[n2];
+                *Y = cblas_sdot((int)N1,X,(int)K,&ni,0);
+                cblas_saxpy((int)N1,-*Y,&o,0,X,(int)K);
+                *Y = sqrtf(cblas_sdot((int)N1,X,(int)K,X,(int)K)*den) / *Y;
             }
         }
     }
@@ -162,7 +162,7 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C,const size
         else { cblas_dgemm(Ord,Tr,Tr,(int)R,(int)C,1,-1.0,Y,ldb,x1,lda,1.0,X,ldc); }
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++) { Y[n2] = sqrt(cblas_ddot((int)N1,&X[n2*N1],1,&X[n2*N1],1)*den) / Y[n2]; }
+            for (size_t n2=0; n2<N2; n2++, X+=N1) { Y[n2] = sqrt(cblas_ddot((int)N1,X,1,X,1)*den) / Y[n2]; }
         }
         else
         {
@@ -181,13 +181,13 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C,const size
         if (!(x1=(double *)malloc((size_t)R*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)R*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)R,&o,0,x1,1); cblas_dcopy((int)R,&ni,0,xni,1);
-        for (size_t h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, n+=RC, n2+=C)
+            for (size_t s=0; s<S; s++, X+=RC, Y+=C)
             {
-                cblas_dgemv(CblasColMajor,CblasTrans,(int)R,(int)C,1.0,&X[n],(int)R,xni,1,0.0,&Y[n2],1);
-                cblas_dgemm(CblasColMajor,CblasTrans,CblasTrans,(int)R,(int)C,1,-1.0,x1,1,&Y[n2],(int)C,1.0,&X[n],(int)R);
-                for (size_t c=0; c<C; c++) { Y[n2+c] = sqrt(cblas_ddot((int)R,&X[n+c*R],1,&X[n+c*R],1)*den) / Y[n2+c]; }
+                cblas_dgemv(CblasColMajor,CblasTrans,(int)R,(int)C,1.0,X,(int)R,xni,1,0.0,Y,1);
+                cblas_dgemm(CblasColMajor,CblasTrans,CblasTrans,(int)R,(int)C,1,-1.0,x1,1,Y,(int)C,1.0,X,(int)R);
+                for (size_t c=0; c<C; c++, X+=R, Y++) { *Y = sqrt(cblas_ddot((int)R,X,1,X,1)*den) / *Y; }
             }
         }
         free(x1); free(xni);
@@ -198,13 +198,13 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C,const size
         if (!(x1=(double *)malloc((size_t)C*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)C*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)C,&o,0,x1,1); cblas_dcopy((int)C,&ni,0,xni,1);
-        for (size_t h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, n+=RC, n2+=R)
+            for (size_t s=0; s<S; s++, X+=(R-1)*C)
             {
-                cblas_dgemv(CblasColMajor,CblasNoTrans,(int)R,(int)C,1.0,&X[n],(int)R,xni,1,0.0,&Y[n2],1);
-                cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,1,-1.0,&Y[n2],(int)R,x1,1,1.0,&X[n],(int)R);
-                for (size_t r=0; r<R; r++) { Y[n2+r] = sqrt(cblas_ddot((int)C,&X[n+r],(int)R,&X[n+r],(int)R)*den) / Y[n2+r]; }
+                cblas_dgemv(CblasColMajor,CblasNoTrans,(int)R,(int)C,1.0,X,(int)R,xni,1,0.0,Y,1);
+                cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,1,-1.0,Y,(int)R,x1,1,1.0,X,(int)R);
+                for (size_t r=0; r<R; r++, X++, Y++) { *Y = sqrt(cblas_ddot((int)C,X,(int)R,X,(int)R)*den) / *Y; }
             }
         }
         free(x1); free(xni);
@@ -215,11 +215,11 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C,const size
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&o,0,x1,1); cblas_dcopy((int)N1,&ni,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        for (size_t r=0; r<R; r++)
         {
-            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,&X[n],(int)S,xni,1,0.0,&Y[n2],1);
-            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0,&Y[n2],1,x1,(int)S,1.0,&X[n],(int)S);
-            for (size_t c=0; c<C; c++) { Y[n2+c] = sqrt(cblas_ddot((int)N1,&X[n+c*S],1,&X[n+c*S],1)*den) / Y[n2+c]; }
+            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,X,(int)S,xni,1,0.0,Y,1);
+            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0,Y,1,x1,(int)S,1.0,X,(int)S);
+            for (size_t c=0; c<C; c++, X+=S, Y++) { *Y = sqrt(cblas_ddot((int)N1,X,1,X,1)*den) / *Y; }
         }
         free(x1); free(xni);
     }
@@ -229,13 +229,13 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C,const size
         const size_t L = N/(M*N1);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, X+=J, Y++)
             {
-                Y[n2] = cblas_ddot((int)N1,&X[n],(int)K,&ni,0);
-                cblas_daxpy((int)N1,-Y[n2],&o,0,&X[n],(int)K);
-                Y[n2] = sqrt(cblas_ddot((int)N1,&X[n],(int)K,&X[n],(int)K)*den) / Y[n2];
+                *Y = cblas_ddot((int)N1,X,(int)K,&ni,0);
+                cblas_daxpy((int)N1,-*Y,&o,0,X,(int)K);
+                *Y = sqrt(cblas_ddot((int)N1,X,(int)K,X,(int)K)*den) / *Y;
             }
         }
     }

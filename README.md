@@ -64,12 +64,7 @@ all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Co
 Generate: Constants Other_Gen Random  
     Constants: zeros, ones, twos, e, ln2, ln10, log2e, log10e, sqrt2, isqrt2, pi, ipi, pi_2, pi_4, sqrt2, isqrt2, eps, realmin, realmax, inf, nan, fill  
     Other_Gen: eye, linspace, logspace, primes, randperm  
-    Random: Uniform Bernoulli Poisson Normal Sampling Randperm  
-        Uniform: uniform_int, uniform_real  
-        Bernouli: bernoulli, binomial, negative_binomial, geometric  
-        Poisson: poisson, exponential, gamma, weibull, extreme_value  
-        Normal: normal, lognormal, chi_squared, cauchy, fisher_f, student_t  
-        Sampling: discrete, piecewise_constant, piecewise_linear  
+    Random: uniform_int, uniform_real, bernoulli, binomial, negative_binomial, geometric, poisson, exponential, gamma, weibull, extreme_value, normal, lognormal, chi_squared, cauchy, fisher_f, student_t, discrete, piecewise_constant, piecewise_linear  
 
 Construct: diagmat, toeplitz, tril, triu, repmat  
 
@@ -81,7 +76,7 @@ Split_Join: split2, split3, join2, join3
 
 Elementwise1: Operators Trig Exp_Log Round Special  
     Operators: plusplus, minusminus
-    Trig: sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, asinh, acosh, atanh, rad2deg, deg2rad
+    Trig: sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, asinh, acosh, atanh, rad2deg, deg2rad  
     Exp_Log: exp, exp2, exp10, log, log2, log10  
     Round: floor, ceil, trunc, round  
     Special: erf, erfc, tgamma, lgamma  

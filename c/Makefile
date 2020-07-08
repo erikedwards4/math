@@ -232,4 +232,5 @@ libmath.a: all
 #make clean
 clean:
 	find ./obj -type f -name *.o | xargs rm -f
+	rm -f *.s
 

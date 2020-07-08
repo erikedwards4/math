@@ -2,7 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 #include <complex.h>
 
@@ -44,12 +43,12 @@ int asinh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float x, y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
         //y = casinhf(X[n2]+1.0if*X[n2+1]);
-        x = X[n2] + 1.0if*X[n2+1];
+        x = *X + 1.0if**(X+1);
         y = clogf(x + csqrtf(x*x+1.0f));
-        memcpy(&Y[n2],(float *)&y,2*sizeof(float));
+        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
     }
     
     return 0;
@@ -60,12 +59,12 @@ int asinh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double x, y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        //y = casinh(X[n2]+1.0i*X[n2+1]);
-        x = X[n2] + 1.0i*X[n2+1];
+        //y = casinh(X[n2]+1.0if*X[n2+1]);
+        x = *X + 1.0i**(X+1);
         y = clog(x + csqrt(x*x+1.0));
-        memcpy(&Y[n2],(double *)&y,2*sizeof(double));
+        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
     }
     
     return 0;
@@ -92,14 +91,14 @@ int asinh_inplace_d (double *X, const size_t N)
 
 int asinh_inplace_c (float *X, const size_t N)
 {
-    _Complex float x;
+    _Complex float x, y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        //x = casinhf(X[n2]+1.0if*X[n2+1]);
-        x = X[n2] + 1.0if*X[n2+1];
-        x = clogf(x + csqrtf(x*x+1.0f));
-        memcpy(&X[n2],(float *)&x,2*sizeof(float));
+        //y = casinhf(X[n2]+1.0if*X[n2+1]);
+        x = *X + 1.0if**(X+1);
+        y = clogf(x + csqrtf(x*x+1.0f));
+        *X++ = *(float *)&y; *X++ = *((float *)&y+1);
     }
     
     return 0;
@@ -108,14 +107,14 @@ int asinh_inplace_c (float *X, const size_t N)
 
 int asinh_inplace_z (double *X, const size_t N)
 {
-    _Complex double x;
+    _Complex double x, y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        //x = casinh(X[n2]+1.0i*X[n2+1]);
-        x = X[n2] + 1.0i*X[n2+1];
-        x = clog(x + csqrt(x*x+1.0));
-        memcpy(&X[n2],(double *)&x,2*sizeof(double));
+        //y = casinh(X[n2]+1.0i*X[n2+1]);
+        x = *X + 1.0i**(X+1);
+        y = clog(x + csqrt(x*x+1.0));
+        *X++ = *(double *)&y; *X++ = *((double *)&y+1);
     }
     
     return 0;

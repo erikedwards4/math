@@ -2,7 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 #include <complex.h>
 
@@ -44,12 +43,12 @@ int atanh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float x, y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
         //y = catanhf(X[n2]+1.0if*X[n2+1]);
-        x = X[n2] + 1.0if*X[n2+1];
-        y = 0.5f * clogf((1.0f+x)/(1.0f-x));
-        memcpy(&Y[n2],(float *)&y,2*sizeof(float));
+        x = *X + 1.0if**(X+1);
+        y = 0.5f + clogf((1.0f+x)/(1.0f-x));
+        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
     }
     
     return 0;
@@ -60,12 +59,12 @@ int atanh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double x, y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        //y = catanh(X[n2]+1.0i*X[n2+1]);
-        x = X[n2] + 1.0i*X[n2+1];
-        y = 0.5 * clog((1.0+x)/(1.0-x));
-        memcpy(&Y[n2],(double *)&y,2*sizeof(double));
+        //y = catanh(X[n2]+1.0if*X[n2+1]);
+        x = *X + 1.0i**(X+1);
+        y = 0.5 + clog((1.0+x)/(1.0-x));
+        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
     }
     
     return 0;
@@ -92,14 +91,14 @@ int atanh_inplace_d (double *X, const size_t N)
 
 int atanh_inplace_c (float *X, const size_t N)
 {
-    _Complex float x;
+    _Complex float x, y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        //x = catanhf(X[n2]+1.0if*X[n2+1]);
-        x = X[n2] + 1.0if*X[n2+1];
-        x = 0.5f * clogf((1.0f+x)/(1.0f-x));
-        memcpy(&X[n2],(float *)&x,2*sizeof(float));
+        //y = catanhf(X[n2]+1.0if*X[n2+1]);
+        x = *X + 1.0if**(X+1);
+        y = 0.5f + clogf((1.0f+x)/(1.0f-x));
+        *X++ = *(float *)&y; *X++ = *((float *)&y+1);
     }
     
     return 0;
@@ -108,14 +107,14 @@ int atanh_inplace_c (float *X, const size_t N)
 
 int atanh_inplace_z (double *X, const size_t N)
 {
-    _Complex double x;
+    _Complex double x, y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        //x = catanh(X[n2]+1.0i*X[n2+1]);
-        x = X[n2] + 1.0i*X[n2+1];
-        x = 0.5 * clog((1.0+x)/(1.0-x));
-        memcpy(&X[n2],(double *)&x,2*sizeof(double));
+        //y = catanh(X[n2]+1.0i*X[n2+1]);
+        x = *X + 1.0i**(X+1);
+        y = 0.5 + clog((1.0+x)/(1.0-x));
+        *X++ = *(double *)&y; *X++ = *((double *)&y+1);
     }
     
     return 0;

@@ -2,7 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 #include <complex.h>
 
@@ -43,10 +42,10 @@ int log10_c (float *Y, const float *X, const size_t N)
     const _Complex float den = clogf(10.0f);
     _Complex float y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        y = clogf(X[n2]+1.0if*X[n2+1]) / den;
-        memcpy(&Y[n2],(float *)&y,2*sizeof(float));
+        y = clogf(*X + 1.0if**(X+1)) / den;
+        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
     }
     
     return 0;
@@ -58,10 +57,10 @@ int log10_z (double *Y, const double *X, const size_t N)
     const _Complex double den = clog(10.0);
     _Complex double y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        y = clog(X[n2]+1.0i*X[n2+1]) / den;
-        memcpy(&Y[n2],(double *)&y,2*sizeof(double));
+        y = clog(*X + 1.0i**(X+1)) / den;
+        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
     }
     
     return 0;
@@ -87,12 +86,12 @@ int log10_inplace_d (double *X, const size_t N)
 int log10_inplace_c (float *X, const size_t N)
 {
     const _Complex float den = clogf(10.0f);
-    _Complex float x;
+    _Complex float y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        x = clogf(X[n2]+1.0if*X[n2+1]) / den;
-        memcpy(&X[n2],(float *)&x,2*sizeof(float));
+        y = clogf(*X + 1.0if**(X+1)) / den;
+        *X++ = *(float *)&y; *X++ = *((float *)&y+1);
     }
     
     return 0;
@@ -102,12 +101,12 @@ int log10_inplace_c (float *X, const size_t N)
 int log10_inplace_z (double *X, const size_t N)
 {
     const _Complex double den = clog(10.0);
-    _Complex double x;
+    _Complex double y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        x = clog(X[n2]+1.0i*X[n2+1]) / den;
-        memcpy(&X[n2],(double *)&x,2*sizeof(double));
+        y = clog(*X + 1.0i**(X+1)) / den;
+        *X++ = *(double *)&y; *X++ = *((double *)&y+1);
     }
     
     return 0;

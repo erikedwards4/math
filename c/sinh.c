@@ -2,7 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 #include <complex.h>
 
@@ -47,12 +46,16 @@ int sinh_d (double *Y, const double *X, const size_t N)
 int sinh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float y, xp, xm;
-
-    for (size_t n2=0; n2<2*N; n2+=2)
+    
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        //y = csinhf(X[n2]+1.0if*X[n2+1]);
-        xp = cexpf(X[n2]+1.0if*X[n2+1]); xm = cexpf(-X[n2]-1.0if*X[n2+1]); y = 0.5f*(xp-xm);
-        memcpy(&Y[n2],(float *)&y,2*sizeof(float));
+        //y = csinhf(*X + 1.0if**(X+1));
+        xp = cexpf(*X + 1.0if**(X+1));
+        xm = cexpf(-*X - 1.0if**(X+1));
+        y = 0.5f * (xp-xm);
+        //y = *X + 1.0if**(X+1);
+        //y = 0.5f * (cexpf(y)-cexpf(-y));
+        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
     }
     
     return 0;
@@ -62,12 +65,13 @@ int sinh_c (float *Y, const float *X, const size_t N)
 int sinh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double y, xp, xm;
-
-    for (size_t n2=0; n2<2*N; n2+=2)
+    
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        //y = csinh(X[n2]+1.0i*X[n2+1]);
-        xp = cexp(X[n2]+1.0i*X[n2+1]); xm = cexp(-X[n2]-1.0i*X[n2+1]); y = 0.5*(xp-xm);
-        memcpy(&Y[n2],(double *)&y,2*sizeof(double));
+        xp = cexp(*X + 1.0i**(X+1));
+        xm = cexp(-*X - 1.0i**(X+1));
+        y = 0.5 * (xp-xm);
+        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
     }
     
     return 0;
@@ -98,14 +102,20 @@ int sinh_inplace_d (double *X, const size_t N)
 
 int sinh_inplace_c (float *X, const size_t N)
 {
-    _Complex float x, xp, xm;
+    _Complex float y, xp, xm;
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        //x = csinhf(X[n2]+1.0if*X[n2+1]);
-        xp = cexpf(X[n2]+1.0if*X[n2+1]); xm = cexpf(-X[n2]-1.0if*X[n2+1]); x = 0.5f*(xp-xm);
-        memcpy(&X[n2],(float *)&x,2*sizeof(float));
+        //y = csinhf(*X + 1.0if**(X+1));
+        xp = cexpf(*X + 1.0if**(X+1));
+        xm = cexpf(-*X - 1.0if**(X+1));
+        y = 0.5f * (xp-xm);
+        //y = *X + 1.0if**(X+1); //this is probably ever so slightly faster but too close to tell
+        //y = 0.5f * (cexpf(y)-cexpf(-y));
+        *X++ = *(float *)&y; *X++ = *((float *)&y+1);
     }
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
     
     return 0;
 }
@@ -113,13 +123,14 @@ int sinh_inplace_c (float *X, const size_t N)
 
 int sinh_inplace_z (double *X, const size_t N)
 {
-    _Complex double x, xp, xm;
-
-    for (size_t n2=0; n2<2*N; n2+=2)
+    _Complex double y, xp, xm;
+    
+    for (size_t n=0; n<N; n++)
     {
-        //x = csinh(X[n2]+1.0i*X[n2+1]);
-        xp = cexp(X[n2]+1.0i*X[n2+1]); xm = cexp(-X[n2]-1.0i*X[n2+1]); x = 0.5*(xp-xm);
-        memcpy(&X[n2],(double *)&x,2*sizeof(double));
+        xp = cexp(*X + 1.0i**(X+1));
+        xm = cexp(-*X - 1.0i**(X+1));
+        y = 0.5 * (xp-xm);
+        *X++ = *(double *)&y; *X++ = *((double *)&y+1);
     }
     
     return 0;

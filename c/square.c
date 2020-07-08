@@ -40,7 +40,7 @@ int square_d (double *Y, const double *X, const size_t N)
 
 int square_c (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = X[n2]*X[n2] + X[n2+1]*X[n2+1]; }
+    for (size_t n=0; n<N; n++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
     
     return 0;
 }
@@ -48,7 +48,7 @@ int square_c (float *Y, const float *X, const size_t N)
 
 int square_z (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n] = X[n2]*X[n2] + X[n2+1]*X[n2+1]; }
+    for (size_t n=0; n<N; n++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
     
     return 0;
 }

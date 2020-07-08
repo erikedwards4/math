@@ -47,11 +47,11 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
         float *xni;
         if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in mean_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&ni,0,xni,1);
-        for (size_t h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, n+=RC, n2+=RC/N1)
+            for (size_t s=0; s<S; s++, X+=RC, Y+=RC/N1)
             {
-                cblas_sgemv(CblasColMajor,Tr,(int)R,(int)C,1.0f,&X[n],(int)R,xni,1,0.0f,&Y[n2],1);
+                cblas_sgemv(CblasColMajor,Tr,(int)R,(int)C,1.0f,X,(int)R,xni,1,0.0f,Y,1);
             }
         }
         free(xni);
@@ -61,9 +61,13 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
         float *xni;
         if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in mean_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&ni,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        // for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        // {
+        //     cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,&X[n],(int)S,xni,1,0.0f,&Y[n2],1);
+        // }
+        for (size_t r=0; r<R; r++, X+=C*SH, Y+=C)
         {
-            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,&X[n],(int)S,xni,1,0.0f,&Y[n2],1);
+            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,X,(int)S,xni,1,0.0f,Y,1);
         }
         free(xni);
     }
@@ -73,11 +77,18 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
         const size_t L = N/(M*N1);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        // for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        // {
+        //     for (size_t m=0; m<M; m++, n+=J, n2++)
+        //     {
+        //         Y[n2] = cblas_sdot((int)N1,&X[n],(int)K,&ni,0);
+        //     }
+        // }
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, X+=J, Y++)
             {
-                Y[n2] = cblas_sdot((int)N1,&X[n],(int)K,&ni,0);
+                *Y = cblas_sdot((int)N1,X,(int)K,&ni,0);
             }
         }
     }
@@ -116,11 +127,11 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
         double *xni;
         if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in mean_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&ni,0,xni,1);
-        for (size_t h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, n+=RC, n2+=RC/N1)
+            for (size_t s=0; s<S; s++, X+=RC, Y+=RC/N1)
             {
-                cblas_dgemv(CblasColMajor,Tr,(int)R,(int)C,1.0,&X[n],(int)R,xni,1,0.0,&Y[n2],1);
+                cblas_dgemv(CblasColMajor,Tr,(int)R,(int)C,1.0,X,(int)R,xni,1,0.0,Y,1);
             }
         }
         free(xni);
@@ -130,9 +141,9 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
         double *xni;
         if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in mean_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&ni,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*SH, n2+=C)
+        for (size_t r=0; r<R; r++, X+=C*SH, Y+=C)
         {
-            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,&X[n],(int)S,xni,1,0.0,&Y[n2],1);
+            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,X,(int)S,xni,1,0.0,Y,1);
         }
         free(xni);
     }
@@ -142,11 +153,11 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
         const size_t L = N/(M*N1);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, X+=J, Y++)
             {
-                Y[n2] = cblas_ddot((int)N1,&X[n],(int)K,&ni,0);
+                *Y = cblas_ddot((int)N1,X,(int)K,&ni,0);
             }
         }
     }
@@ -187,11 +198,11 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
         float *xni;
         if (!(xni=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in mean_c: problem with malloc. "); perror("malloc"); return 1; }
         cblas_ccopy((int)N1,o,0,xni,1);
-        for (size_t h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, n+=2*RC, n2+=2*RC/N1)
+            for (size_t s=0; s<S; s++, X+=2*RC, Y+=2*RC/N1)
             {
-                cblas_cgemv(CblasColMajor,Tr,(int)R,(int)C,o,&X[n],(int)R,xni,1,z,&Y[n2],1);
+                cblas_cgemv(CblasColMajor,Tr,(int)R,(int)C,o,X,(int)R,xni,1,z,Y,1);
             }
         }
         free(xni);
@@ -202,9 +213,9 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
         float *xni;
         if (!(xni=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in mean_c: problem with malloc. "); perror("malloc"); return 1; }
         cblas_ccopy((int)N1,o,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=2*C*SH, n2+=2*C)
+        for (size_t r=0; r<R; r++, X+=2*C*SH, Y+=2*C)
         {
-            cblas_cgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,o,&X[n],(int)S,xni,1,z,&Y[n2],1);
+            cblas_cgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,o,X,(int)S,xni,1,z,Y,1);
         }
         free(xni);
     }
@@ -214,11 +225,11 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
         const size_t L = N/(M*N1);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=2*J, n2+=2)
+            for (size_t m=0; m<M; m++, X+=2*J, Y+=2)
             {
-                cblas_cdotu_sub((int)N1,&X[n],(int)K,ni,0,(_Complex float *)(&Y[n2]));
+                cblas_cdotu_sub((int)N1,X,(int)K,ni,0,(_Complex float *)Y);
             }
         }
     }
@@ -259,11 +270,11 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
         double *xni;
         if (!(xni=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in mean_z: problem with malloc. "); perror("malloc"); return 1; }
         cblas_zcopy((int)N1,o,0,xni,1);
-        for (size_t h=0, n=0, n2=0; h<H; h++)
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, n+=2*RC, n2+=2*RC/N1)
+            for (size_t s=0; s<S; s++, X+=2*RC, Y+=2*RC/N1)
             {
-                cblas_zgemv(CblasColMajor,Tr,(int)R,(int)C,o,&X[n],(int)R,xni,1,z,&Y[n2],1);
+                cblas_zgemv(CblasColMajor,Tr,(int)R,(int)C,o,X,(int)R,xni,1,z,Y,1);
             }
         }
         free(xni);
@@ -274,9 +285,9 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
         double *xni;
         if (!(xni=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in mean_z: problem with malloc. "); perror("malloc"); return 1; }
         cblas_zcopy((int)N1,o,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=2*C*SH, n2+=2*C)
+        for (size_t r=0; r<R; r++, X+=2*C*SH, Y+=2*C)
         {
-            cblas_zgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,o,&X[n],(int)S,xni,1,z,&Y[n2],1);
+            cblas_zgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,o,X,(int)S,xni,1,z,Y,1);
         }
         free(xni);
     }
@@ -286,11 +297,11 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
         const size_t L = N/(M*N1);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=2*J, n2+=2)
+            for (size_t m=0; m<M; m++, X+=2*J, Y+=2)
             {
-                cblas_zdotu_sub((int)N1,&X[n],(int)K,ni,0,(_Complex double *)(&Y[n2]));
+                cblas_zdotu_sub((int)N1,X,(int)K,ni,0,(_Complex double *)Y);
             }
         }
     }

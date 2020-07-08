@@ -42,9 +42,9 @@ int abs_d (double *Y, const double *X, const size_t N)
 
 int abs_c (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0, n2=0; n<N; n++, n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        Y[n] = sqrtf(X[n2]*X[n2] + X[n2+1]*X[n2+1]);
+        *Y++ = sqrtf(*X**X + *(X+1)**(X+1));
     }
     
     return 0;
@@ -53,9 +53,9 @@ int abs_c (float *Y, const float *X, const size_t N)
 
 int abs_z (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0, n2=0; n<N; n++, n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        Y[n] = sqrt(X[n2]*X[n2] + X[n2+1]*X[n2+1]);
+        *Y++ = sqrt(*X**X + *(X+1)**(X+1));
     }
     
     return 0;
@@ -64,12 +64,10 @@ int abs_z (double *Y, const double *X, const size_t N)
 
 int abs_inplace_s (float *X, const size_t N)
 {
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     for (size_t n=0; n<N; n++) { X[n] = fabsf(X[n]); }
     //for (size_t n=0; n<N; n++) { if (X[n]<0.0f) { X[n] = -X[n]; } }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -85,10 +83,12 @@ int abs_inplace_d (double *X, const size_t N)
 
 int abs_inplace_c (float *X, const size_t N)
 {
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     for (size_t n=0, n2=0; n<N; n++, n2+=2)
     {
         X[n] = sqrtf(X[n2]*X[n2] + X[n2+1]*X[n2+1]);
     }
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
     
     return 0;
 }

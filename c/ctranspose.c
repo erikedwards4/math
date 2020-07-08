@@ -32,11 +32,11 @@ int ctranspose_s (float *Y, const float *X, const size_t R, const size_t C, cons
     if (R==1 || C==1) { cblas_scopy((int)(R*C),X,1,Y,1); }
     else if (iscolmajor)
     {
-        for (size_t c=0, n=0; c<C; c++, n+=R) { cblas_scopy((int)R,&X[n],1,&Y[c],(int)C); }
+        for (size_t c=0; c<C; c++, X+=R) { cblas_scopy((int)R,X,1,&Y[c],(int)C); }
     }
     else
     {
-        for (size_t r=0, n=0; r<R; r++, n+=C) { cblas_scopy((int)C,&X[n],1,&Y[r],(int)R); }
+        for (size_t r=0; r<R; r++, X+=C) { cblas_scopy((int)C,X,1,&Y[r],(int)R); }
     }
     //clock_gettime(CLOCK_REALTIME,&toc);
     //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
@@ -50,11 +50,11 @@ int ctranspose_d (double *Y, const double *X, const size_t R, const size_t C, co
     if (R==1 || C==1) { cblas_dcopy((int)(R*C),X,1,Y,1); }
     else if (iscolmajor)
     {
-        for (size_t c=0, n=0; c<C; c++, n+=R) { cblas_dcopy((int)R,&X[n],1,&Y[c],(int)C); }
+        for (size_t c=0; c<C; c++, X+=R) { cblas_dcopy((int)R,X,1,&Y[c],(int)C); }
     }
     else
     {
-        for (size_t r=0, n=0; r<R; r++, n+=C) { cblas_dcopy((int)C,&X[n],1,&Y[r],(int)R); }
+        for (size_t r=0; r<R; r++, X+=C) { cblas_dcopy((int)C,X,1,&Y[r],(int)R); }
     }
 
     return 0;
@@ -66,11 +66,11 @@ int ctranspose_c (float *Y, const float *X, const size_t R, const size_t C, cons
     if (R==1 || C==1) { cblas_ccopy((int)(R*C),X,1,Y,1); }
     else if (iscolmajor)
     {
-        for (size_t c=0, n=0; c<C; c+=2, n+=2*R) { cblas_ccopy((int)R,&X[n],1,&Y[c],(int)C); }
+        for (size_t c=0; c<C; c+=2, X+=2*R) { cblas_ccopy((int)R,X,1,&Y[c],(int)C); }
     }
     else
     {
-        for (size_t r=0, n=0; r<R; r+=2, n+=2*C) { cblas_ccopy((int)C,&X[n],1,&Y[r],(int)R); }
+        for (size_t r=0; r<R; r+=2, X+=2*C) { cblas_ccopy((int)C,X,1,&Y[r],(int)R); }
     }
     cblas_sscal((int)(R*C),-1.0f,&Y[1],2);
 
@@ -83,11 +83,11 @@ int ctranspose_z (double *Y, const double *X, const size_t R, const size_t C, co
     if (R==1 || C==1) { cblas_zcopy((int)(R*C),X,1,Y,1); }
     else if (iscolmajor)
     {
-        for (size_t c=0, n=0; c<C; c+=2, n+=2*R) { cblas_zcopy((int)R,&X[n],1,&Y[c],(int)C); }
+        for (size_t c=0; c<C; c+=2, X+=2*R) { cblas_zcopy((int)R,X,1,&Y[c],(int)C); }
     }
     else
     {
-        for (size_t r=0, n=0; r<R; r+=2, n+=2*C) { cblas_zcopy((int)C,&X[n],1,&Y[r],(int)R); }
+        for (size_t r=0; r<R; r+=2, X+=2*C) { cblas_zcopy((int)C,X,1,&Y[r],(int)R); }
     }
     cblas_dscal((int)(R*C),-1.0,&Y[1],2);
 
@@ -115,11 +115,11 @@ int ctranspose_inplace_s (float *X, const size_t R, const size_t C, const char i
         cblas_scopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t c=0, n=0; c<C; c++, n+=R) { cblas_scopy((int)R,&Xt[n],1,&X[c],(int)C); }
+            for (size_t c=0; c<C; c++, Xt+=R) { cblas_scopy((int)R,Xt,1,&X[c],(int)C); }
         }
         else
         {
-            for (size_t r=0, n=0; r<R; r++, n+=C) { cblas_scopy((int)C,&Xt[n],1,&X[r],(int)R); }
+            for (size_t r=0; r<R; r++, Xt+=C) { cblas_scopy((int)C,Xt,1,&X[r],(int)R); }
         }
         free(Xt);
     }
@@ -147,11 +147,11 @@ int ctranspose_inplace_d (double *X, const size_t R, const size_t C, const char 
         cblas_dcopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t c=0, n=0; c<C; c++, n+=R) { cblas_dcopy((int)R,&Xt[n],1,&X[c],(int)C); }
+            for (size_t c=0; c<C; c++, Xt+=R) { cblas_dcopy((int)R,Xt,1,&X[c],(int)C); }
         }
         else
         {
-            for (size_t r=0, n=0; r<R; r++, n+=C) { cblas_dcopy((int)C,&Xt[n],1,&X[r],(int)R); }
+            for (size_t r=0; r<R; r++, Xt+=C) { cblas_dcopy((int)C,Xt,1,&X[r],(int)R); }
         }
         free(Xt);
     }
@@ -178,11 +178,11 @@ int ctranspose_inplace_c (float *X, const size_t R, const size_t C, const char i
         cblas_sscal((int)(R*C),-1.0f,&Xt[1],2);
         if (iscolmajor)
         {
-            for (size_t c=0, n=0; c<C; c+=2, n+=2*R) { cblas_ccopy((int)R,&Xt[n],1,&X[c],(int)C); }
+            for (size_t c=0; c<C; c+=2, Xt+=2*R) { cblas_ccopy((int)R,Xt,1,&X[c],(int)C); }
         }
         else
         {
-            for (size_t r=0, n=0; r<R; r+=2, n+=2*C) { cblas_ccopy((int)C,&Xt[n],1,&X[r],(int)R); }
+            for (size_t r=0; r<R; r+=2, Xt+=2*C) { cblas_ccopy((int)C,Xt,1,&X[r],(int)R); }
         }
         free(Xt);
     }
@@ -209,11 +209,11 @@ int ctranspose_inplace_z (double *X, const size_t R, const size_t C, const char 
         cblas_dscal((int)(R*C),-1.0,&Xt[1],2);
         if (iscolmajor)
         {
-            for (size_t c=0, n=0; c<C; c+=2, n+=2*R) { cblas_zcopy((int)R,&Xt[n],1,&X[c],(int)C); }
+            for (size_t c=0; c<C; c+=2, Xt+=2*R) { cblas_zcopy((int)R,Xt,1,&X[c],(int)C); }
         }
         else
         {
-            for (size_t r=0, n=0; r<R; r+=2, n+=2*C) { cblas_zcopy((int)C,&Xt[n],1,&X[r],(int)R); }
+            for (size_t r=0; r<R; r+=2, Xt+=2*C) { cblas_zcopy((int)C,Xt,1,&X[r],(int)R); }
         }
         free(Xt);
     }

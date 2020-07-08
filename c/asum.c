@@ -32,11 +32,11 @@ int asum_s (float *Y, const float *X, const size_t R, const size_t C,const size_
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+    for (size_t l=0; l<L; l++, X+=M*(N1-J))
     {
-        for (size_t m=0; m<M; m++, n+=J, n2++)
+        for (size_t m=0; m<M; m++, X+=J, Y++)
         {
-            Y[n2] = cblas_sasum((int)N1,&X[n],(int)K);
+            *Y = cblas_sasum((int)N1,X,(int)K);
         }
     }
     //clock_gettime(CLOCK_REALTIME,&toc);
@@ -55,11 +55,11 @@ int asum_d (double *Y, const double *X, const size_t R, const size_t C,const siz
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+    for (size_t l=0; l<L; l++, X+=M*(N1-J))
     {
-        for (size_t m=0; m<M; m++, n+=J, n2++)
+        for (size_t m=0; m<M; m++, X+=J, Y++)
         {
-            Y[n2] = cblas_dasum((int)N1,&X[n],(int)K);
+            *Y = cblas_dasum((int)N1,X,(int)K);
         }
     }
 
@@ -76,11 +76,11 @@ int asum_c (float *Y, const float *X, const size_t R, const size_t C,const size_
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+    for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
     {
-        for (size_t m=0; m<M; m++, n+=2*J, n2++)
+        for (size_t m=0; m<M; m++, X+=2*J, Y++)
         {
-            Y[n2] = cblas_scasum((int)N1,&X[n],(int)K);
+            *Y = cblas_scasum((int)N1,X,(int)K);
         }
     }
 
@@ -97,11 +97,11 @@ int asum_z (double *Y, const double *X, const size_t R, const size_t C,const siz
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+    for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
     {
-        for (size_t m=0; m<M; m++, n+=2*J, n2++)
+        for (size_t m=0; m<M; m++, X+=2*J, Y++)
         {
-            Y[n2] = cblas_dzasum((int)N1,&X[n],(int)K);
+            *Y = cblas_dzasum((int)N1,X,(int)K);
         }
     }
 

@@ -2,7 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 #include <complex.h>
 
@@ -42,10 +41,10 @@ int sqrt_c (float *Y, const float *X, const size_t N)
 {
     _Complex float y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        y = csqrtf(X[n2]+1.0if*X[n2+1]);
-        memcpy(&Y[n2],(float *)&y,2*sizeof(float));
+        y = csqrtf(*X + 1.0if**(X+1));
+        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
     }
     
     return 0;
@@ -56,10 +55,10 @@ int sqrt_z (double *Y, const double *X, const size_t N)
 {
     _Complex double y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++, X+=2)
     {
-        y = csqrt(X[n2]+1.0i*X[n2+1]);
-        memcpy(&Y[n2],(double *)&y,2*sizeof(double));
+        y = csqrt(*X + 1.0i**(X+1));
+        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
     }
     
     return 0;
@@ -84,12 +83,12 @@ int sqrt_inplace_d (double *X, const size_t N)
 
 int sqrt_inplace_c (float *X, const size_t N)
 {
-    _Complex float x;
+    _Complex float y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        x = csqrtf(X[n2]+1.0if*X[n2+1]);
-        memcpy(&X[n2],(float *)&x,2*sizeof(float));
+        y = csqrtf(*X + 1.0if**(X+1));
+        *X++ = *(float *)&y; *X++ = *((float *)&y+1);
     }
     
     return 0;
@@ -98,12 +97,12 @@ int sqrt_inplace_c (float *X, const size_t N)
 
 int sqrt_inplace_z (double *X, const size_t N)
 {
-    _Complex double x;
+    _Complex double y;
 
-    for (size_t n2=0; n2<2*N; n2+=2)
+    for (size_t n=0; n<N; n++)
     {
-        x = csqrt(X[n2]+1.0i*X[n2+1]);
-        memcpy(&X[n2],(double *)&x,2*sizeof(double));
+        y = csqrt(*X + 1.0i**(X+1));
+        *X++ = *(double *)&y; *X++ = *((double *)&y+1);
     }
     
     return 0;

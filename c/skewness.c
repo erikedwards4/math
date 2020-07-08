@@ -34,7 +34,7 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
     const float o = 1.0f, ni = 1.0f / N1;
     const float w = (biased) ? sqrtf(N1) : N1*sqrtf(N1-1)/(N1-2);
 
-    if (N1<2) { fprintf(stderr,"error in skewness_s: N must be > 1\n"); return 1; }
+    if (N1<3) { fprintf(stderr,"error in skewness_s: N1 must be > 2\n"); return 1; }
     else if (N1==N)
     {
         float sm2 = 0.0f, sm3 = 0.0f;
@@ -83,11 +83,12 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&o,0,x1,1); cblas_scopy((int)N1,&ni,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
+        for (size_t r=0; r<R; r++, X+=C*S, Y+=C)
         {
-            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,&X[n],(int)S,xni,1,0.0f,&Y[n2],1);
-            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0f,&Y[n2],1,x1,(int)S,1.0f,&X[n],(int)S);
+            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,X,(int)S,xni,1,0.0f,Y,1);
+            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0f,Y,1,x1,(int)S,1.0f,X,(int)S);
         }
+        X -= N; Y -= RC;
         for (size_t n=0; n<N; n++) { float x = X[n]*X[n]; sm2[n/N1] += x; sm3[n/N1] += x*X[n]; }
         for (size_t n2=0; n2<N2; n2++) { Y[n2] = w * sm3[n2] / (sm2[n2]*sqrtf(sm2[n2])); }
         free(x1); free(xni); free(sm2); free(sm3);
@@ -100,16 +101,16 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         float sm1, sm2, sm3, *x1;
         if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, X+=J, Y++)
             {
-                cblas_scopy((int)N1,&X[n],(int)K,x1,1);
+                cblas_scopy((int)N1,X,(int)K,x1,1);
                 sm1 = cblas_sdot((int)N1,x1,1,&o,0);
                 cblas_saxpy((int)N1,-sm1,&ni,0,x1,1);
                 sm2 = sm3 = 0.0f;
                 for (size_t n1=0; n1<N1; n1++) { float x = x1[n1]*x1[n1]; sm2 += x; sm3 += x*x1[n1]; }
-                Y[n2] = w * sm3 / (sm2*sqrtf(sm2));
+                *Y = w * sm3 / (sm2*sqrtf(sm2));
             }
         }
         free(x1);
@@ -127,7 +128,7 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_
     const double o = 1.0, ni = 1.0 / N1;
     const double w = (biased) ? sqrt(N1) : N1*sqrt(N1-1)/(N1-2);
 
-    if (N1<2) { fprintf(stderr,"error in skewness_d: N must be > 1\n"); return 1; }
+    if (N1<3) { fprintf(stderr,"error in skewness_d: N1 must be > 2\n"); return 1; }
     else if (N1==N)
     {
         double sm2 = 0.0, sm3 = 0.0;
@@ -176,11 +177,12 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&o,0,x1,1); cblas_dcopy((int)N1,&ni,0,xni,1);
-        for (size_t r=0, n=0, n2=0; r<R; r++, n+=C*S, n2+=C)
+        for (size_t r=0; r<R; r++, X+=C*S, Y+=C)
         {
-            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,&X[n],(int)S,xni,1,0.0,&Y[n2],1);
-            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0,&Y[n2],1,x1,(int)S,1.0,&X[n],(int)S);
+            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,X,(int)S,xni,1,0.0,Y,1);
+            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)C,(int)S,1,-1.0,Y,1,x1,(int)S,1.0,X,(int)S);
         }
+        X -= N; Y -= RC;
         for (size_t n=0; n<N; n++) { double x = X[n]*X[n]; sm2[n/N1] += x; sm3[n/N1] += x*X[n]; }
         for (size_t n2=0; n2<N2; n2++) { Y[n2] = w * sm3[n2] / (sm2[n2]*sqrt(sm2[n2])); }
         free(x1); free(xni); free(sm2); free(sm3);
@@ -193,16 +195,16 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         double sm1, sm2, sm3, *x1;
         if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=J, n2++)
+            for (size_t m=0; m<M; m++, X+=J, Y++)
             {
-                cblas_dcopy((int)N1,&X[n],(int)K,x1,1);
+                cblas_dcopy((int)N1,X,(int)K,x1,1);
                 sm1 = cblas_ddot((int)N1,x1,1,&o,0);
                 cblas_daxpy((int)N1,-sm1,&ni,0,x1,1);
                 sm2 = sm3 = 0.0;
                 for (size_t n1=0; n1<N1; n1++) { double x = x1[n1]*x1[n1]; sm2 += x; sm3 += x*x1[n1]; }
-                Y[n2] = w * sm3 / (sm2*sqrt(sm2));
+                *Y = w * sm3 / (sm2*sqrt(sm2));
             }
         }
         free(x1);
@@ -219,7 +221,7 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
     const float ni[2] = {1.0f/N1,0.0f};
     const float w = (biased) ? sqrtf(N1) : N1*sqrtf(N1-1)/(N1-2);
 
-    if (N1<2) { fprintf(stderr,"error in skewness_c: N must be > 1\n"); return 1; }
+    if (N1<3) { fprintf(stderr,"error in skewness_c: N1 must be > 2\n"); return 1; }
     else if (N1==N)
     {
         float x[2], sm2[2] = {0.0f,0.0f}, sm3[2] = {0.0f,0.0f};
@@ -245,11 +247,11 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         float sm1[2], sm2[2], sm3[2], x[2], *x1;
         if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in skewness_c: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=2*J, n2+=2)
+            for (size_t m=0; m<M; m++, X+=2*J)
             {
-                cblas_ccopy((int)N1,&X[n],(int)K,x1,1);
+                cblas_ccopy((int)N1,X,(int)K,x1,1);
                 sm1[0] = sm1[1] = sm2[0] = sm2[1] = sm3[0] = sm3[1] = 0.0f;
                 for (size_t n1=0; n1<2*N1; n1+=2) { sm1[0] -= x1[n1]; sm1[1] -= x1[n1+1]; }
                 cblas_caxpy((int)N,sm1,ni,0,x1,1);
@@ -261,8 +263,8 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
                     sm3[0] += x[0]*x1[n1] - x[1]*x1[n1+1];
                     sm3[1] += x[0]*x1[n1+1] + x[1]*x1[n1];
                 }
-                Y[n2] = w * sm3[0] / (sm2[0]*sqrt(sm2[0]));
-                Y[n2+1] = w * sm3[1] / (sm2[0]*sqrt(sm2[0]));
+                *Y++ = w * sm3[0] / (sm2[0]*sqrt(sm2[0]));
+                *Y++ = w * sm3[1] / (sm2[0]*sqrt(sm2[0]));
             }
         }
         free(x1);
@@ -279,7 +281,7 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C,const size_
     const double ni[2] = {1.0/N1,0.0};
     const double w = (biased) ? sqrt(N1) : N1*sqrt(N1-1)/(N1-2);
 
-    if (N1<2) { fprintf(stderr,"error in skewness_z: N must be > 1\n"); return 1; }
+    if (N1<3) { fprintf(stderr,"error in skewness_z: N1 must be > 2\n"); return 1; }
     else if (N1==N)
     {
         double x[2], sm2[2] = {0.0,0.0}, sm3[2] = {0.0,0.0};
@@ -305,11 +307,11 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C,const size_
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         double sm1[2], sm2[2], sm3[2], x[2], *x1;
         if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in skewness_z: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, n+=2*J, n2+=2)
+            for (size_t m=0; m<M; m++, X+=2*J)
             {
-                cblas_zcopy((int)N1,&X[n],(int)K,x1,1);
+                cblas_zcopy((int)N1,X,(int)K,x1,1);
                 sm1[0] = sm1[1] = sm2[0] = sm2[1] = sm3[0] = sm3[1] = 0.0;
                 for (size_t n1=0; n1<2*N1; n1+=2) { sm1[0] -= x1[n1]; sm1[1] -= x1[n1+1]; }
                 cblas_zaxpy((int)N,sm1,ni,0,x1,1);
@@ -321,8 +323,8 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C,const size_
                     sm3[0] += x[0]*x1[n1] - x[1]*x1[n1+1];
                     sm3[1] += x[0]*x1[n1+1] + x[1]*x1[n1];
                 }
-                Y[n2] = w * sm3[0] / (sm2[0]*sqrt(sm2[0]));
-                Y[n2+1] = w * sm3[1] / (sm2[0]*sqrt(sm2[0]));
+                *Y++ = w * sm3[0] / (sm2[0]*sqrt(sm2[0]));
+                *Y++ = w * sm3[1] / (sm2[0]*sqrt(sm2[0]));
             }
         }
         free(x1);

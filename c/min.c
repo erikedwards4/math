@@ -34,7 +34,7 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_scopy(N,X,1,Y,1); }
+    if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
     else if (N1==N)
     {
         Y[0] = X[0];
@@ -121,7 +121,7 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C,const size
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_dcopy(N,X,1,Y,1); }
+    if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
     else if (N1==N)
     {
         Y[0] = X[0];

@@ -3,7 +3,6 @@
 //For complex input, gets erf of real and imag parts separately.
 
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 //#include <time.h>
 

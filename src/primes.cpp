@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for integer file (X)" << endl; return 1; }
     if (codee::primes_i(X,&cnt,(P-1)/2))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-    o1.C = size_t(cnt);
+    o1.C = cnt;
     o1.R = o1.S = o1.H = 1u;
 
 

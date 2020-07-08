@@ -1,9 +1,8 @@
 //2-input elementwise function.
-//Raises each element of X to the power of P.
+//Raises each element of X1 to the power of X2.
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 #include <complex.h>
 //#include <time.h>
@@ -13,56 +12,52 @@ namespace codee {
 extern "C" {
 #endif
 
-int pow_s (float *Y, const float *X, const float *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int pow_d (double *Y, const double *X, const double *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int pow_c (float *Y, const float *X, const float *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int pow_z (double *Y, const double *X, const double *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int pow_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int pow_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int pow_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int pow_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
 
-int pow_inplace_s (float *X, const float *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int pow_inplace_d (double *X, const double *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int pow_inplace_c (float *X, const float *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int pow_inplace_z (double *X, const double *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int pow_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int pow_inplace_d (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int pow_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int pow_inplace_z (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
 
 
-int pow_s (float *Y, const float *X, const float *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int pow_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
     const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N1==1)
     {
-        for (size_t n=0; n<N; n++) { Y[n] = powf(X[0],P[n]); }
+        for (size_t n=0; n<N; n++) { Y[n] = powf(X1[0],X2[n]); }
     }    
     else if (N2==1)
     {
-        for (size_t n=0; n<N; n++) { Y[n] = powf(X[n],P[0]); }
+        for (size_t n=0; n<N; n++) { Y[n] = powf(X1[n],X2[0]); }
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { Y[n] = powf(X[n],P[n]); }
+        for (size_t n=0; n<N; n++) { Y[n] = powf(X1[n],X2[n]); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = R1*C1*S1*(H1>1), RCSH2 = R2*C2*S2*(H2>1);
-        const size_t RCS1 = R1*C1*(S1>1), RCS2 = R2*C2*(S2>1);
-        const size_t RC1 = R1*(C1>1), RC2 = R2*(C2>1);
-        const size_t r1i = (R1>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = (int)(R1>1), r2i = (int)(R2>1);
+        const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        Y[n] = powf(X[n1],P[n2]);
+                        *Y++ = powf(*X1,*X2);
                     }
                 }
             }
@@ -70,34 +65,30 @@ int pow_s (float *Y, const float *X, const float *P, const size_t R1, const size
     }
     else
     {
-        const size_t HSCR1 = H1*S1*C1*(R1>1), HSCR2 = H2*S2*C2*(R2>1);
-        const size_t HSC1 = H1*S1*(C1>1), HSC2 = H2*S2*(C2>1);
-        const size_t HS1 = H1*(S1>1), HS2 = H2*(S2>1);
-        const size_t h1i = (H1>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = (int)(H1>1), h2i = (int)(H2>1);
+        const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        Y[n] = powf(X[n1],P[n2]);
+                        *Y++ = powf(*X1,*X2);
                     }
                 }
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
 
 
-int pow_d (double *Y, const double *X, const double *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int pow_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
@@ -107,33 +98,31 @@ int pow_d (double *Y, const double *X, const double *P, const size_t R1, const s
     
     if (N1==1)
     {
-        for (size_t n=0; n<N; n++) { Y[n] = pow(X[0],P[n]); }
+        for (size_t n=0; n<N; n++) { Y[n] = pow(X1[0],X2[n]); }
     }    
     else if (N2==1)
     {
-        for (size_t n=0; n<N; n++) { Y[n] = pow(X[n],P[0]); }
+        for (size_t n=0; n<N; n++) { Y[n] = pow(X1[n],X2[0]); }
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { Y[n] = pow(X[n],P[n]); }
+        for (size_t n=0; n<N; n++) { Y[n] = pow(X1[n],X2[n]); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = R1*C1*S1*(H1>1), RCSH2 = R2*C2*S2*(H2>1);
-        const size_t RCS1 = R1*C1*(S1>1), RCS2 = R2*C2*(S2>1);
-        const size_t RC1 = R1*(C1>1), RC2 = R2*(C2>1);
-        const size_t r1i = (R1>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = (int)(R1>1), r2i = (int)(R2>1);
+        const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        Y[n] = pow(X[n1],P[n2]);
+                        *Y++ = pow(*X1,*X2);
                     }
                 }
             }
@@ -141,21 +130,19 @@ int pow_d (double *Y, const double *X, const double *P, const size_t R1, const s
     }
     else
     {
-        const size_t HSCR1 = H1*S1*C1*(R1>1), HSCR2 = H2*S2*C2*(R2>1);
-        const size_t HSC1 = H1*S1*(C1>1), HSC2 = H2*S2*(C2>1);
-        const size_t HS1 = H1*(S1>1), HS2 = H2*(S2>1);
-        const size_t h1i = (H1>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = (int)(H1>1), h2i = (int)(H2>1);
+        const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        Y[n] = pow(X[n1],P[n2]);
+                        *Y++ = pow(*X1,*X2);
                     }
                 }
             }
@@ -166,7 +153,7 @@ int pow_d (double *Y, const double *X, const double *P, const size_t R1, const s
 }
 
 
-int pow_c (float *Y, const float *X, const float *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int pow_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
@@ -177,36 +164,46 @@ int pow_c (float *Y, const float *X, const float *P, const size_t R1, const size
 
     if (N1==1)
     {
-        const _Complex float x = X[0] + 1.0if*X[1];
-        for (size_t n=0; n<N; n++) { y = cpowf(x,P[n]+1.0if*P[n+1]); memcpy(&Y[n],(float *)&y,2*sizeof(float)); n+=2; }
+        const _Complex float x = X1[0] + 1.0if*X1[1];
+        for (size_t n=0; n<N; n++)
+        {
+            y = cpowf(x,X2[n]+1.0if*X2[n+1]);
+            *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+        }
     }    
     else if (N2==1)
     {
-        const _Complex float p = P[0] + 1.0if*P[1];
-        for (size_t n=0; n<N; n++) { y = cpowf(X[n]+1.0if*X[n+1],p); memcpy(&Y[n],(float *)&y,2*sizeof(float)); n+=2; }
+        const _Complex float p = X2[0] + 1.0if*X2[1];
+        for (size_t n=0; n<N; n++)
+        {
+            y = cpowf(X1[n]+1.0if*X1[n+1],p);
+            *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+        }
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { y = cpowf(X[n]+1.0if*X[n+1],P[n]+1.0if*P[n+1]); memcpy(&Y[n],(float *)&y,2*sizeof(float)); n+=2; }
+        for (size_t n=0; n<N; n++)
+        {
+            y = cpowf(X1[n]+1.0if*X1[n+1],X2[n]+1.0if*X2[n+1]);
+            *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+        }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = 2*R1*C1*S1*(H1>1), RCSH2 = 2*R2*C2*S2*(H2>1);
-        const size_t RCS1 = 2*R1*C1*(S1>1), RCS2 = 2*R2*C2*(S2>1);
-        const size_t RC1 = 2*R1*(C1>1), RC2 = 2*R2*(C2>1);
-        const size_t r1i = 2*(R1>1), r2i = 2*(R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = 2*(int)(R1>1), r2i = 2*(int)(R2>1);
+        const int c1i = 2*(int)R1*((int)(C1>1)-(int)(R1>1)), c2i = 2*(int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = 2*(int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = 2*(int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = 2*(int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = 2*(int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n+=2, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        y = cpowf(X[n1]+1.0if*X[n1+1],P[n2]+1.0if*P[n2+1]);
-                        memcpy(&Y[n],(float *)&y,2*sizeof(float));
+                        y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
+                        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
                     }
                 }
             }
@@ -214,22 +211,20 @@ int pow_c (float *Y, const float *X, const float *P, const size_t R1, const size
     }
     else
     {
-        const size_t HSCR1 = 2*H1*S1*C1*(R1>1), HSCR2 = 2*H2*S2*C2*(R2>1);
-        const size_t HSC1 = 2*H1*S1*(C1>1), HSC2 = 2*H2*S2*(C2>1);
-        const size_t HS1 = 2*H1*(S1>1), HS2 = 2*H2*(S2>1);
-        const size_t h1i = 2*(H1>1), h2i = 2*(H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = 2*(int)(H1>1), h2i = 2*(int)(H2>1);
+        const int s1i = 2*(int)H1*((int)(S1>1)-(int)(H1>1)), s2i = 2*(int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = 2*(int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = 2*(int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = 2*(int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = 2*(int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n+=2, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
                     {
-                        y = cpowf(X[n1]+1.0if*X[n1+1],P[n2]+1.0if*P[n2+1]);
-                        memcpy(&Y[n],(float *)&y,2*sizeof(float));
+                        y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
+                        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
                     }
                 }
             }
@@ -240,7 +235,7 @@ int pow_c (float *Y, const float *X, const float *P, const size_t R1, const size
 }
 
 
-int pow_z (double *Y, const double *X, const double *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int pow_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
@@ -251,36 +246,46 @@ int pow_z (double *Y, const double *X, const double *P, const size_t R1, const s
 
     if (N1==1)
     {
-        const _Complex double x = X[0] + 1.0i*X[1];
-        for (size_t n=0; n<N; n++) { y = cpow(x,P[n]+1.0i*P[n+1]); memcpy(&Y[n],(double *)&y,2*sizeof(double)); n+=2; }
+        const _Complex double x = X1[0] + 1.0i*X1[1];
+        for (size_t n=0; n<N; n++)
+        {
+            y = cpow(x,X2[n]+1.0i*X2[n+1]);
+            *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+        }
     }    
     else if (N2==1)
     {
-        const _Complex double p = P[0] + 1.0i*P[1];
-        for (size_t n=0; n<N; n++) { y = cpow(X[n]+1.0i*X[n+1],p); memcpy(&Y[n],(double *)&y,2*sizeof(double)); n+=2; }
+        const _Complex double p = X2[0] + 1.0i*X2[1];
+        for (size_t n=0; n<N; n++)
+        {
+            y = cpow(X1[n]+1.0i*X1[n+1],p);
+            *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+        }
     }
-    else if (N==N1 && N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { y = cpow(X[n]+1.0i*X[n+1],P[n]+1.0i*P[n+1]); memcpy(&Y[n],(double *)&y,2*sizeof(double)); n+=2; }
+        for (size_t n=0; n<N; n++)
+        {
+            y = cpow(X1[n]+1.0i*X1[n+1],X2[n]+1.0i*X2[n+1]);
+            *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+        }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH1 = 2*R1*C1*S1*(H1>1), RCSH2 = 2*R2*C2*S2*(H2>1);
-        const size_t RCS1 = 2*R1*C1*(S1>1), RCS2 = 2*R2*C2*(S2>1);
-        const size_t RC1 = 2*R1*(C1>1), RC2 = 2*R2*(C2>1);
-        const size_t r1i = 2*(R1>1), r2i = 2*(R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r1i = 2*(int)(R1>1), r2i = 2*(int)(R2>1);
+        const int c1i = 2*(int)R1*((int)(C1>1)-(int)(R1>1)), c2i = 2*(int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s1i = 2*(int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = 2*(int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h1i = 2*(int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = 2*(int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
                 {
-                    size_t n1 = h*RCSH1 + s*RCS1 + c*RC1;
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n+=2, n1+=r1i, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
                     {
-                        y = cpow(X[n1]+1.0i*X[n1+1],P[n2]+1.0i*P[n2+1]);
-                        memcpy(&Y[n],(double *)&y,2*sizeof(double));
+                        y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
+                        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
                     }
                 }
             }
@@ -288,22 +293,20 @@ int pow_z (double *Y, const double *X, const double *P, const size_t R1, const s
     }
     else
     {
-        const size_t HSCR1 = 2*H1*S1*C1*(R1>1), HSCR2 = 2*H2*S2*C2*(R2>1);
-        const size_t HSC1 = 2*H1*S1*(C1>1), HSC2 = 2*H2*S2*(C2>1);
-        const size_t HS1 = 2*H1*(S1>1), HS2 = 2*H2*(S2>1);
-        const size_t h1i = 2*(H1>1), h2i = 2*(H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h1i = 2*(int)(H1>1), h2i = 2*(int)(H2>1);
+        const int s1i = 2*(int)H1*((int)(S1>1)-(int)(H1>1)), s2i = 2*(int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c1i = 2*(int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = 2*(int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r1i = 2*(int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = 2*(int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
                 {
-                    size_t n1 = r*HSCR1 + c*HSC1 + s*HS1;
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n+=2, n1+=h1i, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i, Y+=2)
                     {
-                        y = cpow(X[n1]+1.0i*X[n1+1],P[n2]+1.0i*P[n2+1]);
-                        memcpy(&Y[n],(double *)&y,2*sizeof(double));
+                        y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
+                        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
                     }
                 }
             }
@@ -314,38 +317,38 @@ int pow_z (double *Y, const double *X, const double *P, const size_t R1, const s
 }
 
 
-int pow_inplace_s (float *X, const float *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int pow_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
     const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
-    if (N1!=N) { fprintf(stderr,"error in pow_inplace_s: first input (X) cannot be broadcast for inplace version\n"); return 1; }
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
+    if (N1!=N) { fprintf(stderr,"error in pow_inplace_s: first input (X1) cannot be broadcast for inplace version\n"); return 1; }
 
     if (N2==1)
     {
-        for (size_t n=0; n<N; n++) { X[n] = powf(X[n],P[0]); }
+        for (size_t n=0; n<N; n++) { X1[n] = powf(X1[n],X2[0]); }
     }
-    else if (N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { X[n] = powf(X[n],P[n]); }
+        for (size_t n=0; n<N; n++) { X1[n] = powf(X1[n],X2[n]); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH2 = R2*C2*S2*(H2>1), RCS2 = R2*C2*(S2>1), RC2 = R2*(C2>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r2i = (int)(R2>1);
+        const int c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X2+=c2i)
                 {
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1++, X2+=r2i)
                     {
-                        X[n] = powf(X[n],P[n2]);
+                        *X1 = powf(*X1,*X2);
                     }
                 }
             }
@@ -353,59 +356,61 @@ int pow_inplace_s (float *X, const float *P, const size_t R1, const size_t C1, c
     }
     else
     {
-        const size_t HSCR2 = H2*S2*C2*(R2>1), HSC2 = H2*S2*(C2>1), HS2 = H2*(S2>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h2i = (int)(H2>1);
+        const int s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X2+=s2i)
                 {
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1++, X2+=h2i)
                     {
-                        X[n] = powf(X[n],P[n2]);
+                        *X1 = powf(*X1,*X2);
                     }
                 }
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
 
 
-int pow_inplace_d (double *X, const double *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int pow_inplace_d (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
     const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
-    if (N1!=N) { fprintf(stderr,"error in pow_inplace_d: first input (X) cannot be broadcast for inplace version\n"); return 1; }
+    if (N1!=N) { fprintf(stderr,"error in pow_inplace_d: first input (X1) cannot be broadcast for inplace version\n"); return 1; }
     
     if (N2==1)
     {
-        for (size_t n=0; n<N; n++) { X[n] = pow(X[n],P[0]); }
+        for (size_t n=0; n<N; n++) { X1[n] = pow(X1[n],X2[0]); }
     }
-    else if (N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { X[n] = pow(X[n],P[n]); }
+        for (size_t n=0; n<N; n++) { X1[n] = pow(X1[n],X2[n]); }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH2 = R2*C2*S2*(H2>1), RCS2 = R2*C2*(S2>1), RC2 = R2*(C2>1), r2i = (R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r2i = (int)(R2>1);
+        const int c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X2+=c2i)
                 {
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n++, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X1++, X2+=r2i)
                     {
-                        X[n] = pow(X[n],P[n2]);
+                        *X1 = pow(*X1,*X2);
                     }
                 }
             }
@@ -413,17 +418,19 @@ int pow_inplace_d (double *X, const double *P, const size_t R1, const size_t C1,
     }
     else
     {
-        const size_t HSCR2 = H2*S2*C2*(R2>1), HSC2 = H2*S2*(C2>1), HS2 = H2*(S2>1), h2i = (H2>1);
-        for (size_t r=0, n=0; r<R; r++)
+        const int h2i = (int)(H2>1);
+        const int s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
+        const int c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
+        const int r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
+        for (size_t r=0; r<R; r++, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X2+=s2i)
                 {
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0; h<H; h++, n++, n2+=h2i)
+                    for (size_t h=0; h<H; h++, X1++, X2+=h2i)
                     {
-                        X[n] = pow(X[n],P[n2]);
+                        *X1 = pow(*X1,*X2);
                     }
                 }
             }
@@ -434,40 +441,49 @@ int pow_inplace_d (double *X, const double *P, const size_t R1, const size_t C1,
 }
 
 
-int pow_inplace_c (float *X, const float *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int pow_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
     const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
-    if (N1!=N) { fprintf(stderr,"error in pow_inplace_c: first input (X) cannot be broadcast for inplace version\n"); return 1; }
-    _Complex float x;
+    if (N1!=N) { fprintf(stderr,"error in pow_inplace_c: first input (X1) cannot be broadcast for inplace version\n"); return 1; }
+    _Complex float y;
 
     if (N2==1)
     {
-        const _Complex float p = P[0] + 1.0if*P[1];
-        for (size_t n=0; n<N; n++) { x = cpowf(X[n]+1.0if*X[n+1],p); memcpy(&X[n],(float *)&x,2*sizeof(float)); n+=2; }
+        const _Complex float x2 = X2[0] + 1.0if*X2[1];
+        for (size_t n=0; n<N; n++)
+        {
+            y = cpowf(*X1+1.0if**(X1+1),x2);
+            *X1++ = *(float *)&y; *X1++ = *((float *)&y+1);
+        }
     }
-    else if (N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { x = cpowf(X[n]+1.0if*X[n+1],P[n]+1.0if*P[n+1]); memcpy(&X[n],(float *)&x,2*sizeof(float)); n+=2; }
+        for (size_t n=0; n<N; n++, X2+=2)
+        {
+            y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
+            *X1++ = *(float *)&y; *X1++ = *((float *)&y+1);
+        }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH2 = 2*R2*C2*S2*(H2>1), RCS2 = 2*R2*C2*(S2>1), RC2 = 2*R2*(C2>1), r2i = 2*(R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r2i = 2*(int)(R2>1);
+        const int c2i = 2*(int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s2i = 2*(int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h2i = 2*(int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X2+=c2i)
                 {
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n+=2, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X2+=r2i)
                     {
-                        x = cpowf(X[n]+1.0if*X[n+1],P[n2]+1.0if*P[n2+1]);
-                        memcpy(&X[n],(float *)&x,2*sizeof(float));
-                        n+=2; n2 += r2i;
+                        y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
+                        *X1++ = *(float *)&y; *X1++ = *((float *)&y+1);
                     }
                 }
             }
@@ -475,19 +491,20 @@ int pow_inplace_c (float *X, const float *P, const size_t R1, const size_t C1, c
     }
     else
     {
-        const size_t HSCR2 = 2*H2*S2*C2*(R2>1), HSC2 = 2*H2*S2*(C2>1), HS2 = 2*H2*(S2>1), h2i = 2*(H2>1);
-        for (size_t r=0; r<R; r++)
+        const size_t h2i = 2*(H2>1);
+        const size_t s2i = 2*(H2*(S2>1)-H*(H2>1));
+        const size_t c2i = 2*H2*(S2*(C2>1)-S*(S2>1));
+        const size_t r2i = 2* H2*S2*(C2*(R2>1)-C*(C2>1));
+        for (size_t r=0; r<R; r++, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X2+=s2i)
                 {
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0, n=0; h<H; h++)
+                    for (size_t h=0; h<H; h++, X2+=h2i)
                     {
-                        x = cpowf(X[n]+1.0if*X[n+1],P[n2]+1.0if*P[n2+1]);
-                        memcpy(&X[n],(float *)&x,2*sizeof(float));
-                        n+=2; n2 += h2i;
+                        y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
+                        *X1++ = *(float *)&y; *X1++ = *((float *)&y+1);
                     }
                 }
             }
@@ -498,40 +515,49 @@ int pow_inplace_c (float *X, const float *P, const size_t R1, const size_t C1, c
 }
 
 
-int pow_inplace_z (double *X, const double *P, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int pow_inplace_z (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
 {
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
     const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
-    if (N1!=N) { fprintf(stderr,"error in pow_inplace_z: first input (X) cannot be broadcast for inplace version\n"); return 1; }
-    _Complex double x;
+    if (N1!=N) { fprintf(stderr,"error in pow_inplace_z: first input (X1) cannot be broadcast for inplace version\n"); return 1; }
+    _Complex double y;
 
     if (N2==1)
     {
-        const _Complex double p = P[0] + 1.0i*P[1];
-        for (size_t n=0; n<N; n++) { x = cpow(X[n]+1.0i*X[n+1],p); memcpy(&X[n],(double *)&x,2*sizeof(double)); n+=2; }
+        const _Complex double x2 = X2[0] + 1.0i*X2[1];
+        for (size_t n=0; n<N; n++)
+        {
+            y = cpow(*X1+1.0i**(X1+1),x2);
+            *X1++ = *(double *)&y; *X1++ = *((double *)&y+1);
+        }
     }
-    else if (N==N2)
+    else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { x = cpow(X[n]+1.0i*X[n+1],P[n]+1.0i*P[n+1]); memcpy(&X[n],(double *)&x,2*sizeof(double)); n+=2; }
+        for (size_t n=0; n<N; n++, X2+=2)
+        {
+            y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
+            *X1++ = *(double *)&y; *X1++ = *((double *)&y+1);
+        }
     }
     else if (iscolmajor)
     {
-        const size_t RCSH2 = 2*R2*C2*S2*(H2>1), RCS2 = 2*R2*C2*(S2>1), RC2 = 2*R2*(C2>1), r2i = 2*(R2>1);
-        for (size_t h=0, n=0; h<H; h++)
+        const int r2i = 2*(int)(R2>1);
+        const int c2i = 2*(int)R2*((int)(C2>1)-(int)(R2>1));
+        const int s2i = 2*(int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
+        const int h2i = 2*(int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
+        for (size_t h=0; h<H; h++, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; s++, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++)
+                for (size_t c=0; c<C; c++, X2+=c2i)
                 {
-                    size_t n2 = h*RCSH2 + s*RCS2 + c*RC2;
-                    for (size_t r=0; r<R; r++, n+=2, n2+=r2i)
+                    for (size_t r=0; r<R; r++, X2+=r2i)
                     {
-                        x = cpow(X[n]+1.0i*X[n+1],P[n2]+1.0i*P[n2+1]);
-                        memcpy(&X[n],(double *)&x,2*sizeof(double));
-                        n+=2; n2 += r2i;
+                        y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
+                        *X1++ = *(double *)&y; *X1++ = *((double *)&y+1);
                     }
                 }
             }
@@ -539,19 +565,20 @@ int pow_inplace_z (double *X, const double *P, const size_t R1, const size_t C1,
     }
     else
     {
-        const size_t HSCR2 = 2*H2*S2*C2*(R2>1), HSC2 = 2*H2*S2*(C2>1), HS2 = 2*H2*(S2>1), h2i = 2*(H2>1);
-        for (size_t r=0; r<R; r++)
+        const size_t h2i = 2*(H2>1);
+        const size_t s2i = 2*(H2*(S2>1)-H*(H2>1));
+        const size_t c2i = 2*H2*(S2*(C2>1)-S*(S2>1));
+        const size_t r2i = 2* H2*S2*(C2*(R2>1)-C*(C2>1));
+        for (size_t r=0; r<R; r++, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++)
+            for (size_t c=0; c<C; c++, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++)
+                for (size_t s=0; s<S; s++, X2+=s2i)
                 {
-                    size_t n2 = r*HSCR2 + c*HSC2 + s*HS2;
-                    for (size_t h=0, n=0; h<H; h++)
+                    for (size_t h=0; h<H; h++, X2+=h2i)
                     {
-                        x = cpow(X[n]+1.0i*X[n+1],P[n2]+1.0i*P[n2+1]);
-                        memcpy(&X[n],(double *)&x,2*sizeof(double));
-                        n+=2; n2 += h2i;
+                        y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
+                        *X1++ = *(double *)&y; *X1++ = *((double *)&y+1);
                     }
                 }
             }
