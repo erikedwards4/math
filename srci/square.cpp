@@ -9,6 +9,7 @@ const size_t I = 1, O = 1;
 string descr;
 descr += "Squares each element of X.\n";
 descr += "For complex X, output is real-valued: Y = X.*conj(X).\n";
+descr += "Sometimes this is called an element-wise norm since: y = |x|^2.\n";
 descr += "\n";
 descr += "Examples:\n";
 descr += "$ square X -o Y \n";

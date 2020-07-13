@@ -173,16 +173,15 @@ atan2: atan2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Complex: 1-2 inputs, 1 output, for complex operations
-Complex: complex polar real imag conj arg norm proj
+Complex: complex polar real imag conj arg proj #norm
 complex: complex.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 polar: polar.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 real: real.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 imag: imag.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 arg: arg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-norm: norm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-
+#norm is same as element-wise square
 
 
 #Stats: some basic statistics calculated along rows, cols, etc.

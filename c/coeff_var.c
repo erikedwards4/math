@@ -12,11 +12,11 @@ namespace codee {
 extern "C" {
 #endif
 
-int coeff_var_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int coeff_var_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
 
 
-int coeff_var_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -130,7 +130,7 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C,const size_t
 }
 
 
-int coeff_var_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;

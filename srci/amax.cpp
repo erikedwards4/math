@@ -9,9 +9,10 @@ int dim;
 //Description
 string descr;
 descr += "Gets maximum of absolute values along dim of X.\n";
-descr += "For complex X, this finds the min of abs values,\n";
-descr += "using the definition |x| = |xr| + |xi|,\n";
-descr += "and then returns the corresponding complex number.\n";
+descr += "This is also the Inf-norm or max-norm of each vector in X.\n";
+descr += "\n";
+descr += "For complex X, this uses the definition |x| = |xr| + |xi|,\n";
+descr += "per BLAS standard, so this is not actually the Inf-norm.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get amax along cols.\n";
@@ -42,7 +43,8 @@ if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
 
 //Set output header info
-o1.F = i1.F; o1.T = i1.T;
+o1.F = i1.F;
+o1.T = (i1.T<100) ? i1.T : i1.T-100;
 o1.R = (dim==0) ? 1u : i1.R;
 o1.C = (dim==1) ? 1u : i1.C;
 o1.S = (dim==2) ? 1u : i1.S;
@@ -74,7 +76,7 @@ else if (i1.T==101)
     float *X, *Y;
     try { X = new float[2u*i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    try { Y = new float[2u*o1.N()]; }
+    try { Y = new float[o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }

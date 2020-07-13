@@ -12,13 +12,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int std_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int std_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
 
 
-int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -129,7 +129,7 @@ int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, co
 }
 
 
-int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -240,7 +240,7 @@ int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, 
 }
 
 
-int std_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -289,7 +289,7 @@ int std_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, co
 }
 
 
-int std_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;

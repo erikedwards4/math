@@ -8,7 +8,9 @@ int dim;
 
 //Description
 string descr;
-descr += "Gets the L2-norm (root-mean-square) along dim of X.\n";
+descr += "Gets the 2-norm (root-sum-square) along dim of X.\n";
+descr += "This is the Euclidean (L2) norm of each vector in X.\n";
+descr += "Note that this is not the Frobenius matrix norm of X (see matnorm).\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get norm along cols.\n";

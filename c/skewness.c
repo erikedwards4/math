@@ -20,13 +20,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int skewness_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
 
 
-int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -120,7 +120,7 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
 }
 
 
-int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -214,7 +214,7 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_
 }
 
 
-int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -274,7 +274,7 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
 }
 
 
-int skewness_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;

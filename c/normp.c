@@ -1,8 +1,7 @@
-//Gets L1 norm (sum of absolute-values) for each row or col of X according to dim.
-//This is the 'taxicab' (L1) norm of each vector in X.
-
-//For complex case, output is real. This does not use cblas_scasum or cblas_dzasum,
-//because those sum |xr|+|xi|, which is not the definition of the L1 norm.
+//Gets the p-norm along dim of X.
+//This is the Lp norm of each vector in X.
+//For each vector, y = sum(|x|^p)^1/p.
+//For complex case, output is real.
 
 #include <stdio.h>
 #include <math.h>
@@ -13,53 +12,60 @@ namespace codee {
 extern "C" {
 #endif
 
-int norm1_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int norm1_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int norm1_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int normp_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p);
+int normp_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p);
+int normp_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p);
+int normp_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p);
 
 
-int norm1_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int normp_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const float ip = 1.0f / p;
 
     if (N1==1)
     {
         for (size_t n=0; n<N; n++) { Y[n] = fabsf(X[n]); }
     }
-    else if (N1==N) { *Y = cblas_sasum((int)N1,X,1); }
+    else if (N1==N)
+    {
+        *Y = powf(fabsf(X[0]),p);
+        for (size_t n=1; n<N; n++) { *Y += powf(fabsf(X[n]),p); }
+        *Y = powf(*Y,ip);
+    }
     else if (SH==1)
     {
         const size_t N2 = N/N1;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, X+=N1)
+            for (size_t n2=0; n2<N2; n2++, Y++)
             {
-                *Y++ = cblas_sasum((int)N1,X,1);
+                *Y = powf(fabsf(*X),p); X++;
+                for (size_t n1=1; n1<N1; n1++, X++) { *Y += powf(fabsf(*X),p); }
+                *Y = powf(*Y,ip);
             }
         }
         else
         {
-            // for (size_t n2=0; n2<N2; n2++, X++)
-            // {
-            //     *Y++ = cblas_sasum((int)N1,X,(int)N2);
-            // }
-            for (size_t n2=0; n2<N2; n2++, X++) { *Y++ = fabsf(*X); }
+            for (size_t n2=0; n2<N2; n2++, X++) { *Y++ = powf(fabsf(*X),p); }
             Y -= N2;
             for (size_t n1=1; n1<N1; n1++, Y-=N2)
             {
-                for (size_t n2=0; n2<N2; n2++, X++) { *Y++ += fabsf(*X); }
+                for (size_t n2=0; n2<N2; n2++, X++) { *Y++ += powf(fabsf(*X),p); }
             }
+            for (size_t n2=0; n2<N2; n2++, Y++) { *Y = powf(*Y,ip); }
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
     {
         for (size_t r=0; r<R; r++)
         {
-            for (size_t c=0; c<C; c++, X+=N1)
+            for (size_t c=0; c<C; c++, Y++)
             {
-                *Y++ = cblas_sasum((int)N1,X,1);
+                *Y = powf(fabsf(*X),p); X++;
+                for (size_t s=1; s<S; s++, X++) { *Y += powf(fabsf(*X),p); }
+                *Y = powf(*Y,ip);
             }
         }
     }
@@ -71,9 +77,11 @@ int norm1_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, X+=J)
+            for (size_t m=0; m<M; m++, X-=K*N1-J, Y++)
             {
-                *Y++ = cblas_sasum((int)N1,X,(int)K);
+                *Y = powf(fabsf(*X),p); X += K;
+                for (size_t n1=1; n1<N1; n1++, X+=K) { *Y += powf(fabsf(*X),p); }
+                *Y = powf(*Y,ip);
             }
         }
     }
@@ -82,43 +90,54 @@ int norm1_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int norm1_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int normp_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const double ip = 1.0 / p;
 
     if (N1==1)
     {
         for (size_t n=0; n<N; n++) { Y[n] = fabs(X[n]); }
     }
-    else if (N1==N) { *Y = cblas_dasum((int)N1,X,1); }
+    else if (N1==N)
+    {
+        *Y = pow(fabs(X[0]),p);
+        for (size_t n=1; n<N; n++) { *Y += pow(fabs(X[n]),p); }
+        *Y = pow(*Y,ip);
+    }
     else if (SH==1)
     {
         const size_t N2 = N/N1;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, X+=N1)
+            for (size_t n2=0; n2<N2; n2++, Y++)
             {
-                *Y++ = cblas_dasum((int)N1,X,1);
+                *Y = pow(fabs(*X),p); X++;
+                for (size_t n1=1; n1<N1; n1++, X++) { *Y += pow(fabs(*X),p); }
+                *Y = pow(*Y,ip);
             }
         }
         else
         {
-            for (size_t n2=0; n2<N2; n2++, X++) { *Y++ = fabs(*X); }
+            for (size_t n2=0; n2<N2; n2++, X++) { *Y++ = pow(fabs(*X),p); }
             Y -= N2;
             for (size_t n1=1; n1<N1; n1++, Y-=N2)
             {
-                for (size_t n2=0; n2<N2; n2++, X++) { *Y++ += fabs(*X); }
+                for (size_t n2=0; n2<N2; n2++, X++) { *Y++ += pow(fabs(*X),p); }
             }
+            for (size_t n2=0; n2<N2; n2++, Y++) { *Y = pow(*Y,ip); }
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
     {
         for (size_t r=0; r<R; r++)
         {
-            for (size_t c=0; c<C; c++, X+=N1)
+            for (size_t c=0; c<C; c++, Y++)
             {
-                *Y++ = cblas_dasum((int)N1,X,1);
+                *Y = pow(fabs(*X),p); X++;
+                for (size_t s=1; s<S; s++, X++) { *Y += pow(fabs(*X),p); }
+                *Y = pow(*Y,ip);
             }
         }
     }
@@ -130,9 +149,11 @@ int norm1_d (double *Y, const double *X, const size_t R, const size_t C, const s
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, X+=J)
+            for (size_t m=0; m<M; m++, X-=K*N1-J, Y++)
             {
-                *Y++ = cblas_dasum((int)N1,X,(int)K);
+                *Y = pow(fabs(*X),p); X += K;
+                for (size_t n1=1; n1<N1; n1++, X+=K) { *Y += pow(fabs(*X),p); }
+                *Y = pow(*Y,ip);
             }
         }
     }
@@ -141,10 +162,11 @@ int norm1_d (double *Y, const double *X, const size_t R, const size_t C, const s
 }
 
 
-int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int normp_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const float ip = 1.0f / p;
 
     if (N1==1)
     {
@@ -152,8 +174,9 @@ int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     }
     else if (N1==N)
     {
-        *Y = sqrtf(X[0]*X[0]+X[1]*X[1]);
-        for (size_t n=1; n<N; n+=2) { *Y += sqrtf(X[n]*X[n]+X[n+1]*X[n+1]); }
+        *Y = powf(sqrtf(X[0]*X[0]+X[1]*X[1]),p);
+        for (size_t n=1; n<N; n+=2) { *Y += powf(sqrtf(X[n]*X[n]+X[n+1]*X[n+1]),p); }
+        *Y = powf(*Y,ip);
     }
     else if (SH==1)
     {
@@ -162,18 +185,20 @@ int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         {
             for (size_t n2=0; n2<N2; n2++, Y++)
             {
-                *Y = sqrtf(*X**X+*(X+1)**(X+1)); X += 2;
-                for (size_t n1=1; n1<N1; n1++, X+=2) { *Y += sqrtf(*X**X+*(X+1)**(X+1)); }
+                *Y = powf(sqrtf(*X**X+*(X+1)**(X+1)),p); X += 2;
+                for (size_t n1=1; n1<N1; n1++, X+=2) { *Y += powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
+                *Y = powf(*Y,ip);
             }
         }
         else
         {
-            for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ = sqrtf(*X**X+*(X+1)**(X+1)); }
+            for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ = powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
             Y -= N2;
             for (size_t n1=1; n1<N1; n1++, Y-=N2)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ += sqrtf(*X**X+*(X+1)**(X+1)); }
+                for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ += powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
             }
+            for (size_t n2=0; n2<N2; n2++, Y++) { *Y = powf(*Y,ip); }
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
@@ -182,8 +207,9 @@ int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         {
             for (size_t c=0; c<C; c++, Y++)
             {
-                *Y = sqrtf(*X**X+*(X+1)**(X+1)); X += 2;
-                for (size_t s=1; s<S; s++, X+=2) { *Y += sqrtf(*X**X+*(X+1)**(X+1)); }
+                *Y = powf(sqrtf(*X**X+*(X+1)**(X+1)),p); X += 2;
+                for (size_t s=1; s<S; s++, X+=2) { *Y += powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
+                *Y = powf(*Y,ip);
             }
         }
     }
@@ -197,8 +223,9 @@ int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         {
             for (size_t m=0; m<M; m++, X-=2*(K*N1-J), Y++)
             {
-                *Y = sqrtf(*X**X+*(X+1)**(X+1)); X += 2*K;
-                for (size_t n1=1; n1<N1; n1++, X+=2*K) { *Y += sqrtf(*X**X+*(X+1)**(X+1)); }
+                *Y = powf(sqrtf(*X**X+*(X+1)**(X+1)),p); X += 2*K;
+                for (size_t n1=1; n1<N1; n1++, X+=2*K) { *Y += powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
+                *Y = powf(*Y,ip);
             }
         }
     }
@@ -207,10 +234,11 @@ int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int norm1_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int normp_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const double ip = 1.0 / p;
 
     if (N1==1)
     {
@@ -218,8 +246,9 @@ int norm1_z (double *Y, const double *X, const size_t R, const size_t C, const s
     }
     else if (N1==N)
     {
-        *Y = sqrt(X[0]*X[0]+X[1]*X[1]);
-        for (size_t n=1; n<N; n+=2) { *Y += sqrt(X[n]*X[n]+X[n+1]*X[n+1]); }
+        *Y = pow(sqrt(X[0]*X[0]+X[1]*X[1]),p);
+        for (size_t n=1; n<N; n+=2) { *Y += pow(sqrt(X[n]*X[n]+X[n+1]*X[n+1]),p); }
+        *Y = pow(*Y,ip);
     }
     else if (SH==1)
     {
@@ -228,18 +257,20 @@ int norm1_z (double *Y, const double *X, const size_t R, const size_t C, const s
         {
             for (size_t n2=0; n2<N2; n2++, Y++)
             {
-                *Y = sqrt(*X**X+*(X+1)**(X+1)); X += 2;
-                for (size_t n1=1; n1<N1; n1++, X+=2) { *Y += sqrt(*X**X+*(X+1)**(X+1)); }
+                *Y = pow(sqrt(*X**X+*(X+1)**(X+1)),p); X += 2;
+                for (size_t n1=1; n1<N1; n1++, X+=2) { *Y += pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
+                *Y = pow(*Y,ip);
             }
         }
         else
         {
-            for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ = sqrt(*X**X+*(X+1)**(X+1)); }
+            for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ = pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
             Y -= N2;
             for (size_t n1=1; n1<N1; n1++, Y-=N2)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ += sqrt(*X**X+*(X+1)**(X+1)); }
+                for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ += pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
             }
+            for (size_t n2=0; n2<N2; n2++, Y++) { *Y = pow(*Y,ip); }
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
@@ -248,8 +279,9 @@ int norm1_z (double *Y, const double *X, const size_t R, const size_t C, const s
         {
             for (size_t c=0; c<C; c++, Y++)
             {
-                *Y = sqrt(*X**X+*(X+1)**(X+1)); X += 2;
-                for (size_t s=1; s<S; s++, X+=2) { *Y += sqrt(*X**X+*(X+1)**(X+1)); }
+                *Y = pow(sqrt(*X**X+*(X+1)**(X+1)),p); X += 2;
+                for (size_t s=1; s<S; s++, X+=2) { *Y += pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
+                *Y = pow(*Y,ip);
             }
         }
     }
@@ -263,8 +295,9 @@ int norm1_z (double *Y, const double *X, const size_t R, const size_t C, const s
         {
             for (size_t m=0; m<M; m++, X-=2*(K*N1-J), Y++)
             {
-                *Y = sqrt(*X**X+*(X+1)**(X+1)); X += 2*K;
-                for (size_t n1=1; n1<N1; n1++, X+=2*K) { *Y += sqrt(*X**X+*(X+1)**(X+1)); }
+                *Y = pow(sqrt(*X**X+*(X+1)**(X+1)),p); X += 2*K;
+                for (size_t n1=1; n1<N1; n1++, X+=2*K) { *Y += pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
+                *Y = pow(*Y,ip);
             }
         }
     }

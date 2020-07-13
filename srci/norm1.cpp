@@ -8,7 +8,8 @@ int dim;
 
 //Description
 string descr;
-descr += "Gets L1 norm (sum of absolute-values) along dim of X.\n";
+descr += "Gets 1-norm (sum of absolute-values) along dim of X.\n";
+descr += "This is the 'taxicab' (L1) norm of each vector in X.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get norm along cols.\n";

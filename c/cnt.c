@@ -1,4 +1,6 @@
 //Gets count of nonzero values for each row or col of X according to dim.
+//This is also the Hamming norm (or L0 norm) of each vector in X.
+
 //For complex case, real and imag parts calculated separately.
 
 #include <stdio.h>
@@ -9,18 +11,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int cnt_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
 
-int cnt_inplace_s (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_inplace_d (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_inplace_c (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_inplace_z (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
 
 
-int cnt_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     const size_t RC = R*C, SH = S*H, N = RC*SH;
@@ -45,7 +47,7 @@ int cnt_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
 }
 
 
-int cnt_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -67,7 +69,7 @@ int cnt_d (double *Y, const double *X, const size_t R, const size_t C,const size
 }
 
 
-int cnt_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -89,7 +91,7 @@ int cnt_c (float *Y, const float *X, const size_t R, const size_t C,const size_t
 }
 
 
-int cnt_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -111,7 +113,7 @@ int cnt_z (double *Y, const double *X, const size_t R, const size_t C,const size
 }
 
 
-int cnt_inplace_s (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     const size_t RC = R*C, SH = S*H, N = RC*SH;
@@ -137,7 +139,7 @@ int cnt_inplace_s (float *X, const size_t R, const size_t C,const size_t S, cons
 }
 
 
-int cnt_inplace_d (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -159,7 +161,7 @@ int cnt_inplace_d (double *X, const size_t R, const size_t C,const size_t S, con
 }
 
 
-int cnt_inplace_c (float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -182,7 +184,7 @@ int cnt_inplace_c (float *X, const size_t R, const size_t C,const size_t S, cons
 }
 
 
-int cnt_inplace_z (double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;

@@ -294,7 +294,7 @@ atan2: srci/atan2.cpp c/atan2.c
 
 
 #Complex: 1-2 inputs, 1 output, for complex operations
-Complex: complex polar real imag conj arg norm proj
+Complex: complex polar real imag conj arg proj #norm
 complex: srci/complex.cpp c/complex.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 polar: srci/polar.cpp c/polar.c
@@ -307,11 +307,9 @@ conj: srci/conj.cpp c/conj.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 arg: srci/arg.cpp c/arg.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
-norm: srci/norm.cpp c/norm.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 proj: srci/proj.cpp c/proj.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-
+#norm is same as element-wise square
 
 
 #Stats: some basic statistics calculated along rows, cols, etc.
