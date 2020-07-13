@@ -52,7 +52,7 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const int ldb = (iscolmajor) ? (int)N2 : 1;
         const int ldc = (iscolmajor) ? (int)R : (int)C;
         float *x1;
-        if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&ni,0,x1,1);
         cblas_sgemv(Ord,Tr,(int)R,(int)C,1.0f,X,ldc,x1,1,0.0f,Y,1);
         cblas_scopy((int)N1,&o,0,x1,1);
@@ -80,8 +80,8 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         float *x1, *xni, *sm2, *sm3;
         if (!(sm2=(float *)calloc((size_t)N2,sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with calloc. "); perror("calloc"); return 1; }
         if (!(sm3=(float *)calloc((size_t)N2,sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with calloc. "); perror("calloc"); return 1; }
-        if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&o,0,x1,1); cblas_scopy((int)N1,&ni,0,xni,1);
         for (size_t r=0; r<R; r++, X+=C*S, Y+=C)
         {
@@ -100,7 +100,7 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         float sm1, sm2, sm3, *x1;
-        if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=J, Y++)
@@ -146,7 +146,7 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_
         const int ldb = (iscolmajor) ? (int)N2 : 1;
         const int ldc = (iscolmajor) ? (int)R : (int)C;
         double *x1;
-        if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&ni,0,x1,1);
         cblas_dgemv(Ord,Tr,(int)R,(int)C,1.0,X,ldc,x1,1,0.0,Y,1);
         cblas_dcopy((int)N1,&o,0,x1,1);
@@ -174,8 +174,8 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_
         double *x1, *xni, *sm2, *sm3;
         if (!(sm2=(double *)calloc((size_t)N2,sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with calloc. "); perror("calloc"); return 1; }
         if (!(sm3=(double *)calloc((size_t)N2,sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with calloc. "); perror("calloc"); return 1; }
-        if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&o,0,x1,1); cblas_dcopy((int)N1,&ni,0,xni,1);
         for (size_t r=0; r<R; r++, X+=C*S, Y+=C)
         {
@@ -194,7 +194,7 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C,const size_
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         double sm1, sm2, sm3, *x1;
-        if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=J, Y++)
@@ -246,7 +246,7 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         float sm1[2], sm2[2], sm3[2], x[2], *x1;
-        if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in skewness_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in skewness_c: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=2*J)
@@ -306,7 +306,7 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C,const size_
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         double sm1[2], sm2[2], sm3[2], x[2], *x1;
-        if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in skewness_z: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in skewness_z: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=2*J)

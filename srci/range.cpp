@@ -2,14 +2,13 @@
 #include "range.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
+const valarray<uint8_t> oktypes = {1,2};
 const size_t I = 1, O = 1;
 int dim;
 
 //Description
 string descr;
 descr += "Gets range (max-min) of values along dim of X.\n";
-descr += "For complex X, output Y is real and has range of abs values.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get range along cols.\n";
@@ -60,24 +59,7 @@ if (i1.T==1)
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
     if (codee::range_s(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
-    { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-    if (wo1)
-    {
-        try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
-    }
-    delete[] X; delete[] Y;
-}
-else if (i1.T==101)
-{
-    float *X, *Y;
-    try { X = new float[2u*i1.N()]; }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    try { Y = new float[o1.N()]; }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::range_c(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
+    //if (codee::range_inplace_s(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

@@ -1,9 +1,14 @@
-//Gets range (max-min) of values for each row or col of X according to dim.
-//For complex case, real and imag parts calculated separately.
+//Gets ranges along dim of X.
+//The range is the 100th minus the 0th percentile (max - min).
+
+//The in-place versions still return the same Y, but modify X during processing.
+//However, it turns out to be almost the identical speed for matrices.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <cblas.h>
+#include <lapacke.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -12,292 +17,223 @@ extern "C" {
 
 int range_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
 int range_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int range_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int range_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+
+int range_inplace_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int range_inplace_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
 
 
-int range_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int range_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
-    int r, c;
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t L = N/(M*N1);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+
+    float *X1;
+    if (!(X1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in range_s: problem with malloc. "); perror("malloc"); return 1; }
     float mn, mx;
 
-    if (dim==0)
+    if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (N1==N)
     {
-        if (iscolmajor)
+        mn = mx = X[0];
+        for (size_t n=1; n<N; n++)
         {
-            for (c=0; c<C; c++)
-            {
-                mn = mx = X[c*R];
-                for (r=1; r<R; r++)
-                {
-                    if (X[c*R+r]<mn) { mn = X[c*R+r]; }
-                    else if (X[c*R+r]>mx) { mx = X[c*R+r]; }
-                }
-                Y[c] = mx - mn;
-            }
+            if (X[n]<mn) { mn = X[n]; }
+            else if (X[n]>mx) { mx = X[n]; }
         }
-        else
-        {
-            for (c=0; c<C; c++)
-            {
-                mn = mx = X[c];
-                for (r=1; r<R; r++)
-                {
-                    if (X[r*C+c]<mn) { mn = X[r*C+c]; }
-                    else if (X[r*C+c]>mx) { mx = X[r*C+c]; }
-                }
-                Y[c] = mx - mn;
-            }
-        }
-    }
-    else if (dim==1)
-    {
-        if (iscolmajor)
-        {
-            for (r=0; r<R; r++)
-            {
-                mn = mx = X[r];
-                for (c=1; c<C; c++)
-                {
-                    if (X[c*R+r]<mn) { mn = X[c*R+r]; }
-                    else if (X[c*R+r]>mx) { mx = X[c*R+r]; }
-                }
-                Y[r] = mx - mn;
-            }
-        }
-        else
-        {
-            for (r=0; r<R; r++)
-            {
-                mn = mx = X[r*C];
-                for (c=1; c<C; c++)
-                {
-                    if (X[r*C+c]<mn) { mn = X[r*C+c]; }
-                    else if (X[r*C+c]>mx) { mx = X[r*C+c]; }
-                }
-                Y[r] = mx - mn;
-            }
-        }
+        *Y = mx - mn;
     }
     else
     {
-        fprintf(stderr,"error in range_s: dim must be 0 or 1.\n"); return 1;
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        {
+            for (size_t m=0; m<M; m++, X+=J)
+            {
+                cblas_scopy((int)N1,X,(int)K,X1,1);
+                mn = mx = X1[0];
+                for (size_t n1=1; n1<N1; n1++)
+                {
+                    if (X1[n1]<mn) { mn = X1[n1]; }
+                    else if (X1[n1]>mx) { mx = X1[n1]; }
+                }
+                *Y++ = mx - mn;
+            }
+        }
     }
 
+    free(X1);
     return 0;
 }
 
 
 int range_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
-    int r, c;
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t L = N/(M*N1);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+
+    double *X1;
+    if (!(X1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in range_d: problem with malloc. "); perror("malloc"); return 1; }
     double mn, mx;
 
-    if (dim==0)
+    if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (N1==N)
     {
-        if (iscolmajor)
+        mn = mx = X[0];
+        for (size_t n=1; n<N; n++)
         {
-            for (c=0; c<C; c++)
-            {
-                mn = mx = X[c*R];
-                for (r=1; r<R; r++)
-                {
-                    if (X[c*R+r]<mn) { mn = X[c*R+r]; }
-                    else if (X[c*R+r]>mx) { mx = X[c*R+r]; }
-                }
-                Y[c] = mx - mn;
-            }
+            if (X[n]<mn) { mn = X[n]; }
+            else if (X[n]>mx) { mx = X[n]; }
         }
-        else
+        *Y = mx - mn;
+    }
+    else
+    {
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (c=0; c<C; c++)
+            for (size_t m=0; m<M; m++, X+=J)
             {
-                mn = mx = X[c];
-                for (r=1; r<R; r++)
+                cblas_dcopy((int)N1,X,(int)K,X1,1);
+                mn = mx = X1[0];
+                for (size_t n1=1; n1<N1; n1++)
                 {
-                    if (X[r*C+c]<mn) { mn = X[r*C+c]; }
-                    else if (X[r*C+c]>mx) { mx = X[r*C+c]; }
+                    if (X1[n1]<mn) { mn = X1[n1]; }
+                    else if (X1[n1]>mx) { mx = X1[n1]; }
                 }
-                Y[c] = mx - mn;
+                *Y++ = mx - mn;
             }
         }
     }
-    else if (dim==1)
+
+    free(X1);
+    return 0;
+}
+
+
+int range_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+{
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t L = N/(M*N1);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+    float mn, mx;
+
+    if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (N1==N)
     {
-        if (iscolmajor)
+        mn = mx = X[0];
+        for (size_t n=1; n<N; n++)
         {
-            for (r=0; r<R; r++)
-            {
-                mn = mx = X[r];
-                for (c=1; c<C; c++)
-                {
-                    if (X[c*R+r]<mn) { mn = X[c*R+r]; }
-                    else if (X[c*R+r]>mx) { mx = X[c*R+r]; }
-                }
-                Y[r] = mx - mn;
-            }
+            if (X[n]<mn) { mn = X[n]; }
+            else if (X[n]>mx) { mx = X[n]; }
         }
-        else
+        *Y = mx - mn;
+    }
+    else if (K==1)
+    {
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (r=0; r<R; r++)
+            for (size_t m=0; m<M; m++, X-=N1-J)
             {
-                mn = mx = X[r*C];
-                for (c=1; c<C; c++)
+                mn = mx = *X++;
+                for (size_t n1=1; n1<N1; n1++, X++)
                 {
-                    if (X[r*C+c]<mn) { mn = X[r*C+c]; }
-                    else if (X[r*C+c]>mx) { mx = X[r*C+c]; }
+                    if (*X<mn) { mn = *X; }
+                    else if (*X>mx) { mx = *X; }
                 }
-                Y[r] = mx - mn;
+                *Y++ = mx - mn;
             }
         }
     }
     else
     {
-        fprintf(stderr,"error in range_d: dim must be 0 or 1.\n"); return 1;
+        float *X1;
+        if (!(X1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in range_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        {
+            for (size_t m=0; m<M; m++, X+=J)
+            {
+                cblas_scopy((int)N1,X,(int)K,X1,1);
+                mn = mx = X1[0];
+                for (size_t n1=1; n1<N1; n1++)
+                {
+                    if (X1[n1]<mn) { mn = X1[n1]; }
+                    else if (X1[n1]>mx) { mx = X1[n1]; }
+                }
+                *Y++ = mx - mn;
+            }
+        }
+        free(X1);
     }
 
     return 0;
 }
 
 
-int range_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int range_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
-    int r, c;
-    float mn, mx, a2;
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t L = N/(M*N1);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+    double mn, mx;
 
-    if (dim==0)
+    if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (N1==N)
     {
-        if (iscolmajor)
+        mn = mx = X[0];
+        for (size_t n=1; n<N; n++)
         {
-            for (c=0; c<C; c++)
-            {
-                mn = mx = X[2*c*R]*X[2*c*R] + X[2*c*R+1]*X[2*c*R+1];
-                for (r=1; r<R; r++)
-                {
-                    a2 = X[2*(c*R+r)]*X[2*(c*R+r)] + X[2*(c*R+r)+1]*X[2*(c*R+r)+1];
-                    if (a2<mn) { mn = a2; } else if (a2>mx) { mx = a2; }
-                }
-                Y[c] = sqrtf(mx) - sqrtf(mn);
-            }
+            if (X[n]<mn) { mn = X[n]; }
+            else if (X[n]>mx) { mx = X[n]; }
         }
-        else
-        {
-            for (c=0; c<C; c++)
-            {
-                mn = mx = X[2*c]*X[2*c] + X[2*c+1]*X[2*c+1];
-                for (r=1; r<R; r++)
-                {
-                    a2 = X[2*(r*C+c)]*X[2*(r*C+c)] + X[2*(r*C+c)+1]*X[2*(r*C+c)+1];
-                    if (a2<mn) { mn = a2; } else if (a2>mx) { mx = a2; }
-                }
-                Y[c] = sqrtf(mx) - sqrtf(mn);
-            }
-        }
+        *Y = mx - mn;
     }
-    else if (dim==1)
+    else if (K==1)
     {
-        if (iscolmajor)
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (r=0; r<R; r++)
+            for (size_t m=0; m<M; m++, X-=N1-J)
             {
-                mn = mx = X[2*r]*X[2*r] + X[2*r+1]*X[2*r+1];
-                for (c=1; c<C; c++)
+                mn = mx = *X++;
+                for (size_t n1=1; n1<N1; n1++, X++)
                 {
-                    a2 = X[2*(c*R+r)]*X[2*(c*R+r)] + X[2*(c*R+r)+1]*X[2*(c*R+r)+1];
-                    if (a2<mn) { mn = a2; } else if (a2>mx) { mx = a2; }
+                    if (*X<mn) { mn = *X; }
+                    else if (*X>mx) { mx = *X; }
                 }
-                Y[r] = sqrtf(mx) - sqrtf(mn);
-            }
-        }
-        else
-        {
-            for (r=0; r<R; r++)
-            {
-                mn = mx = X[2*r*C]*X[2*r*C] + X[2*r*C+1]*X[2*r*C+1];
-                for (c=1; c<C; c++)
-                {
-                    a2 = X[2*(r*C+c)]*X[2*(r*C+c)] + X[2*(r*C+c)+1]*X[2*(r*C+c)+1];
-                    if (a2<mn) { mn = a2; } else if (a2>mx) { mx = a2; }
-                }
-                Y[r] = sqrtf(mx) - sqrtf(mn);
+                *Y++ = mx - mn;
             }
         }
     }
     else
     {
-        fprintf(stderr,"error in range_c: dim must be 0 or 1.\n"); return 1;
-    }
-
-    return 0;
-}
-
-
-int range_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
-{
-    int r, c;
-    double mn, mx, a2;
-
-    if (dim==0)
-    {
-        if (iscolmajor)
+        double *X1;
+        if (!(X1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in range_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (c=0; c<C; c++)
+            for (size_t m=0; m<M; m++, X+=J)
             {
-                mn = mx = X[2*c*R]*X[2*c*R] + X[2*c*R+1]*X[2*c*R+1];
-                for (r=1; r<R; r++)
+                cblas_dcopy((int)N1,X,(int)K,X1,1);
+                mn = mx = X1[0];
+                for (size_t n1=1; n1<N1; n1++)
                 {
-                    a2 = X[2*(c*R+r)]*X[2*(c*R+r)] + X[2*(c*R+r)+1]*X[2*(c*R+r)+1];
-                    if (a2<mn) { mn = a2; } else if (a2>mx) { mx = a2; }
+                    if (X1[n1]<mn) { mn = X1[n1]; }
+                    else if (X1[n1]>mx) { mx = X1[n1]; }
                 }
-                Y[c] = sqrt(mx) - sqrt(mn);
+                *Y++ = mx - mn;
             }
         }
-        else
-        {
-            for (c=0; c<C; c++)
-            {
-                mn = mx = X[2*c]*X[2*c] + X[2*c+1]*X[2*c+1];
-                for (r=1; r<R; r++)
-                {
-                    a2 = X[2*(r*C+c)]*X[2*(r*C+c)] + X[2*(r*C+c)+1]*X[2*(r*C+c)+1];
-                    if (a2<mn) { mn = a2; } else if (a2>mx) { mx = a2; }
-                }
-                Y[c] = sqrt(mx) - sqrt(mn);
-            }
-        }
-    }
-    else if (dim==1)
-    {
-        if (iscolmajor)
-        {
-            for (r=0; r<R; r++)
-            {
-                mn = mx = X[2*r]*X[2*r] + X[2*r+1]*X[2*r+1];
-                for (c=1; c<C; c++)
-                {
-                    a2 = X[2*(c*R+r)]*X[2*(c*R+r)] + X[2*(c*R+r)+1]*X[2*(c*R+r)+1];
-                    if (a2<mn) { mn = a2; } else if (a2>mx) { mx = a2; }
-                }
-                Y[r] = sqrt(mx) - sqrt(mn);
-            }
-        }
-        else
-        {
-            for (r=0; r<R; r++)
-            {
-                mn = mx = X[2*r*C]*X[2*r*C] + X[2*r*C+1]*X[2*r*C+1];
-                for (c=1; c<C; c++)
-                {
-                    a2 = X[2*(r*C+c)]*X[2*(r*C+c)] + X[2*(r*C+c)+1]*X[2*(r*C+c)+1];
-                    if (a2<mn) { mn = a2; } else if (a2>mx) { mx = a2; }
-                }
-                Y[r] = sqrt(mx) - sqrt(mn);
-            }
-        }
-    }
-    else
-    {
-        fprintf(stderr,"error in range_z: dim must be 0 or 1.\n"); return 1;
+        free(X1);
     }
 
     return 0;

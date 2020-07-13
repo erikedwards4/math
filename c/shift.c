@@ -169,7 +169,7 @@ int shift_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
     else if (P>0)
     {
         float *X1;
-        if (!(X1=(float *)malloc((size_t)(K*(N1-(size_t)P))*sizeof(float)))) { fprintf(stderr,"error in shift_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(X1=(float *)malloc(K*(N1-(size_t)P)*sizeof(float)))) { fprintf(stderr,"error in shift_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0, n=0; l<L; l++, n+=J)
         {
             cblas_scopy((int)K*((int)N1-P),&X[n],1,X1,1);
@@ -203,7 +203,7 @@ int shift_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
     else if (P>0)
     {
         double *X1;
-        if (!(X1=(double *)malloc((size_t)(K*(N1-(size_t)P))*sizeof(double)))) { fprintf(stderr,"error in shift_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(X1=(double *)malloc(K*(N1-(size_t)P)*sizeof(double)))) { fprintf(stderr,"error in shift_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0, n=0; l<L; l++, n+=J)
         {
             cblas_dcopy((int)K*((int)N1-P),&X[n],1,X1,1);
@@ -237,7 +237,7 @@ int shift_inplace_c (float *X, const size_t R, const size_t C, const size_t S, c
     else if (P>0)
     {
         float *X1;
-        if (!(X1=(float *)malloc((size_t)(2*K*(N1-(size_t)P))*sizeof(float)))) { fprintf(stderr,"error in shift_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(X1=(float *)malloc(2*K*(N1-(size_t)P)*sizeof(float)))) { fprintf(stderr,"error in shift_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0, n=0; l<L; l++, n+=2*J)
         {
             cblas_ccopy((int)K*((int)N1-P),&X[n],1,X1,1);
@@ -271,7 +271,7 @@ int shift_inplace_z (double *X, const size_t R, const size_t C, const size_t S, 
     else if (P>0)
     {
         double *X1;
-        if (!(X1=(double *)malloc((size_t)(2*K*(N1-(size_t)P))*sizeof(double)))) { fprintf(stderr,"error in shift_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(X1=(double *)malloc(2*K*(N1-(size_t)P)*sizeof(double)))) { fprintf(stderr,"error in shift_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0, n=0; l<L; l++, n+=2*J)
         {
             cblas_zcopy((int)K*((int)N1-P),&X[n],1,X1,1);

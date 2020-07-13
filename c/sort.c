@@ -1,5 +1,6 @@
 //Sorts X along dim.
 //This has in-place and not-in-place versions.
+//Too bad there is no LAPACKE_?laord for the in-place version.
 
 #include <stdio.h>
 #include <math.h>
@@ -145,7 +146,6 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
     //struct timespec tic, toc;
     //clock_gettime(CLOCK_REALTIME,&tic);
     
-    //Sort
     if (N1==1) { cblas_scopy((int)(R*C*S*H),X,1,Y,1); }
     else if (M==1 && L==1)
     {
@@ -179,6 +179,7 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
                 cblas_scopy((int)N1,X1,1,&Y[n],(int)K);
             }
         }
+        free(X1);
     }
     //clock_gettime(CLOCK_REALTIME,&toc);
     //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
@@ -197,7 +198,6 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
     const char id = (ascend) ? 'I' : 'D';
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_d : cmp_descend_d;
     
-    //Sort
     if (N1==1) { cblas_dcopy((int)(R*C*S*H),X,1,Y,1); }
     else if (M==1 && L==1)
     {
@@ -231,6 +231,7 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
                 cblas_dcopy((int)N1,X1,1,&Y[n],(int)K);
             }
         }
+        free(X1);
     }
     
     return 0;
@@ -262,6 +263,7 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
                 cblas_ccopy((int)N1,X1,1,&Y[n],(int)K);
             }
         }
+        free(X1);
     }
     
     return 0;
@@ -293,6 +295,7 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
                 cblas_zcopy((int)N1,X1,1,&Y[n],(int)K);
             }
         }
+        free(X1);
     }
     
     return 0;
@@ -340,6 +343,7 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
                 cblas_scopy((int)N1,X1,1,&X[n],(int)K);
             }
         }
+        free(X1);
     }
 
     return 0;
@@ -383,6 +387,7 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
                 cblas_dcopy((int)N1,X1,1,&X[n],(int)K);
             }
         }
+        free(X1);
     }
 
     return 0;
@@ -415,6 +420,7 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
         }
     }
     
+    free(X1);
     return 0;
 }
 
@@ -446,6 +452,7 @@ int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
         }
     }
     
+    free(X1);
     return 0;
 }
 

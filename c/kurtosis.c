@@ -48,7 +48,7 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const int ldb = (iscolmajor) ? (int)N2 : 1;
         const int ldc = (iscolmajor) ? (int)R : (int)C;
         float *x1;
-        if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&ni,0,x1,1);
         cblas_sgemv(Ord,Tr,(int)R,(int)C,1.0f,X,ldc,x1,1,0.0f,Y,1);
         cblas_scopy((int)N1,&o,0,x1,1);
@@ -81,8 +81,8 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
     else if (!iscolmajor && dim==2 && H==1)
     {
         float *x1, *xni;
-        if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&o,0,x1,1); cblas_scopy((int)N1,&ni,0,xni,1);
         for (size_t r=0; r<R; r++, X+=C*S, Y+=C)
         {
@@ -113,7 +113,7 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         float sm1, sm2, sm4, *x1;
-        if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=J, Y++)
@@ -164,7 +164,7 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C,const size_
         const int ldb = (iscolmajor) ? (int)N2 : 1;
         const int ldc = (iscolmajor) ? (int)R : (int)C;
         double *x1;
-        if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&ni,0,x1,1);
         cblas_dgemv(Ord,Tr,(int)R,(int)C,1.0,X,ldc,x1,1,0.0,Y,1);
         cblas_dcopy((int)N1,&o,0,x1,1);
@@ -197,8 +197,8 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C,const size_
     else if (!iscolmajor && dim==2 && H==1)
     {
         double *x1, *xni;
-        if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&o,0,x1,1); cblas_dcopy((int)N1,&ni,0,xni,1);
         for (size_t r=0; r<R; r++, X+=C*S, Y+=C)
         {
@@ -229,7 +229,7 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C,const size_
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         double sm1, sm2, sm4, *x1;
-        if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=J, Y++)
@@ -265,7 +265,7 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
     {
         float sm1[2] = {0.0f,0.0f}, sm2[2] = {0.0f,0.0f}, sm4[2] = {0.0f,0.0f};
         float tmp, *x2;
-        if (!(x2=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in kurtosis_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x2=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_c: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t n=0; n<2*N; n+=2) { sm1[0] += X[n]; sm1[1] += X[n+1]; }
         cblas_caxpy((int)N,sm1,ni,0,X,1);
         cblas_cdotc_sub((int)N,X,1,X,1,(_Complex float *)sm2);
@@ -293,8 +293,8 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C,const size_t 
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         float tmp, sm1[2], sm2[2], sm4[2], *x1, *x2;
-        if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in kurtosis_c: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(x2=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in kurtosis_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x2=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in kurtosis_c: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=2*J)
@@ -344,7 +344,7 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C,const size_
     {
         double sm1[2] = {0.0,0.0}, sm2[2] = {0.0,0.0}, sm4[2] = {0.0,0.0};
         double tmp, *x2;
-        if (!(x2=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in kurtosis_z: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x2=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_z: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t n=0; n<2*N; n+=2) { sm1[0] += X[n]; sm1[1] += X[n+1]; }
         cblas_zaxpy((int)N,sm1,ni,0,X,1);
         cblas_zdotc_sub((int)N,X,1,X,1,(_Complex double *)sm2);
@@ -372,8 +372,8 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C,const size_
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         double tmp, sm1[2], sm2[2], sm4[2], *x1, *x2;
-        if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in kurtosis_z: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(x2=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in kurtosis_z: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_z: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x2=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in kurtosis_z: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=2*J)

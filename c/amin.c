@@ -1,36 +1,37 @@
-//Gets maximum of values for each row or col of X according to dim.
+//Gets maximum of absolute values for each row or col of X according to dim.
 //For complex case, finds max absolute value and outputs the complex number.
-//For complex case, this is the proper absolute value; see amax for the other one.
+//For complex case, this is |Xr|+|Xi|; see max for the usual sqrt(Xr*Xr+Xi*Xi).
 
 
 #include <stdio.h>
 #include <math.h>
 #include <cblas.h>
-//#include <time.h>
+#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
 
-int max_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int max_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int max_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
-int max_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int amin_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int amin_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int amin_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
+int amin_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor);
 
 
-int max_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int amin_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    size_t i;
 
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
     else if (N1==N)
     {
-        *Y = *X;
-        for (size_t n=1; n<N; n++) { if (X[n]>*Y) { *Y = X[n]; } }
+        i = cblas_isamin((int)N,X,1);
+        *Y = *(X+i);
     }
     else if (SH==1)
     {
@@ -39,19 +40,22 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
         {
             for (size_t n2=0; n2<N2; n2++, Y++)
             {
-                *Y = *X++;
-                for (size_t n1=1; n1<N1; n1++, X++) { if (*X>*Y) { *Y = *X; } }
+                i = cblas_isamin((int)N1,X,1);
+                X += i; *Y = *X; X += N1-i;
             }
         }
         else
         {
-            for (size_t n1=0; n1<N1; n1++, Y-=N2)
+            float *mns;
+            if (!(mns=(float *)calloc(N2,sizeof(float)))) { fprintf(stderr,"error in amin_s: problem with calloc. "); perror("calloc"); return 1; }
+            for (size_t n1=0; n1<N1; n1++, Y-=N2, mns-=N2)
             {
-                for (size_t n2=0; n2<N2; n2++, X++, Y++)
+                for (size_t n2=0; n2<N2; n2++, X++, Y++, mns++)
                 {
-                    if (n1==0 || *X>*Y) { *Y = *X; }
+                    if (*X**X<*mns) { *Y = *X; *mns = *X**X; }
                 }
             }
+            free(mns);
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
@@ -60,8 +64,8 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
         {
             for (size_t c=0; c<C; c++, Y++)
             {
-                *Y = *X++;
-                for (size_t n1=1; n1<N1; n1++, X++) { if (*X>*Y) { *Y = *X; } }
+                i = cblas_isamin((int)N1,X,1);
+                X += i; *Y = *X; X += N1-i;
             }
         }
     }
@@ -73,10 +77,11 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, X-=K*N1-J, Y++)
+            for (size_t m=0; m<M; m++, Y++)
             {
-                *Y = *X; X += K;
-                for (size_t n1=1; n1<N1; n1++, X+=K) { if (*X>*Y) { *Y = *X; } }
+                i = cblas_isamin((int)N1,X,(int)K);
+                X += i*K; *Y = *X;
+                X -= (int)((N1-i)*K)-(int)J;
             }
         }
     }
@@ -86,16 +91,17 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C,const size_t
 }
 
 
-int max_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int amin_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    size_t i;
 
     if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
     else if (N1==N)
     {
-        *Y = *X;
-        for (size_t n=1; n<N; n++) { if (X[n]>*Y) { *Y = X[n]; } }
+        i = cblas_idamin((int)N,X,1);
+        *Y = *(X+i);
     }
     else if (SH==1)
     {
@@ -104,19 +110,22 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C,const size
         {
             for (size_t n2=0; n2<N2; n2++, Y++)
             {
-                *Y = *X++;
-                for (size_t n1=1; n1<N1; n1++, X++) { if (*X>*Y) { *Y = *X; } }
+                i = cblas_idamin((int)N1,X,1);
+                X += i; *Y = *X; X += N1-i;
             }
         }
         else
         {
-            for (size_t n1=0; n1<N1; n1++, Y-=N2)
+            double *mns;
+            if (!(mns=(double *)calloc(N2,sizeof(double)))) { fprintf(stderr,"error in amin_d: problem with calloc. "); perror("calloc"); return 1; }
+            for (size_t n1=0; n1<N1; n1++, Y-=N2, mns-=N2)
             {
-                for (size_t n2=0; n2<N2; n2++, X++, Y++)
+                for (size_t n2=0; n2<N2; n2++, X++, Y++, mns++)
                 {
-                    if (n1==0 || *X>*Y) { *Y = *X; }
+                    if (*X**X<*mns) { *Y = *X; *mns = *X**X; }
                 }
             }
+            free(mns);
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
@@ -125,8 +134,8 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C,const size
         {
             for (size_t c=0; c<C; c++, Y++)
             {
-                *Y = *X++;
-                for (size_t n1=1; n1<N1; n1++, X++) { if (*X>*Y) { *Y = *X; } }
+                i = cblas_idamin((int)N1,X,1);
+                X += i; *Y = *X; X += N1-i;
             }
         }
     }
@@ -138,10 +147,11 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C,const size
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, X-=K*N1-J, Y++)
+            for (size_t m=0; m<M; m++, Y++)
             {
-                *Y = *X; X += K;
-                for (size_t n1=1; n1<N1; n1++, X+=K) { if (*X>*Y) { *Y = *X; } }
+                i = cblas_idamin((int)N1,X,(int)K);
+                X += i*K; *Y = *X;
+                X -= (int)((N1-i)*K)-(int)J;
             }
         }
     }
@@ -150,22 +160,17 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C,const size
 }
 
 
-int max_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int amin_c (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    float xx, mn;
+    size_t i;
 
     if (N1==1) { cblas_ccopy((int)N,X,1,Y,1); }
     else if (N1==N)
     {
-        mn = *X**X + *(X+1)**(X+1);
-        *Y = *X; *(Y+1) = *(X+1); X += 2;
-        for (size_t n=1; n<N; n++, X+=2)
-        {
-            xx = *X**X + *(X+1)**(X+1);
-            if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
-        }
+        i = cblas_icamin((int)N,X,1);
+        X += 2*i; *Y = *X; *(Y+1) = *(X+1);
     }
     else if (SH==1)
     {
@@ -174,28 +179,39 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C,const size_t
         {
             for (size_t n2=0; n2<N2; n2++, Y+=2)
             {
-                mn = *X**X + *(X+1)**(X+1);
-                *Y = *X; *(Y+1) = *(X+1); X += 2;
-                for (size_t n1=1; n1<N1; n1++, X+=2)
-                {
-                    xx = *X**X + *(X+1)**(X+1);
-                    if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
-                }
+                i = cblas_icamin((int)N1,X,1);
+                X += 2*i; *Y = *X; *(Y+1) = *(X+1);
+                X += 2*(N1-i);
             }
         }
         else
         {
             float *mns;
-            if (!(mns=(float *)malloc(N2*sizeof(float)))) { fprintf(stderr,"error in min_c: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(mns=(float *)calloc(N2,sizeof(float)))) { fprintf(stderr,"error in amin_c: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t n1=0; n1<N1; n1++, Y-=2*N2, mns-=N2)
             {
                 for (size_t n2=0; n2<N2; n2++, X+=2, Y+=2, mns++)
                 {
-                    xx = *X**X + *(X+1)**(X+1);
-                    if (n1==0 || xx>*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
+                    if (sqrt(*X**X)+sqrt(*(X+1)**(X+1))<*mns)
+                    {
+                        *Y = *X; *(Y+1) = *(X+1);
+                        *mns = sqrt(*X**X)+sqrt(*(X+1)**(X+1));
+                    }
                 }
             }
             free(mns);
+        }
+    }
+    else if (!iscolmajor && dim==2 && H==1)
+    {
+        for (size_t r=0; r<R; r++)
+        {
+            for (size_t c=0; c<C; c++, Y+=2)
+            {
+                i = cblas_icamin((int)N1,X,1);
+                X += 2*i; *Y = *X; *(Y+1) = *(X+1);
+                X += 2*(N1-i);
+            }
         }
     }
     else
@@ -206,15 +222,11 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C,const size_t
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, X-=2*(K*N1-J), Y+=2)
+            for (size_t m=0; m<M; m++, Y+=2)
             {
-                mn = *X**X + *(X+1)**(X+1);
-                *Y = *X; *(Y+1) = *(X+1); X += 2*K;
-                for (size_t n1=1; n1<N1; n1++, X+=2*K)
-                {
-                    xx = *X**X + *(X+1)**(X+1);
-                    if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
-                }
+                i = cblas_icamin((int)N1,X,(int)K);
+                X += 2*i*K; *Y = *X; *(Y+1) = *(X+1);
+                X -= 2*((int)((N1-i)*K)-(int)J);
             }
         }
     }
@@ -223,22 +235,17 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C,const size_t
 }
 
 
-int max_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
+int amin_z (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor)
 {
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    double xx, mn;
+    size_t i;
 
     if (N1==1) { cblas_zcopy((int)N,X,1,Y,1); }
     else if (N1==N)
     {
-        mn = *X**X + *(X+1)**(X+1);
-        *Y = *X; *(Y+1) = *(X+1); X += 2;
-        for (size_t n=1; n<N; n++, X+=2)
-        {
-            xx = *X**X + *(X+1)**(X+1);
-            if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
-        }
+        i = cblas_izamin((int)N,X,1);
+        X += 2*i; *Y = *X; *(Y+1) = *(X+1);
     }
     else if (SH==1)
     {
@@ -247,28 +254,39 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C,const size
         {
             for (size_t n2=0; n2<N2; n2++, Y+=2)
             {
-                mn = *X**X + *(X+1)**(X+1);
-                *Y = *X; *(Y+1) = *(X+1); X += 2;
-                for (size_t n1=1; n1<N1; n1++, X+=2)
-                {
-                    xx = *X**X + *(X+1)**(X+1);
-                    if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
-                }
+                i = cblas_izamin((int)N1,X,1);
+                X += 2*i; *Y = *X; *(Y+1) = *(X+1);
+                X += 2*(N1-i);
             }
         }
         else
         {
             double *mns;
-            if (!(mns=(double *)malloc(N2*sizeof(double)))) { fprintf(stderr,"error in min_z: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(mns=(double *)calloc(N2,sizeof(double)))) { fprintf(stderr,"error in amin_z: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t n1=0; n1<N1; n1++, Y-=2*N2, mns-=N2)
             {
                 for (size_t n2=0; n2<N2; n2++, X+=2, Y+=2, mns++)
                 {
-                    xx = *X**X + *(X+1)**(X+1);
-                    if (n1==0 || xx>*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
+                    if (sqrt(*X**X)+sqrt(*(X+1)**(X+1))<*mns)
+                    {
+                        *Y = *X; *(Y+1) = *(X+1);
+                        *mns = sqrt(*X**X)+sqrt(*(X+1)**(X+1));
+                    }
                 }
             }
             free(mns);
+        }
+    }
+    else if (!iscolmajor && dim==2 && H==1)
+    {
+        for (size_t r=0; r<R; r++)
+        {
+            for (size_t c=0; c<C; c++, Y+=2)
+            {
+                i = cblas_izamin((int)N1,X,1);
+                X += 2*i; *Y = *X; *(Y+1) = *(X+1);
+                X += 2*(N1-i);
+            }
         }
     }
     else
@@ -279,15 +297,11 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C,const size
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
         for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
-            for (size_t m=0; m<M; m++, X-=2*(K*N1-J), Y+=2)
+            for (size_t m=0; m<M; m++, Y+=2)
             {
-                mn = *X**X + *(X+1)**(X+1);
-                *Y = *X; *(Y+1) = *(X+1); X += 2*K;
-                for (size_t n1=1; n1<N1; n1++, X+=2*K)
-                {
-                    xx = *X**X + *(X+1)**(X+1);
-                    if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
-                }
+                i = cblas_izamin((int)N1,X,(int)K);
+                X += 2*i*K; *Y = *X; *(Y+1) = *(X+1);
+                X -= 2*((int)((N1-i)*K)-(int)J);
             }
         }
     }

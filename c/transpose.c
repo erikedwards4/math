@@ -109,7 +109,7 @@ int transpose_inplace_s (float *X, const size_t R, const size_t C, const char is
     else
     {
         float *Xt;
-        if (!(Xt=(float *)malloc((size_t)(R*C)*sizeof(float)))) { fprintf(stderr,"error in transpose_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(Xt=(float *)malloc(R*C*sizeof(float)))) { fprintf(stderr,"error in transpose_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
@@ -141,7 +141,7 @@ int transpose_inplace_d (double *X, const size_t R, const size_t C, const char i
     else
     {
         double *Xt;
-        if (!(Xt=(double *)malloc((size_t)(R*C)*sizeof(double)))) { fprintf(stderr,"error in transpose_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(Xt=(double *)malloc(R*C*sizeof(double)))) { fprintf(stderr,"error in transpose_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
@@ -171,7 +171,7 @@ int transpose_inplace_c (float *X, const size_t R, const size_t C, const char is
     else
     {
         float *Xt;
-        if (!(Xt=(float *)malloc((size_t)(2*R*C)*sizeof(float)))) { fprintf(stderr,"error in transpose_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(Xt=(float *)malloc(2*R*C*sizeof(float)))) { fprintf(stderr,"error in transpose_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
         cblas_ccopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
@@ -201,7 +201,7 @@ int transpose_inplace_z (double *X, const size_t R, const size_t C, const char i
     else
     {
         double *Xt;
-        if (!(Xt=(double *)malloc((size_t)(2*R*C)*sizeof(double)))) { fprintf(stderr,"error in transpose_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(Xt=(double *)malloc(2*R*C*sizeof(double)))) { fprintf(stderr,"error in transpose_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
         cblas_zcopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {

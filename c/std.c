@@ -42,7 +42,7 @@ int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, co
         const int ldb = (iscolmajor) ? (int)N2 : 1;
         const int ldc = (iscolmajor) ? (int)R : (int)C;
         float *x1;
-        if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&ni,0,x1,1);
         cblas_sgemv(Ord,Tr,(int)R,(int)C,1.0f,X,ldc,x1,1,0.0f,Y,1);
         cblas_scopy((int)N1,&o,0,x1,1);
@@ -63,8 +63,8 @@ int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, co
     else if (iscolmajor && dim==0)
     {
         float *x1, *xni;
-        if (!(x1=(float *)malloc((size_t)R*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(float *)malloc((size_t)R*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(R*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(float *)malloc(R*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)R,&o,0,x1,1); cblas_scopy((int)R,&ni,0,xni,1);
         for (size_t h=0; h<H; h++)
         {
@@ -80,8 +80,8 @@ int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, co
     else if (iscolmajor && dim==1)
     {
         float *x1, *xni;
-        if (!(x1=(float *)malloc((size_t)C*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(float *)malloc((size_t)C*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(C*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(float *)malloc(C*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)C,&o,0,x1,1); cblas_scopy((int)C,&ni,0,xni,1);
         for (size_t h=0; h<H; h++)
         {
@@ -97,8 +97,8 @@ int std_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, co
     else if (!iscolmajor && dim==2 && H==1)
     {
         float *x1, *xni;
-        if (!(x1=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(float *)malloc((size_t)N1*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in std_s: problem with malloc. "); perror("malloc"); return 1; }
         cblas_scopy((int)N1,&o,0,x1,1); cblas_scopy((int)N1,&ni,0,xni,1);
         for (size_t r=0; r<R; r++)
         {
@@ -153,7 +153,7 @@ int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, 
         const int ldb = (iscolmajor) ? (int)N2 : 1;
         const int ldc = (iscolmajor) ? (int)R : (int)C;
         double *x1;
-        if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&ni,0,x1,1);
         cblas_dgemv(Ord,Tr,(int)R,(int)C,1.0,X,ldc,x1,1,0.0,Y,1);
         cblas_dcopy((int)N1,&o,0,x1,1);
@@ -174,8 +174,8 @@ int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, 
     else if (iscolmajor && dim==0)
     {
         double *x1, *xni;
-        if (!(x1=(double *)malloc((size_t)R*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(double *)malloc((size_t)R*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(R*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(double *)malloc(R*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)R,&o,0,x1,1); cblas_dcopy((int)R,&ni,0,xni,1);
         for (size_t h=0; h<H; h++)
         {
@@ -191,8 +191,8 @@ int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, 
     else if (iscolmajor && dim==1)
     {
         double *x1, *xni;
-        if (!(x1=(double *)malloc((size_t)C*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(double *)malloc((size_t)C*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(C*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(double *)malloc(C*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)C,&o,0,x1,1); cblas_dcopy((int)C,&ni,0,xni,1);
         for (size_t h=0; h<H; h++)
         {
@@ -208,8 +208,8 @@ int std_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, 
     else if (!iscolmajor && dim==2 && H==1)
     {
         double *x1, *xni;
-        if (!(x1=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(xni=(double *)malloc((size_t)N1*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(xni=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in std_d: problem with malloc. "); perror("malloc"); return 1; }
         cblas_dcopy((int)N1,&o,0,x1,1); cblas_dcopy((int)N1,&ni,0,xni,1);
         for (size_t r=0; r<R; r++)
         {
@@ -269,7 +269,7 @@ int std_c (float *Y, float *X, const size_t R, const size_t C,const size_t S, co
         const float ni[2] = {-1.0f/N1,0.0f};
         float mn[2] = {0.0f,0.0f};
         float *x1;
-        if (!(x1=(float *)malloc((size_t)(2*N1)*sizeof(float)))) { fprintf(stderr,"error in std_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in std_c: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=2*J, Y++)
@@ -318,7 +318,7 @@ int std_z (double *Y, double *X, const size_t R, const size_t C,const size_t S, 
         const double ni[2] = {-1.0/N1,0.0};
         double mn[2] = {0.0,0.0};
         double *x1;
-        if (!(x1=(double *)malloc((size_t)(2*N1)*sizeof(double)))) { fprintf(stderr,"error in std_z: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(x1=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in std_z: problem with malloc. "); perror("malloc"); return 1; }
         for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
         {
             for (size_t m=0; m<M; m++, X+=2*J, Y++)

@@ -193,13 +193,14 @@ sum: sum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 asum: asum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cnt: cnt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Prctiles: min max amin amax median prctile prctiles
-min: min.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-max: max.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-amin: amin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-amax: amax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-median: median.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+Prctiles: prctile prctiles median max min amax #amin
 prctile: prctile.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+median: median.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+max: max.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+min: min.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+amax: amax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+amin: amin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Ranges: range iqr interdecile_range
 range: range.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

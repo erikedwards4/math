@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "min.c"
+#include "amax.c"
 
 #ifdef I
 #undef I
@@ -38,21 +38,22 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Gets minimum of values along dim of X.\n";
+    descr += "Gets maximum of absolute values along dim of X.\n";
     descr += "For complex X, this finds the min of abs values,\n";
-    descr += "and returns the corresponding complex number.\n";
+    descr += "using the definition |x| = |xr| + |xi|,\n";
+    descr += "and then returns the corresponding complex number.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to get min along cols.\n";
-    descr += "Use -d1 to get min along rows.\n";
-    descr += "Use -d2 to get min along slices.\n";
-    descr += "Use -d3 to get min along hyperslices.\n";
+    descr += "Use -d0 to get amax along cols.\n";
+    descr += "Use -d1 to get amax along rows.\n";
+    descr += "Use -d2 to get amax along slices.\n";
+    descr += "Use -d3 to get amax along hyperslices.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ min X -o Y \n";
-    descr += "$ min X > Y \n";
-    descr += "$ min -d1 X > Y \n";
-    descr += "$ cat X | min > Y \n";
+    descr += "$ amax X -o Y \n";
+    descr += "$ amax X > Y \n";
+    descr += "$ amax -d1 X > Y \n";
+    descr += "$ cat X | amax > Y \n";
 
 
     //Argtable
@@ -146,7 +147,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::min_s(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
+        if (codee::amax_s(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -164,7 +165,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::min_d(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
+        if (codee::amax_d(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -182,7 +183,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::min_c(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
+        if (codee::amax_c(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -200,7 +201,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::min_z(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
+        if (codee::amax_z(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

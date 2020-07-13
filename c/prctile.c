@@ -1,102 +1,65 @@
-//Gets prctile of each row or col of X according to dim.
+//Gets pth percentiles along dim of X.
+
+//The in-place versions still return the same Y, but modify X during processing.
+//However, it turns out to be almost the identical speed for matrices.
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <cblas.h>
+#include <lapacke.h>
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
 
-int cmp_ascend_s (const void *a, const void *b);
-int cmp_ascend_d (const void *a, const void *b);
-
 int prctile_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const float p);
 int prctile_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const double p);
 
+int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const float p);
+int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const double p);
 
-int cmp_ascend_s (const void *a, const void *b)
+
+int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p)
 {
-	float x1 = *(const float*)a, x2 = *(const float*)b;
-	if (x1!=x1) { return 1; }
-    else if (x2!=x2) { return -1; }
-    else if (x1>x2) { return 1; }
-    else if (x2>x1) { return -1; }
-    else { return 0; }
-}
+    if (p<0.0f || p>100.0f) { fprintf(stderr,"error in prctile_s: p must be in [0 100]"); return 1; }
 
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-int cmp_ascend_d (const void *a, const void *b)
-{
-	double x1 = *(const double*)a, x2 = *(const double*)b;
-	if (x1!=x1) { return 1; }
-    else if (x2!=x2) { return -1; }
-    else if (x1>x2) { return 1; }
-    else if (x2>x1) { return -1; }
-    else { return 0; }
-}
+    //Prep interpolation
+    const float p1 = (p/100.0f)*(N1-1);
+    const size_t i1 = (p<100.0f) ? (size_t)floorf(p1) : N1-2;
+    const size_t i2 = i1 + 1;
+    const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
+    const float w1 = 1.0f - w2;
 
-
-int prctile_s (float *Y, const float *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const float p)
-{
-    int r, c, n1, n2;
-    float w1, w2;
-    float *X1; //1 row or col of X
-
-    //Prep interpolation weights
-    w2 = (dim==0) ? (p/100.0f)*(R-1) : (p/100.0f)*(C-1);
-    n1 = (int)floorf(w2); n2 = n1 + 1;
-    w2 -= floorf(w2); w1 = 1.0f - w2;
-
-    if (dim==0)
+    float *X1;
+    if (!(X1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in prctile_s: problem with malloc. "); perror("malloc"); return 1; }
+    
+    if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (N1==N)
     {
-        if (!(X1=(float *)malloc((size_t)R*sizeof(float)))) { fprintf(stderr,"error in prctile_s: problem with malloc. "); perror("malloc"); return 1; }
-        if (iscolmajor)
-        {
-            for (c=0; c<C; c++)
-            {
-                cblas_scopy((int)R,&X[c*R],1,X1,1);
-                qsort(X1,(size_t)(R),sizeof(float),cmp_ascend_s);
-                Y[c] = w1*X1[n1] + w2*X1[n2];
-            }
-        }
-        else
-        {
-            for (c=0; c<C; c++)
-            {
-                cblas_scopy((int)R,&X[c],(int)C,X1,1);
-                qsort(X1,(size_t)(R),sizeof(float),cmp_ascend_s);
-                Y[c] = w1*X1[n1] + w2*X1[n2];
-            }
-        }
-    }
-    else if (dim==1)
-    {
-        if (!(X1=(float *)malloc((size_t)C*sizeof(float)))) { fprintf(stderr,"error in prctile_s: problem with malloc. "); perror("malloc"); return 1; }
-        if (iscolmajor)
-        {
-            for (r=0; r<R; r++)
-            {
-                cblas_scopy((int)C,&X[r],(int)R,X1,1);
-                qsort(X1,(size_t)(C),sizeof(float),cmp_ascend_s);
-                Y[r] = w1*X1[n1] + w2*X1[n2];
-            }
-        }
-        else
-        {
-            for (r=0; r<R; r++)
-            {
-                cblas_scopy((int)C,&X[r*C],1,X1,1);
-                qsort(X1,(size_t)(C),sizeof(float),cmp_ascend_s);
-                Y[r] = w1*X1[n1] + w2*X1[n2];
-            }
-        }
+        cblas_scopy((int)N1,X,1,X1,1);
+        if (LAPACKE_slasrt_work('I',(int)N,X1)) { fprintf(stderr,"error in prctile_s: problem with LAPACKE function\n"); }
+        *Y = w1*X1[i1] + w2*X1[i2];
     }
     else
     {
-        fprintf(stderr,"error in prctile_s: dim must be 0 or 1.\n"); return 1;
+        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t L = N/(M*N1);
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        {
+            for (size_t m=0; m<M; m++, X+=J)
+            {
+                cblas_scopy((int)N1,X,(int)K,X1,1);
+                if (LAPACKE_slasrt_work('I',(int)N1,X1)) { fprintf(stderr,"error in prctile_s: problem with LAPACKE function\n"); }
+                *Y++ = w1*X1[i1] + w2*X1[i2];
+            }
+        }
     }
 
     free(X1);
@@ -106,65 +69,156 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C,const si
 
 int prctile_d (double *Y, const double *X, const size_t R, const size_t C,const size_t S, const size_t H, const int dim, const char iscolmajor, const double p)
 {
-    int r, c, n1, n2;
-    double w1, w2;
-    double *X1; //1 row or col of X
+    if (p<0.0 || p>100.0) { fprintf(stderr,"error in prctile_d: p must be in [0 100]"); return 1; }
 
-    //Prep interpolation weights
-    w2 = (dim==0) ? (p/100.0)*(R-1) : (p/100.0)*(C-1);
-    n1 = (int)floor(w2); n2 = n1 + 1;
-    w2 -= floor(w2); w1 = 1.0 - w2;
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (dim==0)
+    //Prep interpolation
+    const double p1 = (p/100.0)*(N1-1);
+    const size_t i1 = (p<100.0) ? (size_t)floor(p1) : N1-2;
+    const size_t i2 = i1 + 1;
+    const double w2 = (p<100.0) ? p1-floor(p1) : 1.0;
+    const double w1 = 1.0 - w2;
+
+    double *X1;
+    if (!(X1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in prctile_d: problem with malloc. "); perror("malloc"); return 1; }
+    
+    if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (N1==N)
     {
-        if (!(X1=(double *)malloc((size_t)R*sizeof(double)))) { fprintf(stderr,"error in prctile_d: problem with malloc. "); perror("malloc"); return 1; }
-        if (iscolmajor)
+        cblas_dcopy((int)N1,X,1,X1,1);
+        if (LAPACKE_dlasrt_work('I',(int)N,X1)) { fprintf(stderr,"error in prctile_d: problem with LAPACKE function\n"); }
+        *Y = w1*X1[i1] + w2*X1[i2];
+    }
+    else
+    {
+        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t L = N/(M*N1);
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (c=0; c<C; c++)
+            for (size_t m=0; m<M; m++, X+=J)
             {
-                cblas_dcopy((int)R,&X[c*R],1,X1,1);
-                qsort(X1,(size_t)(R),sizeof(double),cmp_ascend_s);
-                Y[c] = w1*X1[n1] + w2*X1[n2];
-            }
-        }
-        else
-        {
-            for (c=0; c<C; c++)
-            {
-                cblas_dcopy((int)R,&X[c],(int)C,X1,1);
-                qsort(X1,(size_t)(R),sizeof(double),cmp_ascend_s);
-                Y[c] = w1*X1[n1] + w2*X1[n2];
+                cblas_dcopy((int)N1,X,(int)K,X1,1);
+                if (LAPACKE_dlasrt_work('I',(int)N1,X1)) { fprintf(stderr,"error in prctile_d: problem with LAPACKE function\n"); }
+                *Y++ = w1*X1[i1] + w2*X1[i2];
             }
         }
     }
-    else if (dim==1)
+
+    free(X1);
+    return 0;
+}
+
+
+int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p)
+{
+    if (p<0.0f || p>100.0f) { fprintf(stderr,"error in prctile_inplace_s: p must be in [0 100]"); return 1; }
+
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t L = N/(M*N1);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+
+    //Prep interpolation
+    const float p1 = (p/100.0f)*(N1-1);
+    const size_t i1 = (p<100.0f) ? (size_t)floorf(p1) : N1-2;
+    const size_t i2 = i1 + 1;
+    const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
+    const float w1 = 1.0f - w2;
+
+    if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (N1==N)
     {
-        if (!(X1=(double *)malloc((size_t)C*sizeof(double)))) { fprintf(stderr,"error in prctile_d: problem with malloc. "); perror("malloc"); return 1; }
-        if (iscolmajor)
+        if (LAPACKE_slasrt_work('I',(int)N,X)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
+        *Y = w1*X[i1] + w2*X[i2];
+    }
+    else if (K==1)
+    {
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
         {
-            for (r=0; r<R; r++)
+            for (size_t m=0; m<M; m++, X+=J-i1)
             {
-                cblas_dcopy((int)C,&X[r],(int)R,X1,1);
-                qsort(X1,(size_t)(C),sizeof(double),cmp_ascend_s);
-                Y[r] = w1*X1[n1] + w2*X1[n2];
-            }
-        }
-        else
-        {
-            for (r=0; r<R; r++)
-            {
-                cblas_dcopy((int)C,&X[r*C],1,X1,1);
-                qsort(X1,(size_t)(C),sizeof(double),cmp_ascend_s);
-                Y[r] = w1*X1[n1] + w2*X1[n2];
+                if (LAPACKE_slasrt_work('I',(int)N1,X)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
+                X += i1; *Y++ = w1**X + w2**(X+1);
             }
         }
     }
     else
     {
-        fprintf(stderr,"error in prctile_d: dim must be 0 or 1.\n"); return 1;
+        float *X1;
+        if (!(X1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in prctile_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        {
+            for (size_t m=0; m<M; m++, X+=J)
+            {
+                cblas_scopy((int)N1,X,(int)K,X1,1);
+                if (LAPACKE_slasrt_work('I',(int)N1,X1)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
+                *Y++ = w1*X1[i1] + w2*X1[i2];
+            }
+        }
+        free(X1);
     }
 
-    free(X1);
+    return 0;
+}
+
+
+int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p)
+{
+    if (p<0.0 || p>100.0) { fprintf(stderr,"error in prctile_inplace_d: p must be in [0 100]"); return 1; }
+
+    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t L = N/(M*N1);
+    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+
+    //Prep interpolation
+    const double p1 = (p/100.0)*(N1-1);
+    const size_t i1 = (p<100.0) ? (size_t)floor(p1) : N1-2;
+    const size_t i2 = i1 + 1;
+    const double w2 = (p<100.0) ? p1-floor(p1) : 1.0;
+    const double w1 = 1.0 - w2;
+
+    if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (N1==N)
+    {
+        if (LAPACKE_dlasrt_work('I',(int)N,X)) { fprintf(stderr,"error in prctile_inplace_d: problem with LAPACKE function\n"); }
+        *Y = w1*X[i1] + w2*X[i2];
+    }
+    else if (K==1)
+    {
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        {
+            for (size_t m=0; m<M; m++, X+=J-i1)
+            {
+                if (LAPACKE_dlasrt_work('I',(int)N1,X)) { fprintf(stderr,"error in prctile_inplace_d: problem with LAPACKE function\n"); }
+                X += i1; *Y++ = w1**X + w2**(X+1);
+            }
+        }
+    }
+    else
+    {
+        double *X1;
+        if (!(X1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in prctile_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        {
+            for (size_t m=0; m<M; m++, X+=J)
+            {
+                cblas_dcopy((int)N1,X,(int)K,X1,1);
+                if (LAPACKE_dlasrt_work('I',(int)N1,X1)) { fprintf(stderr,"error in prctile_inplace_d: problem with LAPACKE function\n"); }
+                *Y++ = w1*X1[i1] + w2*X1[i2];
+            }
+        }
+        free(X1);
+    }
+
     return 0;
 }
 

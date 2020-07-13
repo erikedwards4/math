@@ -23,9 +23,11 @@ int randperm_d (double *Y, const size_t M, const size_t N);
 
 int randperm_s (float *Y, const size_t M, const size_t N)
 {
+    if (M>N) {  fprintf(stderr, "error in randperm_s: M must be <= N\n"); return 1; }
+
     //Generate ints 1:N
     size_t *X;
-    if (!(X=(size_t *)malloc((size_t)N*sizeof(size_t)))) { fprintf(stderr,"error in randperm_s: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(X=(size_t *)malloc(N*sizeof(size_t)))) { fprintf(stderr,"error in randperm_s: problem with malloc. "); perror("malloc"); return 1; }
     for (size_t n=0; n<N; n++) { X[n] = n + 1; }
 
     //Seed rand
@@ -36,8 +38,8 @@ int randperm_s (float *Y, const size_t M, const size_t N)
     //M Knuth shuffles
     for (size_t m=0; m<M; m++)
 	{
-		size_t n = m + (N-m)*(size_t)drand48(); //random index from m to N-1
-        Y[m] = (float)X[n]; X[n] = X[m];        //combine swap and output
+		size_t n = m + (size_t)((N-m)*drand48());  //random index from m to N-1
+        Y[m] = (float)X[n]; X[n] = X[m];           //combine swap and output
 	}
 
     free(X);
@@ -47,9 +49,11 @@ int randperm_s (float *Y, const size_t M, const size_t N)
 
 int randperm_d (double *Y, const size_t M, const size_t N)
 {
+    if (M>N) {  fprintf(stderr, "error in randperm_d: M must be <= N\n"); return 1; }
+
     //Generate ints 1:N
     size_t *X;
-    if (!(X=(size_t *)malloc((size_t)N*sizeof(size_t)))) { fprintf(stderr,"error in randperm_d: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(X=(size_t *)malloc(N*sizeof(size_t)))) { fprintf(stderr,"error in randperm_d: problem with malloc. "); perror("malloc"); return 1; }
     for (size_t n=0; n<N; n++) { X[n] = n + 1; }
 
     //Seed rand
@@ -60,8 +64,8 @@ int randperm_d (double *Y, const size_t M, const size_t N)
     //M Knuth shuffles
     for (size_t m=0; m<M; m++)
 	{
-		size_t n = m + (N-m)*(size_t)drand48(); //random index from m to N-1
-        Y[m] = (double)X[n]; X[n] = X[m];       //combine swap and output
+		size_t n = m + (size_t)((N-m)*drand48());  //random index from m to N-1
+        Y[m] = (double)X[n]; X[n] = X[m];          //combine swap and output
 	}
 
     free(X);
