@@ -36,7 +36,7 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 //Get options
 
 //Get o1.F
-if (a_ofmt->count==0) { o1.F = 102; }
+if (a_ofmt->count==0) { o1.F = 147; }
 else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
 else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
 else { o1.F = uint8_t(a_ofmt->ival[0]); }

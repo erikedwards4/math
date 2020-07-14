@@ -92,7 +92,7 @@ randperm: srci/randperm.cpp c/randperm.c
 
 #Random: 0 inputs, 1 output with random numbers
 #These use C++ only (the random library for now; PCG random in future)
-Random: Uniform Bernoulli Poisson Normal Sampling Randperm
+Random: Uniform Bernoulli Poisson Normal Sampling
 
 Uniform: uniform_int uniform_real
 uniform_int: srci/uniform_int.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
