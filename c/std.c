@@ -12,14 +12,16 @@ namespace codee {
 extern "C" {
 #endif
 
-int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
 
 
-int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
+    if (dim>3) { fprintf(stderr,"error in std_s: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t N2 = N/N1;
@@ -129,8 +131,10 @@ int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
+    if (dim>3) { fprintf(stderr,"error in std_d: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t N2 = N/N1;
@@ -240,8 +244,10 @@ int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
 }
 
 
-int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
+    if (dim>3) { fprintf(stderr,"error in std_c: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float den = (biased) ? 1.0f/N1 : 1.0f/(N1-1);
@@ -289,8 +295,10 @@ int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
+    if (dim>3) { fprintf(stderr,"error in std_z: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double den = (biased) ? 1.0/N1 : 1.0/(N1-1);

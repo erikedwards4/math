@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     ifstream ifs1, ifs2, ifs3; ofstream ofs1;
     int8_t stdi1, stdi2, stdi3, stdo1, wo1;
     ioinfo i1, i2, i3, o1;
-    int dim;
+    size_t dim;
 
 
     //Description
@@ -41,11 +41,10 @@ int main(int argc, char *argv[])
     descr += "Joins 3 inputs X1, X2, X3 into 1 output Y.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to work along cols --> Y has size R1+R2+R3 x C.\n";
-    descr += "Use -d1 to work along rows --> Y has size R x C1+C2+C3.\n";
-    descr += "\n";
-    descr += "For dim=0, num cols X1, X2, X3 must be equal (C1=C2=C3).\n";
-    descr += "For dim=1, num rows X1, X2, X3 must be equal (R1=R2=R3).\n";
+    descr += "Use -d0 to work along cols --> Y has R1+R2+R3 rows.\n";
+    descr += "Use -d1 to work along rows --> Y has C1+C2+C3 cols.\n";
+    descr += "Use -d2 to work along slices --> Y has S1+S2+S3 slices.\n";
+    descr += "Use -d3 to work along hyperslices --> Y has H1+H2+H3 hyperslices.\n";
     descr += "\n";
     descr += "Examples:\n";
     descr += "$ join3 X1 X2 X3 -o Y \n";
@@ -113,8 +112,8 @@ int main(int argc, char *argv[])
     //Get dim
     if (a_d->count==0) { dim = 0; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-    else { dim = a_d->ival[0]; }
-    if (dim>1) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1}" << endl; return 1; }
+    else { dim = size_t(a_d->ival[0]); }
+    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 
     //Checks
@@ -124,18 +123,18 @@ int main(int argc, char *argv[])
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 1 (X1) found to be empty" << endl; return 1; }
     if (i2.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) found to be empty" << endl; return 1; }
     if (i3.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 3 (X3) found to be empty" << endl; return 1; }
-    if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 1 (X1) must be a matrix" << endl; return 1; }
-    if (!i2.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) must be a matrix" << endl; return 1; }
-    if (!i3.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 3 (X3) must be a matrix" << endl; return 1; }
-    if (dim==0 && (i1.C!=i2.C || i1.C!=i3.C)) { cerr << progstr+": " << __LINE__ << errstr << "all inputs must have same ncols for dim=0" << endl; return 1; }
-    if (dim==1 && (i1.R!=i2.R || i1.R!=i3.R)) { cerr << progstr+": " << __LINE__ << errstr << "all inputs must have same nrows for dim=1" << endl; return 1; }
+    if (dim!=0 && (i1.R!=i2.R || i1.R!=i3.R)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num rows for dim!=0" << endl; return 1; }
+    if (dim!=1 && (i1.C!=i2.C || i1.C!=i3.C)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num cols for dim!=1" << endl; return 1; }
+    if (dim!=2 && (i1.S!=i2.S || i1.S!=i3.S)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num slices for dim!=2" << endl; return 1; }
+    if (dim!=3 && (i1.H!=i2.H || i1.H!=i3.H)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num hyperslices for dim!=3" << endl; return 1; }
 
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
     o1.R = (dim==0) ? i1.R+i2.R+i3.R : i1.R;
     o1.C = (dim==1) ? i1.C+i2.C+i3.C : i1.C;
-    o1.S = i1.S; o1.H = i1.H;
+    o1.S = (dim==2) ? i1.S+i2.S+i3.S : i1.S;
+    o1.H = (dim==3) ? i1.H+i2.H+i3.H : i1.H;
 
 
     //Open output
@@ -171,7 +170,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (codee::join3_s(Y,X1,X2,X3,i1.R,i2.R,i3.R,i1.C,i2.C,i3.C,dim,i1.iscolmajor()))
+        if (codee::join3_s(Y,X1,X2,X3,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,i3.R,i3.C,i3.S,i3.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -197,7 +196,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (codee::join3_d(Y,X1,X2,X3,i1.R,i2.R,i3.R,i1.C,i2.C,i3.C,dim,i1.iscolmajor()))
+        if (codee::join3_d(Y,X1,X2,X3,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,i3.R,i3.C,i3.S,i3.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -215,7 +214,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file 2 (X2)" << endl; return 1; }
         try { X3 = new float[2u*i3.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file 3 (X3)" << endl; return 1; }
-        try { Y = new float[o1.N()]; }
+        try { Y = new float[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X1),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
@@ -223,7 +222,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (codee::join3_c(Y,X1,X2,X3,i1.R,i2.R,i3.R,i1.C,i2.C,i3.C,dim,i1.iscolmajor()))
+        if (codee::join3_c(Y,X1,X2,X3,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,i3.R,i3.C,i3.S,i3.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -241,7 +240,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file 2 (X2)" << endl; return 1; }
         try { X3 = new double[2u*i3.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file 3 (X3)" << endl; return 1; }
-        try { Y = new double[o1.N()]; }
+        try { Y = new double[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X1),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
@@ -249,7 +248,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (codee::join3_z(Y,X1,X2,X3,i1.R,i2.R,i3.R,i1.C,i2.C,i3.C,dim,i1.iscolmajor()))
+        if (codee::join3_z(Y,X1,X2,X3,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,i3.R,i3.C,i3.S,i3.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

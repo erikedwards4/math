@@ -5,7 +5,7 @@
 const valarray<uint8_t> oktypes = {1,2,101,102};
 const size_t I = 0, O = 1;
 double a, b;
-int dim;
+size_t dim;
 size_t N;
 
 //Description
@@ -50,7 +50,7 @@ b = (a_b->count==0) ? 1.0 : a_b->dval[0];
 //Get dim
 if (a_d->count==0) { dim = 0; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-else { dim = a_d->ival[0]; }
+else { dim = size_t(a_d->ival[0]); }
 if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Get N

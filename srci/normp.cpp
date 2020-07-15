@@ -4,7 +4,7 @@
 //Declarations
 const valarray<uint8_t> oktypes = {1,2,101,102};
 const size_t I = 1, O = 1;
-int dim;
+size_t dim;
 double p;
 
 //Description
@@ -42,7 +42,7 @@ if (p<=0.0) { cerr << progstr+": " << __LINE__ << errstr << "p must be positive"
 //Get dim
 if (a_d->count==0) { dim = 0; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-else { dim = a_d->ival[0]; }
+else { dim = size_t(a_d->ival[0]); }
 if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Checks
@@ -68,7 +68,7 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::normp_s(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor(),float(p)))
+    if (codee::normp_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,float(p)))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -86,7 +86,7 @@ else if (i1.T==101)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::normp_c(Y,X,i1.R,i1.C,i1.S,i1.H,dim,i1.iscolmajor(),float(p)))
+    if (codee::normp_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,float(p)))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

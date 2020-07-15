@@ -4,7 +4,8 @@
 //Declarations
 const valarray<uint8_t> oktypes = {1,2,101,102};
 const size_t I = 1, O = 1;
-int dim, N;
+size_t dim;
+int N;
 
 //Description
 string descr;
@@ -37,7 +38,7 @@ N = (a_n->count>0) ? a_n->ival[0] : 0;
 //Get dim
 if (a_d->count==0) { dim = 0; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-else { dim = a_d->ival[0]; }
+else { dim = size_t(a_d->ival[0]); }
 if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Checks

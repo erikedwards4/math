@@ -15,14 +15,16 @@ namespace codee {
 extern "C" {
 #endif
 
-int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int amin_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int amin_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int amin_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int amin_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
 
-int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in amin_s: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     size_t i;
@@ -93,8 +95,10 @@ int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int amin_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int amin_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in amin_d: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     size_t i;
@@ -162,8 +166,10 @@ int amin_d (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in amin_c: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     size_t i;
@@ -237,8 +243,10 @@ int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int amin_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int amin_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in amin_z: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     size_t i;

@@ -233,12 +233,12 @@ int hypot_z (double *Y, const double *X1, const double *X2, const size_t R1, con
 
     if (N1==1)
     {
-        const float x1 = X1[0]*X1[0] + X1[1]*X1[1];
+        const double x1 = X1[0]*X1[0] + X1[1]*X1[1];
         for (size_t n=0; n<N; n++, X2+=2) { *Y++ = sqrt(x1 + *X2**X2 + *(X2+1)**(X2+1)); }
     }    
     else if (N2==1)
     {
-        const float x2 = X2[0]*X2[0] + X2[1]*X2[1];
+        const double x2 = X2[0]*X2[0] + X2[1]*X2[1];
         for (size_t n=0; n<N; n++, X1+=2) { *Y++ = sqrt(*X1**X1 + *(X1+1)**(X1+1) + x2); }
     }
     else if (N1==N2)

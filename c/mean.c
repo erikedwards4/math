@@ -11,14 +11,16 @@ namespace codee {
 extern "C" {
 #endif
 
-int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int mean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int mean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int mean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int mean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
 
-int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in mean_s: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float ni = 1.0f / N1;
@@ -86,8 +88,10 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int mean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int mean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in mean_d: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double ni = 1.0 / N1;
@@ -155,8 +159,10 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in mean_c: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float ni[2] = {1.0f/N1,0.0f};
@@ -227,8 +233,10 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int mean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int mean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in mean_z: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double ni[2] = {1.0/N1,0.0};

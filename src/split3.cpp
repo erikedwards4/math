@@ -33,19 +33,23 @@ int main(int argc, char *argv[])
     ifstream ifs1; ofstream ofs1, ofs2, ofs3;
     int8_t stdi1, stdo1, stdo2, stdo3, wo1, wo2, wo3;
     ioinfo i1, o1, o2, o3;
-    int dim;
+    size_t dim;
 
 
     //Description
     string descr;
-    descr += "Splits 1 input X into 3 equal-sized outputs Y1, Y2, Y3.\n";
+    descr += "Splits input X into 3 equal-sized outputs Y1, Y2, Y3.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to work along cols --> Y has size R/3 x C.\n";
-    descr += "Use -d1 to work along rows --> Y has size R x C/3.\n";
+    descr += "Use -d0 to work along cols --> Y1, Y2, Y3 have R/3 rows.\n";
+    descr += "Use -d1 to work along rows --> Y1, Y2, Y3 have C/3 cols.\n";
+    descr += "Use -d2 to work along slices --> Y1, Y2, Y3 have S/3 slices.\n";
+    descr += "Use -d3 to work along hyperslices --> Y1, Y2, Y3 have H/3 hyperslices.\n";
     descr += "\n";
-    descr += "For dim=0, num rows X must be even (R%3==0).\n";
-    descr += "For dim=1, num cols X must be even (C%3==0).\n";
+    descr += "For dim=0, num rows X must be multiple of 3 (R%3==0).\n";
+    descr += "For dim=1, num cols X must be multiple of 3 (C%3==0).\n";
+    descr += "For dim=2, num slices X must be multiple of 3 (S%3==0).\n";
+    descr += "For dim=3, num hyperslices X must be multiple of 3 (H%3==0).\n";
     descr += "\n";
     descr += "Examples:\n";
     descr += "$ split3 X -o Y1 -o Y2 -o Y3 \n";
@@ -109,24 +113,25 @@ int main(int argc, char *argv[])
     //Get dim
     if (a_d->count==0) { dim = 0; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-    else { dim = a_d->ival[0]; }
-    if (dim>1) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1}" << endl; return 1; }
+    else { dim = size_t(a_d->ival[0]); }
+    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
-    if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a matrix" << endl; return 1; }
     if (dim==0 && i1.R%3) { cerr << progstr+": " << __LINE__ << errstr << "num rows X must be a multiple of 3 for dim=0" << endl; return 1; }
     if (dim==1 && i1.C%3) { cerr << progstr+": " << __LINE__ << errstr << "num cols X must be a multiple of 3 for dim=1" << endl; return 1; }
+    if (dim==2 && i1.S%3) { cerr << progstr+": " << __LINE__ << errstr << "num slices X must be a multiple of 3 for dim=2" << endl; return 1; }
+    if (dim==3 && i1.H%3) { cerr << progstr+": " << __LINE__ << errstr << "num hyperslices X must be a multiple of 3 for dim=3" << endl; return 1; }
 
 
     //Set output header infos
     o1.F = o2.F = o3.F = i1.F;
-    o1.T = o2.T = o3.F = i1.T;
+    o1.T = o2.T = o3.T = i1.T;
     o1.R = o2.R = o3.R = (dim==0) ? i1.R/3 : i1.R;
     o1.C = o2.C = o3.C = (dim==1) ? i1.C/3 : i1.C;
-    o1.S = o2.S = o3.S = i1.S;
-    o1.H = o2.H = o3.H = i1.H;
+    o1.S = o2.S = o3.S = (dim==2) ? i1.S/3 : i1.S;
+    o1.H = o2.H = o3.H = (dim==3) ? i1.H/3 : i1.H;
 
 
     //Open outputs
@@ -170,14 +175,20 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 3 (Y3)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::split3_s(Y1,Y2,Y3,X,i1.R,i1.C,dim,i1.iscolmajor()))
+        if (codee::split3_s(Y1,Y2,Y3,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y1),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 1 (Y1)" << endl; return 1; }
+        }
+        if (wo2)
+        {
             try { ofs2.write(reinterpret_cast<char*>(Y2),o2.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 2 (Y2)" << endl; return 1; }
+        }
+        if (wo3)
+        {
             try { ofs3.write(reinterpret_cast<char*>(Y3),o3.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 3 (Y3)" << endl; return 1; }
         }
@@ -196,14 +207,20 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 3 (Y3)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::split3_d(Y1,Y2,Y3,X,i1.R,i1.C,dim,i1.iscolmajor()))
+        if (codee::split3_d(Y1,Y2,Y3,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y1),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 1 (Y1)" << endl; return 1; }
+        }
+        if (wo2)
+        {
             try { ofs2.write(reinterpret_cast<char*>(Y2),o2.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 2 (Y2)" << endl; return 1; }
+        }
+        if (wo3)
+        {
             try { ofs3.write(reinterpret_cast<char*>(Y3),o3.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 3 (Y3)" << endl; return 1; }
         }
@@ -222,14 +239,20 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 3 (Y3)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::split3_c(Y1,Y2,Y3,X,i1.R,i1.C,dim,i1.iscolmajor()))
+        if (codee::split3_c(Y1,Y2,Y3,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y1),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 1 (Y1)" << endl; return 1; }
+        }
+        if (wo2)
+        {
             try { ofs2.write(reinterpret_cast<char*>(Y2),o2.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 2 (Y2)" << endl; return 1; }
+        }
+        if (wo3)
+        {
             try { ofs3.write(reinterpret_cast<char*>(Y3),o3.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 3 (Y3)" << endl; return 1; }
         }
@@ -248,14 +271,20 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 3 (Y3)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::split3_z(Y1,Y2,Y3,X,i1.R,i1.C,dim,i1.iscolmajor()))
+        if (codee::split3_z(Y1,Y2,Y3,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y1),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 1 (Y1)" << endl; return 1; }
+        }
+        if (wo2)
+        {
             try { ofs2.write(reinterpret_cast<char*>(Y2),o2.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 2 (Y2)" << endl; return 1; }
+        }
+        if (wo3)
+        {
             try { ofs3.write(reinterpret_cast<char*>(Y3),o3.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 3 (Y3)" << endl; return 1; }
         }

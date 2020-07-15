@@ -16,14 +16,16 @@ namespace codee {
 extern "C" {
 #endif
 
-int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
-int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased);
+int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
 
 
-int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
+    if (dim>3) { fprintf(stderr,"error in kurtosis_s: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t N2 = N/N1;
@@ -138,8 +140,10 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
 }
 
 
-int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
+    if (dim>3) { fprintf(stderr,"error in kurtosis_d: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t N2 = N/N1;
@@ -254,8 +258,10 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
 }
 
 
-int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
+    if (dim>3) { fprintf(stderr,"error in kurtosis_c: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float ni[2] = {-1.0f/N1,0.0f};
@@ -333,8 +339,10 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t
 }
 
 
-int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const char biased)
+int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
+    if (dim>3) { fprintf(stderr,"error in kurtosis_z: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double ni[2] = {-1.0/N1,0.0};

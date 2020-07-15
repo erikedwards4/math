@@ -12,26 +12,29 @@ namespace codee {
 extern "C" {
 #endif
 
-int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
-int flip_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
-int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
-int flip_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
+int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int flip_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int flip_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
-int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
-int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
-int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
-int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim);
+int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
 
-int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
+int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim<0 || dim>3) { fprintf(stderr,"error in flip_s: dim must be in [0 3].\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in flip_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
     const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
-    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_scopy((int)(R*C*S*H),X,1,Y,1); }
+    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1))
+    {
+        cblas_scopy((int)(R*C*S*H),X,1,Y,1);
+    }
     else if (K==1)
     {
         for (size_t l=0, n1=0; l<L; l++)
@@ -56,15 +59,18 @@ int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int flip_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
+int flip_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim<0 || dim>3) { fprintf(stderr,"error in flip_d: dim must be in [0 3].\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in flip_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
     const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
-    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_dcopy((int)(R*C*S*H),X,1,Y,1); }
+    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1))
+    {
+        cblas_dcopy((int)(R*C*S*H),X,1,Y,1);
+    }
     else if (K==1)
     {
         for (size_t l=0, n1=0; l<L; l++)
@@ -87,15 +93,18 @@ int flip_d (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
+int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim<0 || dim>3) { fprintf(stderr,"error in flip_c: dim must be in [0 3].\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in flip_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
     const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
 
-    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_ccopy((int)(R*C*S*H),X,1,Y,1); }
+    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1))
+    {
+        cblas_ccopy((int)(R*C*S*H),X,1,Y,1);
+    }
     else if (K==1)
     {
         for (size_t l=0, n1=0; l<L; l++)
@@ -118,15 +127,18 @@ int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int flip_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
+int flip_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim<0 || dim>3) { fprintf(stderr,"error in flip_z: dim must be in [0 3].\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in flip_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
     const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
     
-    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1)) { cblas_zcopy((int)(R*C*S*H),X,1,Y,1); }
+    if ((dim==0 && R==1) || (dim==1 && C==1) || (dim==2 && S==1) || (dim==3 && H==1))
+    {
+        cblas_zcopy((int)(R*C*S*H),X,1,Y,1);
+    }
     else if (K==1)
     {
         for (size_t l=0, n1=0; l<L; l++)
@@ -149,9 +161,9 @@ int flip_z (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
+int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim<0 || dim>3) { fprintf(stderr,"error in flip_inplace_s: dim must be in [0 3].\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in flip_inplace_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
     const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
@@ -193,9 +205,9 @@ int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 }
 
 
-int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
+int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim<0 || dim>3) { fprintf(stderr,"error in flip_inplace_d: dim must be in [0 3].\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in flip_inplace_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
     const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
@@ -232,9 +244,9 @@ int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
+int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim<0 || dim>3) { fprintf(stderr,"error in flip_inplace_c: dim must be in [0 3].\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in flip_inplace_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
     const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);
@@ -272,9 +284,9 @@ int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
 }
 
 
-int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int dim)
+int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim<0 || dim>3) { fprintf(stderr,"error in flip_inplace_z: dim must be in [0 3].\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in flip_inplace_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t L = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1) : ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S);
     const size_t M = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? R*C : (dim==2) ? R*C*S : R*C*S*H) : ((dim==0) ? R*C*S*H : (dim==1) ? C*S*H : (dim==2) ? S*H : H);

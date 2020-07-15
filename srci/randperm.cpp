@@ -5,7 +5,7 @@
 const valarray<uint8_t> oktypes = {1,2};
 const size_t I = 0, O = 1;
 size_t N, M;
-int dim;
+size_t dim;
 
 //Description
 string descr;
@@ -40,7 +40,7 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 //Get dim
 if (a_d->count==0) { dim = 0; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-else { dim = a_d->ival[0]; }
+else { dim = size_t(a_d->ival[0]); }
 if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Get o1.F

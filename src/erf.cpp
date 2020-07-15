@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "log10.c"
+#include "erf.c"
 
 #ifdef I
 #undef I
@@ -37,13 +37,14 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Elementwise function.\n";
-    descr += "Gets base-10 logarithm (log10) of each element of X.\n";
+    descr += "Elementwise special function.\n";
+    descr += "Gets error-function of element of X.\n";
+    descr += "For each element: y = erf(x).\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ log10 X -o Y \n";
-    descr += "$ log10 X > Y \n";
-    descr += "$ cat X | log10 > Y \n";
+    descr += "$ erf X -o Y \n";
+    descr += "$ erf X > Y \n";
+    descr += "$ cat X | erf > Y \n";
 
 
     //Argtable
@@ -125,7 +126,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::log10_inplace_s(X,i1.N()))
+        if (codee::erf_inplace_s(X,i1.N()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -141,7 +142,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::log10_inplace_d(X,i1.N()))
+        if (codee::erf_inplace_d(X,i1.N()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -153,11 +154,11 @@ int main(int argc, char *argv[])
     else if (i1.T==101)
     {
         float *X;
-        try { X = new float[2*i1.N()]; }
+        try { X = new float[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::log10_inplace_c(X,i1.N()))
+        if (codee::erf_inplace_c(X,i1.N()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -169,11 +170,11 @@ int main(int argc, char *argv[])
     else if (i1.T==102)
     {
         double *X;
-        try { X = new double[2*i1.N()]; }
+        try { X = new double[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::log10_inplace_z(X,i1.N()))
+        if (codee::erf_inplace_z(X,i1.N()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

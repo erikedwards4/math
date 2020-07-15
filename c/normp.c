@@ -12,14 +12,16 @@ namespace codee {
 extern "C" {
 #endif
 
-int normp_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p);
-int normp_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p);
-int normp_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p);
-int normp_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p);
+int normp_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p);
+int normp_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p);
+int normp_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p);
+int normp_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p);
 
 
-int normp_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p)
+int normp_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p)
 {
+    if (dim>3) { fprintf(stderr,"error in normp_s: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float ip = 1.0f / p;
@@ -90,8 +92,10 @@ int normp_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int normp_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p)
+int normp_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p)
 {
+    if (dim>3) { fprintf(stderr,"error in normp_d: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double ip = 1.0 / p;
@@ -162,8 +166,10 @@ int normp_d (double *Y, const double *X, const size_t R, const size_t C, const s
 }
 
 
-int normp_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const float p)
+int normp_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p)
 {
+    if (dim>3) { fprintf(stderr,"error in normp_c: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float ip = 1.0f / p;
@@ -234,8 +240,10 @@ int normp_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int normp_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor, const double p)
+int normp_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p)
 {
+    if (dim>3) { fprintf(stderr,"error in normp_z: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double ip = 1.0 / p;

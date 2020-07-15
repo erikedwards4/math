@@ -11,19 +11,21 @@ namespace codee {
 extern "C" {
 #endif
 
-int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
-int cnt_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
-int cnt_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor);
+int cnt_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int cnt_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int cnt_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int cnt_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
 
-int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in cnt_s: dim must be in [0 3]\n"); return 1; }
+
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -47,8 +49,10 @@ int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 }
 
 
-int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in cnt_d: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
@@ -69,8 +73,10 @@ int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 }
 
 
-int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in cnt_c: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
@@ -91,8 +97,10 @@ int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 }
 
 
-int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in cnt_z: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
@@ -113,8 +121,10 @@ int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 }
 
 
-int cnt_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in cnt_inplace_s: dim must be in [0 3]\n"); return 1; }
+
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -139,8 +149,10 @@ int cnt_inplace_s (float *X, const size_t R, const size_t C, const size_t S, con
 }
 
 
-int cnt_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in cnt_inplace_d: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
@@ -161,8 +173,10 @@ int cnt_inplace_d (double *X, const size_t R, const size_t C, const size_t S, co
 }
 
 
-int cnt_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in cnt_inplace_c: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
@@ -184,8 +198,10 @@ int cnt_inplace_c (float *X, const size_t R, const size_t C, const size_t S, con
 }
 
 
-int cnt_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int dim, const char iscolmajor)
+int cnt_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
+    if (dim>3) { fprintf(stderr,"error in cnt_inplace_z: dim must be in [0 3]\n"); return 1; }
+
     const size_t RC = R*C, SH = S*H, N = RC*SH;
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);

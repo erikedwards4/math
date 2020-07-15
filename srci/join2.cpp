@@ -4,18 +4,17 @@
 //Declarations
 const valarray<uint8_t> oktypes = {1,2,101,102};
 const size_t I = 2, O = 1;
-int dim;
+size_t dim;
 
 //Description
 string descr;
-descr += "Joins 2 inputs X1, X2 into 1 output Y.\n";
+descr += "Joins (stacks) 2 inputs X1, X2 into 1 output Y.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-descr += "Use -d0 to work along cols --> Y has size R1+R2 x C.\n";
-descr += "Use -d1 to work along rows --> Y has size R x C1+C2.\n";
-descr += "\n";
-descr += "For dim=0, num cols X1 must equal num cols X2 (C1==C2).\n";
-descr += "For dim=1, num rows X1 must equal num rows X2 (R1==R2).\n";
+descr += "Use -d0 to work along cols --> Y has R1+R2 rows.\n";
+descr += "Use -d1 to work along rows --> Y has C1+C2 cols.\n";
+descr += "Use -d2 to work along slices --> Y has S1+S2 slices.\n";
+descr += "Use -d3 to work along hyperslices --> Y has H1+H2 hyperslices.\n";
 descr += "\n";
 descr += "Examples:\n";
 descr += "$ join2 X1 X2 -o Y \n";
@@ -33,8 +32,8 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 //Get dim
 if (a_d->count==0) { dim = 0; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-else { dim = a_d->ival[0]; }
-if (dim>1) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1}" << endl; return 1; }
+else { dim = size_t(a_d->ival[0]); }
+if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Checks
 if (i1.T!=i2.T) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same data type" << endl; return 1; }
@@ -42,16 +41,17 @@ if (!(i1.isvec() && i2.isvec()) && (i1.iscolmajor()!=i2.iscolmajor()))
 { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same row/col major format" << endl; return 1; }
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 1 (X1) found to be empty" << endl; return 1; }
 if (i2.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) found to be empty" << endl; return 1; }
-if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 1 (X1) must be a matrix" << endl; return 1; }
-if (!i2.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) must be a matrix" << endl; return 1; }
-if (dim==0 && i1.C!=i2.C) { cerr << progstr+": " << __LINE__ << errstr << "ncols X1 must equal ncols X2 for dim=0" << endl; return 1; }
-if (dim==1 && i1.R!=i2.R) { cerr << progstr+": " << __LINE__ << errstr << "nrows X1 must equal nrows X2 for dim=1" << endl; return 1; }
+if (dim!=0 && i1.R!=i2.R) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num rows for dim!=0" << endl; return 1; }
+if (dim!=1 && i1.C!=i2.C) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num cols for dim!=1" << endl; return 1; }
+if (dim!=2 && i1.S!=i2.S) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num slices for dim!=2" << endl; return 1; }
+if (dim!=3 && i1.H!=i2.H) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num hyperslices for dim!=3" << endl; return 1; }
 
 //Set output header info
 o1.F = i1.F; o1.T = i1.T;
 o1.R = (dim==0) ? i1.R+i2.R : i1.R;
 o1.C = (dim==1) ? i1.C+i2.C : i1.C;
-o1.S = i1.S; o1.H = i1.H;
+o1.S = (dim==2) ? i1.S+i2.S : i1.S;
+o1.H = (dim==3) ? i1.H+i2.H : i1.H;
 
 //Other prep
 
@@ -69,7 +69,7 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
     try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-    if (codee::join2_s(Y,X1,X2,i1.R,i2.R,i1.C,i2.C,dim,i1.iscolmajor()))
+    if (codee::join2_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,i1.iscolmajor(),dim))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -91,7 +91,7 @@ else if (i1.T==101)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
     try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-    if (codee::join2_c(Y,X1,X2,i1.R,i2.R,i1.C,i2.C,dim,i1.iscolmajor()))
+    if (codee::join2_c(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,i1.iscolmajor(),dim))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

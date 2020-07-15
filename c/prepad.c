@@ -20,6 +20,8 @@ int prepad_z (double *Y, const double *X, const size_t R, const size_t C, const 
 
 int prepad_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P)
 {
+    if (dim>3) { fprintf(stderr,"error in prepad_s: dim must be in [0 3]\n"); return 1; }
+
     const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t N2 = N1 + P;
     const size_t I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
@@ -48,6 +50,8 @@ int prepad_s (float *Y, const float *X, const size_t R, const size_t C, const si
 
 int prepad_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P)
 {
+    if (dim>3) { fprintf(stderr,"error in prepad_d: dim must be in [0 3]\n"); return 1; }
+
     const size_t N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
     const size_t J = N * I;
@@ -79,6 +83,8 @@ int prepad_d (double *Y, const double *X, const size_t R, const size_t C, const 
 
 int prepad_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P)
 {
+    if (dim>3) { fprintf(stderr,"error in prepad_c: dim must be in [0 3]\n"); return 1; }
+
     const size_t N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
     const size_t J = N * I;
@@ -110,6 +116,8 @@ int prepad_c (float *Y, const float *X, const size_t R, const size_t C, const si
 
 int prepad_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P)
 {
+    if (dim>3) { fprintf(stderr,"error in prepad_z: dim must be in [0 3]\n"); return 1; }
+
     const size_t N = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t I = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
     const size_t J = N * I;

@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     int8_t stdo1, wo1;
     ioinfo o1;
     size_t N, M;
-    int dim;
+    size_t dim;
 
 
     //Description
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     //Get dim
     if (a_d->count==0) { dim = 0; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-    else { dim = a_d->ival[0]; }
+    else { dim = size_t(a_d->ival[0]); }
     if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
     //Get o1.F

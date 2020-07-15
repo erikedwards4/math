@@ -21,7 +21,7 @@ else
 	WFLAG=-Wall -Wextra
 endif
 
-CFLAGS=$(WFLAG) -O3 $(STD) -march=native -Ic
+CFLAGS=$(WFLAG) -O2 $(STD) -march=native -Ic
 #LIBS=-largtable2 -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
