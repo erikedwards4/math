@@ -1,7 +1,8 @@
 //Non-hermitian transpose of matrix X.
 //This has in-place and not-in-place versions.
 
-//For the inplace R!=C case, there is a faster way to do this (with much more code). Perhaps consider in future.
+//For the inplace R!=C case, there may be a faster way to do this (with much more code).
+//However, it is already ~same speed as Armadillo inplace_strans.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -95,8 +96,7 @@ int transpose_z (double *Y, const double *X, const size_t R, const size_t C, con
 
 int transpose_inplace_s (float *X, const size_t R, const size_t C, const char iscolmajor)
 {
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     if (R==1 || C==1) {}
     else if (R==C)
@@ -113,16 +113,22 @@ int transpose_inplace_s (float *X, const size_t R, const size_t C, const char is
         cblas_scopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; c++, Xt+=R) { cblas_scopy((int)(R),Xt,1,&X[c],(int)C); }
+            // This has ~identical speed, but code is longer
+            // for (size_t r=0; r<R; r++, Xt-=R*C-1)
+            // {
+            //     for (size_t c=0; c<C; c++, Xt+=R) { *X++ = *Xt; }
+            // }
+            // Xt -= R;
+            for (size_t r=0; r<R; r++, X+=C) { cblas_scopy((int)(C),&Xt[r],(int)R,X,1); }
         }
         else
         {
-            for (size_t r=0; r<R; r++, Xt+=C) { cblas_scopy((int)(C),Xt,1,&X[r],(int)R); }
+            for (size_t c=0; c<C; c++, X+=R) { cblas_scopy((int)(R),&Xt[c],(int)C,X,1); }
         }
         free(Xt);
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -145,11 +151,11 @@ int transpose_inplace_d (double *X, const size_t R, const size_t C, const char i
         cblas_dcopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; c++, Xt+=R) { cblas_dcopy((int)(R),Xt,1,&X[c],(int)C); }
+            for (size_t r=0; r<R; r++, X+=C) { cblas_dcopy((int)(C),&Xt[r],(int)R,X,1); }
         }
         else
         {
-            for (size_t r=0; r<R; r++, Xt+=C) { cblas_dcopy((int)(C),Xt,1,&X[r],(int)R); }
+            for (size_t c=0; c<C; c++, X+=R) { cblas_dcopy((int)(R),&Xt[c],(int)C,X,1); }
         }
         free(Xt);
     }
@@ -175,11 +181,11 @@ int transpose_inplace_c (float *X, const size_t R, const size_t C, const char is
         cblas_ccopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; c+=2, Xt+=2*R) { cblas_ccopy((int)(R),Xt,1,&X[c],(int)C); }
+            for (size_t r=0; r<R; r++, X+=2*C) { cblas_ccopy((int)(C),&Xt[2*r],(int)R,X,1); }
         }
         else
         {
-            for (size_t r=0; r<R; r+=2, Xt+=2*C) { cblas_ccopy((int)(C),Xt,1,&X[r],(int)R); }
+            for (size_t c=0; c<C; c++, X+=2*R) { cblas_ccopy((int)(R),&Xt[2*c],(int)C,X,1); }
         }
         free(Xt);
     }
@@ -205,11 +211,11 @@ int transpose_inplace_z (double *X, const size_t R, const size_t C, const char i
         cblas_zcopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; c+=2, Xt+=2*R) { cblas_zcopy((int)(R),Xt,1,&X[c],(int)C); }
+            for (size_t r=0; r<R; r++, X+=2*C) { cblas_zcopy((int)(C),&Xt[2*r],(int)R,X,1); }
         }
         else
         {
-            for (size_t r=0; r<R; r+=2, Xt+=2*C) { cblas_zcopy((int)(C),Xt,1,&X[r],(int)R); }
+            for (size_t c=0; c<C; c++, X+=2*R) { cblas_zcopy((int)(R),&Xt[2*c],(int)C,X,1); }
         }
         free(Xt);
     }

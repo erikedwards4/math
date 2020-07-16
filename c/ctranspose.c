@@ -115,11 +115,11 @@ int ctranspose_inplace_s (float *X, const size_t R, const size_t C, const char i
         cblas_scopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; c++, Xt+=R) { cblas_scopy((int)R,Xt,1,&X[c],(int)C); }
+            for (size_t r=0; r<R; r++, X+=C) { cblas_scopy((int)(C),&Xt[r],(int)R,X,1); }
         }
         else
         {
-            for (size_t r=0; r<R; r++, Xt+=C) { cblas_scopy((int)C,Xt,1,&X[r],(int)R); }
+            for (size_t c=0; c<C; c++, X+=R) { cblas_scopy((int)(R),&Xt[c],(int)C,X,1); }
         }
         free(Xt);
     }
@@ -147,11 +147,11 @@ int ctranspose_inplace_d (double *X, const size_t R, const size_t C, const char 
         cblas_dcopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; c++, Xt+=R) { cblas_dcopy((int)R,Xt,1,&X[c],(int)C); }
+            for (size_t r=0; r<R; r++, X+=C) { cblas_dcopy((int)(C),&Xt[r],(int)R,X,1); }
         }
         else
         {
-            for (size_t r=0; r<R; r++, Xt+=C) { cblas_dcopy((int)C,Xt,1,&X[r],(int)R); }
+            for (size_t c=0; c<C; c++, X+=R) { cblas_dcopy((int)(R),&Xt[c],(int)C,X,1); }
         }
         free(Xt);
     }
@@ -175,15 +175,27 @@ int ctranspose_inplace_c (float *X, const size_t R, const size_t C, const char i
         float *Xt;
         if (!(Xt=(float *)malloc(2*R*C*sizeof(float)))) { fprintf(stderr,"error in ctranspose_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
         cblas_ccopy((int)(R*C),X,1,Xt,1);
-        cblas_sscal((int)(R*C),-1.0f,&Xt[1],2);
+        //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+        //cblas_sscal((int)(R*C),-1.0f,&Xt[1],2);
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; c+=2, Xt+=2*R) { cblas_ccopy((int)R,Xt,1,&X[c],(int)C); }
+            for (size_t r=0; r<R; r++, Xt-=2*(R*C-1))
+            {
+                for (size_t c=0; c<C; c++, Xt+=2*R) { *X++ = *Xt; *X++ = -*Xt; }
+            }
+            Xt -= 2*R;
+            //for (size_t r=0; r<R; r++, X+=2*C) { cblas_ccopy((int)(C),&Xt[2*r],(int)R,X,1); }
         }
         else
         {
-            for (size_t r=0; r<R; r+=2, Xt+=2*C) { cblas_ccopy((int)C,Xt,1,&X[r],(int)R); }
+            for (size_t c=0; c<C; c++, Xt-=2*(R*C-1))
+            {
+                for (size_t r=0; r<R; r++, Xt+=2*C) { *X++ = *Xt; *X++ = -*Xt; }
+            }
+            Xt -= 2*C;
+            //for (size_t c=0; c<C; c++, X+=2*R) { cblas_ccopy((int)(R),&Xt[2*c],(int)C,X,1); }
         }
+        //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
         free(Xt);
     }
 
@@ -206,14 +218,21 @@ int ctranspose_inplace_z (double *X, const size_t R, const size_t C, const char 
         double *Xt;
         if (!(Xt=(double *)malloc(2*R*C*sizeof(double)))) { fprintf(stderr,"error in ctranspose_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
         cblas_zcopy((int)(R*C),X,1,Xt,1);
-        cblas_dscal((int)(R*C),-1.0,&Xt[1],2);
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; c+=2, Xt+=2*R) { cblas_zcopy((int)R,Xt,1,&X[c],(int)C); }
+            for (size_t r=0; r<R; r++, Xt-=2*(R*C-1))
+            {
+                for (size_t c=0; c<C; c++, Xt+=2*R) { *X++ = *Xt; *X++ = -*Xt; }
+            }
+            Xt -= 2*R;
         }
         else
         {
-            for (size_t r=0; r<R; r+=2, Xt+=2*C) { cblas_zcopy((int)C,Xt,1,&X[r],(int)R); }
+            for (size_t c=0; c<C; c++, Xt-=2*(R*C-1))
+            {
+                for (size_t r=0; r<R; r++, Xt+=2*C) { *X++ = *Xt; *X++ = -*Xt; }
+            }
+            Xt -= 2*C;
         }
         free(Xt);
     }
