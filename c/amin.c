@@ -2,13 +2,13 @@
 //This is also the -Inf-norm (or min-norm) of each vector in X.
 
 //For complex case, finds max absolute value and outputs the complex number.
-//For complex case, this is |Xr|+|Xi|; see max for the usual sqrt(Xr*Xr+Xi*Xi).
+//For complex case, this is |Xr|+|Xi|; see max for the usual sqrt(Xr*Xr+Xl*Xi).
 
 
 #include <stdio.h>
 #include <math.h>
 #include <cblas.h>
-#include <time.h>
+//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -26,35 +26,32 @@ int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size
     if (dim>3) { fprintf(stderr,"error in amin_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    size_t i;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-
-    if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        i = cblas_isamin((int)N,X,1);
-        *Y = *(X+i);
+        size_t l = cblas_isamin((int)N,X,1);
+        *Y = *(X+l);
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y++)
+            for (size_t v=0; v<V; v++, Y++)
             {
-                i = cblas_isamin((int)N1,X,1);
-                X += i; *Y = *X; X += N1-i;
+                size_t l = cblas_isamin((int)L,X,1);
+                X += l; *Y = *X; X += L-l;
             }
         }
         else
         {
             float *mns;
-            if (!(mns=(float *)calloc(N2,sizeof(float)))) { fprintf(stderr,"error in amin_s: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t n1=0; n1<N1; n1++, Y-=N2, mns-=N2)
+            if (!(mns=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in amin_s: problem with calloc. "); perror("calloc"); return 1; }
+            for (size_t l=0; l<L; l++, Y-=V, mns-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X++, Y++, mns++)
+                for (size_t v=0; v<V; v++, X++, Y++, mns++)
                 {
                     if (*X**X<*mns) { *Y = *X; *mns = *X**X; }
                 }
@@ -68,28 +65,27 @@ int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             for (size_t c=0; c<C; c++, Y++)
             {
-                i = cblas_isamin((int)N1,X,1);
-                X += i; *Y = *X; X += N1-i;
+                size_t l = cblas_isamin((int)L,X,1);
+                X += l; *Y = *X; X += L-l;
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=B*(L-J))
         {
-            for (size_t m=0; m<M; m++, Y++)
+            for (size_t b=0; b<B; b++, Y++)
             {
-                i = cblas_isamin((int)N1,X,(int)K);
-                X += i*K; *Y = *X;
-                X -= (int)((N1-i)*K)-(int)J;
+                size_t l = cblas_isamin((int)L,X,(int)K);
+                X += l*K; *Y = *X;
+                X -= (int)((L-l)*K)-(int)J;
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -100,33 +96,32 @@ int amin_d (double *Y, const double *X, const size_t R, const size_t C, const si
     if (dim>3) { fprintf(stderr,"error in amin_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    size_t i;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        i = cblas_idamin((int)N,X,1);
-        *Y = *(X+i);
+        size_t l = cblas_idamin((int)N,X,1);
+        *Y = *(X+l);
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y++)
+            for (size_t v=0; v<V; v++, Y++)
             {
-                i = cblas_idamin((int)N1,X,1);
-                X += i; *Y = *X; X += N1-i;
+                size_t l = cblas_idamin((int)L,X,1);
+                X += l; *Y = *X; X += L-l;
             }
         }
         else
         {
             double *mns;
-            if (!(mns=(double *)calloc(N2,sizeof(double)))) { fprintf(stderr,"error in amin_d: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t n1=0; n1<N1; n1++, Y-=N2, mns-=N2)
+            if (!(mns=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in amin_d: problem with calloc. "); perror("calloc"); return 1; }
+            for (size_t l=0; l<L; l++, Y-=V, mns-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X++, Y++, mns++)
+                for (size_t v=0; v<V; v++, X++, Y++, mns++)
                 {
                     if (*X**X<*mns) { *Y = *X; *mns = *X**X; }
                 }
@@ -140,24 +135,24 @@ int amin_d (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t c=0; c<C; c++, Y++)
             {
-                i = cblas_idamin((int)N1,X,1);
-                X += i; *Y = *X; X += N1-i;
+                size_t l = cblas_idamin((int)L,X,1);
+                X += l; *Y = *X; X += L-l;
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=B*(L-J))
         {
-            for (size_t m=0; m<M; m++, Y++)
+            for (size_t b=0; b<B; b++, Y++)
             {
-                i = cblas_idamin((int)N1,X,(int)K);
-                X += i*K; *Y = *X;
-                X -= (int)((N1-i)*K)-(int)J;
+                size_t l = cblas_idamin((int)L,X,(int)K);
+                X += l*K; *Y = *X;
+                X -= (int)((L-l)*K)-(int)J;
             }
         }
     }
@@ -171,34 +166,33 @@ int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size
     if (dim>3) { fprintf(stderr,"error in amin_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    size_t i;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_ccopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        i = cblas_icamin((int)N,X,1);
-        X += 2*i; *Y = *X; *(Y+1) = *(X+1);
+        size_t l = cblas_icamin((int)N,X,1);
+        X += 2*l; *Y = *X; *(Y+1) = *(X+1);
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y+=2)
+            for (size_t v=0; v<V; v++, Y+=2)
             {
-                i = cblas_icamin((int)N1,X,1);
-                X += 2*i; *Y = *X; *(Y+1) = *(X+1);
-                X += 2*(N1-i);
+                size_t l = cblas_icamin((int)L,X,1);
+                X += 2*l; *Y = *X; *(Y+1) = *(X+1);
+                X += 2*(L-l);
             }
         }
         else
         {
             float *mns;
-            if (!(mns=(float *)calloc(N2,sizeof(float)))) { fprintf(stderr,"error in amin_c: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t n1=0; n1<N1; n1++, Y-=2*N2, mns-=N2)
+            if (!(mns=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in amin_c: problem with calloc. "); perror("calloc"); return 1; }
+            for (size_t l=0; l<L; l++, Y-=2*V, mns-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2, Y+=2, mns++)
+                for (size_t v=0; v<V; v++, X+=2, Y+=2, mns++)
                 {
                     if (sqrt(*X**X)+sqrt(*(X+1)**(X+1))<*mns)
                     {
@@ -216,25 +210,25 @@ int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             for (size_t c=0; c<C; c++, Y+=2)
             {
-                i = cblas_icamin((int)N1,X,1);
-                X += 2*i; *Y = *X; *(Y+1) = *(X+1);
-                X += 2*(N1-i);
+                size_t l = cblas_icamin((int)L,X,1);
+                X += 2*l; *Y = *X; *(Y+1) = *(X+1);
+                X += 2*(L-l);
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=2*B*(L-J))
         {
-            for (size_t m=0; m<M; m++, Y+=2)
+            for (size_t b=0; b<B; b++, Y+=2)
             {
-                i = cblas_icamin((int)N1,X,(int)K);
-                X += 2*i*K; *Y = *X; *(Y+1) = *(X+1);
-                X -= 2*((int)((N1-i)*K)-(int)J);
+                size_t l = cblas_icamin((int)L,X,(int)K);
+                X += 2*l*K; *Y = *X; *(Y+1) = *(X+1);
+                X -= 2*((int)((L-l)*K)-(int)J);
             }
         }
     }
@@ -248,34 +242,33 @@ int amin_z (double *Y, const double *X, const size_t R, const size_t C, const si
     if (dim>3) { fprintf(stderr,"error in amin_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    size_t i;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_zcopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        i = cblas_izamin((int)N,X,1);
-        X += 2*i; *Y = *X; *(Y+1) = *(X+1);
+        size_t l = cblas_izamin((int)N,X,1);
+        X += 2*l; *Y = *X; *(Y+1) = *(X+1);
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y+=2)
+            for (size_t v=0; v<V; v++, Y+=2)
             {
-                i = cblas_izamin((int)N1,X,1);
-                X += 2*i; *Y = *X; *(Y+1) = *(X+1);
-                X += 2*(N1-i);
+                size_t l = cblas_izamin((int)L,X,1);
+                X += 2*l; *Y = *X; *(Y+1) = *(X+1);
+                X += 2*(L-l);
             }
         }
         else
         {
             double *mns;
-            if (!(mns=(double *)calloc(N2,sizeof(double)))) { fprintf(stderr,"error in amin_z: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t n1=0; n1<N1; n1++, Y-=2*N2, mns-=N2)
+            if (!(mns=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in amin_z: problem with calloc. "); perror("calloc"); return 1; }
+            for (size_t l=0; l<L; l++, Y-=2*V, mns-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2, Y+=2, mns++)
+                for (size_t v=0; v<V; v++, X+=2, Y+=2, mns++)
                 {
                     if (sqrt(*X**X)+sqrt(*(X+1)**(X+1))<*mns)
                     {
@@ -293,25 +286,25 @@ int amin_z (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t c=0; c<C; c++, Y+=2)
             {
-                i = cblas_izamin((int)N1,X,1);
-                X += 2*i; *Y = *X; *(Y+1) = *(X+1);
-                X += 2*(N1-i);
+                size_t l = cblas_izamin((int)L,X,1);
+                X += 2*l; *Y = *X; *(Y+1) = *(X+1);
+                X += 2*(L-l);
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=2*B*(L-J))
         {
-            for (size_t m=0; m<M; m++, Y+=2)
+            for (size_t b=0; b<B; b++, Y+=2)
             {
-                i = cblas_izamin((int)N1,X,(int)K);
-                X += 2*i*K; *Y = *X; *(Y+1) = *(X+1);
-                X -= 2*((int)((N1-i)*K)-(int)J);
+                size_t l = cblas_izamin((int)L,X,(int)K);
+                X += 2*l*K; *Y = *X; *(Y+1) = *(X+1);
+                X -= 2*((int)((L-l)*K)-(int)J);
             }
         }
     }

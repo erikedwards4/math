@@ -26,8 +26,7 @@ endif
 CFLAGS=$(WFLAG) -O3 $(STD) -march=native -fPIC
 
 
-all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Stats
-	rm -f 7
+all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Vec2scalar Vec2vec Vec2vec2
 
 
 #Generate: aka "Factory" functions
@@ -95,14 +94,10 @@ join2: join2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 join3: join3.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
-#Rearrange: 1 matrix input, 1 matrix output with element rearranged
-Rearrange: transpose ctranspose flip shift cshift sort #rot90
+#Rearrange: 1 matrix input, 1 matrix output with elements rearranged
+Rearrange: transpose ctranspose #rot90
 transpose: transpose.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 ctranspose: ctranspose.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 rot90: rot90.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
@@ -160,6 +155,7 @@ cbrt: cbrt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 deadzone: deadzone.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
+
 #Elementwise2: 2 inputs, 1 output, with array broadcasting for the 2 inputs
 Elementwise2: plus minus times rdivide pow hypot atan2
 plus: plus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -184,17 +180,21 @@ proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #norm is same as element-wise square
 
 
-#Stats: some basic statistics calculated along rows, cols, etc.
-Stats: Sums Prctiles Ranges Moments Norms Other_Stats
+
+#Vec2scalar (Stats): 1 input, 1 output
+#Some basic statistics calculated along rows, cols, etc.
+#That is, the input consists of 1-D vectors within a tensor,
+#and each vector is reduced to a scalar.
+#Thus, these are vec2scalar or "reduction" operations.
+Vec2scalar: Sums Prctiles Ranges Moments Norms Other_Stats
 
 Sums: sum asum cnt
 sum: sum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 asum: asum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cnt: cnt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Prctiles: prctile prctiles median max min amax #amin
+Prctiles: prctile median max min amax #amin
 prctile: prctile.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 median: median.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 max: max.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 min: min.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -221,6 +221,28 @@ Other_Stats: std coeff_var mad
 std: std.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 coeff_var: coeff_var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 mad: mad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+
+
+#Vec2vec: 1 input, 1 output
+#Operates on each 1-D vector in X to produce a new 1-D vector in Y.
+#Y has the same size as X, except perhaps a change in the vector length.
+Vec2vec: flip shift cshift sort prctiles cumsum cumprod
+flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cumsum: cumsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+
+
+#Vec2vec2: 2 inputs, 1 output
+#Operates on each pair of 1-D vectors in X1, X2 to produce a new 1-D vector in Y.
+#This also allows array broadcasting (like Elementwise2).
+Vec2vec2: dot
+dot: dot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 

@@ -2,14 +2,14 @@
 //This is also the Inf-norm (or max-norm) of each vector.
 
 //For complex case, finds max absolute value and outputs the complex number.
-//For complex case, this is |Xr|+|Xi|; see max for the usual sqrt(Xr*Xr+Xi*Xi).
+//For complex case, this is |Xr|+|Xi|; see max for the usual sqrt(Xr*Xr+Xl*Xi).
 //This according to BLAS standard, but is not actually the Inf-norm.
 
 
 #include <stdio.h>
 #include <math.h>
 #include <cblas.h>
-#include <time.h>
+//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -27,44 +27,41 @@ int amax_s (float *Y, const float *X, const size_t R, const size_t C, const size
     if (dim>3) { fprintf(stderr,"error in amax_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    size_t i;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-
-    if (N1==1)
+    if (L==1)
     {
         for (size_t n=0; n<N; n++) { Y[n] = fabsf(X[n]); }
     }
-    else if (N1==N)
+    else if (L==N)
     {
-        i = cblas_isamax((int)N,X,1);
-        *Y = fabsf(*(X+i));
+        size_t l = cblas_isamax((int)N,X,1);
+        *Y = fabsf(*(X+l));
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y++)
+            for (size_t v=0; v<V; v++, Y++)
             {
-                i = cblas_isamax((int)N1,X,1);
-                X += i; *Y = fabsf(*X); X += N1-i;
+                size_t l = cblas_isamax((int)L,X,1);
+                X += l; *Y = fabsf(*X); X += L-l;
             }
         }
         else
         {
-            // for (size_t n2=0; n2<N2; n2++, Y++)
+            // for (size_t v=0; v<V; v++, Y++)
             // {
-            //     i = cblas_isamax((int)N1,X,(int)N2);
-            //     X += i*N2; *Y = fabsf(*X); X -= i*N2-1;
+            //     size_t l = cblas_isamax((int)L,X,(int)V);
+            //     X += l*V; *Y = fabsf(*X); X -= l*V-1;
             // }
-            for (size_t n1=0; n1<N1; n1++, Y-=N2)
+            for (size_t l=0; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X++, Y++)
+                for (size_t v=0; v<V; v++, X++, Y++)
                 {
                     float ax = fabsf(*X);
-                    if (n1==0 || ax>*Y) { *Y = ax; }
+                    if (l==0 || ax>*Y) { *Y = ax; }
                 }
             }
         }
@@ -75,28 +72,27 @@ int amax_s (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             for (size_t c=0; c<C; c++, Y++)
             {
-                i = cblas_isamax((int)N1,X,1);
-                X += i; *Y = fabsf(*X); X += N1-i;
+                size_t l = cblas_isamax((int)L,X,1);
+                X += l; *Y = fabsf(*X); X += L-l;
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=B*(L-J))
         {
-            for (size_t m=0; m<M; m++, Y++)
+            for (size_t b=0; b<B; b++, Y++)
             {
-                i = cblas_isamax((int)N1,X,(int)K);
-                X += i*K; *Y = fabsf(*X);
-                X -= (int)((N1-i)*K) - (int)J;
+                size_t l = cblas_isamax((int)L,X,(int)K);
+                X += l*K; *Y = fabsf(*X);
+                X -= (int)((L-l)*K) - (int)J;
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -107,37 +103,36 @@ int amax_d (double *Y, const double *X, const size_t R, const size_t C, const si
     if (dim>3) { fprintf(stderr,"error in amax_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    size_t i;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1)
+    if (L==1)
     {
         for (size_t n=0; n<N; n++) { Y[n] = fabs(X[n]); }
     }
-    else if (N1==N)
+    else if (L==N)
     {
-        i = cblas_idamax((int)N,X,1);
-        *Y = fabs(*(X+i));
+        size_t l = cblas_idamax((int)N,X,1);
+        *Y = fabs(*(X+l));
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y++)
+            for (size_t v=0; v<V; v++, Y++)
             {
-                i = cblas_idamax((int)N1,X,1);
-                X += i; *Y = fabs(*X); X += N1-i;
+                size_t l = cblas_idamax((int)L,X,1);
+                X += l; *Y = fabs(*X); X += L-l;
             }
         }
         else
         {
-            for (size_t n1=0; n1<N1; n1++, Y-=N2)
+            for (size_t l=0; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X++, Y++)
+                for (size_t v=0; v<V; v++, X++, Y++)
                 {
                     double ax = fabs(*X);
-                    if (n1==0 || ax>*Y) { *Y = ax; }
+                    if (l==0 || ax>*Y) { *Y = ax; }
                 }
             }
         }
@@ -148,24 +143,24 @@ int amax_d (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t c=0; c<C; c++, Y++)
             {
-                i = cblas_idamax((int)N1,X,1);
-                X += i; *Y = fabs(*X); X += N1-i;
+                size_t l = cblas_idamax((int)L,X,1);
+                X += l; *Y = fabs(*X); X += L-l;
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=B*(L-J))
         {
-            for (size_t m=0; m<M; m++, Y++)
+            for (size_t b=0; b<B; b++, Y++)
             {
-                i = cblas_idamax((int)N1,X,(int)K);
-                X += i*K; *Y = *X;
-                X -= (int)((N1-i)*K) - (int)J;
+                size_t l = cblas_idamax((int)L,X,(int)K);
+                X += l*K; *Y = *X;
+                X -= (int)((L-l)*K) - (int)J;
             }
         }
     }
@@ -179,39 +174,39 @@ int amax_c (float *Y, const float *X, const size_t R, const size_t C, const size
     if (dim>3) { fprintf(stderr,"error in amax_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    size_t i;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1)
+    if (L==1)
     {
         for (size_t n=0; n<N; n++, X+=2) { *Y++ = fabsf(*X) + fabsf(*(X+1)); }
     }
-    else if (N1==N)
+    else if (L==N)
     {
-        i = cblas_icamax((int)N,X,1);
+        size_t l = cblas_icamax((int)N,X,1);
+        X += 2*l;
         *Y = fabsf(*X) + fabsf(*(X+1));
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++)
+            for (size_t v=0; v<V; v++)
             {
-                i = cblas_icamax((int)N1,X,1);
-                X += 2*i;
+                size_t l = cblas_icamax((int)L,X,1);
+                X += 2*l;
                 *Y++ = fabsf(*X) + fabsf(*(X+1));
-                X += 2*(N1-i);
+                X += 2*(L-l);
             }
         }
         else
         {
-            for (size_t n1=0; n1<N1; n1++, Y-=N2)
+            for (size_t l=0; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2, Y++)
+                for (size_t v=0; v<V; v++, X+=2, Y++)
                 {
                     float ax = fabsf(*X) + fabsf(*(X+1));
-                    if (n1==0 || ax>*Y) { *Y = ax;}
+                    if (l==0 || ax>*Y) { *Y = ax;}
                 }
             }
         }
@@ -222,27 +217,27 @@ int amax_c (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             for (size_t c=0; c<C; c++)
             {
-                i = cblas_icamax((int)N1,X,1);
-                X += 2*i;
+                size_t l = cblas_icamax((int)L,X,1);
+                X += 2*l;
                 *Y++ = fabsf(*X) + fabsf(*(X+1));
-                X += 2*(N1-i);
+                X += 2*(L-l);
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=2*B*(L-J))
         {
-            for (size_t m=0; m<M; m++)
+            for (size_t b=0; b<B; b++)
             {
-                i = cblas_icamax((int)N1,X,(int)K);
-                X += 2*i*K;
+                size_t l = cblas_icamax((int)L,X,(int)K);
+                X += 2*l*K;
                 *Y++ = fabsf(*X) + fabsf(*(X+1));
-                X -= 2*((int)((N1-i)*K)-(int)J);
+                X -= 2*((int)((L-l)*K)-(int)J);
             }
         }
     }
@@ -256,39 +251,39 @@ int amax_z (double *Y, const double *X, const size_t R, const size_t C, const si
     if (dim>3) { fprintf(stderr,"error in amax_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    size_t i;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1)
+    if (L==1)
     {
         for (size_t n=0; n<N; n++, X+=2) { *Y++ = fabs(*X) + fabs(*(X+1)); }
     }
-    else if (N1==N)
+    else if (L==N)
     {
-        i = cblas_izamax((int)N,X,1);
+        size_t l = cblas_izamax((int)N,X,1);
+        X += 2*l;
         *Y = fabs(*X) + fabs(*(X+1));
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++)
+            for (size_t v=0; v<V; v++)
             {
-                i = cblas_izamax((int)N1,X,1);
-                X += 2*i;
+                size_t l = cblas_izamax((int)L,X,1);
+                X += 2*l;
                 *Y++ = fabs(*X) + fabs(*(X+1));
-                X += 2*(N1-i);
+                X += 2*(L-l);
             }
         }
         else
         {
-            for (size_t n1=0; n1<N1; n1++, Y-=N2)
+            for (size_t l=0; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2, Y++)
+                for (size_t v=0; v<V; v++, X+=2, Y++)
                 {
                     double ax = fabs(*X) + fabs(*(X+1));
-                    if (n1==0 || ax>*Y) { *Y = ax;}
+                    if (l==0 || ax>*Y) { *Y = ax;}
                 }
             }
         }
@@ -299,27 +294,27 @@ int amax_z (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t c=0; c<C; c++)
             {
-                i = cblas_izamax((int)N1,X,1);
-                X += 2*i;
+                size_t l = cblas_izamax((int)L,X,1);
+                X += 2*l;
                 *Y++ = fabs(*X) + fabs(*(X+1));
-                X += 2*(N1-i);
+                X += 2*(L-l);
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=2*B*(L-J))
         {
-            for (size_t m=0; m<M; m++)
+            for (size_t b=0; b<B; b++)
             {
-                i = cblas_izamax((int)N1,X,(int)K);
-                X += 2*i*K;
+                size_t l = cblas_izamax((int)L,X,(int)K);
+                X += 2*l*K;
                 *Y++ = fabs(*X) + fabs(*(X+1));
-                X -= 2*((int)((N1-i)*K)-(int)J);
+                X -= 2*((int)((L-l)*K)-(int)J);
             }
         }
     }

@@ -24,34 +24,32 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     if (dim>3) { fprintf(stderr,"error in max_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-
-    if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
         *Y = *X;
         for (size_t n=1; n<N; n++) { if (X[n]>*Y) { *Y = X[n]; } }
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y++)
+            for (size_t v=0; v<V; v++, Y++)
             {
                 *Y = *X++;
-                for (size_t n1=1; n1<N1; n1++, X++) { if (*X>*Y) { *Y = *X; } }
+                for (size_t l=1; l<L; l++, X++) { if (*X>*Y) { *Y = *X; } }
             }
         }
         else
         {
-            for (size_t n1=0; n1<N1; n1++, Y-=N2)
+            for (size_t l=0; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X++, Y++)
+                for (size_t v=0; v<V; v++, X++, Y++)
                 {
-                    if (n1==0 || *X>*Y) { *Y = *X; }
+                    if (l==0 || *X>*Y) { *Y = *X; }
                 }
             }
         }
@@ -63,26 +61,25 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
             for (size_t c=0; c<C; c++, Y++)
             {
                 *Y = *X++;
-                for (size_t n1=1; n1<N1; n1++, X++) { if (*X>*Y) { *Y = *X; } }
+                for (size_t l=1; l<L; l++, X++) { if (*X>*Y) { *Y = *X; } }
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=B*(L-J))
         {
-            for (size_t m=0; m<M; m++, X-=K*N1-J, Y++)
+            for (size_t b=0; b<B; b++, X-=K*L-J, Y++)
             {
                 *Y = *X; X += K;
-                for (size_t n1=1; n1<N1; n1++, X+=K) { if (*X>*Y) { *Y = *X; } }
+                for (size_t l=1; l<L; l++, X+=K) { if (*X>*Y) { *Y = *X; } }
             }
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -93,32 +90,32 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     if (dim>3) { fprintf(stderr,"error in max_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
         *Y = *X;
         for (size_t n=1; n<N; n++) { if (X[n]>*Y) { *Y = X[n]; } }
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y++)
+            for (size_t v=0; v<V; v++, Y++)
             {
                 *Y = *X++;
-                for (size_t n1=1; n1<N1; n1++, X++) { if (*X>*Y) { *Y = *X; } }
+                for (size_t l=1; l<L; l++, X++) { if (*X>*Y) { *Y = *X; } }
             }
         }
         else
         {
-            for (size_t n1=0; n1<N1; n1++, Y-=N2)
+            for (size_t l=0; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X++, Y++)
+                for (size_t v=0; v<V; v++, X++, Y++)
                 {
-                    if (n1==0 || *X>*Y) { *Y = *X; }
+                    if (l==0 || *X>*Y) { *Y = *X; }
                 }
             }
         }
@@ -130,22 +127,22 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
             for (size_t c=0; c<C; c++, Y++)
             {
                 *Y = *X++;
-                for (size_t n1=1; n1<N1; n1++, X++) { if (*X>*Y) { *Y = *X; } }
+                for (size_t l=1; l<L; l++, X++) { if (*X>*Y) { *Y = *X; } }
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=B*(L-J))
         {
-            for (size_t m=0; m<M; m++, X-=K*N1-J, Y++)
+            for (size_t b=0; b<B; b++, X-=K*L-J, Y++)
             {
                 *Y = *X; X += K;
-                for (size_t n1=1; n1<N1; n1++, X+=K) { if (*X>*Y) { *Y = *X; } }
+                for (size_t l=1; l<L; l++, X+=K) { if (*X>*Y) { *Y = *X; } }
             }
         }
     }
@@ -159,11 +156,11 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     if (dim>3) { fprintf(stderr,"error in max_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     float xx, mn;
 
-    if (N1==1) { cblas_ccopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
         mn = *X**X + *(X+1)**(X+1);
         *Y = *X; *(Y+1) = *(X+1); X += 2;
@@ -175,14 +172,14 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y+=2)
+            for (size_t v=0; v<V; v++, Y+=2)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2;
-                for (size_t n1=1; n1<N1; n1++, X+=2)
+                for (size_t l=1; l<L; l++, X+=2)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -192,13 +189,13 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         else
         {
             float *mns;
-            if (!(mns=(float *)malloc(N2*sizeof(float)))) { fprintf(stderr,"error in min_c: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t n1=0; n1<N1; n1++, Y-=2*N2, mns-=N2)
+            if (!(mns=(float *)malloc(V*sizeof(float)))) { fprintf(stderr,"error in min_c: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t l=0; l<L; l++, Y-=2*V, mns-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2, Y+=2, mns++)
+                for (size_t v=0; v<V; v++, X+=2, Y+=2, mns++)
                 {
                     xx = *X**X + *(X+1)**(X+1);
-                    if (n1==0 || xx>*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
+                    if (l==0 || xx>*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
                 }
             }
             free(mns);
@@ -206,17 +203,17 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=2*B*(L-J))
         {
-            for (size_t m=0; m<M; m++, X-=2*(K*N1-J), Y+=2)
+            for (size_t b=0; b<B; b++, X-=2*(K*L-J), Y+=2)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2*K;
-                for (size_t n1=1; n1<N1; n1++, X+=2*K)
+                for (size_t l=1; l<L; l++, X+=2*K)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -234,11 +231,11 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     if (dim>3) { fprintf(stderr,"error in max_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     double xx, mn;
 
-    if (N1==1) { cblas_zcopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
         mn = *X**X + *(X+1)**(X+1);
         *Y = *X; *(Y+1) = *(X+1); X += 2;
@@ -250,14 +247,14 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, Y+=2)
+            for (size_t v=0; v<V; v++, Y+=2)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2;
-                for (size_t n1=1; n1<N1; n1++, X+=2)
+                for (size_t l=1; l<L; l++, X+=2)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -267,13 +264,13 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         else
         {
             double *mns;
-            if (!(mns=(double *)malloc(N2*sizeof(double)))) { fprintf(stderr,"error in min_z: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t n1=0; n1<N1; n1++, Y-=2*N2, mns-=N2)
+            if (!(mns=(double *)malloc(V*sizeof(double)))) { fprintf(stderr,"error in min_z: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t l=0; l<L; l++, Y-=2*V, mns-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2, Y+=2, mns++)
+                for (size_t v=0; v<V; v++, X+=2, Y+=2, mns++)
                 {
                     xx = *X**X + *(X+1)**(X+1);
-                    if (n1==0 || xx>*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
+                    if (l==0 || xx>*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
                 }
             }
             free(mns);
@@ -281,17 +278,17 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=2*B*(L-J))
         {
-            for (size_t m=0; m<M; m++, X-=2*(K*N1-J), Y+=2)
+            for (size_t b=0; b<B; b++, X-=2*(K*L-J), Y+=2)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2*K;
-                for (size_t n1=1; n1<N1; n1++, X+=2*K)
+                for (size_t l=1; l<L; l++, X+=2*K)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx>mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }

@@ -3,7 +3,12 @@
 
 //For 2D case, this is definitely faster using cblas_?gemv.
 
+//Vec2scalar operation.
+//Sum of elements for each vector in X along dim.
+
 //No in-place version, since cblas_?gemv doesn't work for that.
+//Also, I decided against in-place versions in general for vec2scalar operations,
+//since this would require rewinding X to the right element for each result.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,76 +30,53 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 {
     if (dim>3) { fprintf(stderr,"error in sum_s: dim must be in [0 3]\n"); return 1; }
 
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-
-    if (N1==1) { cblas_scopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (N==0) {}
+    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        Y[0] = 0.0f;
-        for (size_t n=0; n<N; n++) { Y[0] += X[n]; }
-    }
-    else if (SH==1)
-    {
-        const CBLAS_TRANSPOSE Tr = (dim==0) ? CblasTrans : CblasNoTrans;
-        const CBLAS_ORDER Ord = (iscolmajor) ? CblasColMajor : CblasRowMajor;
-        const int lda = (iscolmajor) ? (int)R : (int)C;
-        const float o = 1.0f;
-        float *x1;
-        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_scopy((int)N1,&o,0,x1,1);
-        cblas_sgemv(Ord,Tr,(int)R,(int)C,1.0f,X,lda,x1,1,0.0f,Y,1);
-        //for (size_t c=0; c<C; c++) { Y[c] = cblas_sdot((int)R,&X[c*R],1,&o,0); }
-        free(x1);
-    }
-    else if (iscolmajor && dim<2)
-    {
-        const CBLAS_TRANSPOSE Tr = (dim==0) ? CblasTrans : CblasNoTrans;
-        const float o = 1.0f;
-        float *x1;
-        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_scopy((int)N1,&o,0,x1,1);
-        for (size_t h=0; h<H; h++)
-        {
-            for (size_t s=0; s<S; s++, X+=RC, Y+=RC/N1)
-            {
-                cblas_sgemv(CblasColMajor,Tr,(int)R,(int)C,1.0f,X,(int)R,x1,1,0.0f,Y,1);
-            }
-        }
-        free(x1);
-    }
-    else if (!iscolmajor && dim==2 && H==1)
-    {
-        const float o = 1.0f;
-        float *x1;
-        if (!(x1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_scopy((int)N1,&o,0,x1,1);
-        for (size_t r=0; r<R; r++, X+=C*SH, Y+=C)
-        {
-            cblas_sgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0f,X,(int)S,x1,1,0.0f,Y,1);
-        }
-        free(x1);
-        //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"rmjr,d2,H1: elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+        *Y = 0.0f;
+        for (size_t l=0; l<L; l++) { *Y += X[l]; }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
         const float o = 1.0f;
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0; m<M; m++, X+=J, Y++)
+            float *x1;
+            if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
+            cblas_scopy((int)L,&o,0,x1,1);
+            cblas_sgemv(CblasColMajor,CblasTrans,(int)L,(int)V,1.0f,X,(int)L,x1,1,0.0f,Y,1);
+            free(x1);
+            //for (size_t v=0; v<V; v++, X+=L) { *Y++ = cblas_sdot((int)L,X,1,&o,0); }
+        }
+        else if (G==1)
+        {
+            float *x1;
+            if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
+            cblas_scopy((int)L,&o,0,x1,1);
+            cblas_sgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,1.0f,X,(int)V,x1,1,0.0f,Y,1);
+            free(x1);
+            //for (size_t v=0; v<V; v++, X++) { *Y++ = cblas_sdot((int)L,X,(int)V,&o,0); }
+        }
+        else
+        {
+            for (size_t g=0; g<G; g++, X+=B*(L-1))
             {
-                *Y = cblas_sdot((int)N1,X,(int)K,&o,0);
+                for (size_t b=0; b<B; b++, X++)
+                {
+                    *Y++ = cblas_sdot((int)L,X,(int)K,&o,0);
+                }
             }
         }
-        //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"LMJK: elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
     }
-    
+
     return 0;
 }
 
@@ -103,71 +85,51 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 {
     if (dim>3) { fprintf(stderr,"error in sum_d: dim must be in [0 3]\n"); return 1; }
 
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_dcopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (N==0) {}
+    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        Y[0] = 0.0;
-        for (size_t n=0; n<N; n++) { Y[0] += X[n]; }
-    }
-    else if (SH==1)
-    {
-        const CBLAS_TRANSPOSE Tr = (dim==0) ? CblasTrans : CblasNoTrans;
-        const CBLAS_ORDER Ord = (iscolmajor) ? CblasColMajor : CblasRowMajor;
-        const int lda = (iscolmajor) ? (int)R : (int)C;
-        const double o = 1.0;
-        double *x1;
-        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_dcopy((int)N1,&o,0,x1,1);
-        cblas_dgemv(Ord,Tr,(int)R,(int)C,1.0,X,lda,x1,1,0.0,Y,1);
-        free(x1);
-    }
-    else if (iscolmajor && dim<2)
-    {
-        const CBLAS_TRANSPOSE Tr = (dim==0) ? CblasTrans : CblasNoTrans;
-        const double o = 1.0;
-        double *x1;
-        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_dcopy((int)N1,&o,0,x1,1);
-        for (size_t h=0; h<H; h++)
-        {
-            for (size_t s=0; s<S; s++, X+=RC, Y+=RC/N1)
-            {
-                cblas_dgemv(CblasColMajor,Tr,(int)R,(int)C,1.0,X,(int)R,x1,1,0.0,Y,1);
-            }
-        }
-        free(x1);
-    }
-    else if (!iscolmajor && dim==2 && H==1)
-    {
-        const double o = 1.0;
-        double *x1;
-        if (!(x1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_dcopy((int)N1,&o,0,x1,1);
-        for (size_t r=0; r<R; r++, X+=C*SH, Y+=C)
-        {
-            cblas_dgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,1.0,X,(int)S,x1,1,0.0,Y,1);
-        }
-        free(x1);
+        *Y = 0.0;
+        for (size_t l=0; l<L; l++) { *Y += X[l]; }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
         const double o = 1.0;
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0; m<M; m++, X+=J, Y++)
+            double *x1;
+            if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
+            cblas_dcopy((int)L,&o,0,x1,1);
+            cblas_dgemv(CblasColMajor,CblasTrans,(int)L,(int)V,1.0,X,(int)L,x1,1,0.0,Y,1);
+            free(x1);
+        }
+        else if (G==1)
+        {
+            double *x1;
+            if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
+            cblas_dcopy((int)L,&o,0,x1,1);
+            cblas_dgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,1.0,X,(int)V,x1,1,0.0,Y,1);
+            free(x1);
+        }
+        else
+        {
+            for (size_t g=0; g<G; g++, X+=B*(L-1))
             {
-                *Y = cblas_ddot((int)N1,X,(int)K,&o,0);
+                for (size_t b=0; b<B; b++, X++)
+                {
+                    *Y++ = cblas_ddot((int)L,X,(int)K,&o,0);
+                }
             }
         }
     }
-    
+
     return 0;
 }
 
@@ -176,67 +138,47 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 {
     if (dim>3) { fprintf(stderr,"error in sum_c: dim must be in [0 3]\n"); return 1; }
 
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_ccopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (N==0) {}
+    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        Y[0] = Y[1] = 0.0f;
-        for (size_t n=0; n<2*N1; n+=2) { Y[0] += X[n]; Y[1] += X[n+1]; }
-    }
-    else if (SH==1)
-    {
-        const CBLAS_TRANSPOSE Tr = (dim==0) ? CblasTrans : CblasNoTrans;
-        const CBLAS_ORDER Ord = (iscolmajor) ? CblasColMajor : CblasRowMajor;
-        const int lda = (iscolmajor) ? (int)R : (int)C;
-        const float z[2] = {0.0f,0.0f}, o[2] = {1.0f,0.0f};
-        float *x1;
-        if (!(x1=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in sum_c: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_ccopy((int)N1,o,0,x1,1);
-        cblas_cgemv(Ord,Tr,(int)R,(int)C,o,X,lda,x1,1,z,Y,1);
-        free(x1);
-    }
-    else if (iscolmajor && dim<2)
-    {
-        const CBLAS_TRANSPOSE Tr = (dim==0) ? CblasTrans : CblasNoTrans;
-        const float z[2] = {0.0f,0.0f}, o[2] = {1.0f,0.0f};
-        float *x1;
-        if (!(x1=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in sum_c: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_ccopy((int)N1,o,0,x1,1);
-        for (size_t h=0; h<H; h++)
-        {
-            for (size_t s=0; s<S; s++, X+=2*RC, Y+=2*RC/N1)
-            {
-                cblas_cgemv(CblasColMajor,Tr,(int)R,(int)C,o,X,(int)R,x1,1,z,Y,1);
-            }
-        }
-        free(x1);
-    }
-    else if (!iscolmajor && dim==2 && H==1)
-    {
-        const float z[2] = {0.0f,0.0f}, o[2] = {1.0f,0.0f};
-        float *x1;
-        if (!(x1=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in sum_c: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_ccopy((int)N1,o,0,x1,1);
-        for (size_t r=0; r<R; r++, X+=2*C*SH, Y+=2*C)
-        {
-            cblas_cgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,o,X,(int)S,x1,1,z,Y,1);
-        }
-        free(x1);
+        *Y = *(Y+1) = 0.0f;
+        for (size_t l=0; l<L; l++) { *Y += *X++; *(Y+1) += *X++; }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        const float o[2] = {1.0f,0.0f};
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+        const float z[2] = {0.0f,0.0f}, o[2] = {1.0f,0.0f};
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0; m<M; m++, X+=2*J, Y+=2)
+            float *x1;
+            if (!(x1=(float *)malloc(2*L*sizeof(float)))) { fprintf(stderr,"error in sum_c: problem with malloc. "); perror("malloc"); return 1; }
+            cblas_ccopy((int)L,o,0,x1,1);
+            cblas_cgemv(CblasColMajor,CblasTrans,(int)L,(int)V,o,X,(int)L,x1,1,z,Y,1);
+            free(x1);
+        }
+        else if (G==1)
+        {
+            float *x1;
+            if (!(x1=(float *)malloc(2*L*sizeof(float)))) { fprintf(stderr,"error in sum_c: problem with malloc. "); perror("malloc"); return 1; }
+            cblas_ccopy((int)L,o,0,x1,1);
+            cblas_cgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,o,X,(int)V,x1,1,z,Y,1);
+            free(x1);
+        }
+        else
+        {
+            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
             {
-                cblas_cdotu_sub((int)N1,X,(int)K,o,0,(_Complex float *)Y);
+                for (size_t b=0; b<B; b++, X+=2, Y+=2)
+                {
+                    cblas_cdotu_sub((int)L,X,(int)K,o,0,(_Complex float *)Y);
+                }
             }
         }
     }
@@ -249,70 +191,47 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 {
     if (dim>3) { fprintf(stderr,"error in sum_z: dim must be in [0 3]\n"); return 1; }
 
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1) { cblas_zcopy((int)N,X,1,Y,1); }
-    else if (N1==N)
+    if (N==0) {}
+    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        Y[0] = Y[1] = 0.0;
-        //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-        for (size_t n=0; n<2*N1; n+=2) { Y[0] += X[n]; Y[1] += X[n+1]; }
-        //for (size_t n=0; n<N1; n++) { *Y++ += *X++; *Y-- += *X++; }
-        //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
-    }
-    else if (SH==1)
-    {
-        const CBLAS_TRANSPOSE Tr = (dim==0) ? CblasTrans : CblasNoTrans;
-        const CBLAS_ORDER Ord = (iscolmajor) ? CblasColMajor : CblasRowMajor;
-        const int lda = (iscolmajor) ? (int)R : (int)C;
-        const double z[2] = {0.0,0.0}, o[2] = {1.0,0.0};
-        double *x1;
-        if (!(x1=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in sum_z: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_zcopy((int)N1,o,0,x1,1);
-        cblas_zgemv(Ord,Tr,(int)R,(int)C,o,X,lda,x1,1,z,Y,1);
-        free(x1);
-    }
-    else if (iscolmajor && dim<2)
-    {
-        const CBLAS_TRANSPOSE Tr = (dim==0) ? CblasTrans : CblasNoTrans;
-        const double z[2] = {0.0,0.0}, o[2] = {1.0,0.0};
-        double *x1;
-        if (!(x1=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in sum_z: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_zcopy((int)N1,o,0,x1,1);
-        for (size_t h=0; h<H; h++)
-        {
-            for (size_t s=0; s<S; s++, X+=2*RC, Y+=2*RC/N1)
-            {
-                cblas_zgemv(CblasColMajor,Tr,(int)R,(int)C,o,X,(int)R,x1,1,z,Y,1);
-            }
-        }
-        free(x1);
-    }
-    else if (!iscolmajor && dim==2 && H==1)
-    {
-        const double z[2] = {0.0,0.0}, o[2] = {1.0,0.0};
-        double *x1;
-        if (!(x1=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in sum_z: problem with malloc. "); perror("malloc"); return 1; }
-        cblas_zcopy((int)N1,o,0,x1,1);
-        for (size_t r=0; r<R; r++, X+=2*C*SH, Y+=2*C)
-        {
-            cblas_zgemv(CblasRowMajor,CblasNoTrans,(int)C,(int)S,o,X,(int)S,x1,1,z,Y,1);
-        }
-        free(x1);
+        *Y = *(Y+1) = 0.0;
+        for (size_t l=0; l<L; l++) { *Y += *X++; *(Y+1) += *X++; }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        const double o[2] = {1.0,0.0};
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+        const double z[2] = {0.0,0.0}, o[2] = {1.0,0.0};
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0; m<M; m++, X+=2*J, Y+=2)
+            double *x1;
+            if (!(x1=(double *)malloc(2*L*sizeof(double)))) { fprintf(stderr,"error in sum_z: problem with malloc. "); perror("malloc"); return 1; }
+            cblas_zcopy((int)L,o,0,x1,1);
+            cblas_zgemv(CblasColMajor,CblasTrans,(int)L,(int)V,o,X,(int)L,x1,1,z,Y,1);
+            free(x1);
+        }
+        else if (G==1)
+        {
+            double *x1;
+            if (!(x1=(double *)malloc(2*L*sizeof(double)))) { fprintf(stderr,"error in sum_z: problem with malloc. "); perror("malloc"); return 1; }
+            cblas_zcopy((int)L,o,0,x1,1);
+            cblas_zgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,o,X,(int)V,x1,1,z,Y,1);
+            free(x1);
+        }
+        else
+        {
+            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
             {
-                cblas_zdotu_sub((int)N1,X,(int)K,o,0,(_Complex double *)Y);
+                for (size_t b=0; b<B; b++, X+=2, Y+=2)
+                {
+                    cblas_zdotu_sub((int)L,X,(int)K,o,0,(_Complex double *)Y);
+                }
             }
         }
     }

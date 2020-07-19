@@ -22,14 +22,14 @@ int split3_s (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, c
     if (dim==2 && S%3) { fprintf(stderr,"error in split3_s: num slices X must be a multiple of 3 for dim=2"); return 1; }
     if (dim==3 && H%3) { fprintf(stderr,"error in split3_s: num hyperslices X must be a multiple of 3 for dim=3"); return 1; }
 
-    const size_t M = (iscolmajor) ? ((dim==0) ? R/3 : (dim==1) ? R*C/3 : (dim==2) ? R*C*S/3 : R*C*S*H/3) : ((dim==0) ? H*S*C*R/3 : (dim==1) ? H*S*C/3 : (dim==2) ? H*S/3 : H/3);
-    const size_t L = R*C*S*H/(3*M);
+    const size_t B = (iscolmajor) ? ((dim==0) ? R/3 : (dim==1) ? R*C/3 : (dim==2) ? R*C*S/3 : R*C*S*H/3) : ((dim==0) ? H*S*C*R/3 : (dim==1) ? H*S*C/3 : (dim==2) ? H*S/3 : H/3);
+    const size_t G = R*C*S*H/(3*B);
 
-    for (size_t l=0; l<L; l++)
+    for (size_t g=0; g<G; g++)
     {
-        cblas_scopy((int)M,X,1,Y1,1); X += M; Y1 += M; 
-        cblas_scopy((int)M,X,1,Y2,1); X += M; Y2 += M;
-        cblas_scopy((int)M,X,1,Y3,1); X += M; Y3 += M;
+        cblas_scopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
+        cblas_scopy((int)B,X,1,Y2,1); X += B; Y2 += B;
+        cblas_scopy((int)B,X,1,Y3,1); X += B; Y3 += B;
     }
 
     return 0;
@@ -44,14 +44,14 @@ int split3_d (double *Y1, double *Y2, double *Y3, const double *X, const size_t 
     if (dim==2 && S%3) { fprintf(stderr,"error in split3_d: num slices X must be a multiple of 3 for dim=2"); return 1; }
     if (dim==3 && H%3) { fprintf(stderr,"error in split3_d: num hyperslices X must be a multiple of 3 for dim=3"); return 1; }
 
-    const size_t M = (iscolmajor) ? ((dim==0) ? R/3 : (dim==1) ? R*C/3 : (dim==2) ? R*C*S/3 : R*C*S*H/3) : ((dim==0) ? H*S*C*R/3 : (dim==1) ? H*S*C/3 : (dim==2) ? H*S/3 : H/3);
-    const size_t L = R*C*S*H/(3*M);
+    const size_t B = (iscolmajor) ? ((dim==0) ? R/3 : (dim==1) ? R*C/3 : (dim==2) ? R*C*S/3 : R*C*S*H/3) : ((dim==0) ? H*S*C*R/3 : (dim==1) ? H*S*C/3 : (dim==2) ? H*S/3 : H/3);
+    const size_t G = R*C*S*H/(3*B);
 
-    for (size_t l=0; l<L; l++)
+    for (size_t g=0; g<G; g++)
     {
-        cblas_dcopy((int)M,X,1,Y1,1); X += M; Y1 += M; 
-        cblas_dcopy((int)M,X,1,Y2,1); X += M; Y2 += M;
-        cblas_dcopy((int)M,X,1,Y3,1); X += M; Y3 += M;
+        cblas_dcopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
+        cblas_dcopy((int)B,X,1,Y2,1); X += B; Y2 += B;
+        cblas_dcopy((int)B,X,1,Y3,1); X += B; Y3 += B;
     }
 
     return 0;
@@ -66,14 +66,14 @@ int split3_c (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, c
     if (dim==2 && S%3) { fprintf(stderr,"error in split3_c: num slices X must be a multiple of 3 for dim=2"); return 1; }
     if (dim==3 && H%3) { fprintf(stderr,"error in split3_c: num hyperslices X must be a multiple of 3 for dim=3"); return 1; }
 
-    const size_t M = (iscolmajor) ? ((dim==0) ? R/3 : (dim==1) ? R*C/3 : (dim==2) ? R*C*S/3 : R*C*S*H/3) : ((dim==0) ? H*S*C*R/3 : (dim==1) ? H*S*C/3 : (dim==2) ? H*S/3 : H/3);
-    const size_t L = R*C*S*H/(3*M);
+    const size_t B = (iscolmajor) ? ((dim==0) ? R/3 : (dim==1) ? R*C/3 : (dim==2) ? R*C*S/3 : R*C*S*H/3) : ((dim==0) ? H*S*C*R/3 : (dim==1) ? H*S*C/3 : (dim==2) ? H*S/3 : H/3);
+    const size_t G = R*C*S*H/(3*B);
 
-    for (size_t l=0; l<L; l++)
+    for (size_t g=0; g<G; g++)
     {
-        cblas_ccopy((int)M,X,1,Y1,1); X += M; Y1 += M; 
-        cblas_ccopy((int)M,X,1,Y2,1); X += M; Y2 += M;
-        cblas_ccopy((int)M,X,1,Y3,1); X += M; Y3 += M;
+        cblas_ccopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
+        cblas_ccopy((int)B,X,1,Y2,1); X += B; Y2 += B;
+        cblas_ccopy((int)B,X,1,Y3,1); X += B; Y3 += B;
     }
 
     return 0;
@@ -88,14 +88,14 @@ int split3_z (double *Y1, double *Y2, double *Y3, const double *X, const size_t 
     if (dim==2 && S%3) { fprintf(stderr,"error in split3_z: num slices X must be a multiple of 3 for dim=2"); return 1; }
     if (dim==3 && H%3) { fprintf(stderr,"error in split3_z: num hyperslices X must be a multiple of 3 for dim=3"); return 1; }
 
-    const size_t M = (iscolmajor) ? ((dim==0) ? R/3 : (dim==1) ? R*C/3 : (dim==2) ? R*C*S/3 : R*C*S*H/3) : ((dim==0) ? H*S*C*R/3 : (dim==1) ? H*S*C/3 : (dim==2) ? H*S/3 : H/3);
-    const size_t L = R*C*S*H/(3*M);
+    const size_t B = (iscolmajor) ? ((dim==0) ? R/3 : (dim==1) ? R*C/3 : (dim==2) ? R*C*S/3 : R*C*S*H/3) : ((dim==0) ? H*S*C*R/3 : (dim==1) ? H*S*C/3 : (dim==2) ? H*S/3 : H/3);
+    const size_t G = R*C*S*H/(3*B);
 
-    for (size_t l=0; l<L; l++)
+    for (size_t g=0; g<G; g++)
     {
-        cblas_zcopy((int)M,X,1,Y1,1); X += M; Y1 += M; 
-        cblas_zcopy((int)M,X,1,Y2,1); X += M; Y2 += M;
-        cblas_zcopy((int)M,X,1,Y3,1); X += M; Y3 += M;
+        cblas_zcopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
+        cblas_zcopy((int)B,X,1,Y2,1); X += B; Y2 += B;
+        cblas_zcopy((int)B,X,1,Y3,1); X += B; Y3 += B;
     }
 
     return 0;

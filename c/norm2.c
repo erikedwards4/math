@@ -1,4 +1,4 @@
-//Gets L2-norm (root-sum-square) of each row or col of X according to dim.
+//Gets L2-norm (root-sum-square) for each vector in X along dim.
 //This is the Euclidean (L2) norm of each vector in X.
 //Note that this is not the Frobenius matrix norm of X (see matnorm.c).
 
@@ -24,59 +24,59 @@ int norm2_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     if (dim>3) { fprintf(stderr,"error in norm2_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1)
+    if (L==1)
     {
         for (size_t n=0; n<N; n++) { Y[n] = X[n]*X[n]; }
     }
-    else if (N1==N) { *Y = cblas_snrm2((int)N1,X,1); }
+    else if (L==N) { *Y = cblas_snrm2((int)L,X,1); }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, X+=N1)
+            for (size_t v=0; v<V; v++, X+=L)
             {
-                *Y++ = cblas_snrm2((int)N1,X,1);
+                *Y++ = cblas_snrm2((int)L,X,1);
             }
         }
         else
         {
-            // for (size_t n2=0; n2<N2; n2++, X++)
+            // for (size_t v=0; v<V; v++, X++)
             // {
-            //     *Y++ = cblas_snrm2((int)N1,X,(int)N2);
+            //     *Y++ = cblas_snrm2((int)L,X,(int)V);
             // }
-            for (size_t n2=0; n2<N2; n2++, X++) { *Y++ = *X**X; }
-            Y -= N2;
-            for (size_t n1=1; n1<N1; n1++, Y-=N2)
+            for (size_t v=0; v<V; v++, X++) { *Y++ = *X**X; }
+            Y -= V;
+            for (size_t l=1; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X++) { *Y++ += *X**X; }
+                for (size_t v=0; v<V; v++, X++) { *Y++ += *X**X; }
             }
-            for (size_t n2=0; n2<N2; n2++, Y++) { *Y = sqrtf(*Y); }
+            for (size_t v=0; v<V; v++, Y++) { *Y = sqrtf(*Y); }
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
     {
         for (size_t r=0; r<R; r++)
         {
-            for (size_t c=0; c<C; c++, X+=N1)
+            for (size_t c=0; c<C; c++, X+=L)
             {
-                *Y++ = cblas_snrm2((int)N1,X,1);
+                *Y++ = cblas_snrm2((int)L,X,1);
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=B*(L-J))
         {
-            for (size_t m=0; m<M; m++, X+=J)
+            for (size_t b=0; b<B; b++, X+=J)
             {
-                *Y++ = cblas_snrm2((int)N1,X,(int)K);
+                *Y++ = cblas_snrm2((int)L,X,(int)K);
             }
         }
     }
@@ -90,55 +90,55 @@ int norm2_d (double *Y, const double *X, const size_t R, const size_t C, const s
     if (dim>3) { fprintf(stderr,"error in norm2_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1)
+    if (L==1)
     {
         for (size_t n=0; n<N; n++) { Y[n] = X[n]*X[n]; }
     }
-    else if (N1==N) { *Y = cblas_dnrm2((int)N1,X,1); }
+    else if (L==N) { *Y = cblas_dnrm2((int)L,X,1); }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, X+=N1)
+            for (size_t v=0; v<V; v++, X+=L)
             {
-                *Y++ = cblas_dnrm2((int)N1,X,1);
+                *Y++ = cblas_dnrm2((int)L,X,1);
             }
         }
         else
         {
-            for (size_t n2=0; n2<N2; n2++, X++) { *Y++ = *X**X; }
-            Y -= N2;
-            for (size_t n1=1; n1<N1; n1++, Y-=N2)
+            for (size_t v=0; v<V; v++, X++) { *Y++ = *X**X; }
+            Y -= V;
+            for (size_t l=1; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X++) { *Y++ += *X**X; }
+                for (size_t v=0; v<V; v++, X++) { *Y++ += *X**X; }
             }
-            for (size_t n2=0; n2<N2; n2++, Y++) { *Y = sqrt(*Y); }
+            for (size_t v=0; v<V; v++, Y++) { *Y = sqrt(*Y); }
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
     {
         for (size_t r=0; r<R; r++)
         {
-            for (size_t c=0; c<C; c++, X+=N1)
+            for (size_t c=0; c<C; c++, X+=L)
             {
-                *Y++ = cblas_dnrm2((int)N1,X,1);
+                *Y++ = cblas_dnrm2((int)L,X,1);
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=B*(L-J))
         {
-            for (size_t m=0; m<M; m++, X+=J)
+            for (size_t b=0; b<B; b++, X+=J)
             {
-                *Y++ = cblas_dnrm2((int)N1,X,(int)K);
+                *Y++ = cblas_dnrm2((int)L,X,(int)K);
             }
         }
     }
@@ -152,55 +152,55 @@ int norm2_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     if (dim>3) { fprintf(stderr,"error in norm2_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1)
+    if (L==1)
     {
         for (size_t n=0; n<N; n+=2) { Y[n/2] = X[n]*X[n] + X[n+1]*X[n+1]; }
     }
-    else if (N1==N) { *Y = cblas_scnrm2((int)N1,X,1); }
+    else if (L==N) { *Y = cblas_scnrm2((int)L,X,1); }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, X+=2*N1)
+            for (size_t v=0; v<V; v++, X+=2*L)
             {
-                *Y++ = cblas_scnrm2((int)N1,X,1);
+                *Y++ = cblas_scnrm2((int)L,X,1);
             }
         }
         else
         {
-            for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
-            Y -= N2;
-            for (size_t n1=1; n1<N1; n1++, Y-=N2)
+            for (size_t v=0; v<V; v++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
+            Y -= V;
+            for (size_t l=1; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ += *X**X + *(X+1)**(X+1); }
+                for (size_t v=0; v<V; v++, X+=2) { *Y++ += *X**X + *(X+1)**(X+1); }
             }
-            for (size_t n2=0; n2<N2; n2++, Y++) { *Y = sqrtf(*Y); }
+            for (size_t v=0; v<V; v++, Y++) { *Y = sqrtf(*Y); }
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
     {
         for (size_t r=0; r<R; r++)
         {
-            for (size_t c=0; c<C; c++, X+=2*N1)
+            for (size_t c=0; c<C; c++, X+=2*L)
             {
-                *Y++ = cblas_scnrm2((int)N1,X,1);
+                *Y++ = cblas_scnrm2((int)L,X,1);
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=2*B*(L-J))
         {
-            for (size_t m=0; m<M; m++, X+=2*J)
+            for (size_t b=0; b<B; b++, X+=2*J)
             {
-                *Y++ = cblas_scnrm2((int)N1,X,(int)K);
+                *Y++ = cblas_scnrm2((int)L,X,(int)K);
             }
         }
     }
@@ -214,55 +214,55 @@ int norm2_z (double *Y, const double *X, const size_t R, const size_t C, const s
     if (dim>3) { fprintf(stderr,"error in norm2_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N1==1)
+    if (L==1)
     {
         for (size_t n=0; n<N; n+=2) { Y[n/2] = X[n]*X[n] + X[n+1]*X[n+1]; }
     }
-    else if (N1==N) { *Y = cblas_dznrm2((int)N1,X,1); }
+    else if (L==N) { *Y = cblas_dznrm2((int)L,X,1); }
     else if (SH==1)
     {
-        const size_t N2 = N/N1;
+        const size_t V = N/L;
         if ((dim==0 && iscolmajor) || (dim==1 && !iscolmajor))
         {
-            for (size_t n2=0; n2<N2; n2++, X+=2*N1)
+            for (size_t v=0; v<V; v++, X+=2*L)
             {
-                *Y++ = cblas_dznrm2((int)N1,X,1);
+                *Y++ = cblas_dznrm2((int)L,X,1);
             }
         }
         else
         {
-            for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
-            Y -= N2;
-            for (size_t n1=1; n1<N1; n1++, Y-=N2)
+            for (size_t v=0; v<V; v++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
+            Y -= V;
+            for (size_t l=1; l<L; l++, Y-=V)
             {
-                for (size_t n2=0; n2<N2; n2++, X+=2) { *Y++ += *X**X + *(X+1)**(X+1); }
+                for (size_t v=0; v<V; v++, X+=2) { *Y++ += *X**X + *(X+1)**(X+1); }
             }
-            for (size_t n2=0; n2<N2; n2++, Y++) { *Y = sqrt(*Y); }
+            for (size_t v=0; v<V; v++, Y++) { *Y = sqrt(*Y); }
         }
     }
     else if (!iscolmajor && dim==2 && H==1)
     {
         for (size_t r=0; r<R; r++)
         {
-            for (size_t c=0; c<C; c++, X+=2*N1)
+            for (size_t c=0; c<C; c++, X+=2*L)
             {
-                *Y++ = cblas_dznrm2((int)N1,X,1);
+                *Y++ = cblas_dznrm2((int)L,X,1);
             }
         }
     }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-        const size_t L = N/(M*N1);
+        const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+        const size_t G = N / (B*L);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
         const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+        for (size_t g=0; g<G; g++, X+=2*B*(L-J))
         {
-            for (size_t m=0; m<M; m++, X+=2*J)
+            for (size_t b=0; b<B; b++, X+=2*J)
             {
-                *Y++ = cblas_dznrm2((int)N1,X,(int)K);
+                *Y++ = cblas_dznrm2((int)L,X,(int)K);
             }
         }
     }

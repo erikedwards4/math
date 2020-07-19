@@ -138,53 +138,49 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
 {
     if (dim>3) { fprintf(stderr,"error in sort_s: dim must be in [0 3]\n"); return 1; }
 
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t L = R*C*S*H/(M*N1);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const char id = (ascend) ? 'I' : 'D';
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
-    
-    if (N1==1) { cblas_scopy((int)(R*C*S*H),X,1,Y,1); }
-    else if (M==1 && L==1)
+
+    if (N==0) {}
+    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        cblas_scopy((int)(R*C*S*H),X,1,Y,1);
-        if (LAPACKE_slasrt_work(id,(int)N1,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
-        //qsort(X,N1,sizeof(float),comp);
-    }
-    else if (K==1)
-    {
-        for (size_t l=0; l<L; l++)
-        {
-            for (size_t m=0, n=l*M*N1; m<M; m++, n+=J)
-            {
-                cblas_scopy((int)N1,&X[n],1,&Y[n],1);
-                if (LAPACKE_slasrt_work(id,(int)N1,&Y[n])) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
-                //qsort(&Y[n],N1,sizeof(float),comp);
-            }
-        }
+        cblas_scopy((int)N,X,1,Y,1);
+        if (LAPACKE_slasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
+        //qsort(Y,L,sizeof(float),comp);
     }
     else
     {
-        float *X1;
-        if (!(X1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in sort_s: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0; l<L; l++)
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0, n=l*M*N1; m<M; m++, n+=J)
+            for (size_t v=0; v<V; v++, X+=L, Y+=L)
             {
-                cblas_scopy((int)N1,&X[n],(int)K,X1,1);
-                if (LAPACKE_slasrt_work(id,(int)N1,X1)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
-                //qsort(X1,N1,sizeof(float),comp);
-                cblas_scopy((int)N1,X1,1,&Y[n],(int)K);
+                cblas_scopy((int)L,X,1,Y,1);
+                if (LAPACKE_slasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
             }
         }
-        free(X1);
+        else
+        {
+            float *X1;
+            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sort_s: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=B*(L-1), Y+=B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X++, Y++)
+                {
+                    cblas_scopy((int)L,X,(int)K,X1,1);
+                    if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
+                    cblas_scopy((int)L,X1,1,Y,(int)K);
+                }
+            }
+            free(X1);
+        }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -194,50 +190,48 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
 {
     if (dim>3) { fprintf(stderr,"error in sort_d: dim must be in [0 3]\n"); return 1; }
 
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t L = R*C*S*H/(M*N1);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const char id = (ascend) ? 'I' : 'D';
-    //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_d : cmp_descend_d;
-    
-    if (N1==1) { cblas_dcopy((int)(R*C*S*H),X,1,Y,1); }
-    else if (M==1 && L==1)
+
+    if (N==0) {}
+    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==N)
     {
-        cblas_dcopy((int)(R*C*S*H),X,1,Y,1);
-        if (LAPACKE_dlasrt(id,(int)N1,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
-        //qsort(X,N1,sizeof(double),comp);
-    }
-    else if (K==1)
-    {
-        for (size_t l=0; l<L; l++)
-        {
-            for (size_t m=0, n=l*M*N1; m<M; m++, n+=J)
-            {
-                cblas_dcopy((int)N1,&X[n],1,&Y[n],1);
-                if (LAPACKE_dlasrt(id,(int)N1,&Y[n])) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
-                //qsort(&Y[n],N1,sizeof(double),comp);
-            }
-        }
+        cblas_dcopy((int)N,X,1,Y,1);
+        if (LAPACKE_dlasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
     }
     else
     {
-        double *X1;
-        if (!(X1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in sort_d: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0; l<L; l++)
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0, n=l*M*N1; m<M; m++, n+=J)
+            for (size_t v=0; v<V; v++, X+=L, Y+=L)
             {
-                cblas_dcopy((int)N1,&X[n],(int)K,X1,1);
-                if (LAPACKE_dlasrt(id,(int)N1,X1)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
-                //qsort(X1,N1,sizeof(double),comp);
-                cblas_dcopy((int)N1,X1,1,&Y[n],(int)K);
+                cblas_dcopy((int)L,X,1,Y,1);
+                if (LAPACKE_dlasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
             }
         }
-        free(X1);
+        else
+        {
+            double *X1;
+            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sort_d: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=B*(L-1), Y+=B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X++, Y++)
+                {
+                    cblas_dcopy((int)L,X,(int)K,X1,1);
+                    if (LAPACKE_dlasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
+                    cblas_dcopy((int)L,X1,1,Y,(int)K);
+                }
+            }
+            free(X1);
+        }
     }
-    
+
     return 0;
 }
 
@@ -246,32 +240,48 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
 {
     if (dim>3) { fprintf(stderr,"error in sort_c: dim must be in [0 3]\n"); return 1; }
 
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_c : cmp_descend_c;
 
-    if (N1==1) { cblas_ccopy((int)(R*C*S*H),X,1,Y,1); }
+    if (N==0) {}
+    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==N)
+    {
+        cblas_ccopy((int)N,X,1,Y,1);
+        qsort(Y,L,2*sizeof(float),comp);
+    }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t L = R*C*S*H/(M*N1);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_c : cmp_descend_c;
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
 
-        float *X1;
-        if (!(X1=(float *)malloc(N1*2*sizeof(float)))) { fprintf(stderr,"error in sort_c: problem with malloc. "); perror("malloc"); return 1; }
-        
-        for (size_t l=0; l<L; l++)
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0, n=2*l*M*N1; m<M; m++, n+=2*J)
+            for (size_t v=0; v<V; v++, X+=2*L, Y+=2*L)
             {
-                cblas_ccopy((int)N1,&X[n],(int)K,X1,1);
-                qsort(X1,N1,2*sizeof(float),comp);
-                cblas_ccopy((int)N1,X1,1,&Y[n],(int)K);
+                cblas_ccopy((int)L,X,1,Y,1);
+                qsort(Y,L,2*sizeof(float),comp);
             }
         }
-        free(X1);
+        else
+        {
+            float *X1;
+            if (!(X1=(float *)malloc(2*L*sizeof(float)))) { fprintf(stderr,"error in sort_c: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=2*B*(L-1), Y+=2*B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X+=2, Y+=2)
+                {
+                    cblas_ccopy((int)L,X,(int)K,X1,1);
+                    qsort(X1,L,2*sizeof(float),comp);
+                    cblas_ccopy((int)L,X1,1,Y,(int)K);
+                }
+            }
+            free(X1);
+        }
     }
-    
+
     return 0;
 }
 
@@ -280,32 +290,48 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
 {
     if (dim>3) { fprintf(stderr,"error in sort_z: dim must be in [0 3]\n"); return 1; }
 
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_z : cmp_descend_z;
 
-    if (N1==1) { cblas_zcopy((int)(R*C*S*H),X,1,Y,1); }
+    if (N==0) {}
+    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==N)
+    {
+        cblas_zcopy((int)N,X,1,Y,1);
+        qsort(Y,L,2*sizeof(double),comp);
+    }
     else
     {
-        const size_t M = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t L = R*C*S*H/(M*N1);
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-        int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_z : cmp_descend_z;
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
 
-        double *X1;
-        if (!(X1=(double *)malloc(N1*2*sizeof(double)))) { fprintf(stderr,"error in sort_z: problem with malloc. "); perror("malloc"); return 1; }
-        
-        for (size_t l=0; l<L; l++)
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0, n=2*l*M*N1; m<M; m++, n+=2*J)
+            for (size_t v=0; v<V; v++, X+=2*L, Y+=2*L)
             {
-                cblas_zcopy((int)N1,&X[n],(int)K,X1,1);
-                qsort(X1,N1,2*sizeof(double),comp);
-                cblas_zcopy((int)N1,X1,1,&Y[n],(int)K);
+                cblas_zcopy((int)L,X,1,Y,1);
+                qsort(Y,L,2*sizeof(double),comp);
             }
         }
-        free(X1);
+        else
+        {
+            double *X1;
+            if (!(X1=(double *)malloc(2*L*sizeof(double)))) { fprintf(stderr,"error in sort_z: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=2*B*(L-1), Y+=2*B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X+=2, Y+=2)
+                {
+                    cblas_zcopy((int)L,X,(int)K,X1,1);
+                    qsort(X1,L,2*sizeof(double),comp);
+                    cblas_zcopy((int)L,X1,1,Y,(int)K);
+                }
+            }
+            free(X1);
+        }
     }
-    
+
     return 0;
 }
 
@@ -314,46 +340,45 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 {
     if (dim>3) { fprintf(stderr,"error in sort_inplace_s: dim must be in [0 3]\n"); return 1; }
 
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t L = R*C*S*H/(M*N1);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const char id = (ascend) ? 'I' : 'D';
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
 
-    if (N1==1) {}
-    else if (M==1 && L==1)
+    if (N==0 || L==1) {}
+    else if (L==N)
     {
-        if (LAPACKE_slasrt_work(id,(int)N1,X)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
-        //qsort(X,N1,sizeof(float),comp);
-    }
-    else if (K==1)
-    {
-        for (size_t l=0; l<L; l++)
-        {
-            for (size_t m=0, n=l*M*N1; m<M; m++, n+=J)
-            {
-                if (LAPACKE_slasrt_work(id,(int)N1,&X[n])) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
-                //qsort(&X[n],N1,sizeof(float),comp);
-            }
-        }
+        if (LAPACKE_slasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
+        //qsort(X,L,sizeof(float),comp);
     }
     else
     {
-        float *X1;
-        if (!(X1=(float *)malloc(N1*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0; l<L; l++)
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0, n=l*M*N1; m<M; m++, n+=J)
+            for (size_t v=0; v<V; v++, X+=L)
             {
-                cblas_scopy((int)N1,&X[n],(int)K,X1,1);
-                if (LAPACKE_slasrt_work(id,(int)N1,X1)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
-                //qsort(X1,N1,sizeof(float),comp);
-                cblas_scopy((int)N1,X1,1,&X[n],(int)K);
+                if (LAPACKE_slasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
             }
         }
-        free(X1);
+        else
+        {
+            float *X1;
+            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X++)
+                {
+                    cblas_scopy((int)L,X,(int)K,X1,1);
+                    if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
+                    cblas_scopy((int)L,X1,1,X,(int)K);
+                }
+            }
+            free(X1);
+        }
     }
 
     return 0;
@@ -364,42 +389,43 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
 {
     if (dim>3) { fprintf(stderr,"error in sort_inplace_d: dim must be in [0 3]\n"); return 1; }
 
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t L = R*C*S*H/(M*N1);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const char id = (ascend) ? 'I' : 'D';
 
-    if (N1==1) {}
-    else if (M==1 && L==1)
+    if (N==0 || L==1) {}
+    else if (L==N)
     {
-        if (LAPACKE_dlasrt(id,(int)N1,X)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
-    }
-    else if (K==1)
-    {
-        for (size_t l=0; l<L; l++)
-        {
-            for (size_t m=0, n=l*M*N1; m<M; m++, n+=J)
-            {
-                if (LAPACKE_dlasrt(id,(int)N1,&X[n])) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
-            }
-        }
+        if (LAPACKE_dlasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
     }
     else
     {
-        double *X1;
-        if (!(X1=(double *)malloc(N1*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t l=0; l<L; l++)
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0, n=l*M*N1; m<M; m++, n+=J)
+            for (size_t v=0; v<V; v++, X+=L)
             {
-                cblas_dcopy((int)N1,&X[n],(int)K,X1,1);
-                if (LAPACKE_dlasrt(id,(int)N1,X1)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
-                cblas_dcopy((int)N1,X1,1,&X[n],(int)K);
+                if (LAPACKE_dlasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
             }
         }
-        free(X1);
+        else
+        {
+            double *X1;
+            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X++)
+                {
+                    cblas_dcopy((int)L,X,(int)K,X1,1);
+                    if (LAPACKE_dlasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
+                    cblas_dcopy((int)L,X1,1,X,(int)K);
+                }
+            }
+            free(X1);
+        }
     }
 
     return 0;
@@ -410,31 +436,45 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
 {
     if (dim>3) { fprintf(stderr,"error in sort_inplace_c: dim must be in [0 3]\n"); return 1; }
 
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t L = R*C*S*H/(M*N1);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_c : cmp_descend_c;
 
-    float *X1;
-    if (!(X1=(float *)malloc(N1*2*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
-
-    if (N1==1) {}
+    if (N==0 || L==1) {}
+    else if (L==N)
+    {
+        qsort(X,L,2*sizeof(float),comp);
+    }
     else
     {
-        for (size_t l=0; l<L; l++)
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0, n=2*l*M*N1; m<M; m++, n+=2*J)
+            for (size_t v=0; v<V; v++, X+=2*L)
             {
-                cblas_ccopy((int)N1,&X[n],(int)K,X1,1);
-                qsort(X1,N1,2*sizeof(float),comp);
-                cblas_ccopy((int)N1,X1,1,&X[n],(int)K);
+                qsort(X,L,2*sizeof(float),comp);
             }
         }
+        else
+        {
+            float *X1;
+            if (!(X1=(float *)malloc(2*L*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X+=2)
+                {
+                    cblas_ccopy((int)L,X,(int)K,X1,1);
+                    qsort(X1,L,2*sizeof(float),comp);
+                    cblas_ccopy((int)L,X1,1,X,(int)K);
+                }
+            }
+            free(X1);
+        }
     }
-    
-    free(X1);
+
     return 0;
 }
 
@@ -443,32 +483,45 @@ int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
 {
     if (dim>3) { fprintf(stderr,"error in sort_inplace_z: dim must be in [0 3]\n"); return 1; }
 
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*S*H : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t L = R*C*S*H/(M*N1);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-    //const char id = (ascend) ? 'I' : 'D';
+    const size_t N = R*C*S*H;
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_z : cmp_descend_z;
-    
-    double *X1;
-    if (!(X1=(double *)malloc(N1*2*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N1==1) {}
+    if (N==0 || L==1) {}
+    else if (L==N)
+    {
+        qsort(X,L,2*sizeof(double),comp);
+    }
     else
     {
-        for (size_t l=0; l<L; l++)
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t m=0, n=2*l*M*N1; m<M; m++, n+=2*J)
+            for (size_t v=0; v<V; v++, X+=2*L)
             {
-                cblas_zcopy((int)N1,&X[n],(int)K,X1,1);
-                qsort(X1,N1,2*sizeof(double),comp);
-                cblas_zcopy((int)N1,X1,1,&X[n],(int)K);
+                qsort(X,L,2*sizeof(double),comp);
             }
         }
+        else
+        {
+            double *X1;
+            if (!(X1=(double *)malloc(2*L*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X+=2)
+                {
+                    cblas_zcopy((int)L,X,(int)K,X1,1);
+                    qsort(X1,L,2*sizeof(double),comp);
+                    cblas_zcopy((int)L,X1,1,X,(int)K);
+                }
+            }
+            free(X1);
+        }
     }
-    
-    free(X1);
+
     return 0;
 }
 

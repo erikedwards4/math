@@ -26,23 +26,20 @@ int asum_s (float *Y, const float *X, const size_t R, const size_t C, const size
 {
     if (dim>3) { fprintf(stderr,"error in asum_s: dim must be in [0 3]\n"); return 1; }
 
-    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t L = N/(M*N1);
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t G = N / (B*L);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0; l<L; l++, X+=M*(N1-J))
+    for (size_t g=0; g<G; g++, X+=B*(L-J))
     {
-        for (size_t m=0; m<M; m++, X+=J, Y++)
+        for (size_t b=0; b<B; b++, X+=J, Y++)
         {
-            *Y = cblas_sasum((int)N1,X,(int)K);
+            *Y = cblas_sasum((int)L,X,(int)K);
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -53,17 +50,17 @@ int asum_d (double *Y, const double *X, const size_t R, const size_t C, const si
     if (dim>3) { fprintf(stderr,"error in asum_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t L = N/(M*N1);
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t G = N / (B*L);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0; l<L; l++, X+=M*(N1-J))
+    for (size_t g=0; g<G; g++, X+=B*(L-J))
     {
-        for (size_t m=0; m<M; m++, X+=J, Y++)
+        for (size_t b=0; b<B; b++, X+=J, Y++)
         {
-            *Y = cblas_dasum((int)N1,X,(int)K);
+            *Y = cblas_dasum((int)L,X,(int)K);
         }
     }
 
@@ -76,17 +73,17 @@ int asum_c (float *Y, const float *X, const size_t R, const size_t C, const size
     if (dim>3) { fprintf(stderr,"error in asum_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t L = N/(M*N1);
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t G = N / (B*L);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+    for (size_t g=0; g<G; g++, X+=2*B*(L-J))
     {
-        for (size_t m=0; m<M; m++, X+=2*J, Y++)
+        for (size_t b=0; b<B; b++, X+=2*J, Y++)
         {
-            *Y = cblas_scasum((int)N1,X,(int)K);
+            *Y = cblas_scasum((int)L,X,(int)K);
         }
     }
 
@@ -99,17 +96,17 @@ int asum_z (double *Y, const double *X, const size_t R, const size_t C, const si
     if (dim>3) { fprintf(stderr,"error in asum_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t L = N/(M*N1);
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t G = N / (B*L);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0; l<L; l++, X+=2*M*(N1-J))
+    for (size_t g=0; g<G; g++, X+=2*B*(L-J))
     {
-        for (size_t m=0; m<M; m++, X+=2*J, Y++)
+        for (size_t b=0; b<B; b++, X+=2*J, Y++)
         {
-            *Y = cblas_dzasum((int)N1,X,(int)K);
+            *Y = cblas_dzasum((int)L,X,(int)K);
         }
     }
 
@@ -121,23 +118,20 @@ int asum_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 {
     if (dim>3) { fprintf(stderr,"error in asum_inplace_s: dim must be in [0 3]\n"); return 1; }
 
-    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t L = N/(M*N1);
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t G = N / (B*L);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+    for (size_t g=0, n=0, v=0; g<G; g++, n+=B*(L-J))
     {
-        for (size_t m=0; m<M; m++, n+=J, n2++)
+        for (size_t b=0; b<B; b++, n+=J, v++)
         {
-            X[n2] = cblas_sasum((int)N1,&X[n],(int)K);
+            X[v] = cblas_sasum((int)L,&X[n],(int)K);
         }
     }
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -148,17 +142,17 @@ int asum_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
     if (dim>3) { fprintf(stderr,"error in asum_inplace_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t L = N/(M*N1);
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t G = N / (B*L);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0, n=0, n2=0; l<L; l++, n+=M*(N1-J))
+    for (size_t g=0, n=0, v=0; g<G; g++, n+=B*(L-J))
     {
-        for (size_t m=0; m<M; m++, n+=J, n2++)
+        for (size_t b=0; b<B; b++, n+=J, v++)
         {
-            X[n2] = cblas_dasum((int)N1,&X[n],(int)K);
+            X[v] = cblas_dasum((int)L,&X[n],(int)K);
         }
     }
 
@@ -171,17 +165,17 @@ int asum_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
     if (dim>3) { fprintf(stderr,"error in asum_inplace_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t L = N/(M*N1);
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t G = N / (B*L);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+    for (size_t g=0, n=0, v=0; g<G; g++, n+=2*B*(L-J))
     {
-        for (size_t m=0; m<M; m++, n+=2*J, n2++)
+        for (size_t b=0; b<B; b++, n+=2*J, v++)
         {
-            X[n2] = cblas_scasum((int)N1,&X[n],(int)K);
+            X[v] = cblas_scasum((int)L,&X[n],(int)K);
         }
     }
 
@@ -194,17 +188,17 @@ int asum_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
     if (dim>3) { fprintf(stderr,"error in asum_inplace_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t N1 = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t M = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t L = N/(M*N1);
+    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
+    const size_t G = N / (B*L);
     const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
     const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
     
-    for (size_t l=0, n=0, n2=0; l<L; l++, n+=2*M*(N1-J))
+    for (size_t g=0, n=0, v=0; g<G; g++, n+=2*B*(L-J))
     {
-        for (size_t m=0; m<M; m++, n+=2*J, n2++)
+        for (size_t b=0; b<B; b++, n+=2*J, v++)
         {
-            X[n2] = cblas_dzasum((int)N1,&X[n],(int)K);
+            X[v] = cblas_dzasum((int)L,&X[n],(int)K);
         }
     }
 
