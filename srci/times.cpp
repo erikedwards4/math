@@ -11,7 +11,7 @@ descr += "Elementwise function for 2 inputs with broadcasting.\n";
 descr += "Elementwise multiplication: Y = X1 .* X2.\n";
 descr += "\n";
 descr += "X1 and X2 must have the same size or broadcast-compatible sizes.\n";
-descr += "Output (Y) has size max(R1,R2) x max(C1,C2).\n";
+descr += "Output (Y) has size max(R1,R2) x max(C1,C2) x max(S1,S2) x max(H1,H2).\n";
 descr += "\n";
 descr += "Examples:\n";
 descr += "$ times X1 X2 -o Y \n";

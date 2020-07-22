@@ -8,9 +8,10 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Gets count of nonzero values along dim of X.\n";
-descr += "Although the count is an integer, output Y is float or double.\n";
+descr += "Vec2scalar operation.\n";
+descr += "Gets count of nonzero values for each vector in X along dim.\n";
 descr += "This is also the Hamming norm (or L0 norm) of each vector in X.\n";
+descr += "Although the count is an integer, output Y is float or double.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get count along cols.\n";
@@ -53,41 +54,39 @@ o1.H = (dim==3) ? 1u : i1.H;
 //Process
 if (i1.T==1)
 {
-    float *X; //, *Y;
+    float *X, *Y;
     try { X = new float[i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    //try { Y = new float[o1.N()]; }
-    //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+    try { Y = new float[o1.N()]; }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    //if (codee::cnt_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-    if (codee::cnt_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+    if (codee::cnt_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
-        try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+        try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
-    delete[] X; //delete[] Y;
+    delete[] X; delete[] Y;
 }
 else if (i1.T==101)
 {
-    float *X; //, *Y;
+    float *X, *Y;
     try { X = new float[2u*i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    //try { Y = new float[o1.N()]; }
-    //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+    try { Y = new float[o1.N()]; }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    //if (codee::cnt_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-    if (codee::cnt_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+    if (codee::cnt_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
-        try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+        try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
-    delete[] X; //delete[] Y;
+    delete[] X; delete[] Y;
 }
 
 //Finish

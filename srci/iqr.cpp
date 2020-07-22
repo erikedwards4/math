@@ -8,7 +8,9 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Gets interquartile range (IQR) along dim of X.\n";
+descr += "Vec2scalar operation.\n";
+descr += "Gets interquartile range (IQR) for each vector in X along dim.\n";
+descr += "This is the 75th minus the 25th percentile for each vector.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get iqr along cols.\n";
@@ -57,8 +59,8 @@ if (i1.T==1)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::iqr_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-    //if (codee::iqr_inplace_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+    //if (codee::iqr_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+    if (codee::iqr_inplace_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

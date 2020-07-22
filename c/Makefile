@@ -26,7 +26,7 @@ endif
 CFLAGS=$(WFLAG) -O3 $(STD) -march=native -fPIC
 
 
-all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Vec2scalar Vec2vec Vec2vec2
+all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vec2vec Vec2vec2 Complex Linalg
 
 
 #Generate: aka "Factory" functions
@@ -102,7 +102,7 @@ rot90: rot90.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
-#Elementwise1: 1 input, 1 output element-wise functions
+#Elementwise1 (scalar2scalar): 1 input, 1 output element-wise functions
 #These include many common static nonlinearities.
 Elementwise1: Operators Trig Exp_Log Round Special Nonlin
 
@@ -157,7 +157,7 @@ deadzone: deadzone.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Elementwise2: 2 inputs, 1 output, with array broadcasting for the 2 inputs
-Elementwise2: plus minus times rdivide pow hypot atan2
+Elementwise2: plus minus times rdivide pow hypot atan2 adiff
 plus: plus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 minus: minus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 times: times.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -165,26 +165,13 @@ rdivide: rdivide.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 pow: pow.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 hypot: hypot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 atan2: atan2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-
-
-
-#Complex: 1-2 inputs, 1 output, for complex operations
-Complex: complex polar real imag conj arg proj #norm
-complex: complex.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-polar: polar.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-real: real.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-imag: imag.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-arg: arg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-#norm is same as element-wise square
+adiff: adiff.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
 #Vec2scalar (Stats): 1 input, 1 output
 #Some basic statistics calculated along rows, cols, etc.
-#That is, the input consists of 1-D vectors within a tensor,
-#and each vector is reduced to a scalar.
+#The input consists of 1-D vectors within a tensor, and each vector is reduced to a scalar.
 #Thus, these are vec2scalar or "reduction" operations.
 Vec2scalar: Sums Prctiles Ranges Moments Norms Other_Stats
 
@@ -217,10 +204,11 @@ norm1: norm1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 norm2: norm2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normp: normp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Stats: std coeff_var mad
+Other_Stats: std coeff_var mad prod
 std: std.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 coeff_var: coeff_var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 mad: mad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+prod: prod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
@@ -243,6 +231,19 @@ cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #This also allows array broadcasting (like Elementwise2).
 Vec2vec2: dot
 dot: dot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+
+
+#Complex: 1-2 inputs, 1 output, for complex operations
+Complex: complex polar real imag conj arg proj #norm
+complex: complex.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+polar: polar.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+real: real.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+imag: imag.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+arg: arg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+#norm is same as element-wise square
 
 
 

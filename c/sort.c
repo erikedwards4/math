@@ -1,4 +1,5 @@
-//Sorts X along dim.
+//Vec2vec operation.
+//Sorts each vector in X along dim.
 //This has in-place and not-in-place versions.
 //Too bad there is no LAPACKE_?laord for the in-place version.
 

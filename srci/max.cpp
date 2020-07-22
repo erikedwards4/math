@@ -8,7 +8,9 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Gets maximum of values along dim of X.\n";
+descr += "Vec2scalar operation.\n";
+descr += "Gets maximum for each vector in X along dim.\n";
+descr += "\n";
 descr += "For complex X, this finds the max of abs values,\n";
 descr += "and returns the corresponding complex number.\n";
 descr += "\n";

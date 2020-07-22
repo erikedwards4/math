@@ -8,7 +8,8 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Gets range (max-min) of values along dim of X.\n";
+descr += "Vec2scalar operation.\n";
+descr += "Gets range (max-min) for each vector in X along dim.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get range along cols.\n";
@@ -39,8 +40,7 @@ if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
 
 //Set output header info
-o1.F = i1.F;
-o1.T = (i1.T<100) ? i1.T : i1.T-100;
+o1.F = i1.F; o1.T = i1.T;
 o1.R = (dim==0) ? 1u : i1.R;
 o1.C = (dim==1) ? 1u : i1.C;
 o1.S = (dim==2) ? 1u : i1.S;
@@ -59,7 +59,6 @@ if (i1.T==1)
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
     if (codee::range_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-    //if (codee::range_inplace_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

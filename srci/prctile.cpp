@@ -9,7 +9,8 @@ double p;
 
 //Description
 string descr;
-descr += "Gets pth percentile along dim of X.\n";
+descr += "Vec2scalar operation.\n";
+descr += "Gets pth percentile for each vector in X along dim.\n";
 descr += "\n";
 descr += "Use -p (--p) to give the percentile in [0 100] [default=50].\n";
 descr += "\n";

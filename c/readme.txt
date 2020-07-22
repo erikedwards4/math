@@ -62,7 +62,7 @@ Again, a typical program designates G groups and B blocks of vectors (often V = 
 For some functions, I found a faster method than iterating through each vector individually (so G and B may mean something different there).
 
 Vec2vec2: 2 Inputs, 1 Output
-Examples: dot, cross.
+Examples: dot, cross. [perhaps weighted stats]
 These operate on 2 sets of input vectors (X1,X2) with equal vector lengths.
 Option flag -d (--dim) indicates which direction the vectors are oriented within X.
 That is, -d0 means col vecs, -d1 means row vecs, etc.

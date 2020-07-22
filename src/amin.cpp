@@ -38,12 +38,12 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Gets minimum of absolute values along dim of X.\n";
+    descr += "Vec2scalar operation.\n";
+    descr += "Gets minimum of absolute values for each vector in X along dim.\n";
     descr += "This is also the -Inf-norm or min-norm of each vector in X.\n";
     descr += "\n";
-    descr += "For complex X, this finds the min of abs values,\n";
-    descr += "using the definition |x| = |xr| + |xi|,\n";
-    descr += "and then returns the corresponding complex number.\n";
+    descr += "For complex X, this uses the definition |x| = |xr| + |xi|,\n";
+    descr += "per BLAS standard, so this is not actually the min-norm.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Use -d0 to get amin along cols.\n";

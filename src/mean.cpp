@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Gets mean along dim of X.\n";
+    descr += "Vec2scalar operation.\n";
+    descr += "Gets mean for each vector in X along dim.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Use -d0 to get mean along cols.\n";

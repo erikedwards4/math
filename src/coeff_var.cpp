@@ -39,7 +39,9 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Gets coefficient of variation (std/mean) along dim of X.\n";
+    descr += "Vec2scalar operation.\n";
+    descr += "Gets the coefficient of variation for each vector in X along dim.\n";
+    descr += "This is the standard deviation divided by the mean (std/mean).\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Use -d0 to work along cols.\n";

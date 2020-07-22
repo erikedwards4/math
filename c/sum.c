@@ -1,10 +1,8 @@
-//Gets sum of each row or col of X according to dim.
+//Vec2scalar (reduction) operation.
+//Gets sum of elements for each vector in X along dim.
 //For complex case, real and imag parts calculated separately.
 
 //For 2D case, this is definitely faster using cblas_?gemv.
-
-//Vec2scalar operation.
-//Sum of elements for each vector in X along dim.
 
 //No in-place version, since cblas_?gemv doesn't work for that.
 //Also, I decided against in-place versions in general for vec2scalar operations,
@@ -32,38 +30,49 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const float o = 1.0f;
 
     if (N==0) {}
     else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        *Y = 0.0f;
-        for (size_t l=0; l<L; l++) { *Y += X[l]; }
+        *Y = cblas_sdot((int)L,X,1,&o,0);
     }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
         const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
-        const float o = 1.0f;
 
         if (K==1 && (G==1 || B==1))
         {
-            float *x1;
-            if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
-            cblas_scopy((int)L,&o,0,x1,1);
-            cblas_sgemv(CblasColMajor,CblasTrans,(int)L,(int)V,1.0f,X,(int)L,x1,1,0.0f,Y,1);
-            free(x1);
-            //for (size_t v=0; v<V; v++, X+=L) { *Y++ = cblas_sdot((int)L,X,1,&o,0); }
+            if (V<250)
+            {
+                for (size_t v=0; v<V; v++, X+=L) { *Y++ = cblas_sdot((int)L,X,1,&o,0); }
+            }
+            else
+            {
+                float *x1;
+                if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
+                cblas_scopy((int)L,&o,0,x1,1);
+                cblas_sgemv(CblasColMajor,CblasTrans,(int)L,(int)V,o,X,(int)L,x1,1,0.0f,Y,1);
+                free(x1);
+            }
         }
         else if (G==1)
         {
-            float *x1;
-            if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
-            cblas_scopy((int)L,&o,0,x1,1);
-            cblas_sgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,1.0f,X,(int)V,x1,1,0.0f,Y,1);
-            free(x1);
-            //for (size_t v=0; v<V; v++, X++) { *Y++ = cblas_sdot((int)L,X,(int)V,&o,0); }
+            if (V<40)
+            {
+                for (size_t v=0; v<V; v++, X++) { *Y++ = cblas_sdot((int)L,X,(int)V,&o,0); }
+            }
+            else
+            {
+                float *x1;
+                if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sum_s: problem with malloc. "); perror("malloc"); return 1; }
+                cblas_scopy((int)L,&o,0,x1,1);
+                cblas_sgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,o,X,(int)V,x1,1,0.0f,Y,1);
+                free(x1);
+            }
         }
         else
         {
@@ -87,36 +96,49 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const double o = 1.0;
 
     if (N==0) {}
     else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        *Y = 0.0;
-        for (size_t l=0; l<L; l++) { *Y += X[l]; }
+        *Y = cblas_ddot((int)L,X,1,&o,0);
     }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
         const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
-        const double o = 1.0;
 
         if (K==1 && (G==1 || B==1))
         {
-            double *x1;
-            if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
-            cblas_dcopy((int)L,&o,0,x1,1);
-            cblas_dgemv(CblasColMajor,CblasTrans,(int)L,(int)V,1.0,X,(int)L,x1,1,0.0,Y,1);
-            free(x1);
+            if (V<250)
+            {
+                for (size_t v=0; v<V; v++, X+=L) { *Y++ = cblas_ddot((int)L,X,1,&o,0); }
+            }
+            else
+            {
+                double *x1;
+                if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
+                cblas_dcopy((int)L,&o,0,x1,1);
+                cblas_dgemv(CblasColMajor,CblasTrans,(int)L,(int)V,o,X,(int)L,x1,1,0.0,Y,1);
+                free(x1);
+            }
         }
         else if (G==1)
         {
-            double *x1;
-            if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
-            cblas_dcopy((int)L,&o,0,x1,1);
-            cblas_dgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,1.0,X,(int)V,x1,1,0.0,Y,1);
-            free(x1);
+            if (V<40)
+            {
+                for (size_t v=0; v<V; v++, X++) { *Y++ = cblas_ddot((int)L,X,(int)V,&o,0); }
+            }
+            else
+            {
+                double *x1;
+                if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sum_d: problem with malloc. "); perror("malloc"); return 1; }
+                cblas_dcopy((int)L,&o,0,x1,1);
+                cblas_dgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,o,X,(int)V,x1,1,0.0,Y,1);
+                free(x1);
+            } 
         }
         else
         {

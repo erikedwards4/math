@@ -1,3 +1,4 @@
+//Vec2scalar (reduction) operation.
 //Gets the p-norm for each vector in X along dim.
 //This is the Lp norm of each vector in X.
 //For each vector, y = sum(|x|^p)^1/p.

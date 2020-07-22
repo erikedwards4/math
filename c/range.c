@@ -1,12 +1,11 @@
-//Gets ranges along dim of X.
+//Vec2scalar (reduction) operation.
+//Gets range of each vector in X along dim.
 //The range is the 100th minus the 0th percentile (max - min).
 
-//The in-place versions still return the same Y, but modify X during processing.
-//However, it turns out to be almost the identical speed for matrices.
+//There is no need for an in-place version here.
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <cblas.h>
 #include <lapacke.h>
 
@@ -18,55 +17,68 @@ extern "C" {
 int range_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 int range_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
-int range_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int range_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-
 
 int range_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
     if (dim>3) { fprintf(stderr,"error in range_s: dim must be in [0 3]\n"); return 1; }
 
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t G = N / (B*L);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-
-    float *X1;
-    if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in range_s: problem with malloc. "); perror("malloc"); return 1; }
     float mn, mx;
 
-    if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    if (N==0) {}
+    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        mn = mx = X[0];
-        for (size_t n=1; n<N; n++)
+        mn = mx = *X++;
+        for (size_t l=1; l<L; l++, X++)
         {
-            if (X[n]<mn) { mn = X[n]; }
-            else if (X[n]>mx) { mx = X[n]; }
+            if (*X<mn) { mn = *X; }
+            else if (*X>mx) { mx = *X; }
         }
         *Y = mx - mn;
     }
     else
     {
-        for (size_t g=0; g<G; g++, X+=B*(L-J))
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t b=0; b<B; b++, X+=J)
+            for (size_t v=0; v<V; v++)
             {
-                cblas_scopy((int)L,X,(int)K,X1,1);
-                mn = mx = X1[0];
-                for (size_t l=1; l<L; l++)
+                mn = mx = *X++;
+                for (size_t l=1; l<L; l++, X++)
                 {
-                    if (X1[l]<mn) { mn = X1[l]; }
-                    else if (X1[l]>mx) { mx = X1[l]; }
+                    if (*X<mn) { mn = *X; }
+                    else if (*X>mx) { mx = *X; }
                 }
                 *Y++ = mx - mn;
             }
         }
+        else
+        {
+            float *X1;
+            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in range_s: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            {
+                for (size_t b=0; b<B; b++, X1-=L, X++)
+                {
+                    cblas_scopy((int)L,X,(int)K,X1,1);
+                    mn = mx = *X1++;
+                    for (size_t l=1; l<L; l++, X1++)
+                    {
+                        if (*X1<mn) { mn = *X1; }
+                        else if (*X1>mx) { mx = *X1; }
+                    }
+                    *Y++ = mx - mn;
+                }
+            }
+            free(X1);
+        }
     }
 
-    free(X1);
     return 0;
 }
 
@@ -75,79 +87,31 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
 {
     if (dim>3) { fprintf(stderr,"error in range_d: dim must be in [0 3]\n"); return 1; }
 
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t G = N / (B*L);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-
-    double *X1;
-    if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in range_d: problem with malloc. "); perror("malloc"); return 1; }
     double mn, mx;
 
-    if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    if (N==0) {}
+    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        mn = mx = X[0];
-        for (size_t n=1; n<N; n++)
+        mn = mx = *X++;
+        for (size_t l=1; l<L; l++, X++)
         {
-            if (X[n]<mn) { mn = X[n]; }
-            else if (X[n]>mx) { mx = X[n]; }
+            if (*X<mn) { mn = *X; }
+            else if (*X>mx) { mx = *X; }
         }
         *Y = mx - mn;
     }
     else
     {
-        for (size_t g=0; g<G; g++, X+=B*(L-J))
+        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
+        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t V = N/L, G = V/B;
+
+        if (K==1 && (G==1 || B==1))
         {
-            for (size_t b=0; b<B; b++, X+=J)
-            {
-                cblas_dcopy((int)L,X,(int)K,X1,1);
-                mn = mx = X1[0];
-                for (size_t l=1; l<L; l++)
-                {
-                    if (X1[l]<mn) { mn = X1[l]; }
-                    else if (X1[l]>mx) { mx = X1[l]; }
-                }
-                *Y++ = mx - mn;
-            }
-        }
-    }
-
-    free(X1);
-    return 0;
-}
-
-
-int range_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
-{
-    if (dim>3) { fprintf(stderr,"error in range_inplace_s: dim must be in [0 3]\n"); return 1; }
-
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t G = N / (B*L);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-    float mn, mx;
-
-    if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
-    else if (L==N)
-    {
-        mn = mx = X[0];
-        for (size_t n=1; n<N; n++)
-        {
-            if (X[n]<mn) { mn = X[n]; }
-            else if (X[n]>mx) { mx = X[n]; }
-        }
-        *Y = mx - mn;
-    }
-    else if (K==1)
-    {
-        for (size_t g=0; g<G; g++, X+=B*(L-J))
-        {
-            for (size_t b=0; b<B; b++, X-=L-J)
+            for (size_t v=0; v<V; v++)
             {
                 mn = mx = *X++;
                 for (size_t l=1; l<L; l++, X++)
@@ -158,90 +122,26 @@ int range_inplace_s (float *Y, float *X, const size_t R, const size_t C, const s
                 *Y++ = mx - mn;
             }
         }
-    }
-    else
-    {
-        float *X1;
-        if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in range_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t g=0; g<G; g++, X+=B*(L-J))
+        else
         {
-            for (size_t b=0; b<B; b++, X+=J)
+            double *X1;
+            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in range_d: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; g++, X+=B*(L-1))
             {
-                cblas_scopy((int)L,X,(int)K,X1,1);
-                mn = mx = X1[0];
-                for (size_t l=1; l<L; l++)
+                for (size_t b=0; b<B; b++, X1-=L, X++)
                 {
-                    if (X1[l]<mn) { mn = X1[l]; }
-                    else if (X1[l]>mx) { mx = X1[l]; }
+                    cblas_dcopy((int)L,X,(int)K,X1,1);
+                    mn = mx = *X1++;
+                    for (size_t l=1; l<L; l++, X1++)
+                    {
+                        if (*X1<mn) { mn = *X1; }
+                        else if (*X1>mx) { mx = *X1; }
+                    }
+                    *Y++ = mx - mn;
                 }
-                *Y++ = mx - mn;
             }
+            free(X1);
         }
-        free(X1);
-    }
-
-    return 0;
-}
-
-
-int range_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
-{
-    if (dim>3) { fprintf(stderr,"error in range_inplace_d: dim must be in [0 3]\n"); return 1; }
-
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const size_t B = (iscolmajor) ? ((dim==0) ? C*SH : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t G = N / (B*L);
-    const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? RC : RC*S) : ((dim==0) ? C*SH : (dim==1) ? SH : (dim==2) ? H : 1);
-    const size_t J = (iscolmajor) ? ((dim==0) ? R : (dim==1) ? 1 : (dim==2) ? 1 : 1) : ((dim==0) ? 1 : (dim==1) ? 1 : (dim==2) ? 1 : H);
-    double mn, mx;
-
-    if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
-    else if (L==N)
-    {
-        mn = mx = X[0];
-        for (size_t n=1; n<N; n++)
-        {
-            if (X[n]<mn) { mn = X[n]; }
-            else if (X[n]>mx) { mx = X[n]; }
-        }
-        *Y = mx - mn;
-    }
-    else if (K==1)
-    {
-        for (size_t g=0; g<G; g++, X+=B*(L-J))
-        {
-            for (size_t b=0; b<B; b++, X-=L-J)
-            {
-                mn = mx = *X++;
-                for (size_t l=1; l<L; l++, X++)
-                {
-                    if (*X<mn) { mn = *X; }
-                    else if (*X>mx) { mx = *X; }
-                }
-                *Y++ = mx - mn;
-            }
-        }
-    }
-    else
-    {
-        double *X1;
-        if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in range_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t g=0; g<G; g++, X+=B*(L-J))
-        {
-            for (size_t b=0; b<B; b++, X+=J)
-            {
-                cblas_dcopy((int)L,X,(int)K,X1,1);
-                mn = mx = X1[0];
-                for (size_t l=1; l<L; l++)
-                {
-                    if (X1[l]<mn) { mn = X1[l]; }
-                    else if (X1[l]>mx) { mx = X1[l]; }
-                }
-                *Y++ = mx - mn;
-            }
-        }
-        free(X1);
     }
 
     return 0;

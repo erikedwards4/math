@@ -8,7 +8,9 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Gets the 2-norm (root-sum-square) along dim of X.\n";
+descr += "Vec2scalar operation.\n";
+descr += "Gets 2-norm (root-sum-square) for each vector in X along dim.\n";
+descr += "\n";
 descr += "This is the Euclidean (L2) norm of each vector in X.\n";
 descr += "Note that this is not the Frobenius matrix norm of X (see matnorm).\n";
 descr += "\n";

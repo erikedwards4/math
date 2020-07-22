@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "std.c"
+#include "prod.c"
 
 #ifdef I
 #undef I
@@ -34,39 +34,33 @@ int main(int argc, char *argv[])
     int8_t stdi1, stdo1, wo1;
     ioinfo i1, o1;
     size_t dim;
-    char b;
 
 
     //Description
     string descr;
-    descr += "Vec2scalar operation.\n";
-    descr += "Gets standard deviation for each vector in X along dim.\n";
+    descr += "Gets prod (product of elements) for each vector in X along dim.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to get std along cols.\n";
-    descr += "Use -d1 to get std along rows.\n";
-    descr += "Use -d2 to get std along slices.\n";
-    descr += "Use -d3 to get std along hyperslices.\n";
-    descr += "\n";
-    descr += "Include -b (--biased) to use the biased denominator [default is unbiased].\n";
-    descr += "The biased denominator is N, and the unbiased denominator is N-1.\n";
+    descr += "Use -d0 to multiply along cols.\n";
+    descr += "Use -d1 to multiply along rows.\n";
+    descr += "Use -d2 to multiply along slices.\n";
+    descr += "Use -d3 to multiply along hyperslices.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ std X -o Y \n";
-    descr += "$ std X > Y \n";
-    descr += "$ std -d1 X > Y \n";
-    descr += "$ cat X | std > Y \n";
+    descr += "$ prod X -o Y \n";
+    descr += "$ prod X > Y \n";
+    descr += "$ prod -d1 X > Y \n";
+    descr += "$ cat X | prod > Y \n";
 
 
     //Argtable
     int nerrs;
     struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
     struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
-    struct arg_lit    *a_b = arg_litn("b","biased",0,1,"use biased (N) denominator [default=N-1]");
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_fi, a_d, a_b, a_fo, a_help, a_end};
+    void *argtable[] = {a_fi, a_d, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -112,17 +106,13 @@ int main(int argc, char *argv[])
     else { dim = size_t(a_d->ival[0]); }
     if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
-    //Get b
-    b = (a_b->count>0);
-
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
 
 
     //Set output header info
-    o1.F = i1.F;
-    o1.T = (i1.T<100) ? i1.T : i1.T-100;
+    o1.F = i1.F; o1.T = i1.T;
     o1.R = (dim==0) ? 1u : i1.R;
     o1.C = (dim==1) ? 1u : i1.C;
     o1.S = (dim==2) ? 1u : i1.S;
@@ -154,7 +144,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::std_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b))
+        if (codee::prod_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -172,7 +162,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::std_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b))
+        if (codee::prod_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -186,11 +176,11 @@ int main(int argc, char *argv[])
         float *X, *Y;
         try { X = new float[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new float[o1.N()]; }
+        try { Y = new float[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::std_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b))
+        if (codee::prod_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -204,11 +194,11 @@ int main(int argc, char *argv[])
         double *X, *Y;
         try { X = new double[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new double[o1.N()]; }
+        try { Y = new double[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::std_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b))
+        if (codee::prod_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

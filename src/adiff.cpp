@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "hypot.c"
+#include "adiff.c"
 
 #ifdef I
 #undef I
@@ -38,19 +38,17 @@ int main(int argc, char *argv[])
     //Description
     string descr;
     descr += "Elementwise function for 2 inputs with broadcasting.\n";
-    descr += "Gets hypotenuse for each corresponding element of X1, X2:\n";
-    descr += "y = sqrt(x1^2 + x2^2) \n";
-    descr += "\n";
-    descr += "For complex input, output is real-valued: \n";
-    descr += "y = sqrt(|x1|^2 + |x2|^2) \n";
+    descr += "Elementwise absolute-value of difference: Y = |X1-X2|.\n";
     descr += "\n";
     descr += "X1 and X2 must have the same size or broadcast-compatible sizes.\n";
     descr += "Output (Y) has size max(R1,R2) x max(C1,C2) x max(S1,S2) x max(H1,H2).\n";
     descr += "\n";
+    descr += "For complex inputs, the output is real-valued.\n";
+    descr += "\n";
     descr += "Examples:\n";
-    descr += "$ hypot X1 X2 -o Y \n";
-    descr += "$ hypot X1 X2 > Y \n";
-    descr += "$ cat X1 | hypot - X2 > Y \n";
+    descr += "$ adiff X1 X2 -o Y \n";
+    descr += "$ adiff X1 X2 > Y \n";
+    descr += "$ cat X1 | adiff - X2 > Y \n";
 
 
     //Argtable
@@ -115,7 +113,7 @@ int main(int argc, char *argv[])
 
     //Set output header info
     o1.F = i1.F;
-    o1.T = (i1.isreal()) ? i1.T : i1.T-100;
+    o1.T = i1.isreal() ? i1.T : i1.T-100;
     o1.R = (i1.R>i2.R) ? i1.R : i2.R;
     o1.C = (i1.C>i2.C) ? i1.C : i2.C;
     o1.S = (i1.S>i2.S) ? i1.S : i2.S;
@@ -151,7 +149,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i1.N()==o1.N())
         {
-            if (codee::hypot_inplace_s(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
+            if (codee::adiff_inplace_s(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -164,7 +162,7 @@ int main(int argc, char *argv[])
             float *Y;
             try { Y = new float[o1.N()]; }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-            if (codee::hypot_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
+            if (codee::adiff_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -188,7 +186,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         if (i1.N()==o1.N())
         {
-            if (codee::hypot_inplace_d(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
+            if (codee::adiff_inplace_d(X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -201,7 +199,7 @@ int main(int argc, char *argv[])
             double *Y;
             try { Y = new double[o1.N()]; }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-            if (codee::hypot_d(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
+            if (codee::adiff_d(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
             if (wo1)
             {
@@ -225,7 +223,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
         try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-        if (codee::hypot_c(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
+        if (codee::adiff_c(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -247,7 +245,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
         try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-        if (codee::hypot_z(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
+        if (codee::adiff_z(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

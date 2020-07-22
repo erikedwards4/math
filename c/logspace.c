@@ -58,7 +58,7 @@ int logspace_c (float *Y, const size_t N, const float a, const float b)
 
     Y[0] = a;
     for (size_t n=1; n<N-1; n++) { Y[2*n] = a + n*stp; }
-    Y[N-1] = b;
+    Y[2*N-2] = b;
     for (size_t n=0; n<N; n++) { Y[2*n] = powf(10.0f,Y[2*n]); }
     cblas_scopy((int)N,&z,0,&Y[1],2);  //set imag part to 0
 
@@ -72,7 +72,7 @@ int logspace_z (double *Y, const size_t N, const double a, const double b)
 
     Y[0] = a;
     for (size_t n=1; n<N-1; n++) { Y[2*n] = a + n*stp; }
-    Y[N-1] = b;
+    Y[2*N-2] = b;
     for (size_t n=0; n<N; n++) { Y[2*n] = pow(10.0,Y[2*n]); }
     cblas_dcopy((int)N,&z,0,&Y[1],2);  //set imag part to 0
 

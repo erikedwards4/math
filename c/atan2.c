@@ -1,7 +1,5 @@
 //2-input elementwise function.
-//Gets atan2 for corresponding elements in X1, X2: y = sqrt(x1^2 + x2^2)
-//For complex input, output is real-valued: y = sqrt(|x1|^2 + |x2|^2)
-//This has in-place and not-in-place versions.
+//Gets atan2 for corresponding elements in X1, X2.
 
 #include <stdio.h>
 #include <math.h>

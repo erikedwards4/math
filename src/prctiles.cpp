@@ -159,8 +159,8 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X)" << endl; return 1; }
         try { ifs2.read(reinterpret_cast<char*>(P),i2.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (P)" << endl; return 1; }
-        //if (codee::prctiles_s(Y,X,P,i2.N(),i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::prctiles_inplace_s(Y,X,P,i2.N(),i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::prctiles_s(Y,X,P,i2.N(),i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        //if (codee::prctiles_inplace_s(Y,X,P,i2.N(),i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -182,8 +182,8 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X)" << endl; return 1; }
         try { ifs2.read(reinterpret_cast<char*>(P),i2.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (P)" << endl; return 1; }
-        //if (codee::prctiles_d(Y,X,P,i2.N(),i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::prctiles_inplace_d(Y,X,P,i2.N(),i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::prctiles_d(Y,X,P,i2.N(),i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        //if (codee::prctiles_inplace_d(Y,X,P,i2.N(),i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

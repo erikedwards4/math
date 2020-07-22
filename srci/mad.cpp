@@ -8,8 +8,10 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Gets MAD (median absolute deviation from median) along dim of X.\n";
-descr += "This is a robust measure of spread.\n";
+descr += "Vec2scalar operation.\n";
+descr += "Gets MAD for each vector in X along dim.\n";
+descr += "This is the median absolute deviation from the median,\n";
+descr += "which is a robust measure of spread.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get mad along cols.\n";

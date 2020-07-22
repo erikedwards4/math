@@ -25,7 +25,7 @@ CFLAGS=$(WFLAG) -O3 $(STD) -march=native -Ic
 #LIBS=-largtable2 -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
-all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Complex Stats Vec2vec Linalg
+all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vec2vec Complex Linalg
 	rm -f 7 obj/*.o
 
 
@@ -126,7 +126,7 @@ piecewise_linear: srci/piecewise_linear.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp;
 
 
 
-#Construct: 1-2 vectors or matrices input, 1 matrix output constructed from the vectors
+#Construct: 1-2 vectors or matrices input, 1 matrix output constructed from the inputs
 Construct: diagmat toeplitz tril triu repmat #prepad postpad
 diagmat: srci/diagmat.cpp c/diagmat.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
@@ -177,7 +177,7 @@ join3: srci/join3.cpp c/join3.c
 
 
 
-#Elementwise1: 1 input, 1 output functions that operate element-wise
+#Elementwise1 (scalar2scalar): 1 input, 1 output functions that operate element-wise
 Elementwise1: Operators Trig Exp_Log Round Special
 
 Operators: plusplus minusminus
@@ -268,7 +268,7 @@ deadzone: srci/deadzone.cpp c/deadzone.c
 
 
 #Elementwise2: 2 inputs, 1 output, with array broadcasting for the 2 inputs
-Elementwise2: plus minus times rdivide pow hypot atan2
+Elementwise2: plus minus times rdivide pow hypot atan2 adiff
 plus: srci/plus.cpp c/plus.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 minus: srci/minus.cpp c/minus.c
@@ -283,29 +283,15 @@ hypot: srci/hypot.cpp c/hypot.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 atan2: srci/atan2.cpp c/atan2.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
-
-
-#Complex: 1-2 inputs, 1 output, for complex operations
-Complex: complex polar real imag conj arg proj #norm
-complex: srci/complex.cpp c/complex.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
-polar: srci/polar.cpp c/polar.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
-real: srci/real.cpp c/real.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
-imag: srci/imag.cpp c/imag.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
-conj: srci/conj.cpp c/conj.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
-arg: srci/arg.cpp c/arg.c
+adiff: srci/adiff.cpp c/adiff.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
-proj: srci/proj.cpp c/proj.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-#norm is same as element-wise square
 
 
-#Stats: some basic statistics calculated along rows, cols, etc.
-Stats: Sums Prctiles Ranges Moments Norms Other_Stats
+
+#Vec2scalar: some basic statistics calculated along rows, cols, etc.
+#The input consists of 1-D vectors within a tensor, and each vector is reduced to a scalar.
+#Thus, these are vec2scalar or "reduction" operations.
+Vec2scalar: Sums Prctiles Ranges Moments Norms Other_Stats
 
 Sums: sum asum cnt
 sum: srci/sum.cpp c/sum.c
@@ -323,7 +309,7 @@ median: srci/median.cpp c/median.c
 max: srci/max.cpp c/max.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 min: srci/min.cpp c/min.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 amax: srci/amax.cpp c/amax.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 amin: srci/amin.cpp c/amin.c
@@ -331,7 +317,7 @@ amin: srci/amin.cpp c/amin.c
 
 Ranges: range iqr interdecile_range
 range: srci/range.cpp c/range.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke
 iqr: srci/iqr.cpp c/iqr.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
 interdecile_range: srci/interdecile_range.cpp c/interdecile_range.c
@@ -345,7 +331,7 @@ var: srci/var.cpp c/var.c
 skewness: srci/skewness.cpp c/skewness.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 kurtosis: srci/kurtosis.cpp c/kurtosis.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 
 Norms: norm1 norm2 normp
 norm1: srci/norm1.cpp c/norm1.c
@@ -355,15 +341,18 @@ norm2: srci/norm2.cpp c/norm2.c
 normp: srci/normp.cpp c/normp.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 
-Other_Stats: std coeff_var mad
+Other_Stats: std coeff_var mad prod
 std: srci/std.cpp c/std.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 coeff_var: srci/coeff_var.cpp c/coeff_var.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 mad: srci/mad.cpp c/mad.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
+prod: srci/prod.cpp c/prod.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 
 
+#Vec2vec: Each vector in tensor X is transformed to a vector in tensor Y
 Vec2vec: flip shift cshift sort prctiles cumsum cumprod
 flip: srci/flip.cpp c/flip.c
 	$(ss) -tvd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
@@ -379,6 +368,26 @@ cumsum: srci/cumsum.cpp c/cumsum.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 cumprod: srci/cumprod.cpp c/cumprod.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+
+
+
+#Complex: 1-2 inputs, 1 output, for complex-valued operations
+Complex: complex polar real imag conj arg proj #norm
+complex: srci/complex.cpp c/complex.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+polar: srci/polar.cpp c/polar.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+real: srci/real.cpp c/real.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+imag: srci/imag.cpp c/imag.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+conj: srci/conj.cpp c/conj.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+arg: srci/arg.cpp c/arg.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+proj: srci/proj.cpp c/proj.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+#norm is same as element-wise square
 
 
 

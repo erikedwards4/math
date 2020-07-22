@@ -9,7 +9,8 @@ char b;
 
 //Description
 string descr;
-descr += "Gets skewness along dim of X.\n";
+descr += "Vec2scalar operation.\n";
+descr += "Gets skewness for each vector in X along dim.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to get skewness along cols.\n";
