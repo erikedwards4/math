@@ -10,9 +10,10 @@ size_t *X;
 //Description
 string descr;
 descr += "Generate function (0 inputs, 1 output).\n";
-descr += "Output Y is a row vector filled with prime numbers from 2 up to P.\n";
+descr += "Output Y is a row vector filled with prime numbers from 2 through P.\n";
 descr += "\n";
-descr += "Use -p (--P) to specify the largest integer below which to return primes [default=2].\n";
+descr += "Use -p (--P) to specify the largest integer to return [default=2].\n";
+descr += "That is, all primes less than or equal to P will be returned.\n";
 descr += "\n";
 descr += "Use -t (--type) to specify output data type [default=1 -> float].\n";
 descr += "Data type can also be 2 (double).\n";
@@ -60,7 +61,7 @@ if ((o1.T==oktypes).sum()==0)
 //Checks
 
 //Set output header info
-try { X = new size_t[(P-1)/2]; }
+try { X = new size_t[1+(P-1)/2]; }
 catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for integer file (X)" << endl; return 1; }
 if (codee::primes_i(X,&cnt,(P-1)/2))
 { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }

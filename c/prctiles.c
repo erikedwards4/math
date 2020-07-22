@@ -103,7 +103,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
         }
     }
 
-    free(X1);
+    free(X1); free(i1); free(w1); free(w2);
     return 0;
 }
 
@@ -190,7 +190,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
         }
     }
 
-    free(X1);
+    free(X1); free(i1); free(w1); free(w2);
     return 0;
 }
 
@@ -275,6 +275,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
         }
     }
 
+    free(i1); free(w1); free(w2);
     return 0;
 }
 
@@ -359,6 +360,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
         }
     }
 
+    free(i1); free(w1); free(w2);
     return 0;
 }
 
