@@ -27,7 +27,7 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float o = 1.0f, ni = 1.0f / L;
+    const float o = 1.0f, ni = 1.0f/L;
     float x2, sm2 = 0.0f, sm4 = 0.0f;
 
     if (N==0) {}
@@ -105,7 +105,7 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double o = 1.0, ni = 1.0 / L;
+    const double o = 1.0, ni = 1.0/L;
     double x2, sm2 = 0.0, sm4 = 0.0;
 
     if (N==0) {}

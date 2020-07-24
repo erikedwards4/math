@@ -1,6 +1,6 @@
 //Vec2scalar (reduction) operation.
-//Gets L2-norm (root-sum-square) for each vector in X along dim.
-//This is the Euclidean (L2) norm of each vector in X.
+//Gets L2-norm (Euclidean) for each vector in X along dim.
+//This is the root-sum-square for each vector in X.
 //Note that this is not the Frobenius matrix norm of X (see matnorm.c).
 
 //For complex case, output is real.

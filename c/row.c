@@ -25,11 +25,12 @@ int row_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
     if (iscolmajor)
     {
-        for (size_t h=0, m=r; h<H; h++)
+        X += r;
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, m+=R*C, Y+=C)
+            for (size_t s=0; s<S; s++, X+=R*C, Y+=C)
             {
-                cblas_scopy((int)C,&X[m],(int)R,Y,1);
+                cblas_scopy((int)C,X,(int)R,Y,1);
             }
         }
     }
@@ -48,11 +49,12 @@ int row_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
     if (iscolmajor)
     {
-        for (size_t h=0, m=r; h<H; h++)
+        X += r;
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, m+=R*C, Y+=C)
+            for (size_t s=0; s<S; s++, X+=R*C, Y+=C)
             {
-                cblas_dcopy((int)C,&X[m],(int)R,Y,1);
+                cblas_dcopy((int)C,X,(int)R,Y,1);
             }
         }
     }
@@ -71,11 +73,12 @@ int row_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
     if (iscolmajor)
     {
-        for (size_t h=0, m=2*r; h<H; h++)
+        X += 2*r;
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, m+=2*R*C, Y+=2*C)
+            for (size_t s=0; s<S; s++, X+=2*R*C, Y+=2*C)
             {
-                cblas_ccopy((int)C,&X[m],(int)R,Y,1);
+                cblas_ccopy((int)C,X,(int)R,Y,1);
             }
         }
     }
@@ -94,11 +97,12 @@ int row_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
     if (iscolmajor)
     {
-        for (size_t h=0, m=2*r; h<H; h++)
+        X += 2*r;
+        for (size_t h=0; h<H; h++)
         {
-            for (size_t s=0; s<S; s++, m+=2*R*C, Y+=2*C)
+            for (size_t s=0; s<S; s++, X+=2*R*C, Y+=2*C)
             {
-                cblas_zcopy((int)C,&X[m],(int)R,Y,1);
+                cblas_zcopy((int)C,X,(int)R,Y,1);
             }
         }
     }

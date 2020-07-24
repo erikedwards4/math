@@ -199,7 +199,8 @@ var: var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 skewness: skewness.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kurtosis: kurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Norms: norm1 norm2 normp
+Norms: norm0 norm1 norm2 normp
+norm0: norm0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 norm1: norm1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 norm2: norm2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normp: normp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -226,12 +227,58 @@ cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
-#Vec2vec2: 2 inputs, 1 output
-#Operates on each pair of 1-D vectors in X1, X2 to produce a new 1-D vector in Y.
-#This also allows array broadcasting (like Elementwise2).
-Vec2vec2: dot
-dot: dot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+#Vecs2scalar: 2 inputs, 1 output
+#Operates on each pair of 1-D vectors in X1, X2 to produce a scalar in Y.
+#This also allows vector broadcasting (like Elementwise2, but limited to single vectors).
+Vecs2scalar: Similarity Dist WStats
 
+#Similarity measures or related for 2 vectors
+Similarity: dot cov corr cos2 cokurtosis #spearman
+dot: dot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cov: cov.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+corr: corr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cos2: cos2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cokurtosis: cokurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+spearman: spearman.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+
+#Distance metrics or related for 2 vectors
+Dist: dist1 dist2 distp dist_hamm dist_cos
+dist0: dist0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+dist1: dist1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+dist2: dist2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+distp: distp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+dist_cos: dist_cos.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+
+#Weighted statistics
+WStats: WSums WPrctiles WRanges WMoments WOther
+
+WSums: wsum wasum wcnt
+wsum: wsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wasum: wasum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wcnt: wcnt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Wnorms: wnorm0 wnorm1 wnorm2 wnormp
+
+WPrctiles: wprctile wmedian
+wprctile: wprctile.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wmedian: wmedian.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+WRanges: wiqr widr
+wiqr: wiqr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+widr: widr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+WMoments: wmean wvar wskewness wkurtosis
+wmean: wmean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wvar: wvar.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wskewness: wskewness.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wkurtosis: wkurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+WOther: wstd wcoeff_var wmad
+wstd: wstd.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wcoeff_var: wcoeff_var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wmad: wmad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Complex: 1-2 inputs, 1 output, for complex operations

@@ -26,7 +26,7 @@ int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float z = 0.0f, o = 1.0f, ni = 1.0f / L;
+    const float z = 0.0f, o = 1.0f, ni = 1.0f/L;
     const float den = (biased) ? 1.0f/sqrtf(L) : 1.0f/sqrtf(L-1);
 
     if (N==0) {}
@@ -107,7 +107,7 @@ int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double z = 0.0, o = 1.0, ni = 1.0 / L;
+    const double z = 0.0, o = 1.0, ni = 1.0/L;
     const double den = (biased) ? 1.0/sqrt(L) : 1.0/sqrt(L-1);
 
     if (N==0) {}

@@ -1,6 +1,6 @@
 //Vec2scalar (reduction) operation.
-//Gets L1 norm (sum of absolute-values) for each vector in X along dim.
-//This is the 'taxicab' (L1) norm of each vector in X.
+//Gets L1 norm (taxicab) for each vector in X along dim.
+//This is the sum of absolute-values for each vector in X.
 
 //For complex case, output is real. This does not use cblas_scasum or cblas_dzasum,
 //because those sum |xr|+|xi|, which is not the definition of the L1 norm.
