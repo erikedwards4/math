@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <cblas.h>
 //#include <time.h>
 
 #ifdef __cplusplus
@@ -38,6 +39,11 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
     float x1, x2, mn1 = 0.0f, mn2 = 0.0f, sd1 = 0.0f, sd2 = 0.0f;
 
     if (N==0) {}
+    else if (L==1)
+    {
+        const float o = 1.0f;
+        cblas_scopy((int)N,&o,0,Y,1);
+    }
     else if (L==N)
     {
         for (size_t l=0; l<L; l++) { mn1 += *X1++; mn2 += *X2++; }
@@ -115,6 +121,11 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
     double x1, x2, mn1 = 0.0, mn2 = 0.0, sd1 = 0.0, sd2 = 0.0;
 
     if (N==0) {}
+    else if (L==1)
+    {
+        const double o = 1.0;
+        cblas_dcopy((int)N,&o,0,Y,1);
+    }
     else if (L==N)
     {
         for (size_t l=0; l<L; l++) { mn1 += *X1++; mn2 += *X2++; }
@@ -192,6 +203,11 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
     float x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, den;
 
     if (N==0) {}
+    else if (L==1)
+    {
+        const float o = 1.0f;
+        cblas_scopy((int)N,&o,0,Y,2);
+    }
     else if (L==N)
     {
         mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = 0.0f;
@@ -306,6 +322,11 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
     double x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, den;
 
     if (N==0) {}
+    else if (L==1)
+    {
+        const double o = 1.0;
+        cblas_dcopy((int)N,&o,0,Y,2);
+    }
     else if (L==N)
     {
         mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = 0.0;

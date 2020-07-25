@@ -9,7 +9,7 @@ char b;
 
 //Description
 string descr;
-descr += "Vec2scalar operation.\n";
+descr += "Vec2scalar (reduction) operation.\n";
 descr += "Gets the coefficient of variation for each vector in X along dim.\n";
 descr += "This is the standard deviation divided by the mean (std/mean).\n";
 descr += "\n";

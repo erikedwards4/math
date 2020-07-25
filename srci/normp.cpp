@@ -9,7 +9,7 @@ double p;
 
 //Description
 string descr;
-descr += "Vec2scalar operation.\n";
+descr += "Vec2scalar (reduction) operation.\n";
 descr += "Gets p-norm for each vector in X along dim.\n";
 descr += "\n";
 descr += "This is the Lp norm of each vector in X:\n";

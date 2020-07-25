@@ -8,7 +8,7 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Vec2scalar operation.\n";
+descr += "Vec2scalar (reduction) operation.\n";
 descr += "Gets L2 (Euclidean) for each vector in X along dim.\n";
 descr += "\n";
 descr += "This is the square-root of the sum-of-squares for each vector in X.\n";

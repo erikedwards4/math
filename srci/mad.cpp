@@ -8,7 +8,7 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Vec2scalar operation.\n";
+descr += "Vec2scalar (reduction) operation.\n";
 descr += "Gets MAD for each vector in X along dim.\n";
 descr += "This is the median absolute deviation from the median,\n";
 descr += "which is a robust measure of spread.\n";

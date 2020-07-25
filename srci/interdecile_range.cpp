@@ -8,7 +8,7 @@ size_t dim;
 
 //Description
 string descr;
-descr += "Vec2scalar operation.\n";
+descr += "Vec2scalar (reduction) operation.\n";
 descr += "Gets the interdecile range for each vector in X along dim.\n";
 descr += "This is the 90th minus the 10th percentile for each vector.\n";
 descr += "\n";

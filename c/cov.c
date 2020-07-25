@@ -10,6 +10,7 @@
 //This computes pairwise covariance taken as a vector similarity measure.
 
 #include <stdio.h>
+#include <cblas.h>
 //#include <time.h>
 
 #ifdef __cplusplus
@@ -41,6 +42,11 @@ int cov_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
     float mn1 = 0.0f, mn2 = 0.0f;
 
     if (N==0) {}
+    else if (L==1)
+    {
+        const float z = 0.0f;
+        cblas_scopy((int)N,&z,0,Y,1);
+    }
     else if (L==N)
     {
         for (size_t l=0; l<L; l++) { mn1 += *X1++; mn2 += *X2++; }
@@ -107,6 +113,11 @@ int cov_d (double *Y, const double *X1, const double *X2, const size_t R1, const
     double mn1 = 0.0, mn2 = 0.0;
 
     if (N==0) {}
+    else if (L==1)
+    {
+        const double z = 0.0;
+        cblas_dcopy((int)N,&z,0,Y,1);
+    }
     else if (L==N)
     {
         for (size_t l=0; l<L; l++) { mn1 += *X1++; mn2 += *X2++; }
@@ -173,6 +184,11 @@ int cov_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
     float mn1r, mn1i, mn2r, mn2i, x1r, x1i, x2r, x2i;
 
     if (N==0) {}
+    else if (L==1)
+    {
+        const float z = 0.0f;
+        cblas_scopy((int)N,&z,0,Y,2);
+    }
     else if (L==N)
     {
         mn1r = mn1i = mn2r = mn2i = 0.0f;
@@ -279,6 +295,11 @@ int cov_z (double *Y, const double *X1, const double *X2, const size_t R1, const
     double mn1r, mn1i, mn2r, mn2i, x1r, x1i, x2r, x2i;
 
     if (N==0) {}
+    else if (L==1)
+    {
+        const double z = 0.0;
+        cblas_dcopy((int)N,&z,0,Y,2);
+    }
     else if (L==N)
     {
         mn1r = mn1i = mn2r = mn2i = 0.0;

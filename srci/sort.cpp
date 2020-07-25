@@ -9,7 +9,7 @@ char a;
 
 //Description
 string descr;
-descr += "Matrix rearrange function.\n";
+descr += "Vec2vec operation.\n";
 descr += "Sorts elements of X along dim.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
@@ -18,7 +18,7 @@ descr += "Use -d1 to sort along rows.\n";
 descr += "Use -d2 to sort along slices.\n";
 descr += "Use -d3 to sort along hyperslices.\n";
 descr += "\n";
-descr += "Include -a (--ascend) to sort in ascending order [default=descend]\n";
+descr += "Include -a (--ascend) to sort in ascending order [default=descend].\n";
 descr += "\n";
 descr += "Examples:\n";
 descr += "$ sort X -o Y \n";

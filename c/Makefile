@@ -173,7 +173,7 @@ adiff: adiff.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #Some basic statistics calculated along rows, cols, etc.
 #The input consists of 1-D vectors within a tensor, and each vector is reduced to a scalar.
 #Thus, these are vec2scalar or "reduction" operations.
-Vec2scalar: Sums Prctiles Ranges Moments Norms Other_Stats
+Vec2scalar: Sums Prctiles Iprctiles Ranges Moments Norms Other_Stats
 
 Sums: sum asum cnt
 sum: sum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -187,6 +187,14 @@ max: max.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 min: min.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 amax: amax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 amin: amin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Iprctiles: iprctile imed imax imin iamax #iamin
+iprctile: iprctile.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+imed: imed.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+imax: imax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+imin: imin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+iamax: iamax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+iamin: iamin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Ranges: range iqr interdecile_range
 range: range.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -216,14 +224,23 @@ prod: prod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #Vec2vec: 1 input, 1 output
 #Operates on each 1-D vector in X to produce a new 1-D vector in Y.
 #Y has the same size as X, except perhaps a change in the vector length.
-Vec2vec: flip shift cshift sort prctiles cumsum cumprod
+Vec2vec: Reorder Other_Vec2vec
+
+Reorder: flip shift cshift sort
 flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Other_Vec2vec: sorti ranks prctiles cumsum cumprod center scale normalize
+sorti: sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+ranks: ranks.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cumsum: cumsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+center: center.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+scale: scale.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+normalize: normalize.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
@@ -232,14 +249,15 @@ cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #This also allows vector broadcasting (like Elementwise2, but limited to single vectors).
 Vecs2scalar: Similarity Dist WStats
 
-#Similarity measures or related for 2 vectors
-Similarity: dot cov corr cos2 cokurtosis #spearman
+#Similarity or related measures for 2 vectors
+Similarity: dot cov corr cos2 cokurtosis spearman
 dot: dot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cov: cov.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 corr: corr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cos2: cos2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cokurtosis: cokurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 spearman: spearman.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+kendall: kendall.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Distance metrics or related for 2 vectors
@@ -252,14 +270,18 @@ dist_cos: dist_cos.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Weighted statistics
-WStats: WSums WPrctiles WRanges WMoments WOther
+WStats: WSums WNorms WPrctiles WRanges WMoments WOther
 
 WSums: wsum wasum wcnt
 wsum: wsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 wasum: wasum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 wcnt: wcnt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Wnorms: wnorm0 wnorm1 wnorm2 wnormp
+WNorms: wnorm0 wnorm1 wnorm2 wnormp
+wnorm0: wnorm0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wnorm1: wnorm1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wnorm2: wnorm2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+wnormp: wnormp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 WPrctiles: wprctile wmedian
 wprctile: wprctile.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
