@@ -43,12 +43,12 @@ int tril_s (float *Y, const float *X, const size_t R, const size_t C, const size
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0, n=0; h<H; h++)
+        for (size_t h=0, n=0; h<H; ++h)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; ++s)
             {
                 if (CX>0) { cblas_scopy((int)(R*CX),&X[n],1,&Y[n],1); n += R*CX; }
-                for (size_t c=CX; c<C-C0; c++)
+                for (size_t c=CX; c<C-C0; ++c)
                 {
                     cblas_scopy((int)c-k,&z,0,&Y[n],1); n += (size_t)((int)c-k);
                     cblas_scopy((int)R-(int)c+k,&X[n],1,&Y[n],1); n += (size_t)((int)R-(int)c+k);
@@ -63,7 +63,7 @@ int tril_s (float *Y, const float *X, const size_t R, const size_t C, const size
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
         if (R0>0) { cblas_scopy((int)(R0*C*SH),&z,0,Y,1); }
-        for (size_t r=R0, n=R0*C*SH; r<R-RX; r++)
+        for (size_t r=R0, n=R0*C*SH; r<R-RX; ++r)
         {
             cblas_scopy((int)SH*((int)r+k+1),&X[n],1,&Y[n],1); n += SH*(size_t)((int)r+k+1);
             cblas_scopy((int)SH*((int)C-(int)r-k-1),&z,0,&Y[n],1); n += SH*(size_t)((int)C-(int)r-k-1);
@@ -87,12 +87,12 @@ int tril_d (double *Y, const double *X, const size_t R, const size_t C, const si
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0, n=0; h<H; h++)
+        for (size_t h=0, n=0; h<H; ++h)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; ++s)
             {
                 if (CX>0) { cblas_dcopy((int)(R*CX),&X[n],1,&Y[n],1); n += R*CX; }
-                for (size_t c=CX; c<C-C0; c++)
+                for (size_t c=CX; c<C-C0; ++c)
                 {
                     cblas_dcopy((int)c-k,&z,0,&Y[n],1); n += (size_t)((int)c-k);
                     cblas_dcopy((int)R-(int)c+k,&X[n],1,&Y[n],1); n += (size_t)((int)R-(int)c+k);
@@ -107,7 +107,7 @@ int tril_d (double *Y, const double *X, const size_t R, const size_t C, const si
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
         if (R0>0) { cblas_dcopy((int)(R0*C*SH),&z,0,Y,1); }
-        for (size_t r=R0, n=R0*C*SH; r<R-RX; r++)
+        for (size_t r=R0, n=R0*C*SH; r<R-RX; ++r)
         {
             cblas_dcopy((int)SH*((int)r+k+1),&X[n],1,&Y[n],1); n += SH*(size_t)((int)r+k+1);
             cblas_dcopy((int)SH*((int)C-(int)r-k-1),&z,0,&Y[n],1); n += SH*(size_t)((int)C-(int)r-k-1);
@@ -129,12 +129,12 @@ int tril_c (float *Y, const float *X, const size_t R, const size_t C, const size
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0, n=0; h<H; h++)
+        for (size_t h=0, n=0; h<H; ++h)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; ++s)
             {
                 if (CX>0) { cblas_ccopy((int)(R*CX),&X[n],1,&Y[n],1); n += 2*R*CX; }
-                for (size_t c=CX; c<C-C0; c++)
+                for (size_t c=CX; c<C-C0; ++c)
                 {
                     cblas_ccopy((int)c-k,z,0,&Y[n],1); n += 2*(size_t)((int)c-k);
                     cblas_ccopy((int)R-(int)c+k,&X[n],1,&Y[n],1); n += 2*(size_t)((int)R-(int)c+k);
@@ -149,7 +149,7 @@ int tril_c (float *Y, const float *X, const size_t R, const size_t C, const size
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
         if (R0>0) { cblas_ccopy((int)(R0*C*SH),z,0,Y,1); }
-        for (size_t r=R0, n=2*R0*C*SH; r<R-RX; r++)
+        for (size_t r=R0, n=2*R0*C*SH; r<R-RX; ++r)
         {
             cblas_ccopy((int)SH*((int)r+k+1),&X[n],1,&Y[n],1); n += 2*SH*(size_t)((int)r+k+1);
             cblas_ccopy((int)SH*((int)C-(int)r-k-1),z,0,&Y[n],1); n += 2*SH*(size_t)((int)C-(int)r-k-1);
@@ -171,12 +171,12 @@ int tril_z (double *Y, const double *X, const size_t R, const size_t C, const si
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0, n=0; h<H; h++)
+        for (size_t h=0, n=0; h<H; ++h)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; ++s)
             {
                 if (CX>0) { cblas_zcopy((int)(R*CX),&X[n],1,&Y[n],1); n += 2*R*CX; }
-                for (size_t c=CX; c<C-C0; c++)
+                for (size_t c=CX; c<C-C0; ++c)
                 {
                     cblas_zcopy((int)c-k,z,0,&Y[n],1); n += 2*(size_t)((int)c-k);
                     cblas_zcopy((int)R-(int)c+k,&X[n],1,&Y[n],1); n += 2*(size_t)((int)R-(int)c+k);
@@ -191,7 +191,7 @@ int tril_z (double *Y, const double *X, const size_t R, const size_t C, const si
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
         if (R0>0) { cblas_zcopy((int)(R0*C*SH),z,0,Y,1); }
-        for (size_t r=R0, n=2*R0*C*SH; r<R-RX; r++)
+        for (size_t r=R0, n=2*R0*C*SH; r<R-RX; ++r)
         {
             cblas_zcopy((int)SH*((int)r+k+1),&X[n],1,&Y[n],1); n += 2*SH*(size_t)((int)r+k+1);
             cblas_zcopy((int)SH*((int)C-(int)r-k-1),z,0,&Y[n],1); n += 2*SH*(size_t)((int)C-(int)r-k-1);
@@ -215,12 +215,12 @@ int tril_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0, n=0; h<H; h++)
+        for (size_t h=0, n=0; h<H; ++h)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; ++s)
             {
                 if (CX>0) { n += R*CX; }
-                for (size_t c=CX; c<C-C0; c++)
+                for (size_t c=CX; c<C-C0; ++c)
                 {
                     cblas_scopy((int)c-k,&z,0,&X[n],1);
                     n += R;
@@ -235,7 +235,7 @@ int tril_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
         if (R0>0) { cblas_scopy((int)(R0*C*SH),&z,0,X,1); }
-        for (size_t r=R0, n=R0*C*SH; r<R-RX; r++)
+        for (size_t r=R0, n=R0*C*SH; r<R-RX; ++r)
         {
             n += SH*(size_t)((int)r+k+1);
             cblas_scopy((int)SH*((int)C-(int)r-k-1),&z,0,&X[n],1);
@@ -259,12 +259,12 @@ int tril_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0, n=0; h<H; h++)
+        for (size_t h=0, n=0; h<H; ++h)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; ++s)
             {
                 if (CX>0) { n += R*CX; }
-                for (size_t c=CX; c<C-C0; c++)
+                for (size_t c=CX; c<C-C0; ++c)
                 {
                     cblas_dcopy((int)c-k,&z,0,&X[n],1);
                     n += R;
@@ -279,7 +279,7 @@ int tril_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
         if (R0>0) { cblas_dcopy((int)(R0*C*SH),&z,0,X,1); }
-        for (size_t r=R0, n=R0*C*SH; r<R-RX; r++)
+        for (size_t r=R0, n=R0*C*SH; r<R-RX; ++r)
         {
             n += SH*(size_t)((int)r+k+1);
             cblas_dcopy((int)SH*((int)C-(int)r-k-1),&z,0,&X[n],1);
@@ -301,12 +301,12 @@ int tril_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0, n=0; h<H; h++)
+        for (size_t h=0, n=0; h<H; ++h)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; ++s)
             {
                 if (CX>0) { n += 2*R*CX; }
-                for (size_t c=CX; c<C-C0; c++)
+                for (size_t c=CX; c<C-C0; ++c)
                 {
                     cblas_ccopy((int)c-k,z,0,&X[n],1);
                     n += 2*R;
@@ -321,7 +321,7 @@ int tril_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
         if (R0>0) { cblas_ccopy((int)(R0*C*SH),z,0,X,1); }
-        for (size_t r=R0, n=2*R0*C*SH; r<R-RX; r++)
+        for (size_t r=R0, n=2*R0*C*SH; r<R-RX; ++r)
         {
             n += 2*SH*(size_t)((int)r+k+1);
             cblas_ccopy((int)SH*((int)C-(int)r-k-1),z,0,&X[n],1);
@@ -343,12 +343,12 @@ int tril_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0, n=0; h<H; h++)
+        for (size_t h=0, n=0; h<H; ++h)
         {
-            for (size_t s=0; s<S; s++)
+            for (size_t s=0; s<S; ++s)
             {
                 if (CX>0) { n += 2*R*CX; }
-                for (size_t c=CX; c<C-C0; c++)
+                for (size_t c=CX; c<C-C0; ++c)
                 {
                     cblas_zcopy((int)c-k,z,0,&X[n],1);
                     n += 2*R;
@@ -363,7 +363,7 @@ int tril_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
         if (R0>0) { cblas_zcopy((int)(R0*C*SH),z,0,X,1); }
-        for (size_t r=R0, n=2*R0*C*SH; r<R-RX; r++)
+        for (size_t r=R0, n=2*R0*C*SH; r<R-RX; ++r)
         {
             n += 2*SH*(size_t)((int)r+k+1);
             cblas_zcopy((int)SH*((int)C-(int)r-k-1),z,0,&X[n],1);

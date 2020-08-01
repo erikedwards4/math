@@ -27,21 +27,21 @@ int polar_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
 
     if (N1==1)
     {
-        for (size_t n=0; n<N; n++) { *Y++ = X1[0]*cosf(X2[n]); *Y++ = X1[0]*sinf(X2[n]); }
-        //for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n2] = X1[0]*cosf(X2[n]); Y[n2+1] = X1[0]*sinf(X2[n]); }
+        for (size_t n=0; n<N; ++n, ++X2) { *Y++ = *X1 * cosf(*X2); *Y++ = *X1 * sinf(*X2); }
+        //for (size_t n=0, n2=0; n<N; ++n, n2+=2) { Y[n2] = *X1 * cosf(*X2); Y[n2+1] = *X1 * sinf(*X2); }
     }
     else if (N2==1)
     {
-        const float cosx = cosf(X2[0]), sinx = sinf(X2[0]);
-        for (size_t n=0; n<N; n++) { *Y++ = X1[n]*cosx; *Y++ = X1[n]*sinx; }
-        //for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n2] = X1[n]*cosx; Y[n2+1] = X1[n]*sinx; }
+        const float cosx = cosf(*X2), sinx = sinf(*X2);
+        for (size_t n=0; n<N; ++n, ++X1) { *Y++ = *X1 * cosx; *Y++ = *X1 * sinx; }
+        //for (size_t n=0, n2=0; n<N; ++n, n2+=2) { Y[n2] = *X1 * cosx; Y[n2+1] = *X1 * sinx; }
         //cblas_scopy((int)N,X1,1,Y,2); cblas_scopy((int)N,X1,1,&Y[1],2);
         //cblas_sscal((int)N,cosx,Y,2); cblas_sscal((int)N,sinx,&Y[1],2);
     }
     else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { *Y++ = X1[n]*cosf(X2[n]); *Y++ = X1[n]*sinf(X2[n]); }
-        //for (size_t n=0, n2=0; n<N; n++, n2+=2) { Y[n2] = X1[n]*cosf(X2[n]); Y[n2+1] = X1[n]*sinf(X2[n]); }
+        for (size_t n=0; n<N; ++n, ++X1, ++X2) { *Y++ = *X1 * cosf(*X2); *Y++ = *X1 * sinf(*X2); }
+        //for (size_t n=0, n2=0; n<N; ++n, n2+=2) { Y[n2] = *X1 * cosf(*X2); Y[n2+1] = *X1 * sinf(*X2); }
     }
     else if (iscolmajor)
     {
@@ -49,13 +49,13 @@ int polar_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
         const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
         const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
         const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
-        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
+        for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
+            for (size_t s=0; s<S; ++s, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
+                for (size_t c=0; c<C; ++c, X1+=c1i, X2+=c2i)
                 {
-                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
+                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i)
                     {
                         *Y++ = *X1 * cosf(*X2);
                         *Y++ = *X1 * sinf(*X2);
@@ -70,13 +70,13 @@ int polar_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
         const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
         const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
         const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
-        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
+        for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
+            for (size_t c=0; c<C; ++c, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
+                for (size_t s=0; s<S; ++s, X1+=s1i, X2+=s2i)
                 {
-                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
+                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i)
                     {
                         *Y++ = *X1 * cosf(*X2);
                         *Y++ = *X1 * sinf(*X2);
@@ -100,16 +100,16 @@ int polar_d (double *Y, const double *X1, const double *X2, const size_t R1, con
 
     if (N1==1)
     {
-        for (size_t n=0; n<N; n++) { *Y++ = X1[0]*cos(X2[n]); *Y++ = X1[0]*sin(X2[n]); }
+        for (size_t n=0; n<N; ++n, ++X2) { *Y++ = *X1 * cos(*X2); *Y++ = *X1 * sin(*X2); }
     }    
     else if (N2==1)
     {
-        const double cosx = cos(X2[0]), sinx = sin(X2[0]);
-        for (size_t n=0; n<N; n++) { *Y++ = X1[n]*cosx; *Y++ = X1[n]*sinx; }
+        const double cosx = cos(*X2), sinx = sin(*X2);
+        for (size_t n=0; n<N; ++n, ++X1) { *Y++ = *X1 * cosx; *Y++ = *X1 * sinx; }
     }
     else if (N1==N2)
     {
-        for (size_t n=0; n<N; n++) { *Y++ = X1[n]*cos(X2[n]); *Y++ = X1[n]*sin(X2[n]); }
+        for (size_t n=0; n<N; ++n, ++X1, ++X2) { *Y++ = *X1 * cos(*X2); *Y++ = *X1 * sin(*X2); }
     }
     else if (iscolmajor)
     {
@@ -117,13 +117,13 @@ int polar_d (double *Y, const double *X1, const double *X2, const size_t R1, con
         const int c1i = (int)R1*((int)(C1>1)-(int)(R1>1)), c2i = (int)R2*((int)(C2>1)-(int)(R2>1));
         const int s1i = (int)(R1*C1)*((int)(S1>1)-(int)(C1>1)), s2i = (int)(R2*C2)*((int)(S2>1)-(int)(C2>1));
         const int h1i = (int)(R1*C1*S1)*((int)(H1>1)-(int)(S1>1)), h2i = (int)(R2*C2*S2)*((int)(H2>1)-(int)(S2>1));
-        for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
+        for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i)
         {
-            for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
+            for (size_t s=0; s<S; ++s, X1+=s1i, X2+=s2i)
             {
-                for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
+                for (size_t c=0; c<C; ++c, X1+=c1i, X2+=c2i)
                 {
-                    for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
+                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i)
                     {
                         *Y++ = *X1 * cos(*X2);
                         *Y++ = *X1 * sin(*X2);
@@ -138,13 +138,13 @@ int polar_d (double *Y, const double *X1, const double *X2, const size_t R1, con
         const int s1i = (int)H1*((int)(S1>1)-(int)(H1>1)), s2i = (int)H2*((int)(S2>1)-(int)(H2>1));
         const int c1i = (int)(H1*S1)*((int)(C1>1)-(int)(S1>1)), c2i = (int)(H2*S2)*((int)(C2>1)-(int)(S2>1));
         const int r1i = (int)(H1*S1*C1)*((int)(R1>1)-(int)(C1>1)), r2i = (int)(H2*S2*C2)*((int)(R2>1)-(int)(C2>1));
-        for (size_t r=0; r<R; r++, X1+=r1i, X2+=r2i)
+        for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i)
         {
-            for (size_t c=0; c<C; c++, X1+=c1i, X2+=c2i)
+            for (size_t c=0; c<C; ++c, X1+=c1i, X2+=c2i)
             {
-                for (size_t s=0; s<S; s++, X1+=s1i, X2+=s2i)
+                for (size_t s=0; s<S; ++s, X1+=s1i, X2+=s2i)
                 {
-                    for (size_t h=0; h<H; h++, X1+=h1i, X2+=h2i)
+                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i)
                     {
                         *Y++ = *X1 * cos(*X2);
                         *Y++ = *X1 * sin(*X2);

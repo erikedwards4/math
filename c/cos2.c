@@ -38,7 +38,7 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
     else if (L==N)
     {
         *Y = sd1 = sd2 = 0.0f;
-        for (size_t l=0; l<L; l++, X1++, X2++)
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             sd1 += *X1**X1; sd2 += *X2**X2;
             *Y += *X1**X2;
@@ -54,15 +54,15 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; v++, X1-=J1, X2-=J2)
+            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 *Y = sd1 = sd2 = 0.0f;
-                for (size_t l=0; l<L; l++, X1++, X2++)
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     sd1 += *X1**X1; sd2 += *X2**X2;
                     *Y += *X1**X2;
                 }
-                *Y++ /= sqrtf(sd1*sd2);
+                *Y /= sqrtf(sd1*sd2);
             }
         }
         else
@@ -70,17 +70,17 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; g++, X1+=I1, X2+=I2)
+            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; b++, X1-=L*K1-J1, X2-=L*K2-J2)
+                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     *Y = sd1 = sd2 = 0.0f;
-                    for (size_t l=0; l<L; l++, X1+=K1, X2+=K2)
+                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         sd1 += *X1**X1; sd2 += *X2**X2;
                         *Y += *X1**X2;
                     }
-                    *Y++ /= sqrtf(sd1*sd2);
+                    *Y /= sqrtf(sd1*sd2);
                 }
             }
         }
@@ -109,7 +109,7 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
     else if (L==N)
     {
         *Y = sd1 = sd2 = 0.0;
-        for (size_t l=0; l<L; l++, X1++, X2++)
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             sd1 += *X1**X1; sd2 += *X2**X2;
             *Y += *X1**X2;
@@ -125,15 +125,15 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; v++, X1-=J1, X2-=J2)
+            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 *Y = sd1 = sd2 = 0.0;
-                for (size_t l=0; l<L; l++, X1++, X2++)
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     sd1 += *X1**X1; sd2 += *X2**X2;
                     *Y += *X1**X2;
                 }
-                *Y++ /= sqrt(sd1*sd2);
+                *Y /= sqrt(sd1*sd2);
             }
         }
         else
@@ -141,17 +141,17 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; g++, X1+=I1, X2+=I2)
+            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; b++, X1-=L*K1-J1, X2-=L*K2-J2)
+                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     *Y = sd1 = sd2 = 0.0;
-                    for (size_t l=0; l<L; l++, X1+=K1, X2+=K2)
+                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         sd1 += *X1**X1; sd2 += *X2**X2;
                         *Y += *X1**X2;
                     }
-                    *Y++ /= sqrt(sd1*sd2);
+                    *Y /= sqrt(sd1*sd2);
                 }
             }
         }
@@ -174,24 +174,22 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cos2_c: vectors in X1 and X2 must have the same length\n"); return 1; }
-    float x1r, x1i, x2r, x2i, sd1, sd2, den;
+    float x1r, x2r, sd1, sd2, yr, yi, den;
 
     if (N==0) {}
     else if (L==N)
     {
-        sd1 = sd2 = 0.0f;
-        *Y++ = 0.0f; *Y-- = 0.0f;
-        for (size_t l=0; l<L; l++)
+        sd1 = sd2 = yr = yi = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            x1r = *X1++; x1i = *X1++;
-            x2r = *X2++; x2i = *X2++;
-            sd1 += x1r*x1r + x1i*x1i;
-            sd2 += x2r*x2r + x2i*x2i;
-            *Y++ += x1r*x2r + x1i*x2i;
-            *Y-- -= x1r*x2i - x1i*x2r;
+            x1r = *X1++; x2r = *X2++;
+            sd1 += x1r*x1r + *X1**X1;
+            sd2 += x2r*x2r + *X2**X2;
+            yr += x1r*x2r + *X1**X2;
+            yi -= x1r**X2 - *X1*x2r;
         }
         den = sqrtf(sd1*sd2);
-        *Y++ /= den; *Y /= den;
+        *Y++ = yr / den; *Y = yi / den;
     }
     else
     {
@@ -202,21 +200,19 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? 2*L : 0, J2 = (L==N2) ? 2*L : 0;
-            for (size_t v=0; v<V; v++, X1-=J1, X2-=J2)
+            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                sd1 = sd2 = 0.0f;
-                *Y++ = 0.0f; *Y-- = 0.0f;
-                for (size_t l=0; l<L; l++)
+                sd1 = sd2 = yr = yi = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    x1r = *X1++; x1i = *X1++;
-                    x2r = *X2++; x2i = *X2++;
-                    sd1 += x1r*x1r + x1i*x1i;
-                    sd2 += x2r*x2r + x2i*x2i;
-                    *Y++ += x1r*x2r + x1i*x2i;
-                    *Y-- -= x1r*x2i - x1i*x2r;
+                    x1r = *X1++; x2r = *X2++;
+                    sd1 += x1r*x1r + *X1**X1;
+                    sd2 += x2r*x2r + *X2**X2;
+                    yr += x1r*x2r + *X1**X2;
+                    yi -= x1r**X2 - *X1*x2r;
                 }
                 den = sqrtf(sd1*sd2);
-                *Y++ /= den; *Y++ /= den;
+                *Y++ = yr / den; *Y = yi / den;
             }
         }
         else
@@ -224,23 +220,21 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
             const size_t J1 = (L==N1) ? 0 : 2, J2 = (L==N2) ? 0 : 2;
             const size_t K1 = (L==N1) ? 2 : 2*K, K2 = (L==N2) ? 2 : 2*K;
             const size_t I1 = (L==N1) ? 0 : 2*B*(L-1), I2 = (L==N2) ? 0 : 2*B*(L-1);
-            for (size_t g=0; g<G; g++, X1+=I1, X2+=I2)
+            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; b++, X1-=L*K1-J1, X2-=L*K2-J2)
+                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
-                    sd1 = sd2 = 0.0f;
-                    *Y++ = 0.0f; *Y-- = 0.0f;
-                    for (size_t l=0; l<L; l++, X1+=K1-1, X2+=K2-1)
+                    sd1 = sd2 = yr = yi = 0.0f;
+                    for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
-                        x1r = *X1++; x1i = *X1;
-                        x2r = *X2++; x2i = *X2;
-                        sd1 += x1r*x1r + x1i*x1i;
-                        sd2 += x2r*x2r + x2i*x2i;
-                        *Y++ += x1r*x2r + x1i*x2i;
-                        *Y-- -= x1r*x2i - x1i*x2r;
+                        x1r = *X1++; x2r = *X2++;
+                        sd1 += x1r*x1r + *X1**X1;
+                        sd2 += x2r*x2r + *X2**X2;
+                        yr += x1r*x2r + *X1**X2;
+                        yi -= x1r**X2 - *X1*x2r;
                     }
                     den = sqrtf(sd1*sd2);
-                    *Y++ /= den; *Y++ /= den;
+                    *Y++ = yr / den; *Y++ = yi / den;
                 }
             }
         }
@@ -263,24 +257,22 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cos2_z: vectors in X1 and X2 must have the same length\n"); return 1; }
-    double x1r, x1i, x2r, x2i, sd1, sd2, den;
+    double x1r, x2r, sd1, sd2, yr, yi, den;
 
     if (N==0) {}
     else if (L==N)
     {
-        sd1 = sd2 = 0.0;
-        *Y++ = 0.0; *Y-- = 0.0;
-        for (size_t l=0; l<L; l++)
+        sd1 = sd2 = yr = yi = 0.0;
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            x1r = *X1++; x1i = *X1++;
-            x2r = *X2++; x2i = *X2++;
-            sd1 += x1r*x1r + x1i*x1i;
-            sd2 += x2r*x2r + x2i*x2i;
-            *Y++ += x1r*x2r + x1i*x2i;
-            *Y-- -= x1r*x2i - x1i*x2r;
+            x1r = *X1++; x2r = *X2++;
+            sd1 += x1r*x1r + *X1**X1;
+            sd2 += x2r*x2r + *X2**X2;
+            yr += x1r*x2r + *X1**X2;
+            yi -= x1r**X2 - *X1*x2r;
         }
         den = sqrt(sd1*sd2);
-        *Y++ /= den; *Y /= den;
+        *Y++ = yr / den; *Y = yi / den;
     }
     else
     {
@@ -291,21 +283,19 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? 2*L : 0, J2 = (L==N2) ? 2*L : 0;
-            for (size_t v=0; v<V; v++, X1-=J1, X2-=J2)
+            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                sd1 = sd2 = 0.0;
-                *Y++ = 0.0; *Y-- = 0.0;
-                for (size_t l=0; l<L; l++)
+                sd1 = sd2 = yr = yi = 0.0;
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    x1r = *X1++; x1i = *X1++;
-                    x2r = *X2++; x2i = *X2++;
-                    sd1 += x1r*x1r + x1i*x1i;
-                    sd2 += x2r*x2r + x2i*x2i;
-                    *Y++ += x1r*x2r + x1i*x2i;
-                    *Y-- -= x1r*x2i - x1i*x2r;
+                    x1r = *X1++; x2r = *X2++;
+                    sd1 += x1r*x1r + *X1**X1;
+                    sd2 += x2r*x2r + *X2**X2;
+                    yr += x1r*x2r + *X1**X2;
+                    yi -= x1r**X2 - *X1*x2r;
                 }
                 den = sqrt(sd1*sd2);
-                *Y++ /= den; *Y++ /= den;
+                *Y++ = yr / den; *Y = yi / den;
             }
         }
         else
@@ -313,23 +303,21 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
             const size_t J1 = (L==N1) ? 0 : 2, J2 = (L==N2) ? 0 : 2;
             const size_t K1 = (L==N1) ? 2 : 2*K, K2 = (L==N2) ? 2 : 2*K;
             const size_t I1 = (L==N1) ? 0 : 2*B*(L-1), I2 = (L==N2) ? 0 : 2*B*(L-1);
-            for (size_t g=0; g<G; g++, X1+=I1, X2+=I2)
+            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; b++, X1-=L*K1-J1, X2-=L*K2-J2)
+                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
-                    sd1 = sd2 = 0.0;
-                    *Y++ = 0.0; *Y-- = 0.0;
-                    for (size_t l=0; l<L; l++, X1+=K1-1, X2+=K2-1)
+                    sd1 = sd2 = yr = yi = 0.0;
+                    for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
-                        x1r = *X1++; x1i = *X1;
-                        x2r = *X2++; x2i = *X2;
-                        sd1 += x1r*x1r + x1i*x1i;
-                        sd2 += x2r*x2r + x2i*x2i;
-                        *Y++ += x1r*x2r + x1i*x2i;
-                        *Y-- -= x1r*x2i - x1i*x2r;
+                        x1r = *X1++; x2r = *X2++;
+                        sd1 += x1r*x1r + *X1**X1;
+                        sd2 += x2r*x2r + *X2**X2;
+                        yr += x1r*x2r + *X1**X2;
+                        yi -= x1r**X2 - *X1*x2r;
                     }
                     den = sqrt(sd1*sd2);
-                    *Y++ /= den; *Y++ /= den;
+                    *Y++ = yr / den; *Y++ = yi / den;
                 }
             }
         }

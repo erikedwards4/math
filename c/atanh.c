@@ -23,8 +23,8 @@ int atanh_inplace_z (double *X, const size_t N);
 
 int atanh_s (float *Y, const float *X, const size_t N)
 {
-    //for (size_t n=0; n<N; n++) { Y[n] = atanhf(X[n]); }
-    for (size_t n=0; n<N; n++) { Y[n] = 0.5f * logf((1.0f+X[n])/(1.0f-X[n])); }
+    //for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = atanhf(*X); }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = 0.5f * logf((1.0f+*X)/(1.0f-*X)); }
 
     return 0;
 }
@@ -32,8 +32,8 @@ int atanh_s (float *Y, const float *X, const size_t N)
 
 int atanh_d (double *Y, const double *X, const size_t N)
 {
-    //for (size_t n=0; n<N; n++) { Y[n] = atanh(X[n]); }
-    for (size_t n=0; n<N; n++) { Y[n] = 0.5 * log((1.0+X[n])/(1.0-X[n])); }
+    //for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = atanh(*X); }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = 0.5 * log((1.0+*X)/(1.0-*X)); }
     
     return 0;
 }
@@ -43,7 +43,7 @@ int atanh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float x, y;
 
-    for (size_t n=0; n<N; n++, X+=2)
+    for (size_t n=0; n<N; ++n, X+=2)
     {
         //y = catanhf(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0if**(X+1);
@@ -59,7 +59,7 @@ int atanh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double x, y;
 
-    for (size_t n=0; n<N; n++, X+=2)
+    for (size_t n=0; n<N; ++n, X+=2)
     {
         //y = catanh(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0i**(X+1);
@@ -73,8 +73,8 @@ int atanh_z (double *Y, const double *X, const size_t N)
 
 int atanh_inplace_s (float *X, const size_t N)
 {
-    //for (size_t n=0; n<N; n++) { X[n] = atanhf(X[n]); }
-    for (size_t n=0; n<N; n++) { X[n] = 0.5f * logf((1.0f+X[n])/(1.0f-X[n])); }
+    //for (size_t n=0; n<N; ++n, ++X) { *X = atanhf(*X); }
+    for (size_t n=0; n<N; ++n, ++X) { *X = 0.5f * logf((1.0f+*X)/(1.0f-*X)); }
 
     return 0;
 }
@@ -82,8 +82,8 @@ int atanh_inplace_s (float *X, const size_t N)
 
 int atanh_inplace_d (double *X, const size_t N)
 {
-    //for (size_t n=0; n<N; n++) { X[n] = atanh(X[n]); }
-    for (size_t n=0; n<N; n++) { X[n] = 0.5 * log((1.0+X[n])/(1.0-X[n])); }
+    //for (size_t n=0; n<N; ++n, ++X) { *X = atanh(*X); }
+    for (size_t n=0; n<N; ++n, ++X) { *X = 0.5 * log((1.0+*X)/(1.0-*X)); }
     
     return 0;
 }
@@ -93,7 +93,7 @@ int atanh_inplace_c (float *X, const size_t N)
 {
     _Complex float x, y;
 
-    for (size_t n=0; n<N; n++)
+    for (size_t n=0; n<N; ++n)
     {
         //y = catanhf(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0if**(X+1);
@@ -109,7 +109,7 @@ int atanh_inplace_z (double *X, const size_t N)
 {
     _Complex double x, y;
 
-    for (size_t n=0; n<N; n++)
+    for (size_t n=0; n<N; ++n)
     {
         //y = catanh(X[n2]+1.0i*X[n2+1]);
         x = *X + 1.0i**(X+1);

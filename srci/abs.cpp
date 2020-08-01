@@ -36,11 +36,14 @@ o1.S = i1.S; o1.H = i1.H;
 //Process
 if (i1.T==1)
 {
-    float *X;
+    float *X; //, *Y;
     try { X = new float[i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
+    //try { Y = new float[o1.N()]; }
+    //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+    //if (codee::abs_s(Y,X,i1.N()))
     if (codee::abs_inplace_s(X,i1.N()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
@@ -48,15 +51,18 @@ if (i1.T==1)
         try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
-    delete[] X;
+    delete[] X; //delete[] Y;
 }
 else if (i1.T==101)
 {
-    float *X;
+    float *X; //, *Y;
     try { X = new float[2u*i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
+    //try { Y = new float[2u*o1.N()]; }
+    //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+    //if (codee::abs_c(Y,X,i1.N()))
     if (codee::abs_inplace_c(X,i1.N()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
@@ -64,7 +70,7 @@ else if (i1.T==101)
         try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
-    delete[] X;
+    delete[] X; //delete[] Y;
 }
 
 //Finish

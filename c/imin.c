@@ -34,8 +34,8 @@ int imin_s (float *Y, const float *X, const size_t R, const size_t C, const size
     }
     else if (L==N)
     {
-        mn = *X; *Y = 0.0f;
-        for (size_t l=1; l<L; l++) { if (X[l]<mn) { mn = X[l]; *Y = l; } }
+        mn = *X++; *Y = 0.0f;
+        for (size_t l=1; l<L; ++l, ++X) { if (*X<mn) { mn = *X; *Y = l; } }
     }
     else
     {
@@ -45,20 +45,20 @@ int imin_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 mn = *X++; *Y = 0.0f;
-                for (size_t l=1; l<L; l++, X++) { if (*X<mn) { mn = *X; *Y = l; } }
+                for (size_t l=1; l<L; ++l, ++X) { if (*X<mn) { mn = *X; *Y = l; } }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=K*L-1, Y++)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     mn = *X; *Y = 0.0f; X += K;
-                    for (size_t l=1; l<L; l++, X+=K) { if (*X<mn) { mn = *X; *Y = l; } }
+                    for (size_t l=1; l<L; ++l, X+=K) { if (*X<mn) { mn = *X; *Y = l; } }
                 }
             }
         }
@@ -84,8 +84,8 @@ int imin_d (double *Y, const double *X, const size_t R, const size_t C, const si
     }
     else if (L==N)
     {
-        mn = *X; *Y = 0.0;
-        for (size_t l=1; l<L; l++) { if (X[l]<mn) { mn = X[l]; *Y = l; } }
+        mn = *X++; *Y = 0.0;
+        for (size_t l=1; l<L; ++l, ++X) { if (*X<mn) { mn = *X; *Y = l; } }
     }
     else
     {
@@ -95,20 +95,20 @@ int imin_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 mn = *X++; *Y = 0.0;
-                for (size_t l=1; l<L; l++, X++) { if (*X<mn) { mn = *X; *Y = l; } }
+                for (size_t l=1; l<L; ++l, ++X) { if (*X<mn) { mn = *X; *Y = l; } }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=K*L-1, Y++)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     mn = *X; *Y = 0.0; X += K;
-                    for (size_t l=1; l<L; l++, X+=K) { if (*X<mn) { mn = *X; *Y = l; } }
+                    for (size_t l=1; l<L; ++l, X+=K) { if (*X<mn) { mn = *X; *Y = l; } }
                 }
             }
         }
@@ -136,7 +136,7 @@ int imin_c (float *Y, const float *X, const size_t R, const size_t C, const size
     {
         mn = *X**X + *(X+1)**(X+1);
         *Y = 0.0f; X += 2;
-        for (size_t l=1; l<L; l++, X+=2)
+        for (size_t l=1; l<L; ++l, X+=2)
         {
             xx = *X**X + *(X+1)**(X+1);
             if (xx<mn) { mn = xx; *Y = l; }
@@ -150,11 +150,11 @@ int imin_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = 0.0f; X += 2;
-                for (size_t l=1; l<L; l++, X+=2)
+                for (size_t l=1; l<L; ++l, X+=2)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx<mn) { mn = xx; *Y = l; }
@@ -163,13 +163,13 @@ int imin_c (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=2*K*L-2, Y++)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     mn = *X**X + *(X+1)**(X+1);
                     *Y = 0.0f; X += 2*K;
-                    for (size_t l=1; l<L; l++, X+=2*K)
+                    for (size_t l=1; l<L; ++l, X+=2*K)
                     {
                         xx = *X**X + *(X+1)**(X+1);
                         if (xx<mn) { mn = xx; *Y = l; }
@@ -201,7 +201,7 @@ int imin_z (double *Y, const double *X, const size_t R, const size_t C, const si
     {
         mn = *X**X + *(X+1)**(X+1);
         *Y = 0.0; X += 2;
-        for (size_t l=1; l<L; l++, X+=2)
+        for (size_t l=1; l<L; ++l, X+=2)
         {
             xx = *X**X + *(X+1)**(X+1);
             if (xx<mn) { mn = xx; *Y = l; }
@@ -215,11 +215,11 @@ int imin_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = 0.0; X += 2;
-                for (size_t l=1; l<L; l++, X+=2)
+                for (size_t l=1; l<L; ++l, X+=2)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx<mn) { mn = xx; *Y = l; }
@@ -228,13 +228,13 @@ int imin_z (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=2*K*L-2, Y++)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     mn = *X**X + *(X+1)**(X+1);
                     *Y = 0.0; X += 2*K;
-                    for (size_t l=1; l<L; l++, X+=2*K)
+                    for (size_t l=1; l<L; ++l, X+=2*K)
                     {
                         xx = *X**X + *(X+1)**(X+1);
                         if (xx<mn) { mn = xx; *Y = l; }

@@ -34,9 +34,8 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        *Y = *X;
-        //for (size_t l=1; l<L; l++, X++) { if (*X<*Y) { *Y = *X; } }
-        for (size_t l=1; l<L; l++) { if (X[l]<*Y) { *Y = X[l]; } }
+        *Y = *X++;
+        for (size_t l=1; l<L; ++l, ++X) { if (*X<*Y) { *Y = *X; } }
     }
     else
     {
@@ -46,17 +45,17 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 *Y = *X++;
-                for (size_t l=1; l<L; l++, X++) { if (*X<*Y) { *Y = *X; } }
+                for (size_t l=1; l<L; ++l, ++X) { if (*X<*Y) { *Y = *X; } }
             }
         }
         else if (G==1)
         {
-            for (size_t l=0; l<L; l++, Y-=V)
+            for (size_t l=0; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; v++, X++, Y++)
+                for (size_t v=0; v<V; ++v, ++X, ++Y)
                 {
                     if (l==0 || *X<*Y) { *Y = *X; }
                 }
@@ -64,12 +63,12 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=K*L-1, Y++)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     *Y = *X; X += K;
-                    for (size_t l=1; l<L; l++, X+=K) { if (*X<*Y) { *Y = *X; } }
+                    for (size_t l=1; l<L; ++l, X+=K) { if (*X<*Y) { *Y = *X; } }
                 }
             }
         }
@@ -90,8 +89,8 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        *Y = *X;
-        for (size_t l=1; l<L; l++) { if (X[l]<*Y) { *Y = X[l]; } }
+        *Y = *X++;
+        for (size_t l=1; l<L; ++l, ++X) { if (*X<*Y) { *Y = *X; } }
     }
     else
     {
@@ -101,17 +100,17 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 *Y = *X++;
-                for (size_t l=1; l<L; l++, X++) { if (*X<*Y) { *Y = *X; } }
+                for (size_t l=1; l<L; ++l, ++X) { if (*X<*Y) { *Y = *X; } }
             }
         }
         else if (G==1)
         {
-            for (size_t l=0; l<L; l++, Y-=V)
+            for (size_t l=0; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; v++, X++, Y++)
+                for (size_t v=0; v<V; ++v, ++X, ++Y)
                 {
                     if (l==0 || *X<*Y) { *Y = *X; }
                 }
@@ -119,12 +118,12 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=K*L-1, Y++)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     *Y = *X; X += K;
-                    for (size_t l=1; l<L; l++, X+=K) { if (*X<*Y) { *Y = *X; } }
+                    for (size_t l=1; l<L; ++l, X+=K) { if (*X<*Y) { *Y = *X; } }
                 }
             }
         }
@@ -148,7 +147,7 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     {
         mn = *X**X + *(X+1)**(X+1);
         *Y = *X; *(Y+1) = *(X+1); X += 2;
-        for (size_t l=1; l<L; l++, X+=2)
+        for (size_t l=1; l<L; ++l, X+=2)
         {
             xx = *X**X + *(X+1)**(X+1);
             if (xx<mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -162,11 +161,11 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y+=2)
+            for (size_t v=0; v<V; ++v, Y+=2)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2;
-                for (size_t l=1; l<L; l++, X+=2)
+                for (size_t l=1; l<L; ++l, X+=2)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx<mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -177,9 +176,9 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         {
             float *mns;
             if (!(mns=(float *)malloc(V*sizeof(float)))) { fprintf(stderr,"error in min_c: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t l=0; l<L; l++, Y-=2*V, mns-=V)
+            for (size_t l=0; l<L; ++l, Y-=2*V, mns-=V)
             {
-                for (size_t v=0; v<V; v++, X+=2, Y+=2, mns++)
+                for (size_t v=0; v<V; ++v, X+=2, Y+=2, mns++)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (l==0 || xx<*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -189,13 +188,13 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=2*K*L-2, Y+=2)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y+=2)
                 {
                     mn = *X**X + *(X+1)**(X+1);
                     *Y = *X; *(Y+1) = *(X+1); X += 2*K;
-                    for (size_t l=1; l<L; l++, X+=2*K)
+                    for (size_t l=1; l<L; ++l, X+=2*K)
                     {
                         xx = *X**X + *(X+1)**(X+1);
                         if (xx<mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -223,7 +222,7 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     {
         mn = *X**X + *(X+1)**(X+1);
         *Y = *X; *(Y+1) = *(X+1); X += 2;
-        for (size_t l=1; l<L; l++, X+=2)
+        for (size_t l=1; l<L; ++l, X+=2)
         {
             xx = *X**X + *(X+1)**(X+1);
             if (xx<mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -237,11 +236,11 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y+=2)
+            for (size_t v=0; v<V; ++v, Y+=2)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2;
-                for (size_t l=1; l<L; l++, X+=2)
+                for (size_t l=1; l<L; ++l, X+=2)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx<mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -252,9 +251,9 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         {
             double *mns;
             if (!(mns=(double *)malloc(V*sizeof(double)))) { fprintf(stderr,"error in min_z: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t l=0; l<L; l++, Y-=2*V, mns-=V)
+            for (size_t l=0; l<L; ++l, Y-=2*V, mns-=V)
             {
-                for (size_t v=0; v<V; v++, X+=2, Y+=2, mns++)
+                for (size_t v=0; v<V; ++v, X+=2, Y+=2, mns++)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (l==0 || xx<*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -264,13 +263,13 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=2*K*L-2, Y+=2)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y+=2)
                 {
                     mn = *X**X + *(X+1)**(X+1);
                     *Y = *X; *(Y+1) = *(X+1); X += 2*K;
-                    for (size_t l=1; l<L; l++, X+=2*K)
+                    for (size_t l=1; l<L; ++l, X+=2*K)
                     {
                         xx = *X**X + *(X+1)**(X+1);
                         if (xx<mn) { mn = xx; *Y = *X; *(Y+1) = *(X+1); }

@@ -23,7 +23,7 @@ int primes_i (size_t *Y, size_t *cnt, const size_t N)
     int8_t *sieve;
 	if (!(sieve=(int8_t*)calloc((size_t)N,1))) { fprintf(stderr,"error in primes: problem with calloc. "); perror("caloc"); return 1; }
 
-    for (size_t n=0; n<N/3; n++, sieve++)
+    for (size_t n=0; n<N/3; ++n, ++sieve)
 	{
 		if (*sieve==0)
         {
@@ -33,7 +33,7 @@ int primes_i (size_t *Y, size_t *cnt, const size_t N)
     sieve -= N/3;
 
     Y[0] = 2; *cnt = 1;
-    for (size_t n=0; n<N; n++, sieve++)
+    for (size_t n=0; n<N; ++n, ++sieve)
 	{
         Y[*cnt] = 2*n + 3;
         *cnt = *cnt + (size_t)(*sieve==0);

@@ -23,10 +23,13 @@ descr += "Use -d1 to get norm along rows.\n";
 descr += "Use -d2 to get norm along slices.\n";
 descr += "Use -d3 to get norm along hyperslices.\n";
 descr += "\n";
+descr += "Note that norm1 and norm2 are special cases of\n";
+descr += "normp, where p=1 and p=2, respectively.\n";
+descr += "\n";
 descr += "Examples:\n";
 descr += "$ normp X -o Y \n";
-descr += "$ normp X > Y \n";
-descr += "$ normp -d1 X > Y \n";
+descr += "$ normp -p1.5 X > Y \n";
+descr += "$ normp -p3 -d1 X > Y \n";
 descr += "$ cat X | normp > Y \n";
 
 //Argtable

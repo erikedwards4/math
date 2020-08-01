@@ -55,7 +55,7 @@ int shift_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         const size_t J = L*K, G = N/J;
         if (P<0)
         {
-            for (size_t g=0, n=0; g<G; g++, n+=J)
+            for (size_t g=0, n=0; g<G; ++g, n+=J)
             {
                 cblas_scopy((int)L1,&X[n+L2],1,&Y[n],1);
                 cblas_scopy((int)L2,&z,0,&Y[n+L1],1);
@@ -63,7 +63,7 @@ int shift_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0, n=0; g<G; g++, n+=J)
+            for (size_t g=0, n=0; g<G; ++g, n+=J)
             {
                 cblas_scopy((int)L2,&z,0,&Y[n],1);
                 cblas_scopy((int)L1,&X[n],1,&Y[n+L2],1);
@@ -107,7 +107,7 @@ int shift_d (double *Y, const double *X, const size_t R, const size_t C, const s
         const size_t J = L*K, G = N/J;
         if (P<0)
         {
-            for (size_t g=0, n=0; g<G; g++, n+=J)
+            for (size_t g=0, n=0; g<G; ++g, n+=J)
             {
                 cblas_dcopy((int)L1,&X[n+L2],1,&Y[n],1);
                 cblas_dcopy((int)L2,&z,0,&Y[n+L1],1);
@@ -115,7 +115,7 @@ int shift_d (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0, n=0; g<G; g++, n+=J)
+            for (size_t g=0, n=0; g<G; ++g, n+=J)
             {
                 cblas_dcopy((int)L2,&z,0,&Y[n],1);
                 cblas_dcopy((int)L1,&X[n],1,&Y[n+L2],1);
@@ -159,7 +159,7 @@ int shift_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         const size_t J = L*K, G = N/J;
         if (P<0)
         {
-            for (size_t g=0, n=0; g<G; g++, n+=2*J)
+            for (size_t g=0, n=0; g<G; ++g, n+=2*J)
             {
                 cblas_ccopy((int)L1,&X[n+2*L2],1,&Y[n],1);
                 cblas_ccopy((int)L2,z,0,&Y[n+2*L1],1);
@@ -167,7 +167,7 @@ int shift_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0, n=0; g<G; g++, n+=2*J)
+            for (size_t g=0, n=0; g<G; ++g, n+=2*J)
             {
                 cblas_ccopy((int)L2,z,0,&Y[n],1);
                 cblas_ccopy((int)L1,&X[n],1,&Y[n+2*L2],1);
@@ -211,7 +211,7 @@ int shift_z (double *Y, const double *X, const size_t R, const size_t C, const s
         const size_t J = L*K, G = N/J;
         if (P<0)
         {
-            for (size_t g=0, n=0; g<G; g++, n+=2*J)
+            for (size_t g=0, n=0; g<G; ++g, n+=2*J)
             {
                 cblas_zcopy((int)L1,&X[n+2*L2],1,&Y[n],1);
                 cblas_zcopy((int)L2,z,0,&Y[n+2*L1],1);
@@ -219,7 +219,7 @@ int shift_z (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0, n=0; g<G; g++, n+=2*J)
+            for (size_t g=0, n=0; g<G; ++g, n+=2*J)
             {
                 cblas_zcopy((int)L2,z,0,&Y[n],1);
                 cblas_zcopy((int)L1,&X[n],1,&Y[n+2*L2],1);
@@ -254,7 +254,7 @@ int shift_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
         else
         {
             const size_t J = L*K, G = N/J;
-            for (size_t g=0, n=0; g<G; g++, n+=J)
+            for (size_t g=0, n=0; g<G; ++g, n+=J)
             {
                 cblas_scopy((int)L1,&X[n+L2],1,&X[n],1);
                 cblas_scopy((int)L2,&z,0,&X[n+L1],1);
@@ -277,7 +277,7 @@ int shift_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
         else
         {
             const size_t J = L*K, G = N/J;
-            for (size_t g=0, n=0; g<G; g++, n+=J)
+            for (size_t g=0, n=0; g<G; ++g, n+=J)
             {
                 cblas_scopy((int)L1,&X[n],1,X1,1);
                 cblas_scopy((int)L2,&z,0,&X[n],1);
@@ -314,7 +314,7 @@ int shift_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
         else
         {
             const size_t J = L*K, G = N/J;
-            for (size_t g=0, n=0; g<G; g++, n+=J)
+            for (size_t g=0, n=0; g<G; ++g, n+=J)
             {
                 cblas_dcopy((int)L1,&X[n+L2],1,&X[n],1);
                 cblas_dcopy((int)L2,&z,0,&X[n+L1],1);
@@ -337,7 +337,7 @@ int shift_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
         else
         {
             const size_t J = L*K, G = N/J;
-            for (size_t g=0, n=0; g<G; g++, n+=J)
+            for (size_t g=0, n=0; g<G; ++g, n+=J)
             {
                 cblas_dcopy((int)L1,&X[n],1,X1,1);
                 cblas_dcopy((int)L2,&z,0,&X[n],1);
@@ -374,7 +374,7 @@ int shift_inplace_c (float *X, const size_t R, const size_t C, const size_t S, c
         else
         {
             const size_t J = L*K, G = N/J;
-            for (size_t g=0, n=0; g<G; g++, n+=2*J)
+            for (size_t g=0, n=0; g<G; ++g, n+=2*J)
             {
                 cblas_ccopy((int)L1,&X[n+2*L2],1,&X[n],1);
                 cblas_ccopy((int)L2,z,0,&X[n+2*L1],1);
@@ -397,7 +397,7 @@ int shift_inplace_c (float *X, const size_t R, const size_t C, const size_t S, c
         else
         {
             const size_t J = L*K, G = N/J;
-            for (size_t g=0, n=0; g<G; g++, n+=2*J)
+            for (size_t g=0, n=0; g<G; ++g, n+=2*J)
             {
                 cblas_ccopy((int)L1,&X[n],1,X1,1);
                 cblas_ccopy((int)L2,z,0,&X[n],1);
@@ -434,7 +434,7 @@ int shift_inplace_z (double *X, const size_t R, const size_t C, const size_t S, 
         else
         {
             const size_t J = L*K, G = N/J;
-            for (size_t g=0, n=0; g<G; g++, n+=2*J)
+            for (size_t g=0, n=0; g<G; ++g, n+=2*J)
             {
                 cblas_zcopy((int)L1,&X[n+2*L2],1,&X[n],1);
                 cblas_zcopy((int)L2,z,0,&X[n+2*L1],1);
@@ -457,7 +457,7 @@ int shift_inplace_z (double *X, const size_t R, const size_t C, const size_t S, 
         else
         {
             const size_t J = L*K, G = N/J;
-            for (size_t g=0, n=0; g<G; g++, n+=2*J)
+            for (size_t g=0, n=0; g<G; ++g, n+=2*J)
             {
                 cblas_zcopy((int)L1,&X[n],1,X1,1);
                 cblas_zcopy((int)L2,z,0,&X[n],1);

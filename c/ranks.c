@@ -148,9 +148,9 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = l; }
+        for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
         qsort(XI,L,sizeof(FLT),comp);
-        for (size_t l=0; l<L; l++) { Y[XI[l].ind] = (float)l; }
+        for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (float)l; }
     }
     else
     {
@@ -160,22 +160,22 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y+=L)
+            for (size_t v=0; v<V; ++v, Y+=L)
             {
-                for (size_t l=0; l<L; l++) { XI[l].val = *X++; XI[l].ind = l; }
+                for (size_t l=0; l<L; ++l) { XI[l].val = *X++; XI[l].ind = l; }
                 qsort(XI,L,sizeof(FLT),comp);
-                for (size_t l=0; l<L; l++) { Y[XI[l].ind] = (float)l; }
+                for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (float)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; l++) { XI[l].val = X[l*K]; XI[l].ind = l; }
+                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(FLT),comp);
-                    for (size_t l=0; l<L; l++) { Y[K*XI[l].ind] = (float)l; }
+                    for (size_t l=0; l<L; ++l) { Y[K*XI[l].ind] = (float)l; }
                 }
             }
         }
@@ -205,9 +205,9 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = l; }
+        for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
         qsort(XI,L,sizeof(DBL),comp);
-        for (size_t l=0; l<L; l++) { Y[XI[l].ind] = (double)l; }
+        for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (double)l; }
     }
     else
     {
@@ -217,22 +217,22 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y+=L)
+            for (size_t v=0; v<V; ++v, Y+=L)
             {
-                for (size_t l=0; l<L; l++) { XI[l].val = *X++; XI[l].ind = l; }
+                for (size_t l=0; l<L; ++l) { XI[l].val = *X++; XI[l].ind = l; }
                 qsort(XI,L,sizeof(DBL),comp);
-                for (size_t l=0; l<L; l++) { Y[XI[l].ind] = (double)l; }
+                for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (double)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; l++) { XI[l].val = X[l*K]; XI[l].ind = l; }
+                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(DBL),comp);
-                    for (size_t l=0; l<L; l++) { Y[K*XI[l].ind] = (double)l; }
+                    for (size_t l=0; l<L; ++l) { Y[K*XI[l].ind] = (double)l; }
                 }
             }
         }
@@ -262,9 +262,9 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; l++) { XI[l].r = *X++; XI[l].i = *X++; XI[l].ind = l; }
+        for (size_t l=0; l<L; ++l) { XI[l].r = *X++; XI[l].i = *X++; XI[l].ind = l; }
         qsort(XI,L,sizeof(CFLT),comp);
-        for (size_t l=0; l<L; l++) { Y[XI[l].ind] = (float)l; }
+        for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (float)l; }
     }
     else
     {
@@ -274,22 +274,22 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++)
+            for (size_t v=0; v<V; ++v)
             {
-                for (size_t l=0; l<L; l++) { XI[l].r = *X++; XI[l].i = *X++; XI[l].ind = l; }
+                for (size_t l=0; l<L; ++l) { XI[l].r = *X++; XI[l].i = *X++; XI[l].ind = l; }
                 qsort(XI,L,sizeof(CFLT),comp);
-                for (size_t l=0; l<L; l++, Y++) { Y[XI[l].ind] = (float)l; }
+                for (size_t l=0; l<L; ++l, ++Y) { Y[XI[l].ind] = (float)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; l++) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
+                    for (size_t l=0; l<L; ++l) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(CFLT),comp);
-                    for (size_t l=0; l<L; l++) { Y[K*XI[l].ind] = (float)l; }
+                    for (size_t l=0; l<L; ++l) { Y[K*XI[l].ind] = (float)l; }
                 }
             }
         }
@@ -319,9 +319,9 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; l++) { XI[l].r = *X++; XI[l].i = *X++; XI[l].ind = l; }
+        for (size_t l=0; l<L; ++l) { XI[l].r = *X++; XI[l].i = *X++; XI[l].ind = l; }
         qsort(XI,L,sizeof(ZDBL),comp);
-        for (size_t l=0; l<L; l++) { Y[XI[l].ind] = (double)l; }
+        for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (double)l; }
     }
     else
     {
@@ -331,22 +331,22 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++)
+            for (size_t v=0; v<V; ++v)
             {
-                for (size_t l=0; l<L; l++) { XI[l].r = *X++; XI[l].i = *X++; XI[l].ind = l; }
+                for (size_t l=0; l<L; ++l) { XI[l].r = *X++; XI[l].i = *X++; XI[l].ind = l; }
                 qsort(XI,L,sizeof(ZDBL),comp);
-                for (size_t l=0; l<L; l++, Y++) { Y[XI[l].ind] = (double)l; }
+                for (size_t l=0; l<L; ++l, ++Y) { Y[XI[l].ind] = (double)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; l++) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
+                    for (size_t l=0; l<L; ++l) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(ZDBL),comp);
-                    for (size_t l=0; l<L; l++) { Y[K*XI[l].ind] = (double)l; }
+                    for (size_t l=0; l<L; ++l) { Y[K*XI[l].ind] = (double)l; }
                 }
             }
         }
@@ -376,9 +376,9 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = l; }
+        for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
         qsort(XI,L,sizeof(FLT),comp);
-        for (size_t l=0; l<L; l++) { X[XI[l].ind] = (float)l; }
+        for (size_t l=0; l<L; ++l) { X[XI[l].ind] = (float)l; }
     }
     else
     {
@@ -388,22 +388,22 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L)
             {
-                for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = l; }
+                for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
                 qsort(XI,L,sizeof(FLT),comp);
-                for (size_t l=0; l<L; l++) { X[XI[l].ind] = (float)l; }
+                for (size_t l=0; l<L; ++l) { X[XI[l].ind] = (float)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X)
                 {
-                    for (size_t l=0; l<L; l++) { XI[l].val = X[l*K]; XI[l].ind = l; }
+                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(FLT),comp);
-                    for (size_t l=0; l<L; l++) { X[K*XI[l].ind] = (float)l; }
+                    for (size_t l=0; l<L; ++l) { X[K*XI[l].ind] = (float)l; }
                 }
             }
         }
@@ -433,9 +433,9 @@ int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = l; }
+        for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
         qsort(XI,L,sizeof(DBL),comp);
-        for (size_t l=0; l<L; l++) { X[XI[l].ind] = (double)l; }
+        for (size_t l=0; l<L; ++l) { X[XI[l].ind] = (double)l; }
     }
     else
     {
@@ -445,22 +445,22 @@ int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L)
             {
-                for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = l; }
+                for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
                 qsort(XI,L,sizeof(DBL),comp);
-                for (size_t l=0; l<L; l++) { X[XI[l].ind] = (double)l; }
+                for (size_t l=0; l<L; ++l) { X[XI[l].ind] = (double)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X)
                 {
-                    for (size_t l=0; l<L; l++) { XI[l].val = X[l*K]; XI[l].ind = l; }
+                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(DBL),comp);
-                    for (size_t l=0; l<L; l++) { X[K*XI[l].ind] = (double)l; }
+                    for (size_t l=0; l<L; ++l) { X[K*XI[l].ind] = (double)l; }
                 }
             }
         }

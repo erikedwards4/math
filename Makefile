@@ -21,7 +21,7 @@ else
 	WFLAG=-Wall -Wextra
 endif
 
-CFLAGS=$(WFLAG) -O2 $(STD) -march=native -Ic
+CFLAGS=$(WFLAG) -O2 -ffast-math $(STD) -march=native -Ic
 #LIBS=-largtable2 -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
@@ -82,9 +82,9 @@ Other_Generate: eye linspace logspace primes randperm
 eye: srci/eye.cpp c/eye.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 linspace: srci/linspace.cpp c/linspace.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 logspace: srci/logspace.cpp c/logspace.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 primes: srci/primes.cpp c/primes.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 randperm: srci/randperm.cpp c/randperm.c
@@ -180,11 +180,13 @@ join3: srci/join3.cpp c/join3.c
 #Elementwise1 (scalar2scalar): 1 input, 1 output functions that operate element-wise
 Elementwise1: Operators Trig Exp_Log Round Special
 
-Operators: plusplus minusminus
+Operators: plusplus minusminus neg
 plusplus: srci/plusplus.cpp c/plusplus.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 minusminus: srci/minusminus.cpp c/minusminus.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+neg: srci/neg.cpp c/neg.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 
 Trig: sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh rad2deg deg2rad
 sin: srci/sin.cpp c/sin.c
@@ -251,7 +253,7 @@ lgamma: srci/lgamma.cpp c/lgamma.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 #Nonlin: other 1 input, 1 output static nonlinearities
-Nonlin: abs square cube sqrt cbrt deadzone
+Nonlin: abs square cube sqrt cbrt reciprocal deadzone
 abs: srci/abs.cpp c/abs.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 square: srci/square.cpp c/square.c
@@ -262,6 +264,8 @@ sqrt: srci/sqrt.cpp c/sqrt.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 cbrt: srci/cbrt.cpp c/cbrt.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+reciprocal: srci/reciprocal.cpp c/reciprocal.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 deadzone: srci/deadzone.cpp c/deadzone.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
@@ -291,7 +295,7 @@ adiff: srci/adiff.cpp c/adiff.c
 #Vec2scalar: some basic statistics calculated along rows, cols, etc.
 #The input consists of 1-D vectors within a tensor, and each vector is reduced to a scalar.
 #Thus, these are vec2scalar or "reduction" operations.
-Vec2scalar: Sums Prctiles Iprctiles Ranges Moments Norms Other_Stats
+Vec2scalar: Sums Prctiles Iprctiles Ranges Norms Moments Other_Means Other_Spreads Other_Stats
 
 Sums: sum asum cnt
 sum: srci/sum.cpp c/sum.c
@@ -357,13 +361,36 @@ norm2: srci/norm2.cpp c/norm2.c
 normp: srci/normp.cpp c/normp.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 
-Other_Stats: std coeff_var mad prod
+#Other_Means: trimmed, winsorized, geometric, harmonic, and generalized means (including special case RMS)
+Other_Means: trimmean winsormean geomean harmean genmean
+trimmean: srci/trimmean.cpp c/trimmean.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
+winsormean: srci/winsormean.cpp c/winsormean.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
+geomean: srci/geomean.cpp c/geomean.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+harmean: srci/harmean.cpp c/harmean.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+genmean: srci/genmean.cpp c/genmean.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+rms: srci/rms.cpp c/rms.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+
+Other_Spreads: std geostd trimstd trimvar coeff_var mad
 std: srci/std.cpp c/std.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+geostd: srci/geostd.cpp c/geostd.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+trimstd: srci/trimstd.cpp c/trimstd.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
+trimvar: srci/trimvar.cpp c/trimvar.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
 coeff_var: srci/coeff_var.cpp c/coeff_var.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 mad: srci/mad.cpp c/mad.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
+
+Other_Stats: prod
 prod: srci/prod.cpp c/prod.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 
@@ -415,12 +442,18 @@ cshift: srci/cshift.cpp c/cshift.c
 sort: srci/sort.cpp c/sort.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
 
-Other_Vec2vec: sorti ranks prctiles cumsum cumprod center scale normalize
+Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod center scale normalize
 sorti: srci/sorti.cpp c/sorti.c
-	$(ss) -tvd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 ranks: srci/ranks.cpp c/ranks.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 prctiles: srci/prctiles.cpp c/prctiles.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
+moments: srci/moments.cpp c/moments.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
+winsorize: srci/winsorize.cpp c/winsorize.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
+trim: srci/trim.cpp c/trim.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -llapacke -lm
 cumsum: srci/cumsum.cpp c/cumsum.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas

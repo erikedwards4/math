@@ -29,7 +29,7 @@ int deg2rad_s (float *Y, const float *X, const size_t N)
 {
     const float d2r = (float)(M_PI/180.0);
 
-    for (size_t n=0; n<N; n++) { Y[n] = d2r * X[n]; }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = d2r * *X; }
 
     return 0;
 }
@@ -39,7 +39,7 @@ int deg2rad_d (double *Y, const double *X, const size_t N)
 {
     const double d2r = M_PI / 180.0;
 
-    for (size_t n=0; n<N; n++) { Y[n] = d2r * X[n]; }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = d2r * *X; }
     
     return 0;
 }

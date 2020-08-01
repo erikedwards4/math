@@ -31,7 +31,7 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     else if (L==N)
     {
         mn = mx = *X++;
-        for (size_t l=1; l<L; l++, X++)
+        for (size_t l=1; l<L; ++l, ++X)
         {
             if (*X<mn) { mn = *X; }
             else if (*X>mx) { mx = *X; }
@@ -46,33 +46,33 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 mn = mx = *X++;
-                for (size_t l=1; l<L; l++, X++)
+                for (size_t l=1; l<L; ++l, ++X)
                 {
                     if (*X<mn) { mn = *X; }
                     else if (*X>mx) { mx = *X; }
                 }
-                *Y++ = mx - mn;
+                *Y = mx - mn;
             }
         }
         else
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in range_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X1-=L, X++)
+                for (size_t b=0; b<B; ++b, X1-=L, ++X, ++Y)
                 {
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     mn = mx = *X1++;
-                    for (size_t l=1; l<L; l++, X1++)
+                    for (size_t l=1; l<L; ++l, X1++)
                     {
                         if (*X1<mn) { mn = *X1; }
                         else if (*X1>mx) { mx = *X1; }
                     }
-                    *Y++ = mx - mn;
+                    *Y = mx - mn;
                 }
             }
             free(X1);
@@ -96,7 +96,7 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
     else if (L==N)
     {
         mn = mx = *X++;
-        for (size_t l=1; l<L; l++, X++)
+        for (size_t l=1; l<L; ++l, ++X)
         {
             if (*X<mn) { mn = *X; }
             else if (*X>mx) { mx = *X; }
@@ -111,33 +111,33 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 mn = mx = *X++;
-                for (size_t l=1; l<L; l++, X++)
+                for (size_t l=1; l<L; ++l, ++X)
                 {
                     if (*X<mn) { mn = *X; }
                     else if (*X>mx) { mx = *X; }
                 }
-                *Y++ = mx - mn;
+                *Y = mx - mn;
             }
         }
         else
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in range_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X1-=L, X++)
+                for (size_t b=0; b<B; ++b, X1-=L, ++X, ++Y)
                 {
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     mn = mx = *X1++;
-                    for (size_t l=1; l<L; l++, X1++)
+                    for (size_t l=1; l<L; ++l, X1++)
                     {
                         if (*X1<mn) { mn = *X1; }
                         else if (*X1>mx) { mx = *X1; }
                     }
-                    *Y++ = mx - mn;
+                    *Y = mx - mn;
                 }
             }
             free(X1);

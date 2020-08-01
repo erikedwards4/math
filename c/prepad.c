@@ -35,7 +35,7 @@ int prepad_s (float *Y, const float *X, const size_t R, const size_t C, const si
     if (P==0) { cblas_scopy((int)(R*C*S*H),X,1,Y,1); }
     else
     {
-        for (size_t l=0, n=0; l<L; l++, n+=J)
+        for (size_t l=0, n=0; l<L; ++l, n+=J)
         {
             cblas_scopy((int)((N-P)*I),&X[n],1,&Y[n+P*I],1);
             cblas_scopy((int)(P*I)&z,0,&Y[n],1);
@@ -62,7 +62,7 @@ int prepad_d (double *Y, const double *X, const size_t R, const size_t C, const 
     else if (P<=-N || P>=N) { cblas_dcopy((int)(R*C*S*H),&z,0,Y,1); }
     else if (P<0)
     {
-        for (size_t l=0, n=0; l<L; l++, n+=J)
+        for (size_t l=0, n=0; l<L; ++l, n+=J)
         {
             cblas_dcopy((N+P)*I,&X[n-P*I],1,&Y[n],1);
             cblas_dcopy((int)(-P*I)&z,0,&Y[n+(N+P)*I],1);
@@ -70,7 +70,7 @@ int prepad_d (double *Y, const double *X, const size_t R, const size_t C, const 
     }
     else
     {
-        for (size_t l=0, n=0; l<L; l++, n+=J)
+        for (size_t l=0, n=0; l<L; ++l, n+=J)
         {
             cblas_dcopy((int)((N-P)*I),&X[n],1,&Y[n+P*I],1);
             cblas_dcopy((int)(P*I)&z,0,&Y[n],1);
@@ -95,7 +95,7 @@ int prepad_c (float *Y, const float *X, const size_t R, const size_t C, const si
     else if (P<=-N || P>=N) { cblas_ccopy((int)(R*C*S*H),z,0,Y,1); }
     else if (P<0)
     {
-        for (size_t l=0, n=0; l<L; l++, n+=2*J)
+        for (size_t l=0, n=0; l<L; ++l, n+=2*J)
         {
             cblas_ccopy((N+P)*I,&X[n-2*P*I],1,&Y[n],1);
             cblas_ccopy((int)(-P*I)z,0,&Y[n+2*(N+P)*I],1);
@@ -103,7 +103,7 @@ int prepad_c (float *Y, const float *X, const size_t R, const size_t C, const si
     }
     else
     {
-        for (size_t l=0, n=0; l<L; l++, n+=2*J)
+        for (size_t l=0, n=0; l<L; ++l, n+=2*J)
         {
             cblas_ccopy((int)((N-P)*I),&X[n],1,&Y[n+2*P*I],1);
             cblas_ccopy((int)(P*I)z,0,&Y[n],1);
@@ -128,7 +128,7 @@ int prepad_z (double *Y, const double *X, const size_t R, const size_t C, const 
     else if (P<=-N || P>=N) { cblas_zcopy((int)(R*C*S*H),z,0,Y,1); }
     else if (P<0)
     {
-        for (size_t l=0, n=0; l<L; l++, n+=2*J)
+        for (size_t l=0, n=0; l<L; ++l, n+=2*J)
         {
             cblas_zcopy((N+P)*I,&X[n-2*P*I],1,&Y[n],1);
             cblas_zcopy((int)(-P*I)z,0,&Y[n+2*(N+P)*I],1);
@@ -136,7 +136,7 @@ int prepad_z (double *Y, const double *X, const size_t R, const size_t C, const 
     }
     else
     {
-        for (size_t l=0, n=0; l<L; l++, n+=2*J)
+        for (size_t l=0, n=0; l<L; ++l, n+=2*J)
         {
             cblas_zcopy((int)((N-P)*I),&X[n],1,&Y[n+2*P*I],1);
             cblas_zcopy((int)(P*I)z,0,&Y[n],1);

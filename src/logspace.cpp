@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Y is column vector for d=0, a row vector for d=1, etc.\n";
     descr += "\n";
-    descr += "Use -t (--type) to specify output data type [default=1 -> float].\n";
-    descr += "Data type can also be 2 (double).\n";
+    descr += "Use -t (--type) to specify output data type [default=1 (float)].\n";
+    descr += "Data type can also be 2 (double), 101 (complex float), or 102 (complex double).\n";
     descr += "\n";
     descr += "Use -f (--fmt) to specify output file format [default=147 -> NumPy].\n";
     descr += "File format can also be 1 (ArrayFire), 65 (Armadillo),\n";

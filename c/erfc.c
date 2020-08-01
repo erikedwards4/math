@@ -24,7 +24,7 @@ int erfc_inplace_z (double *X, const size_t N);
 
 int erfc_s (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { Y[n] = erfcf(X[n]); }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = erfcf(*X); }
 
     return 0;
 }
@@ -32,7 +32,7 @@ int erfc_s (float *Y, const float *X, const size_t N)
 
 int erfc_d (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { Y[n] = erfc(X[n]); }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = erfc(*X); }
     
     return 0;
 }
@@ -40,7 +40,7 @@ int erfc_d (double *Y, const double *X, const size_t N)
 
 int erfc_c (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0; n<2*N; n++) { Y[n] = erfcf(X[n]); }
+    for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = erfcf(*X); }
     
     return 0;
 }
@@ -48,7 +48,7 @@ int erfc_c (float *Y, const float *X, const size_t N)
 
 int erfc_z (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0; n<2*N; n++) { Y[n] = erfc(X[n]); }
+    for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = erfc(*X); }
     
     return 0;
 }
@@ -56,7 +56,7 @@ int erfc_z (double *Y, const double *X, const size_t N)
 
 int erfc_inplace_s (float *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { X[n] = erfcf(X[n]); }
+    for (size_t n=0; n<N; ++n, ++X) { *X = erfcf(*X); }
 
     return 0;
 }
@@ -64,7 +64,7 @@ int erfc_inplace_s (float *X, const size_t N)
 
 int erfc_inplace_d (double *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { X[n] = erfc(X[n]); }
+    for (size_t n=0; n<N; ++n, ++X) { *X = erfc(*X); }
     
     return 0;
 }
@@ -72,7 +72,7 @@ int erfc_inplace_d (double *X, const size_t N)
 
 int erfc_inplace_c (float *X, const size_t N)
 {
-    for (size_t n=0; n<2*N; n++) { X[n] = erfcf(X[n]); }
+    for (size_t n=0; n<2*N; ++n, ++X) { *X = erfcf(*X); }
     
     return 0;
 }
@@ -80,7 +80,7 @@ int erfc_inplace_c (float *X, const size_t N)
 
 int erfc_inplace_z (double *X, const size_t N)
 {
-    for (size_t n=0; n<2*N; n++) { X[n] = erfc(X[n]); }
+    for (size_t n=0; n<2*N; ++n, ++X) { *X = erfc(*X); }
     
     return 0;
 }

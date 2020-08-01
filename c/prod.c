@@ -28,7 +28,7 @@ int prod_s (float *Y, const float *X, const size_t R, const size_t C, const size
     else if (L==N)
     {
         *Y = *X;
-        for (size_t l=1; l<L; l++) { *Y *= X[l]; }
+        for (size_t l=1; l<L; ++l, ++X) { *Y *= *X; }
     }
     else
     {
@@ -38,29 +38,29 @@ int prod_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 *Y = *X++;
-                for (size_t l=1; l<L; l++) { *Y *= *X++; }
+                for (size_t l=1; l<L; ++l, ++X) { *Y *= *X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; v++) { *Y++ = *X++; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1; l<L; l++, Y-=V)
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; v++) { *Y++ *= *X++; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y *= *X; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=K*L-1, Y++)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     *Y = *X; X += K; Y += K;
-                    for (size_t l=1; l<L; l++, X+=K, Y+=K) { *Y *= *X; }
+                    for (size_t l=1; l<L; ++l, X+=K, Y+=K) { *Y *= *X; }
                 }
             }
         }
@@ -82,7 +82,7 @@ int prod_d (double *Y, const double *X, const size_t R, const size_t C, const si
     else if (L==N)
     {
         *Y = *X;
-        for (size_t l=1; l<L; l++) { *Y *= X[l]; }
+        for (size_t l=1; l<L; ++l, ++X) { *Y *= *X; }
     }
     else
     {
@@ -92,29 +92,29 @@ int prod_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 *Y = *X++;
-                for (size_t l=1; l<L; l++) { *Y *= *X++; }
+                for (size_t l=1; l<L; ++l, ++X) { *Y *= *X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; v++) { *Y++ = *X++; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1; l<L; l++, Y-=V)
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; v++) { *Y++ *= *X++; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y *= *X; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=K*L-1, Y++)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     *Y = *X; X += K; Y += K;
-                    for (size_t l=1; l<L; l++, X+=K, Y+=K) { *Y *= *X; }
+                    for (size_t l=1; l<L; ++l, X+=K, Y+=K) { *Y *= *X; }
                 }
             }
         }
@@ -137,11 +137,11 @@ int prod_c (float *Y, const float *X, const size_t R, const size_t C, const size
     else if (L==N)
     {
         *Y++ = *X++; *Y-- = *X++;
-        for (size_t l=1; l<L; l++, X+=2)
+        for (size_t l=1; l<L; ++l, X+=2)
         {
             yr = *X**Y - *(X+1)**(Y+1);
             yi = *X**(Y+1) + *(X+1)**Y;
-            *Y++ = yr ; *Y-- = yi;
+            *Y++ = yr; *Y-- = yi;
         }
     }
     else
@@ -152,49 +152,49 @@ int prod_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y+=2)
+            for (size_t v=0; v<V; ++v, Y+=2)
             {
                 *Y++ = *X++; *Y-- = *X++;
-                for (size_t l=1; l<L; l++, X+=2)
+                for (size_t l=1; l<L; ++l, X+=2)
                 {
                     yr = *X**Y - *(X+1)**(Y+1);
                     yi = *X**(Y+1) + *(X+1)**Y;
-                    *Y++ = yr ; *Y-- = yi;
+                    *Y++ = yr; *Y-- = yi;
                 }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; v++) { *Y++ = *X++; *Y++ = *X++; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *Y++ = *X++; }
             Y -= 2*V;
-            for (size_t l=1; l<L; l++, Y-=2*V)
+            for (size_t l=1; l<L; ++l, Y-=2*V)
             {
-                for (size_t v=0; v<V; v++, X+=2)
+                for (size_t v=0; v<V; ++v, X+=2)
                 {
                     yr = *X**Y - *(X+1)**(Y+1);
                     yi = *X**(Y+1) + *(X+1)**Y;
-                    *Y++ = yr ; *Y++ = yi;
+                    *Y++ = yr; *Y++ = yi;
                 }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=2*K*L-2, Y+=2)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y+=2)
                 {
                     *Y++ = *X; *Y-- = *(X+1); X += 2*K;
-                    for (size_t l=1; l<L; l++, X+=2*K)
+                    for (size_t l=1; l<L; ++l, X+=2*K)
                     {
                         yr = *X**Y - *(X+1)**(Y+1);
                         yi = *X**(Y+1) + *(X+1)**Y;
-                        *Y++ = yr ; *Y-- = yi;
+                        *Y++ = yr; *Y-- = yi;
                     }
                 }
             }
         }
     }
-
+    
     return 0;
 }
 
@@ -212,11 +212,11 @@ int prod_z (double *Y, const double *X, const size_t R, const size_t C, const si
     else if (L==N)
     {
         *Y++ = *X++; *Y-- = *X++;
-        for (size_t l=1; l<L; l++, X+=2)
+        for (size_t l=1; l<L; ++l, X+=2)
         {
             yr = *X**Y - *(X+1)**(Y+1);
             yi = *X**(Y+1) + *(X+1)**Y;
-            *Y++ = yr ; *Y-- = yi;
+            *Y++ = yr; *Y-- = yi;
         }
     }
     else
@@ -227,43 +227,43 @@ int prod_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, Y+=2)
+            for (size_t v=0; v<V; ++v, Y+=2)
             {
                 *Y++ = *X++; *Y-- = *X++;
-                for (size_t l=1; l<L; l++, X+=2)
+                for (size_t l=1; l<L; ++l, X+=2)
                 {
                     yr = *X**Y - *(X+1)**(Y+1);
                     yi = *X**(Y+1) + *(X+1)**Y;
-                    *Y++ = yr ; *Y-- = yi;
+                    *Y++ = yr; *Y-- = yi;
                 }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; v++) { *Y++ = *X++; *Y++ = *X++; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *Y++ = *X++; }
             Y -= 2*V;
-            for (size_t l=1; l<L; l++, Y-=2*V)
+            for (size_t l=1; l<L; ++l, Y-=2*V)
             {
-                for (size_t v=0; v<V; v++, X+=2)
+                for (size_t v=0; v<V; ++v, X+=2)
                 {
                     yr = *X**Y - *(X+1)**(Y+1);
                     yi = *X**(Y+1) + *(X+1)**Y;
-                    *Y++ = yr ; *Y++ = yi;
+                    *Y++ = yr; *Y++ = yi;
                 }
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X-=2*K*L-2, Y+=2)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y+=2)
                 {
                     *Y++ = *X; *Y-- = *(X+1); X += 2*K;
-                    for (size_t l=1; l<L; l++, X+=2*K)
+                    for (size_t l=1; l<L; ++l, X+=2*K)
                     {
                         yr = *X**Y - *(X+1)**(Y+1);
                         yi = *X**(Y+1) + *(X+1)**Y;
-                        *Y++ = yr ; *Y-- = yi;
+                        *Y++ = yr; *Y-- = yi;
                     }
                 }
             }

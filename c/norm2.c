@@ -30,7 +30,7 @@ int norm2_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; n++) { Y[n] = X[n]*X[n]; }
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = fabsf(*X); }
     }
     else if (L==N)
     {
@@ -44,28 +44,28 @@ int norm2_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L, ++Y)
             {
-                *Y++ = cblas_snrm2((int)L,X,1);
+                *Y = cblas_snrm2((int)L,X,1);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; v++, X++) { *Y++ = *X**X; }
-            Y -= V;
-            for (size_t l=1; l<L; l++, Y-=V)
+            const float z = 0.0f;
+            cblas_scopy((int)V,&z,0,Y,1);
+            for (size_t l=0; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; v++, X++) { *Y++ += *X**X; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
             }
-            for (size_t v=0; v<V; v++, Y++) { *Y = sqrtf(*Y); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrtf(*Y); }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    *Y++ = cblas_snrm2((int)L,X,(int)K);
+                    *Y = cblas_snrm2((int)L,X,(int)K);
                 }
             }
         }
@@ -85,7 +85,7 @@ int norm2_d (double *Y, const double *X, const size_t R, const size_t C, const s
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; n++) { Y[n] = X[n]*X[n]; }
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = fabs(*X); }
     }
     else if (L==N)
     {
@@ -99,28 +99,28 @@ int norm2_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L, ++Y)
             {
-                *Y++ = cblas_dnrm2((int)L,X,1);
+                *Y = cblas_dnrm2((int)L,X,1);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; v++, X++) { *Y++ = *X**X; }
-            Y -= V;
-            for (size_t l=1; l<L; l++, Y-=V)
+            const double z = 0.0;
+            cblas_dcopy((int)V,&z,0,Y,1);
+            for (size_t l=0; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; v++, X++) { *Y++ += *X**X; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
             }
-            for (size_t v=0; v<V; v++, Y++) { *Y = sqrt(*Y); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrt(*Y); }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    *Y++ = cblas_dnrm2((int)L,X,(int)K);
+                    *Y = cblas_dnrm2((int)L,X,(int)K);
                 }
             }
         }
@@ -140,7 +140,7 @@ int norm2_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; n++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
+        for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
@@ -154,28 +154,28 @@ int norm2_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=2*L)
+            for (size_t v=0; v<V; ++v, X+=2*L, ++Y)
             {
-                *Y++ = cblas_scnrm2((int)L,X,1);
+                *Y = cblas_scnrm2((int)L,X,1);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; v++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
-            Y -= V;
-            for (size_t l=1; l<L; l++, Y-=V)
+            const float z = 0.0f;
+            cblas_scopy((int)V,&z,0,Y,1);
+            for (size_t l=0; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; v++, X+=2) { *Y++ += *X**X + *(X+1)**(X+1); }
+                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
             }
-            for (size_t v=0; v<V; v++, Y++) { *Y = sqrtf(*Y); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrtf(*Y); }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X+=2)
+                for (size_t b=0; b<B; ++b, X+=2, ++Y)
                 {
-                    *Y++ = cblas_scnrm2((int)L,X,(int)K);
+                    *Y = cblas_scnrm2((int)L,X,(int)K);
                 }
             }
         }
@@ -195,7 +195,7 @@ int norm2_z (double *Y, const double *X, const size_t R, const size_t C, const s
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; n++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
+        for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
@@ -209,28 +209,28 @@ int norm2_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=2*L)
+            for (size_t v=0; v<V; ++v, X+=2*L, ++Y)
             {
-                *Y++ = cblas_dznrm2((int)L,X,1);
+                *Y = cblas_dznrm2((int)L,X,1);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; v++, X+=2) { *Y++ = *X**X + *(X+1)**(X+1); }
-            Y -= V;
-            for (size_t l=1; l<L; l++, Y-=V)
+            const double z = 0.0;
+            cblas_dcopy((int)V,&z,0,Y,1);
+            for (size_t l=0; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; v++, X+=2) { *Y++ += *X**X + *(X+1)**(X+1); }
+                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
             }
-            for (size_t v=0; v<V; v++, Y++) { *Y = sqrt(*Y); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrt(*Y); }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X+=2)
+                for (size_t b=0; b<B; ++b, X+=2, ++Y)
                 {
-                    *Y++ = cblas_dznrm2((int)L,X,(int)K);
+                    *Y = cblas_dznrm2((int)L,X,(int)K);
                 }
             }
         }

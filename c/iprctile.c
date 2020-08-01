@@ -69,7 +69,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = (float)l; }
+        for (size_t l=0; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (float)l; }
         qsort(XI,L,sizeof(FLT),cmp_ascend_s);
         *Y = XI[ip].ind;
     }
@@ -81,22 +81,22 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                for (size_t l=0; l<L; l++) { XI[l].val = *X++; XI[l].ind = (float)l; }
+                for (size_t l=0; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (float)l; }
                 qsort(XI,L,sizeof(FLT),cmp_ascend_s);
-                *Y++ = XI[ip].ind;
+                *Y = XI[ip].ind;
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = (float)l; }
+                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = (float)l; }
                     qsort(XI,L,sizeof(FLT),cmp_ascend_s);
-                    *Y++ = XI[ip].ind;
+                    *Y = XI[ip].ind;
                 }
             }
         }
@@ -132,7 +132,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = (double)l; }
+        for (size_t l=0; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (double)l; }
         qsort(XI,L,sizeof(DBL),cmp_ascend_d);
         *Y = XI[ip].ind;
     }
@@ -144,22 +144,22 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                for (size_t l=0; l<L; l++) { XI[l].val = *X++; XI[l].ind = (double)l; }
+                for (size_t l=0; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (double)l; }
                 qsort(XI,L,sizeof(DBL),cmp_ascend_d);
-                *Y++ = XI[ip].ind;
+                *Y = XI[ip].ind;
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; l++) { XI[l].val = X[l]; XI[l].ind = (double)l; }
+                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = (double)l; }
                     qsort(XI,L,sizeof(DBL),cmp_ascend_d);
-                    *Y++ = XI[ip].ind;
+                    *Y = XI[ip].ind;
                 }
             }
         }

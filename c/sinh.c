@@ -25,8 +25,8 @@ int sinh_s (float *Y, const float *X, const size_t N)
 {
     float xp, xm;
 
-    //for (size_t n=0; n<N; n++) { Y[n] = sinhf(X[n]); }
-    for (size_t n=0; n<N; n++) { xp = expf(X[n]); xm = expf(-X[n]); Y[n] = 0.5f*(xp-xm); }
+    //for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = sinhf(*X); }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { xp = expf(*X); xm = expf(-*X); *Y = 0.5f*(xp-xm); }
 
     return 0;
 }
@@ -36,8 +36,8 @@ int sinh_d (double *Y, const double *X, const size_t N)
 {
     double xp, xm;
 
-    //for (size_t n=0; n<N; n++) { Y[n] = sinh(X[n]); }
-    for (size_t n=0; n<N; n++) { xp = exp(X[n]); xm = exp(-X[n]); Y[n] = 0.5*(xp-xm); }
+    //for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = sinh(*X); }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { xp = exp(*X); xm = exp(-*X); *Y = 0.5*(xp-xm); }
     
     return 0;
 }
@@ -47,7 +47,7 @@ int sinh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float y, xp, xm;
     
-    for (size_t n=0; n<N; n++, X+=2)
+    for (size_t n=0; n<N; ++n, X+=2)
     {
         //y = csinhf(*X + 1.0if**(X+1));
         xp = cexpf(*X + 1.0if**(X+1));
@@ -66,7 +66,7 @@ int sinh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double y, xp, xm;
     
-    for (size_t n=0; n<N; n++, X+=2)
+    for (size_t n=0; n<N; ++n, X+=2)
     {
         xp = cexp(*X + 1.0i**(X+1));
         xm = cexp(-*X - 1.0i**(X+1));
@@ -82,8 +82,8 @@ int sinh_inplace_s (float *X, const size_t N)
 {
     float xp, xm;
 
-    //for (size_t n=0; n<N; n++) { X[n] = sinhf(X[n]); }
-    for (size_t n=0; n<N; n++) { xp = expf(X[n]); xm = expf(-X[n]); X[n] = 0.5f*(xp-xm); }
+    //for (size_t n=0; n<N; ++n, ++X) { *X = sinhf(*X); }
+    for (size_t n=0; n<N; ++n, ++X) { xp = expf(*X); xm = expf(-*X); *X = 0.5f*(xp-xm); }
 
     return 0;
 }
@@ -93,8 +93,8 @@ int sinh_inplace_d (double *X, const size_t N)
 {
     double xp, xm;
 
-    //for (size_t n=0; n<N; n++) { X[n] = sinh(X[n]); }
-    for (size_t n=0; n<N; n++) { xp = exp(X[n]); xm = exp(-X[n]); X[n] = 0.5*(xp-xm); }
+    //for (size_t n=0; n<N; ++n, ++X) { *X = sinh(*X); }
+    for (size_t n=0; n<N; ++n, ++X) { xp = exp(*X); xm = exp(-*X); *X = 0.5*(xp-xm); }
     
     return 0;
 }
@@ -105,7 +105,7 @@ int sinh_inplace_c (float *X, const size_t N)
     _Complex float y, xp, xm;
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
-    for (size_t n=0; n<N; n++)
+    for (size_t n=0; n<N; ++n)
     {
         //y = csinhf(*X + 1.0if**(X+1));
         xp = cexpf(*X + 1.0if**(X+1));
@@ -125,7 +125,7 @@ int sinh_inplace_z (double *X, const size_t N)
 {
     _Complex double y, xp, xm;
     
-    for (size_t n=0; n<N; n++)
+    for (size_t n=0; n<N; ++n)
     {
         xp = cexp(*X + 1.0i**(X+1));
         xm = cexp(-*X - 1.0i**(X+1));

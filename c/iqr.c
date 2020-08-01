@@ -59,7 +59,7 @@ int iqr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L, Y++)
+            for (size_t v=0; v<V; ++v, X+=L, ++Y)
             {
                 cblas_scopy((int)L,X,1,X1,1);
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr_s: problem with LAPACKE function\n"); }
@@ -72,9 +72,9 @@ int iqr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr_s: problem with LAPACKE function\n"); }
@@ -129,7 +129,7 @@ int iqr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L, Y++)
+            for (size_t v=0; v<V; ++v, X+=L, ++Y)
             {
                 cblas_dcopy((int)L,X,1,X1,1);
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr_d: problem with LAPACKE function\n"); }
@@ -142,9 +142,9 @@ int iqr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr_d: problem with LAPACKE function\n"); }
@@ -194,7 +194,7 @@ int iqr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L-i2, Y++)
+            for (size_t v=0; v<V; ++v, X+=L-i2, ++Y)
             {
                 if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in iqr_inplace_s: problem with LAPACKE function\n"); }
                 X += i1;
@@ -207,9 +207,9 @@ int iqr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in iqr_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr_inplace_s: problem with LAPACKE function\n"); }
@@ -259,7 +259,7 @@ int iqr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L-i2, Y++)
+            for (size_t v=0; v<V; ++v, X+=L-i2, ++Y)
             {
                 if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in iqr_inplace_d: problem with LAPACKE function\n"); }
                 X += i1;
@@ -272,9 +272,9 @@ int iqr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in iqr_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr_inplace_d: problem with LAPACKE function\n"); }

@@ -24,7 +24,7 @@ int proj_c (float *Y, const float *X, const size_t N)
 
     for (size_t n=0; n<2*N; n+=2)
     {
-        y = cprojf(X[n]+1.0if*X[n+1]);
+        y = cprojf(*X + 1.0if**(X+1));
         //memcpy(&Y[n],(float *)&y,2*sizeof(float));
         *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
     }
@@ -39,7 +39,7 @@ int proj_z (double *Y, const double *X, const size_t N)
 
     for (size_t n=0; n<2*N; n+=2)
     {
-        y = cproj(X[n]+1.0i*X[n+1]);
+        y = cproj(*X + 1.0i**(X+1));
         *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
     }
     
@@ -54,7 +54,7 @@ int proj_inplace_c (float *X, const size_t N)
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     //for (size_t n=0; n<2*N; n+=2)
-    for (size_t n=0; n<N; n++)
+    for (size_t n=0; n<N; ++n)
     {
         y = cprojf(*X + 1.0if**(X+1));
         //y = cprojf(X[n]+1.0if*X[n+1]);
@@ -75,7 +75,7 @@ int proj_inplace_z (double *X, const size_t N)
 
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
-    for (size_t n=0; n<N; n++)
+    for (size_t n=0; n<N; ++n)
     {
         y = cproj(*X + 1.0i**(X+1));
         *X++ = *(double *)&y; *X++ = *((double *)&y+1);

@@ -44,7 +44,7 @@ int mad_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         cblas_scopy((int)L,X,1,X1,1);
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_s: problem with LAPACKE function\n"); }
         X1 += i2; *Y = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1)); X1 -= i2;
-        for (size_t l=0; l<L; l++) { X1[l] = fabsf(X1[l]-*Y); }
+        for (size_t l=0; l<L; ++l) { X1[l] = fabsf(X1[l]-*Y); }
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_s: problem with LAPACKE function\n"); }
         X1 += i2; *Y = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1)); X1 -= i2;
     }
@@ -56,26 +56,26 @@ int mad_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L)
             {
                 cblas_scopy((int)L,X,1,X1,1);
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_s: problem with LAPACKE function\n"); }
                 X1 += i2; *Y = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1)); X1 -= i2;
-                for (size_t l=0; l<L; l++) { X1[l] = fabsf(X1[l]-*Y); }
+                for (size_t l=0; l<L; ++l) { X1[l] = fabsf(X1[l]-*Y); }
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_s: problem with LAPACKE function\n"); }
                 X1 += i2; *Y++ = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1)); X1 -= i2;
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X)
                 {
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_s: problem with LAPACKE function\n"); }
                     X1 += i2; *Y = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1)); X1 -= i2;
-                    for (size_t l=0; l<L; l++) { X1[l] = fabsf(X1[l]-*Y); }
+                    for (size_t l=0; l<L; ++l) { X1[l] = fabsf(X1[l]-*Y); }
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_s: problem with LAPACKE function\n"); }
                     X1 += i2; *Y++ = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1)); X1 -= i2;
                 }
@@ -110,7 +110,7 @@ int mad_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         cblas_dcopy((int)L,X,1,X1,1);
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_d: problem with LAPACKE function\n"); }
         X1 += i2; *Y = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1)); X1 -= i2;
-        for (size_t l=0; l<L; l++) { X1[l] = fabs(X1[l]-*Y); }
+        for (size_t l=0; l<L; ++l) { X1[l] = fabs(X1[l]-*Y); }
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_d: problem with LAPACKE function\n"); }
         X1 += i2; *Y = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1)); X1 -= i2;
     }
@@ -122,26 +122,26 @@ int mad_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L)
             {
                 cblas_dcopy((int)L,X,1,X1,1);
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_d: problem with LAPACKE function\n"); }
                 X1 += i2; *Y = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1)); X1 -= i2;
-                for (size_t l=0; l<L; l++) { X1[l] = fabs(X1[l]-*Y); }
+                for (size_t l=0; l<L; ++l) { X1[l] = fabs(X1[l]-*Y); }
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_d: problem with LAPACKE function\n"); }
                 X1 += i2; *Y++ = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1)); X1 -= i2;
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X)
                 {
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_d: problem with LAPACKE function\n"); }
                     X1 += i2; *Y = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1)); X1 -= i2;
-                    for (size_t l=0; l<L; l++) { X1[l] = fabs(X1[l]-*Y); }
+                    for (size_t l=0; l<L; ++l) { X1[l] = fabs(X1[l]-*Y); }
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_d: problem with LAPACKE function\n"); }
                     X1 += i2; *Y++ = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1)); X1 -= i2;
                 }
@@ -172,7 +172,7 @@ int mad_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
     {
         if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in mad_inplace_s: problem with LAPACKE function\n"); }
         X += i2; *Y = (L%2) ? *X : 0.5f*(*X + *(X-1)); X -= i2;
-        for (size_t l=0; l<L; l++) { X[l] = fabsf(X[l]-*Y); }
+        for (size_t l=0; l<L; ++l) { X[l] = fabsf(X[l]-*Y); }
         if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in mad_inplace_s: problem with LAPACKE function\n"); }
         X += i2; *Y = (L%2) ? *X : 0.5f*(*X + *(X-1));
     }
@@ -184,11 +184,11 @@ int mad_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L-i2)
+            for (size_t v=0; v<V; ++v, X+=L-i2)
             {
                 if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in mad_inplace_s: problem with LAPACKE function\n"); }
                 X += i2; *Y = (L%2) ? *X : 0.5f*(*X + *(X-1)); X -= i2;
-                for (size_t l=0; l<L; l++) { X[l] = fabsf(X[l]-*Y); }
+                for (size_t l=0; l<L; ++l) { X[l] = fabsf(X[l]-*Y); }
                 if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in mad_inplace_s: problem with LAPACKE function\n"); }
                 X += i2; *Y++ = (L%2) ? *X : 0.5f*(*X + *(X-1));
             }
@@ -197,14 +197,14 @@ int mad_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in mad_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X)
                 {
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_inplace_s: problem with LAPACKE function\n"); }
                     X1 += i2; *Y = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1)); X1 -= i2;
-                    for (size_t l=0; l<L; l++) { X1[l] = fabsf(X1[l]-*Y); }
+                    for (size_t l=0; l<L; ++l) { X1[l] = fabsf(X1[l]-*Y); }
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_inplace_s: problem with LAPACKE function\n"); }
                     X1 += i2; *Y++ = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1)); X1 -= i2;
                 }
@@ -235,7 +235,7 @@ int mad_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
     {
         if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in mad_inplace_d: problem with LAPACKE function\n"); }
         X += i2; *Y = (L%2) ? *X : 0.5*(*X + *(X-1)); X -= i2;
-        for (size_t l=0; l<L; l++) { X[l] = fabs(X[l]-*Y); }
+        for (size_t l=0; l<L; ++l) { X[l] = fabs(X[l]-*Y); }
         if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in mad_inplace_d: problem with LAPACKE function\n"); }
         X += i2; *Y = (L%2) ? *X : 0.5*(*X + *(X-1));
     }
@@ -247,11 +247,11 @@ int mad_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L-i2)
+            for (size_t v=0; v<V; ++v, X+=L-i2)
             {
                 if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in mad_inplace_d: problem with LAPACKE function\n"); }
                 X += i2; *Y = (L%2) ? *X : 0.5*(*X + *(X-1)); X -= i2;
-                for (size_t l=0; l<L; l++) { X[l] = fabs(X[l]-*Y); }
+                for (size_t l=0; l<L; ++l) { X[l] = fabs(X[l]-*Y); }
                 if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in mad_inplace_d: problem with LAPACKE function\n"); }
                 X += i2; *Y++ = (L%2) ? *X : 0.5*(*X + *(X-1));
             }
@@ -260,14 +260,14 @@ int mad_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in mad_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X)
                 {
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_inplace_d: problem with LAPACKE function\n"); }
                     X1 += i2; *Y = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1)); X1 -= i2;
-                    for (size_t l=0; l<L; l++) { X1[l] = fabs(X1[l]-*Y); }
+                    for (size_t l=0; l<L; ++l) { X1[l] = fabs(X1[l]-*Y); }
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mad_inplace_d: problem with LAPACKE function\n"); }
                     X1 += i2; *Y++ = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1)); X1 -= i2;
                 }

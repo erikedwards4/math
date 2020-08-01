@@ -43,18 +43,18 @@ int iamin_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L, ++Y)
             {
-                *Y++ = (float)cblas_isamin((int)L,X,1);
+                *Y = (float)cblas_isamin((int)L,X,1);
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    *Y++ = (float)cblas_isamin((int)L,X,(int)K);
+                    *Y = (float)cblas_isamin((int)L,X,(int)K);
                 }
             }
         }
@@ -89,18 +89,18 @@ int iamin_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L, ++Y)
             {
-                *Y++ = (double)cblas_idamin((int)L,X,1);
+                *Y = (double)cblas_idamin((int)L,X,1);
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    *Y++ = (double)cblas_idamin((int)L,X,(int)K);
+                    *Y = (double)cblas_idamin((int)L,X,(int)K);
                 }
             }
         }
@@ -135,18 +135,18 @@ int iamin_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=2*L)
+            for (size_t v=0; v<V; ++v, X+=2*L, ++Y)
             {
-                *Y++ = (float)cblas_icamin((int)L,X,1);
+                *Y = (float)cblas_icamin((int)L,X,1);
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X+=2)
+                for (size_t b=0; b<B; ++b, X+=2, ++Y)
                 {
-                    *Y++ = (float)cblas_icamin((int)L,X,2*(int)K);
+                    *Y = (float)cblas_icamin((int)L,X,2*(int)K);
                 }
             }
         }
@@ -181,18 +181,18 @@ int iamin_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=2*L)
+            for (size_t v=0; v<V; ++v, X+=2*L, ++Y)
             {
-                *Y++ = (double)cblas_izamin((int)L,X,1);
+                *Y = (double)cblas_izamin((int)L,X,1);
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=2*B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X+=2)
+                for (size_t b=0; b<B; ++b, X+=2, ++Y)
                 {
-                    *Y++ = (double)cblas_izamin((int)L,X,2*(int)K);
+                    *Y = (double)cblas_izamin((int)L,X,2*(int)K);
                 }
             }
         }

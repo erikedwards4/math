@@ -35,7 +35,7 @@ int dist_cos_s (float *Y, const float *X1, const float *X2, const size_t R1, con
     else if (L==N)
     {
         sm11 = sm22 = sm12 = 0.0f;
-        for (size_t l=0; l<L; l++, X1++, X2++)
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
         }
@@ -50,14 +50,14 @@ int dist_cos_s (float *Y, const float *X1, const float *X2, const size_t R1, con
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; v++, X1-=J1, X2-=J2)
+            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 sm11 = sm22 = sm12 = 0.0f;
-                for (size_t l=0; l<L; l++, X1++, X2++)
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
                 }
-                *Y++ = 1.0f - sm12/sqrtf(sm11*sm22);
+                *Y = 1.0f - sm12/sqrtf(sm11*sm22);
             }
         }
         else
@@ -65,16 +65,16 @@ int dist_cos_s (float *Y, const float *X1, const float *X2, const size_t R1, con
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; g++, X1+=I1, X2+=I2)
+            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; b++, X1-=L*K1-J1, X2-=L*K2-J2)
+                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm11 = sm22 = sm12 = 0.0f;
-                    for (size_t l=0; l<L; l++, X1+=K1, X2+=K2)
+                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
                     }
-                    *Y++ = 1.0f - sm12/sqrtf(sm11*sm22);
+                    *Y = 1.0f - sm12/sqrtf(sm11*sm22);
                 }
             }
         }
@@ -103,7 +103,7 @@ int dist_cos_d (double *Y, const double *X1, const double *X2, const size_t R1, 
     else if (L==N)
     {
         sm11 = sm22 = sm12 = 0.0;
-        for (size_t l=0; l<L; l++, X1++, X2++)
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
         }
@@ -118,14 +118,14 @@ int dist_cos_d (double *Y, const double *X1, const double *X2, const size_t R1, 
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; v++, X1-=J1, X2-=J2)
+            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 sm11 = sm22 = sm12 = 0.0;
-                for (size_t l=0; l<L; l++, X1++, X2++)
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
                 }
-                *Y++ = 1.0 - sm12/sqrt(sm11*sm22);
+                *Y = 1.0 - sm12/sqrt(sm11*sm22);
             }
         }
         else
@@ -133,16 +133,16 @@ int dist_cos_d (double *Y, const double *X1, const double *X2, const size_t R1, 
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; g++, X1+=I1, X2+=I2)
+            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; b++, X1-=L*K1-J1, X2-=L*K2-J2)
+                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm11 = sm22 = sm12 = 0.0;
-                    for (size_t l=0; l<L; l++, X1+=K1, X2+=K2)
+                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
                     }
-                    *Y++ = 1.0 - sm12/sqrt(sm11*sm22);
+                    *Y = 1.0 - sm12/sqrt(sm11*sm22);
                 }
             }
         }

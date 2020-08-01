@@ -1,6 +1,5 @@
 //Vec2scalar (reduction) operation.
 //Gets the coefficient of variation (std/mean) for each vector in X along dim.
-//This works in place.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,16 +21,27 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float z = 0.0f, o = 1.0f, ni = 1.0f/L;
-    const float den = (biased) ? 1.0f/sqrtf(L) : 1.0f/sqrtf(L-1);
+    const float ni = 1.0f/L, den = (biased) ? ni : 1.0f/(L-1);
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,&z,0,Y,1); }
+    else if (L<2) { fprintf(stderr,"error in coeff_var_s: L must be > 1\n"); return 1; }
     else if (L==N)
     {
-        *Y = cblas_sdot((int)L,X,1,&o,0) * ni;
-        cblas_saxpy((int)L,-*Y,&o,0,X,1);
-        *Y = cblas_snrm2((int)L,X,1) * den / *Y;
+        float x, sm2 = 0.0f;
+        if (L<7000)
+        {
+            *Y = 0.0f;
+            for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
+            *Y *= ni;
+            for (size_t l=0; l<L; ++l) { x = *--X - *Y; sm2 += x*x; }
+        }
+        else
+        {
+            const float o = 1.0f;
+            *Y = cblas_sdot((int)L,X,1,&o,0) * ni;
+            for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; sm2 += x*x; }
+        }
+        *Y = sqrtf(sm2*den) / *Y;
     }
     else
     {
@@ -41,56 +51,54 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            if (V<250)
+            float x, sm2;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                for (size_t v=0; v<V; v++, X+=L, Y++)
-                {
-                    *Y = cblas_sdot((int)L,X,1,&o,0) * ni;
-                    cblas_saxpy((int)L,-*Y,&o,0,X,1);
-                    *Y = cblas_snrm2((int)L,X,1) * den / *Y;
-                }
-            }
-            else
-            {
-                float *x1;
-                if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
-                cblas_scopy((int)L,&o,0,x1,1);
-                cblas_sgemv(CblasColMajor,CblasTrans,(int)L,(int)V,o,X,(int)L,x1,1,0.0f,Y,1);
-                cblas_sscal((int)V,ni,Y,1);
-                cblas_sgemm(CblasColMajor,CblasTrans,CblasTrans,(int)L,(int)V,1,-o,x1,1,Y,(int)V,o,X,(int)L);
-                for (size_t v=0; v<V; v++, X+=L, Y++) { *Y = cblas_snrm2((int)L,X,1) * den / *Y; }
-                free(x1);
+                *Y = sm2 = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
+                *Y *= ni; X -= L;
+                for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; sm2 += x*x; }
+                *Y = sqrtf(sm2*den) / *Y;
             }
         }
         else if (G==1)
         {
-            float *x1;
-            if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
-            cblas_scopy((int)L,&o,0,x1,1);
-            cblas_sgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,o,X,(int)V,x1,1,z,Y,1);
-            cblas_sscal((int)V,ni,Y,1);
-            cblas_sgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)L,(int)V,1,-o,x1,1,Y,(int)V,o,X,(int)V);
-            for (size_t v=0; v<V; v++, X++, Y++) { *Y = cblas_snrm2((int)L,X,(int)V) * den / *Y; }
-            free(x1);
+            const float z = 0.0f;
+            float x, *mn;
+            if (!(mn=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with calloc. "); perror("calloc"); return 1; }
+            for (size_t l=0; l<L; ++l, mn-=V)
+            {
+                for (size_t v=0; v<V; ++v, ++X, ++mn) { *mn += *X; }
+            }
+            X -= N;
+            cblas_sscal((int)V,ni,mn,1);
+            cblas_scopy((int)V,&z,0,Y,1);
+            for (size_t l=0; l<L; ++l, mn-=V, Y-=V)
+            {
+                for (size_t v=0; v<V; ++v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
+            }
+            for (size_t v=0; v<V; ++v, ++mn, ++Y) { *Y = sqrtf(*Y*den) / *mn; }
+            mn -= V; free(mn);
         }
         else
         {
-            float *x1;
-            if (!(x1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            float x, sm2, *X1;
+            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    cblas_scopy((int)L,X,(int)K,x1,1);
-                    *Y = cblas_sdot((int)L,x1,1,&o,0) * ni;
-                    cblas_saxpy((int)L,-*Y,&o,0,x1,1);
-                    *Y = cblas_snrm2((int)L,x1,1) * den / *Y;
+                    cblas_scopy((int)L,X,(int)K,X1,1);
+                    *Y = sm2 = 0.0;
+                    for (size_t l=0; l<L; ++l, ++X1) { *Y += *X1; }
+                    *Y *= ni;
+                    for (size_t l=0; l<L; ++l) { x = *--X1 - *Y; sm2 += x*x; }
+                    *Y = sqrtf(sm2*den) / *Y;
                 }
             }
-            free(x1);
         }
     }
-    
+
     return 0;
 }
 
@@ -101,16 +109,27 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double z = 0.0, o = 1.0, ni = 1.0/L;
-    const double den = (biased) ? 1.0/sqrt(L) : 1.0/sqrt(L-1);
+    const double ni = 1.0/L, den = (biased) ? ni : 1.0/(L-1);
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,&z,0,Y,1); }
+    else if (L<2) { fprintf(stderr,"error in coeff_var_d: L must be > 1\n"); return 1; }
     else if (L==N)
     {
-        *Y = cblas_ddot((int)L,X,1,&o,0) * ni;
-        cblas_daxpy((int)L,-*Y,&o,0,X,1);
-        *Y = cblas_dnrm2((int)L,X,1) * den / *Y;
+        double x, sm2 = 0.0;
+        if (L<7000)
+        {
+            *Y = 0.0;
+            for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
+            *Y *= ni;
+            for (size_t l=0; l<L; ++l) { x = *--X - *Y; sm2 += x*x; }
+        }
+        else
+        {
+            const double o = 1.0;
+            *Y = cblas_ddot((int)L,X,1,&o,0) * ni;
+            for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; sm2 += x*x; }
+        }
+        *Y = sqrt(sm2*den);
     }
     else
     {
@@ -120,56 +139,54 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            if (V<250)
+            double x, sm2;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                for (size_t v=0; v<V; v++, X+=L, Y++)
-                {
-                    *Y = cblas_ddot((int)L,X,1,&o,0) * ni;
-                    cblas_daxpy((int)L,-*Y,&o,0,X,1);
-                    *Y = cblas_dnrm2((int)L,X,1) * den / *Y;
-                }
-            }
-            else
-            {
-                double *x1;
-                if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
-                cblas_dcopy((int)L,&o,0,x1,1);
-                cblas_dgemv(CblasColMajor,CblasTrans,(int)L,(int)V,o,X,(int)L,x1,1,0.0,Y,1);
-                cblas_dscal((int)V,ni,Y,1);
-                cblas_dgemm(CblasColMajor,CblasTrans,CblasTrans,(int)L,(int)V,1,-o,x1,1,Y,(int)V,o,X,(int)L);
-                for (size_t v=0; v<V; v++, X+=L, Y++) { *Y = cblas_dnrm2((int)L,X,1) * den / *Y; }
-                free(x1);
+                *Y = sm2 = 0.0;
+                for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
+                *Y *= ni; X -= L;
+                for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; sm2 += x*x; }
+                *Y = sqrt(sm2*den);
             }
         }
         else if (G==1)
         {
-            double *x1;
-            if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
-            cblas_dcopy((int)L,&o,0,x1,1);
-            cblas_dgemv(CblasRowMajor,CblasTrans,(int)L,(int)V,o,X,(int)V,x1,1,z,Y,1);
-            cblas_dscal((int)V,ni,Y,1);
-            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)L,(int)V,1,-o,x1,1,Y,(int)V,o,X,(int)V);
-            for (size_t v=0; v<V; v++, X++, Y++) { *Y = cblas_dnrm2((int)L,X,(int)V) * den / *Y; }
-            free(x1);
+            const double z = 0.0;
+            double x, *mn;
+            if (!(mn=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with calloc. "); perror("calloc"); return 1; }
+            for (size_t l=0; l<L; ++l, mn-=V)
+            {
+                for (size_t v=0; v<V; ++v, ++X, ++mn) { *mn += *X; }
+            }
+            X -= N;
+            cblas_dscal((int)V,ni,mn,1);
+            cblas_dcopy((int)V,&z,0,Y,1);
+            for (size_t l=0; l<L; ++l, mn-=V, Y-=V)
+            {
+                for (size_t v=0; v<V; ++v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
+            }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrt(*Y*den); }
+            free(mn);
         }
         else
         {
-            double *x1;
-            if (!(x1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            double x, sm2, *X1;
+            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++, Y++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
-                    cblas_dcopy((int)L,X,(int)K,x1,1);
-                    *Y = cblas_ddot((int)L,x1,1,&o,0) * ni;
-                    cblas_daxpy((int)L,-*Y,&o,0,x1,1);
-                    *Y = cblas_dnrm2((int)L,x1,1) * den / *Y;
+                    cblas_dcopy((int)L,X,(int)K,X1,1);
+                    *Y = sm2 = 0.0;
+                    for (size_t l=0; l<L; ++l, ++X1) { *Y += *X1; }
+                    *Y *= ni;
+                    for (size_t l=0; l<L; ++l) { x = *--X1 - *Y; sm2 += x*x; }
+                    *Y = sqrt(sm2*den);
                 }
             }
-            free(x1);
         }
     }
-    
+
     return 0;
 }
 

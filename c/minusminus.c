@@ -14,7 +14,7 @@ int minusminus_d (double *X, const size_t N);
 
 int minusminus_s (float *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { X[n]--; }
+    for (size_t n=0; n<N; ++n) { X[n]--; }
 
     return 0;
 }
@@ -22,7 +22,7 @@ int minusminus_s (float *X, const size_t N)
 
 int minusminus_d (double *X, const size_t N)
 {
-    for (size_t n=0; n<N; n++) { X[n]--; }
+    for (size_t n=0; n<N; ++n) { X[n]--; }
     
     return 0;
 }

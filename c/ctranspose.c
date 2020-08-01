@@ -29,11 +29,11 @@ int ctranspose_s (float *Y, const float *X, const size_t R, const size_t C, cons
     if (R==1 || C==1) { cblas_scopy((int)(R*C),X,1,Y,1); }
     else if (iscolmajor)
     {
-        for (size_t c=0; c<C; c++, X+=R, Y++) { cblas_scopy((int)(R),X,1,Y,(int)C); }
+        for (size_t c=0; c<C; ++c, X+=R, ++Y) { cblas_scopy((int)(R),X,1,Y,(int)C); }
     }
     else
     {
-        for (size_t r=0; r<R; r++, X+=C, Y++) { cblas_scopy((int)(C),X,1,Y,(int)R); }
+        for (size_t r=0; r<R; ++r, X+=C, ++Y) { cblas_scopy((int)(C),X,1,Y,(int)R); }
     }
 
     return 0;
@@ -45,11 +45,11 @@ int ctranspose_d (double *Y, const double *X, const size_t R, const size_t C, co
     if (R==1 || C==1) { cblas_dcopy((int)(R*C),X,1,Y,1); }
     else if (iscolmajor)
     {
-        for (size_t c=0; c<C; c++, X+=R, Y++) { cblas_dcopy((int)(R),X,1,Y,(int)C); }
+        for (size_t c=0; c<C; ++c, X+=R, ++Y) { cblas_dcopy((int)(R),X,1,Y,(int)C); }
     }
     else
     {
-        for (size_t r=0; r<R; r++, X+=C, Y++) { cblas_dcopy((int)(C),X,1,Y,(int)R); }
+        for (size_t r=0; r<R; ++r, X+=C, ++Y) { cblas_dcopy((int)(C),X,1,Y,(int)R); }
     }
 
     return 0;
@@ -95,7 +95,7 @@ int ctranspose_inplace_s (float *X, const size_t R, const size_t C, const char i
     if (R==1 || C==1) {}
     else if (R==C)
     {
-        for (size_t c=0, n=1; c<C-1; c++, n+=R+1)
+        for (size_t c=0, n=1; c<C-1; ++c, n+=R+1)
         {
             cblas_sswap((int)(R-c-1),&X[n],1,&X[(c+1)*R+c],(int)C);
         }
@@ -107,12 +107,12 @@ int ctranspose_inplace_s (float *X, const size_t R, const size_t C, const char i
         cblas_scopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t r=0; r<R; r++, X+=C, Xt++) { cblas_scopy((int)(C),Xt,(int)R,X,1); }
+            for (size_t r=0; r<R; ++r, X+=C, ++Xt) { cblas_scopy((int)(C),Xt,(int)R,X,1); }
             Xt -= R;
         }
         else
         {
-            for (size_t c=0; c<C; c++, X+=R, Xt++) { cblas_scopy((int)(R),Xt,(int)C,X,1); }
+            for (size_t c=0; c<C; ++c, X+=R, ++Xt) { cblas_scopy((int)(R),Xt,(int)C,X,1); }
             Xt -= C;
         }
         free(Xt);
@@ -127,7 +127,7 @@ int ctranspose_inplace_d (double *X, const size_t R, const size_t C, const char 
     if (R==1 || C==1) {}
     else if (R==C)
     {
-        for (size_t c=0, n=1; c<C-1; c++, n+=R+1)
+        for (size_t c=0, n=1; c<C-1; ++c, n+=R+1)
         {
             cblas_dswap((int)(R-c-1),&X[n],1,&X[(c+1)*R+c],(int)C);
         }
@@ -139,12 +139,12 @@ int ctranspose_inplace_d (double *X, const size_t R, const size_t C, const char 
         cblas_dcopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t r=0; r<R; r++, X+=C, Xt++) { cblas_dcopy((int)(C),Xt,(int)R,X,1); }
+            for (size_t r=0; r<R; ++r, X+=C, ++Xt) { cblas_dcopy((int)(C),Xt,(int)R,X,1); }
             Xt -= R;
         }
         else
         {
-            for (size_t c=0; c<C; c++, X+=R, Xt++) { cblas_dcopy((int)(R),Xt,(int)C,X,1); }
+            for (size_t c=0; c<C; ++c, X+=R, ++Xt) { cblas_dcopy((int)(R),Xt,(int)C,X,1); }
             Xt -= C;
         }
         free(Xt);
@@ -159,7 +159,7 @@ int ctranspose_inplace_c (float *X, const size_t R, const size_t C, const char i
     if (R==1 || C==1) {}
     else if (R==C)
     {
-        for (size_t c=0, n=2; c<C-1; c++, n+=2*R+2)
+        for (size_t c=0, n=2; c<C-1; ++c, n+=2*R+2)
         {
             cblas_cswap((int)(R-c-1),&X[n],1,&X[2*((c+1)*R+c)],(int)C);
         }
@@ -173,21 +173,21 @@ int ctranspose_inplace_c (float *X, const size_t R, const size_t C, const char i
         //cblas_sscal((int)(R*C),-1.0f,&Xt[1],2);
         if (iscolmajor)
         {
-            for (size_t r=0; r<R; r++, Xt-=2*(R*C-1))
+            for (size_t r=0; r<R; ++r, Xt-=2*(R*C-1))
             {
-                for (size_t c=0; c<C; c++, Xt+=2*R) { *X++ = *Xt; *X++ = -*Xt; }
+                for (size_t c=0; c<C; ++c, Xt+=2*R) { *X++ = *Xt; *X++ = -*Xt; }
             }
             Xt -= 2*R;
-            //for (size_t r=0; r<R; r++, X+=2*C) { cblas_ccopy((int)(C),&Xt[2*r],(int)R,X,1); }
+            //for (size_t r=0; r<R; ++r, X+=2*C) { cblas_ccopy((int)(C),&Xt[2*r],(int)R,X,1); }
         }
         else
         {
-            for (size_t c=0; c<C; c++, Xt-=2*(R*C-1))
+            for (size_t c=0; c<C; ++c, Xt-=2*(R*C-1))
             {
-                for (size_t r=0; r<R; r++, Xt+=2*C) { *X++ = *Xt; *X++ = -*Xt; }
+                for (size_t r=0; r<R; ++r, Xt+=2*C) { *X++ = *Xt; *X++ = -*Xt; }
             }
             Xt -= 2*C;
-            //for (size_t c=0; c<C; c++, X+=2*R) { cblas_ccopy((int)(R),&Xt[2*c],(int)C,X,1); }
+            //for (size_t c=0; c<C; ++c, X+=2*R) { cblas_ccopy((int)(R),&Xt[2*c],(int)C,X,1); }
         }
         //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
         free(Xt);
@@ -202,7 +202,7 @@ int ctranspose_inplace_z (double *X, const size_t R, const size_t C, const char 
     if (R==1 || C==1) {}
     else if (R==C)
     {
-        for (size_t c=0, n=2; c<C-1; c++, n+=2*R+2)
+        for (size_t c=0, n=2; c<C-1; ++c, n+=2*R+2)
         {
             cblas_zswap((int)(R-c-1),&X[n],1,&X[2*((c+1)*R+c)],(int)C);
         }
@@ -214,17 +214,17 @@ int ctranspose_inplace_z (double *X, const size_t R, const size_t C, const char 
         cblas_zcopy((int)(R*C),X,1,Xt,1);
         if (iscolmajor)
         {
-            for (size_t r=0; r<R; r++, Xt-=2*(R*C-1))
+            for (size_t r=0; r<R; ++r, Xt-=2*(R*C-1))
             {
-                for (size_t c=0; c<C; c++, Xt+=2*R) { *X++ = *Xt; *X++ = -*Xt; }
+                for (size_t c=0; c<C; ++c, Xt+=2*R) { *X++ = *Xt; *X++ = -*Xt; }
             }
             Xt -= 2*R;
         }
         else
         {
-            for (size_t c=0; c<C; c++, Xt-=2*(R*C-1))
+            for (size_t c=0; c<C; ++c, Xt-=2*(R*C-1))
             {
-                for (size_t r=0; r<R; r++, Xt+=2*C) { *X++ = *Xt; *X++ = -*Xt; }
+                for (size_t r=0; r<R; ++r, Xt+=2*C) { *X++ = *Xt; *X++ = -*Xt; }
             }
             Xt -= 2*C;
         }

@@ -39,8 +39,10 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Gets the p-norm along dim of X.\n";
-    descr += "This is the Lp norm of each vector in X.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
+    descr += "Gets p-norm for each vector in X along dim.\n";
+    descr += "\n";
+    descr += "This is the Lp norm of each vector in X:\n";
     descr += "For each vector, y = sum(|x|^p)^1/p. \n";
     descr += "\n";
     descr += "Use -p (--p) to specify a p>0 [default=2].\n";
@@ -51,10 +53,13 @@ int main(int argc, char *argv[])
     descr += "Use -d2 to get norm along slices.\n";
     descr += "Use -d3 to get norm along hyperslices.\n";
     descr += "\n";
+    descr += "Note that norm1 and norm2 are special cases of\n";
+    descr += "normp, where p=1 and p=2, respectively.\n";
+    descr += "\n";
     descr += "Examples:\n";
     descr += "$ normp X -o Y \n";
-    descr += "$ normp X > Y \n";
-    descr += "$ normp -d1 X > Y \n";
+    descr += "$ normp -p1.5 X > Y \n";
+    descr += "$ normp -p3 -d1 X > Y \n";
     descr += "$ cat X | normp > Y \n";
 
 

@@ -38,8 +38,10 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Gets the 2-norm (root-sum-square) along dim of X.\n";
-    descr += "This is the Euclidean (L2) norm of each vector in X.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
+    descr += "Gets L2 (Euclidean) for each vector in X along dim.\n";
+    descr += "\n";
+    descr += "This is the square-root of the sum-of-squares for each vector in X.\n";
     descr += "Note that this is not the Frobenius matrix norm of X (see matnorm).\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";

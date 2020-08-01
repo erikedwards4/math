@@ -8,7 +8,7 @@
 
 SHELL=/bin/bash
 
-CC=clang++
+CC=clang
 
 ifeq ($(CC),$(filter $(CC),clang gcc))
 	STD=-std=c11
@@ -106,9 +106,10 @@ rot90: rot90.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #These include many common static nonlinearities.
 Elementwise1: Operators Trig Exp_Log Round Special Nonlin
 
-Operators: plusplus minusminus
+Operators: plusplus minusminus neg
 plusplus: plusplus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 minusminus: minusminus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+neg: neg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Trig: sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh #rad2deg deg2rad
 sin: sin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -146,12 +147,13 @@ erfc: erfc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 tgamma: tgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lgamma: lgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Nonlin: abs square cube sqrt cbrt deadzone
+Nonlin: abs square cube sqrt cbrt reciprocal deadzone
 abs: abs.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 square: square.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cube: cube.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sqrt: sqrt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cbrt: cbrt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+reciprocal: reciprocal.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 deadzone: deadzone.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
@@ -173,7 +175,7 @@ adiff: adiff.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #Some basic statistics calculated along rows, cols, etc.
 #The input consists of 1-D vectors within a tensor, and each vector is reduced to a scalar.
 #Thus, these are vec2scalar or "reduction" operations.
-Vec2scalar: Sums Prctiles Iprctiles Ranges Moments Norms Other_Stats
+Vec2scalar: Sums Prctiles Iprctiles Ranges Norms Moments Other_Means Other_Spreads Other_Stats
 
 Sums: sum asum cnt
 sum: sum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -201,23 +203,38 @@ range: range.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 iqr: iqr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 interdecile_range: interdecile_range.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Moments: mean var skewness kurtosis
-mean: mean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-var: var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-skewness: skewness.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-kurtosis: kurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-
 Norms: norm0 norm1 norm2 normp
 norm0: norm0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 norm1: norm1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 norm2: norm2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normp: normp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Stats: std coeff_var mad prod
+Moments: mean var skewness kurtosis
+mean: mean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+var: var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+skewness: skewness.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+kurtosis: kurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+#Other_Means: trimmed_mean geometric_mean harmonic_mean generalized_mean
+Other_Means: trimmean winsormean geomean harmean genmean rms
+trimmean: trimmean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+winsormean: winsormean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+geomean: geomean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+harmean: harmean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+genmean: genmean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+rms: rms.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Other_Spreads: std geostd trimstd trimvar coeff_var mad
 std: std.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+geostd: geostd.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+trimstd: trimstd.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+trimvar: trimvar.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 coeff_var: coeff_var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 mad: mad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Other_Stats: prod
 prod: prod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
 
 
 
@@ -232,15 +249,18 @@ shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Vec2vec: sorti ranks prctiles cumsum cumprod center scale normalize
+Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod #center scale normalize
 sorti: sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 ranks: ranks.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+moments: moments.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+winsorize: winsorize.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+trim: trim.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cumsum: cumsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-center: center.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-scale: scale.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-normalize: normalize.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+#center: center.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+#scale: scale.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+#normalize: normalize.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
@@ -259,7 +279,6 @@ cokurtosis: cokurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 spearman: spearman.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kendall: kendall.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-
 #Distance metrics or related for 2 vectors
 Dist: dist1 dist2 distp dist_hamm dist_cos
 dist0: dist0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -267,7 +286,6 @@ dist1: dist1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 dist2: dist2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 distp: distp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 dist_cos: dist_cos.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-
 
 #Weighted statistics
 WStats: WSums WNorms WPrctiles WRanges WMoments WOther
@@ -301,6 +319,7 @@ WOther: wstd wcoeff_var wmad
 wstd: wstd.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 wcoeff_var: wcoeff_var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 wmad: wmad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
 
 
 #Complex: 1-2 inputs, 1 output, for complex operations

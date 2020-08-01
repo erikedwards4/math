@@ -39,9 +39,9 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
     }
     else if (L==N)
     {
-        for (size_t l2=1; l2<L; l2++)
+        for (size_t l2=1; l2<L; ++l2)
         {
-            for (size_t l1=0; l1<l2; l1++)
+            for (size_t l1=0; l1<l2; ++l1)
             {
                 s1 = (X1[l1]>X1[l2]) ? 1 : (X1[l1]<X1[l2]) ? -1 : 0;
                 s2 = (X2[l1]>X2[l2]) ? 1 : (X2[l1]<X2[l2]) ? -1 : 0;
@@ -59,19 +59,19 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? 0 : L, J2 = (L==N2) ? 0 : L;
-            for (size_t v=0; v<V; v++, X1+=J1, X2+=J2)
+            for (size_t v=0; v<V; ++v, X1+=J1, X2+=J2, ++Y)
             {
                 ssm = 0;
-                for (size_t l2=1; l2<L; l2++)
+                for (size_t l2=1; l2<L; ++l2)
                 {
-                    for (size_t l1=0; l1<l2; l1++)
+                    for (size_t l1=0; l1<l2; ++l1)
                     {
                         s1 = (X1[l1]>X1[l2]) ? 1 : (X1[l1]<X1[l2]) ? -1 : 0;
                         s2 = (X2[l1]>X2[l2]) ? 1 : (X2[l1]<X2[l2]) ? -1 : 0;
                         ssm += s1 * s2;
                     }
                 }
-                *Y++ = den * ssm;
+                *Y = den * ssm;
             }
         }
         else
@@ -79,21 +79,21 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; g++, X1+=I1, X2+=I2)
+            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; b++, X1+=J1, X2+=J2)
+                for (size_t b=0; b<B; ++b, X1+=J1, X2+=J2, ++Y)
                 {
                     ssm = 0;
-                    for (size_t l2=1; l2<L; l2++)
+                    for (size_t l2=1; l2<L; ++l2)
                     {
-                        for (size_t l1=0; l1<l2; l1++)
+                        for (size_t l1=0; l1<l2; ++l1)
                         {
                             s1 = (X1[l1*K1]>X1[l2*K1]) ? 1 : (X1[l1*K1]<X1[l2*K1]) ? -1 : 0;
                             s2 = (X2[l1*K2]>X2[l2*K2]) ? 1 : (X2[l1*K2]<X2[l2*K2]) ? -1 : 0;
                             ssm += s1 * s2;
                         }
                     }
-                    *Y++ = den * ssm;
+                    *Y = den * ssm;
                 }
             }
         }
@@ -127,9 +127,9 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
     }
     else if (L==N)
     {
-        for (size_t l2=1; l2<L; l2++)
+        for (size_t l2=1; l2<L; ++l2)
         {
-            for (size_t l1=0; l1<l2; l1++)
+            for (size_t l1=0; l1<l2; ++l1)
             {
                 s1 = (X1[l1]>X1[l2]) ? 1 : (X1[l1]<X1[l2]) ? -1 : 0;
                 s2 = (X2[l1]>X2[l2]) ? 1 : (X2[l1]<X2[l2]) ? -1 : 0;
@@ -147,19 +147,19 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? 0 : L, J2 = (L==N2) ? 0 : L;
-            for (size_t v=0; v<V; v++, X1+=J1, X2+=J2)
+            for (size_t v=0; v<V; ++v, X1+=J1, X2+=J2, ++Y)
             {
                 ssm = 0;
-                for (size_t l2=1; l2<L; l2++)
+                for (size_t l2=1; l2<L; ++l2)
                 {
-                    for (size_t l1=0; l1<l2; l1++)
+                    for (size_t l1=0; l1<l2; ++l1)
                     {
                         s1 = (X1[l1]>X1[l2]) ? 1 : (X1[l1]<X1[l2]) ? -1 : 0;
                         s2 = (X2[l1]>X2[l2]) ? 1 : (X2[l1]<X2[l2]) ? -1 : 0;
                         ssm += s1 * s2;
                     }
                 }
-                *Y++ = den * ssm;
+                *Y = den * ssm;
             }
         }
         else
@@ -167,21 +167,21 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; g++, X1+=I1, X2+=I2)
+            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; b++, X1+=J1, X2+=J2)
+                for (size_t b=0; b<B; ++b, X1+=J1, X2+=J2, ++Y)
                 {
                     ssm = 0;
-                    for (size_t l2=1; l2<L; l2++)
+                    for (size_t l2=1; l2<L; ++l2)
                     {
-                        for (size_t l1=0; l1<l2; l1++)
+                        for (size_t l1=0; l1<l2; ++l1)
                         {
                             s1 = (X1[l1*K1]>X1[l2*K1]) ? 1 : (X1[l1*K1]<X1[l2*K1]) ? -1 : 0;
                             s2 = (X2[l1*K2]>X2[l2*K2]) ? 1 : (X2[l1*K2]<X2[l2*K2]) ? -1 : 0;
                             ssm += s1 * s2;
                         }
                     }
-                    *Y++ = den * ssm;
+                    *Y = den * ssm;
                 }
             }
         }

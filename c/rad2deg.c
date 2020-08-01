@@ -25,7 +25,7 @@ int rad2deg_s (float *Y, const float *X, const size_t N)
 {
     const float r2d = (float)(180.0*M_1_PI);
 
-    for (size_t n=0; n<N; n++) { Y[n] = r2d * X[n]; }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = r2d * *X; }
 
     return 0;
 }
@@ -35,7 +35,7 @@ int rad2deg_d (double *Y, const double *X, const size_t N)
 {
     const double r2d = 180.0 * M_1_PI;
 
-    for (size_t n=0; n<N; n++) { Y[n] = r2d * X[n]; }
+    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = r2d * *X; }
     
     return 0;
 }

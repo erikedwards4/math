@@ -50,25 +50,25 @@ int median_s (float *Y, const float *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L, ++Y)
             {
                 cblas_scopy((int)L,X,1,X1,1);
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in median_s: problem with LAPACKE function\n"); }
                 X1 += i2;
-                *Y++ = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1));
+                *Y = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1));
                 X1 -= i2;
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in median_s: problem with LAPACKE function\n"); }
                     X1 += i2;
-                    *Y++ = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1));
+                    *Y = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1));
                     X1 -= i2;
                 }
             }
@@ -109,25 +109,25 @@ int median_d (double *Y, const double *X, const size_t R, const size_t C, const 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L, ++Y)
             {
                 cblas_dcopy((int)L,X,1,X1,1);
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in median_d: problem with LAPACKE function\n"); }
                 X1 += i2;
-                *Y++ = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1));
+                *Y = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1));
                 X1 -= i2;
             }
         }
         else
         {
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in median_d: problem with LAPACKE function\n"); }
                     X1 += i2;
-                    *Y++ = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1));
+                    *Y = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1));
                     X1 -= i2;
                 }
             }
@@ -163,25 +163,25 @@ int median_inplace_s (float *Y, float *X, const size_t R, const size_t C, const 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L-i2)
+            for (size_t v=0; v<V; ++v, X+=L-i2, ++Y)
             {
                 if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in median_inplace_s: problem with LAPACKE function\n"); }
                 X += i2;
-                *Y++ = (L%2) ? *X : 0.5f*(*X + *(X-1));
+                *Y = (L%2) ? *X : 0.5f*(*X + *(X-1));
             }
         }
         else
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in median_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in median_inplace_s: problem with LAPACKE function\n"); }
                     X1 += i2;
-                    *Y++ = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1));
+                    *Y = (L%2) ? *X1 : 0.5f*(*X1 + *(X1-1));
                     X1 -= i2;
                 }
             }
@@ -217,25 +217,25 @@ int median_inplace_d (double *Y, double *X, const size_t R, const size_t C, cons
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; v++, X+=L-i2)
+            for (size_t v=0; v<V; ++v, X+=L-i2, ++Y)
             {
                 if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in median_inplace_d: problem with LAPACKE function\n"); }
                 X += i2;
-                *Y++ = (L%2) ? *X : 0.5*(*X + *(X-1));
+                *Y = (L%2) ? *X : 0.5*(*X + *(X-1));
             }
         }
         else
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in median_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; g++, X+=B*(L-1))
+            for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; b++, X++)
+                for (size_t b=0; b<B; ++b, ++X, ++Y)
                 {
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in median_inplace_d: problem with LAPACKE function\n"); }
                     X1 += i2;
-                    *Y++ = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1));
+                    *Y = (L%2) ? *X1 : 0.5*(*X1 + *(X1-1));
                     X1 -= i2;
                 }
             }

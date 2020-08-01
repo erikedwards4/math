@@ -27,7 +27,7 @@ int join3_s (float *Y, const float *X1, const float *X2, const float *X3,  const
     const size_t M3 = (iscolmajor) ? ((dim==0) ? R3 : (dim==1) ? R3*C3 : (dim==2) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0) ? H3*S3*C3*R3 : (dim==1) ? H3*S3*C3 : (dim==2) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
-    for (size_t g=0; g<G; g++)
+    for (size_t g=0; g<G; ++g)
     {
         cblas_scopy((int)B1,X1,1,Y,1); X1 += B1; Y += B1;
         cblas_scopy((int)B2,X2,1,Y,1); X2 += B2; Y += B2;
@@ -51,7 +51,7 @@ int join3_d (double *Y, const double *X1, const double *X2, const double *X3,  c
     const size_t M3 = (iscolmajor) ? ((dim==0) ? R3 : (dim==1) ? R3*C3 : (dim==2) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0) ? H3*S3*C3*R3 : (dim==1) ? H3*S3*C3 : (dim==2) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
-    for (size_t g=0; g<G; g++)
+    for (size_t g=0; g<G; ++g)
     {
         cblas_dcopy((int)B1,X1,1,Y,1); X1 += B1; Y += B1;
         cblas_dcopy((int)B2,X2,1,Y,1); X2 += B2; Y += B2;
@@ -75,7 +75,7 @@ int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const
     const size_t M3 = (iscolmajor) ? ((dim==0) ? R3 : (dim==1) ? R3*C3 : (dim==2) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0) ? H3*S3*C3*R3 : (dim==1) ? H3*S3*C3 : (dim==2) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
-    for (size_t g=0; g<G; g++)
+    for (size_t g=0; g<G; ++g)
     {
         cblas_ccopy((int)B1,X1,1,Y,1); X1 += 2*B1; Y += 2*B1;
         cblas_ccopy((int)B2,X2,1,Y,1); X2 += 2*B2; Y += 2*B2;
@@ -99,7 +99,7 @@ int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  c
     const size_t M3 = (iscolmajor) ? ((dim==0) ? R3 : (dim==1) ? R3*C3 : (dim==2) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0) ? H3*S3*C3*R3 : (dim==1) ? H3*S3*C3 : (dim==2) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
-    for (size_t g=0; g<G; g++)
+    for (size_t g=0; g<G; ++g)
     {
         cblas_zcopy((int)B1,X1,1,Y,1); X1 += 2*B1; Y += 2*B1;
         cblas_zcopy((int)B2,X2,1,Y,1); X2 += 2*B2; Y += 2*B2;
