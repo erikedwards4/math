@@ -37,7 +37,7 @@ int cov_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cov_s: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float ni = 1.0f/L, den = (biased) ? ni : 1.0f/(L-1);
+    const float den = 1.0f/L, den2 = (biased) ? den : 1.0f/(L-1);
     float mn1 = 0.0f, mn2 = 0.0f;
 
     if (N==0) {}
@@ -49,9 +49,9 @@ int cov_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
     else if (L==N)
     {
         for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-        mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L; *Y = 0.0f;
+        mn1 *= den; mn2 *= den; X1 -= L; X2 -= L; *Y = 0.0f;
         for (size_t l=0; l<L; ++l, ++X1, ++X2) { *Y += (*X1-mn1) * (*X2-mn2); }
-        *Y *= den;
+        *Y *= den2;
     }
     else
     {
@@ -66,9 +66,9 @@ int cov_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
             {
                 mn1 = mn2 = *Y = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-                mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L;
+                mn1 *= den; mn2 *= den; X1 -= L; X2 -= L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2) { *Y += (*X1-mn1) * (*X2-mn2); }
-                *Y *= den;
+                *Y *= den2;
             }
         }
         else
@@ -82,9 +82,9 @@ int cov_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
                 {
                     mn1 = mn2 = *Y = 0.0f;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
-                    mn1 *= ni; mn2 *= ni; X1 -= L*K1; X2 -= L*K2;
+                    mn1 *= den; mn2 *= den; X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { *Y += (*X1-mn1) * (*X2-mn2); }
-                    *Y *= den;
+                    *Y *= den2;
                 }
             }
         }
@@ -107,7 +107,7 @@ int cov_d (double *Y, const double *X1, const double *X2, const size_t R1, const
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cov_s: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double ni = 1.0/L, den = (biased) ? ni : 1.0/(L-1);
+    const double den = 1.0/L, den2 = (biased) ? den : 1.0/(L-1);
     double mn1 = 0.0, mn2 = 0.0;
 
     if (N==0) {}
@@ -119,9 +119,9 @@ int cov_d (double *Y, const double *X1, const double *X2, const size_t R1, const
     else if (L==N)
     {
         for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-        mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L; *Y = 0.0;
+        mn1 *= den; mn2 *= den; X1 -= L; X2 -= L; *Y = 0.0;
         for (size_t l=0; l<L; ++l, ++X1, ++X2) { *Y += (*X1-mn1) * (*X2-mn2); }
-        *Y *= den;
+        *Y *= den2;
     }
     else
     {
@@ -136,9 +136,9 @@ int cov_d (double *Y, const double *X1, const double *X2, const size_t R1, const
             {
                 mn1 = mn2 = *Y = 0.0;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-                mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L;
+                mn1 *= den; mn2 *= den; X1 -= L; X2 -= L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2) { *Y += (*X1-mn1) * (*X2-mn2); }
-                *Y *= den;
+                *Y *= den2;
             }
         }
         else
@@ -152,9 +152,9 @@ int cov_d (double *Y, const double *X1, const double *X2, const size_t R1, const
                 {
                     mn1 = mn2 = *Y = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
-                    mn1 *= ni; mn2 *= ni; X1 -= L*K1; X2 -= L*K2;
+                    mn1 *= den; mn2 *= den; X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { *Y += (*X1-mn1) * (*X2-mn2); }
-                    *Y *= den;
+                    *Y *= den2;
                 }
             }
         }
@@ -177,7 +177,7 @@ int cov_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cov_c: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float ni = 1.0f/L, den = (biased) ? ni : 1.0f/(L-1);
+    const float den = 1.0f/L, den2 = (biased) ? den : 1.0f/(L-1);
     float mn1r, mn1i, mn2r, mn2i, x1r, x1i, x2r, x2i, yr, yi;
 
     if (N==0) {}
@@ -194,8 +194,8 @@ int cov_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
             mn1r += *X1++; mn1i += *X1;
             mn2r += *X2++; mn2i += *X2;
         }
-        mn1r *= ni; mn1i *= ni;
-        mn2r *= ni; mn2i *= ni;
+        mn1r *= den; mn1i *= den;
+        mn2r *= den; mn2i *= den;
         X1 -= 2*L; X2 -= 2*L;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
@@ -204,7 +204,7 @@ int cov_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
             yr += x1r*x2r + x1i*x2i;
             yi -= x1r*x2i - x1i*x2r;
         }
-        *Y++ = yr * den; *Y = yi * den;
+        *Y++ = yr * den2; *Y = yi * den2;
     }
     else
     {
@@ -223,8 +223,8 @@ int cov_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
                     mn1r += *X1++; mn1i += *X1;
                     mn2r += *X2++; mn2i += *X2;
                 }
-                mn1r *= ni; mn1i *= ni;
-                mn2r *= ni; mn2i *= ni;
+                mn1r *= den; mn1i *= den;
+                mn2r *= den; mn2i *= den;
                 X1 -= 2*L; X2 -= 2*L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
@@ -233,7 +233,7 @@ int cov_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
                     yr += x1r*x2r + x1i*x2i;
                     yi -= x1r*x2i - x1i*x2r;
                 }
-                *Y++ = yr * den; *Y = yi * den;
+                *Y++ = yr * den2; *Y = yi * den2;
             }
         }
         else
@@ -251,8 +251,8 @@ int cov_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
                         mn1r += *X1++; mn1i += *X1;
                         mn2r += *X2++; mn2i += *X2;
                     }
-                    mn1r *= ni; mn1i *= ni;
-                    mn2r *= ni; mn2i *= ni;
+                    mn1r *= den; mn1i *= den;
+                    mn2r *= den; mn2i *= den;
                     X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
@@ -261,7 +261,7 @@ int cov_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
                         yr += x1r*x2r + x1i*x2i;
                         yi -= x1r*x2i - x1i*x2r;
                     }
-                    *Y++ = yr * den; *Y = yi * den;
+                    *Y++ = yr * den2; *Y = yi * den2;
                 }
             }
         }
@@ -284,7 +284,7 @@ int cov_z (double *Y, const double *X1, const double *X2, const size_t R1, const
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cov_z: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double ni = 1.0/L, den = (biased) ? ni : 1.0/(L-1);
+    const double den = 1.0/L, den2 = (biased) ? den : 1.0/(L-1);
     double mn1r, mn1i, mn2r, mn2i, x1r, x1i, x2r, x2i, yr, yi;
 
     if (N==0) {}
@@ -301,8 +301,8 @@ int cov_z (double *Y, const double *X1, const double *X2, const size_t R1, const
             mn1r += *X1++; mn1i += *X1;
             mn2r += *X2++; mn2i += *X2;
         }
-        mn1r *= ni; mn1i *= ni;
-        mn2r *= ni; mn2i *= ni;
+        mn1r *= den; mn1i *= den;
+        mn2r *= den; mn2i *= den;
         X1 -= 2*L; X2 -= 2*L;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
@@ -311,7 +311,7 @@ int cov_z (double *Y, const double *X1, const double *X2, const size_t R1, const
             yr += x1r*x2r + x1i*x2i;
             yi -= x1r*x2i - x1i*x2r;
         }
-        *Y++ = yr * den; *Y = yi * den;
+        *Y++ = yr * den2; *Y = yi * den2;
     }
     else
     {
@@ -330,8 +330,8 @@ int cov_z (double *Y, const double *X1, const double *X2, const size_t R1, const
                     mn1r += *X1++; mn1i += *X1;
                     mn2r += *X2++; mn2i += *X2;
                 }
-                mn1r *= ni; mn1i *= ni;
-                mn2r *= ni; mn2i *= ni;
+                mn1r *= den; mn1i *= den;
+                mn2r *= den; mn2i *= den;
                 X1 -= 2*L; X2 -= 2*L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
@@ -340,7 +340,7 @@ int cov_z (double *Y, const double *X1, const double *X2, const size_t R1, const
                     yr += x1r*x2r + x1i*x2i;
                     yi -= x1r*x2i - x1i*x2r;
                 }
-                *Y++ = yr * den; *Y = yi * den;
+                *Y++ = yr * den2; *Y = yi * den2;
             }
         }
         else
@@ -358,8 +358,8 @@ int cov_z (double *Y, const double *X1, const double *X2, const size_t R1, const
                         mn1r += *X1++; mn1i += *X1;
                         mn2r += *X2++; mn2i += *X2;
                     }
-                    mn1r *= ni; mn1i *= ni;
-                    mn2r *= ni; mn2i *= ni;
+                    mn1r *= den; mn1i *= den;
+                    mn2r *= den; mn2i *= den;
                     X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
@@ -368,7 +368,7 @@ int cov_z (double *Y, const double *X1, const double *X2, const size_t R1, const
                         yr += x1r*x2r + x1i*x2i;
                         yi -= x1r*x2i - x1i*x2r;
                     }
-                    *Y++ = yr * den; *Y = yi * den;
+                    *Y++ = yr * den2; *Y = yi * den2;
                 }
             }
         }

@@ -48,13 +48,13 @@ int tanh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float y, xp, xm;
 
-    for (size_t n=0; n<N; ++n, X+=2)
+    for (size_t n=0; n<N; ++n, X+=2, ++Y)
     {
         //y = ctanhf(X[n2]+1.0if*X[n2+1]);
         xp = cexpf(*X + 1.0if**(X+1));
         xm = cexpf(-*X - 1.0if**(X+1));
         y = (xp-xm) / (xp+xm);
-        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+        *Y++ = *(float *)&y; *Y = *((float *)&y+1);
     }
     
     return 0;
@@ -65,12 +65,12 @@ int tanh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double y, xp, xm;
 
-    for (size_t n=0; n<N; ++n, X+=2)
+    for (size_t n=0; n<N; ++n, X+=2, ++Y)
     {
         xp = cexp(*X + 1.0i**(X+1));
         xm = cexp(-*X - 1.0i**(X+1));
         y = (xp-xm) / (xp+xm);
-        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+        *Y++ = *(double *)&y; *Y = *((double *)&y+1);
     }
     
     return 0;
@@ -82,7 +82,7 @@ int tanh_inplace_s (float *X, const size_t N)
     float xp, xm;
 
     //for (size_t n=0; n<N; ++n, ++X) { *X = tanhf(*X); }
-    //for (size_t n=0; n<N; ++n) { x = expf(2.0f**X); *X = (x-1.0f)/(x+1.0f); }   //this is faster, but less numerical accuracy
+    //for (size_t n=0; n<N; ++n, ++X) { x = expf(2.0f**X); *X = (x-1.0f)/(x+1.0f); }   //this is faster, but less numerical accuracy
     for (size_t n=0; n<N; ++n, ++X) { xp = expf(*X); xm = expf(-*X); *X = (xp-xm)/(xp+xm); }
 
     return 0;
@@ -104,13 +104,13 @@ int tanh_inplace_c (float *X, const size_t N)
 {
     _Complex float y, xp, xm;
 
-    for (size_t n=0; n<N; ++n)
+    for (size_t n=0; n<N; ++n, ++X)
     {
         //x = ctanhf(X[n2]+1.0if*X[n2+1]);
         xp = cexpf(*X + 1.0if**(X+1));
         xm = cexpf(-*X - 1.0if**(X+1));
         y = (xp-xm) / (xp+xm);
-        *X++ = *(float *)&y; *X++ = *((float *)&y+1);
+        *X++ = *(float *)&y; *X = *((float *)&y+1);
     }
     
     return 0;
@@ -121,13 +121,13 @@ int tanh_inplace_z (double *X, const size_t N)
 {
     _Complex double y, xp, xm;
     
-    for (size_t n=0; n<N; ++n)
+    for (size_t n=0; n<N; ++n, ++X)
     {
         //x = ctanh(X[n2]+1.0i*X[n2+1]);
         xp = cexp(*X + 1.0i**(X+1));
         xm = cexp(-*X - 1.0i**(X+1));
         y = (xp-xm) / (xp+xm);
-        *X++ = *(double *)&y; *X++ = *((double *)&y+1);
+        *X++ = *(double *)&y; *X = *((double *)&y+1);
     }
     
     return 0;

@@ -254,10 +254,10 @@ int distp_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     float sm = 0.0;
-                    for (size_t l=0; l<L; ++l, X1+=K1-2, X2+=K2-2)
+                    for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
                         dr = *X1++ - *X2++;
-                        di = *X1++ - *X2++;
+                        di = *X1 - *X2;
                         sm += powf(dr*dr+di*di,p2);
                     }
                     *Y = powf(sm,ip);
@@ -338,10 +338,10 @@ int distp_z (double *Y, const double *X1, const double *X2, const size_t R1, con
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     double sm = 0.0;
-                    for (size_t l=0; l<L; ++l, X1+=K1-2, X2+=K2-2)
+                    for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
                         dr = *X1++ - *X2++;
-                        di = *X1++ - *X2++;
+                        di = *X1 - *X2;
                         sm += pow(dr*dr+di*di,p2);
                     }
                     *Y = pow(sm,ip);

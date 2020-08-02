@@ -1,5 +1,5 @@
 //This just cubes input X element-wise.
-//For complex data, this is |X|.^2, i.e. Xr*Xr + Xi*Xi.
+//For complex data, this is |X|.^3.
 
 //This has in-place and not-in-place versions.
 
@@ -19,8 +19,6 @@ int cube_z (double *Y, const double *X, const size_t N);
 
 int cube_inplace_s (float *X, const size_t N);
 int cube_inplace_d (double *X, const size_t N);
-int cube_inplace_c (float *X, const size_t N);
-int cube_inplace_z (double *X, const size_t N);
 
 
 int cube_s (float *Y, const float *X, const size_t N)
@@ -41,11 +39,7 @@ int cube_d (double *Y, const double *X, const size_t N)
 
 int cube_c (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0, n2=0; n<N; ++n, n2+=2)
-    {
-        *Y = X[n2]*X[n2] + X[n2+1]*X[n2+1];
-        *Y *= sqrtf(*Y);
-    }
+    for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); *Y *= sqrtf(*Y); }
     
     return 0;
 }
@@ -53,11 +47,7 @@ int cube_c (float *Y, const float *X, const size_t N)
 
 int cube_z (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0, n2=0; n<N; ++n, n2+=2)
-    {
-        *Y = X[n2]*X[n2] + X[n2+1]*X[n2+1];
-        *Y *= sqrt(*Y);
-    }
+    for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); *Y *= sqrt(*Y); }
     
     return 0;
 }
@@ -79,30 +69,6 @@ int cube_inplace_s (float *X, const size_t N)
 int cube_inplace_d (double *X, const size_t N)
 {
     for (size_t n=0; n<N; ++n, ++X) { *X = *X * *X * *X; }
-    
-    return 0;
-}
-
-
-int cube_inplace_c (float *X, const size_t N)
-{
-    for (size_t n=0, n2=0; n<N; ++n, n2+=2)
-    {
-        *X = X[n2]*X[n2] + X[n2+1]*X[n2+1];
-        *X *= sqrtf(*X);
-    }
-    
-    return 0;
-}
-
-
-int cube_inplace_z (double *X, const size_t N)
-{
-    for (size_t n=0, n2=0; n<N; ++n, n2+=2)
-    {
-        *X = X[n2]*X[n2] + X[n2+1]*X[n2+1];
-        *X *= sqrt(*X);
-    }
     
     return 0;
 }

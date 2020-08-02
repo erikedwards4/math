@@ -84,7 +84,7 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=L*K-1, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     *Y = 0.0f;
                     for (size_t l=0; l<L; ++l, X+=K) { *Y += *X; }
@@ -157,7 +157,7 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=L*K-1, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     *Y = 0.0;
                     for (size_t l=0; l<L; ++l, X+=K) { *Y += *X; }
@@ -182,8 +182,8 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        yr = *X++; yi = *X++;
-        for (size_t l=1; l<L; ++l, ++X) { yr += *X++; yi += *X; }
+        yr = yi = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X) { yr += *X++; yi += *X; }
         *Y++ = yr; *Y = yi;
     }
     else
@@ -196,8 +196,8 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                yr = *X++; yi = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { yr += *X++; yi += *X; }
+                yr = yi = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X) { yr += *X++; yi += *X; }
                 *Y++ = yr; *Y = yi;
             }
         }
@@ -214,10 +214,10 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         {
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*L*K-2, ++Y)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    yr = *X++; yi = *X; X += 2*K-1;
-                    for (size_t l=1; l<L; ++l, X+=2*K-1) { yr += *X++; yi += *X; }
+                    yr = yi = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=2*K-1) { yr += *X++; yi += *X; }
                     *Y++ = yr; *Y = yi;
                 }
             }
@@ -240,8 +240,8 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        yr = *X++; yi = *X++;
-        for (size_t l=1; l<L; ++l, ++X) { yr += *X++; yi += *X; }
+        yr = yi = 0.0;
+        for (size_t l=0; l<L; ++l, ++X) { yr += *X++; yi += *X; }
         *Y++ = yr; *Y = yi;
     }
     else
@@ -254,8 +254,8 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                yr = *X++; yi = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { yr += *X++; yi += *X; }
+                yr = yi = 0.0;
+                for (size_t l=0; l<L; ++l, ++X) { yr += *X++; yi += *X; }
                 *Y++ = yr; *Y = yi;
             }
         }
@@ -272,10 +272,10 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         {
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*L*K-2, ++Y)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    yr = *X++; yi = *X; X += 2*K-1;
-                    for (size_t l=1; l<L; ++l, X+=2*K-1) { yr += *X++; yi += *X; }
+                    yr = yi = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=2*K-1) { yr += *X++; yi += *X; }
                     *Y++ = yr; *Y = yi;
                 }
             }

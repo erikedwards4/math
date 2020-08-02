@@ -43,10 +43,10 @@ int main(int argc, char *argv[])
     descr += "This is the reciprocal of the mean of reciprocals for each vector.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to get harmean along cols.\n";
-    descr += "Use -d1 to get harmean along rows.\n";
-    descr += "Use -d2 to get harmean along slices.\n";
-    descr += "Use -d3 to get harmean along hyperslices.\n";
+    descr += "Use -d0 to get harmonic mean along cols.\n";
+    descr += "Use -d1 to get harmonic mean along rows.\n";
+    descr += "Use -d2 to get harmonic mean along slices.\n";
+    descr += "Use -d3 to get harmonic mean along hyperslices.\n";
     descr += "\n";
     descr += "Examples:\n";
     descr += "$ harmean X -o Y \n";

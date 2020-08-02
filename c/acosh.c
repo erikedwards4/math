@@ -43,12 +43,12 @@ int acosh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float x, y;
 
-    for (size_t n=0; n<N; ++n, X+=2)
+    for (size_t n=0; n<N; ++n, X+=2, ++Y)
     {
         //y = cacoshf(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0if**(X+1);
         y = clogf(x + csqrtf(x*x-1.0f));
-        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+        *Y++ = *(float *)&y; *Y = *((float *)&y+1);
     }
     
     return 0;
@@ -59,12 +59,12 @@ int acosh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double x, y;
 
-    for (size_t n=0; n<N; ++n, X+=2)
+    for (size_t n=0; n<N; ++n, X+=2, ++Y)
     {
         //y = cacosh(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0i**(X+1);
         y = clog(x + csqrt(x*x-1.0));
-        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+        *Y++ = *(double *)&y; *Y = *((double *)&y+1);
     }
     
     return 0;
@@ -93,12 +93,12 @@ int acosh_inplace_c (float *X, const size_t N)
 {
     _Complex float x, y;
 
-    for (size_t n=0; n<N; ++n)
+    for (size_t n=0; n<N; ++n, ++X)
     {
         //y = cacoshf(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0if**(X+1);
         y = clogf(x + csqrtf(x*x-1.0f));
-        *X++ = *(float *)&y; *X++ = *((float *)&y+1);
+        *X++ = *(float *)&y; *X = *((float *)&y+1);
     }
     
     return 0;
@@ -109,12 +109,12 @@ int acosh_inplace_z (double *X, const size_t N)
 {
     _Complex double x, y;
 
-    for (size_t n=0; n<N; ++n)
+    for (size_t n=0; n<N; ++n, ++X)
     {
         //y = cacosh(X[n2]+1.0i*X[n2+1]);
         x = *X + 1.0i**(X+1);
         y = clog(x + csqrt(x*x-1.0));
-        *X++ = *(double *)&y; *X++ = *((double *)&y+1);
+        *X++ = *(double *)&y; *X = *((double *)&y+1);
     }
     
     return 0;

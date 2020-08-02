@@ -92,9 +92,9 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = (float)l; }
+                    for (size_t l=0; l<L; ++l, X+=K) { XI[l].val = *X; XI[l].ind = (float)l; }
                     qsort(XI,L,sizeof(FLT),cmp_ascend_s);
                     *Y = XI[ip].ind;
                 }
@@ -155,9 +155,9 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = (double)l; }
+                    for (size_t l=0; l<L; ++l, X+=K) { XI[l].val = *X; XI[l].ind = (double)l; }
                     qsort(XI,L,sizeof(DBL),cmp_ascend_d);
                     *Y = XI[ip].ind;
                 }

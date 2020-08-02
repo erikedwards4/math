@@ -26,6 +26,7 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const float den = 1.0f / L;
 
     if (N==0) {}
     else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
@@ -33,7 +34,7 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
     {
         *Y = 0.0f;
         for (size_t l=0; l<L; ++l, ++X) { *Y += logf(*X); }
-        *Y = expf(*Y/L);
+        *Y = expf(*Y*den);
     }
     else
     {
@@ -47,7 +48,7 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 *Y = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X) { *Y += logf(*X); }
-                *Y = expf(*Y/L);
+                *Y = expf(*Y*den);
             }
         }
         else if (G==1)
@@ -58,7 +59,7 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += logf(*X); }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = expf(*Y/L); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = expf(*Y*den); }
         }
         else
         {
@@ -68,7 +69,7 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 {
                     *Y = 0.0f;
                     for (size_t l=0; l<L; ++l, X+=K) { *Y += logf(*X); }
-                    *Y = expf(*Y/L);
+                    *Y = expf(*Y*den);
                 }
             }
         }
@@ -84,6 +85,7 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const double den = 1.0 / L;
 
     if (N==0) {}
     else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
@@ -91,7 +93,7 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
     {
         *Y = 0.0;
         for (size_t l=0; l<L; ++l, ++X) { *Y += log(*X); }
-        *Y = exp(*Y/L);
+        *Y = exp(*Y*den);
     }
     else
     {
@@ -105,7 +107,7 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 *Y = 0.0;
                 for (size_t l=0; l<L; ++l, ++X) { *Y += log(*X); }
-                *Y = exp(*Y/L);
+                *Y = exp(*Y*den);
             }
         }
         else if (G==1)
@@ -116,7 +118,7 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += log(*X); }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = exp(*Y/L); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = exp(*Y*den); }
         }
         else
         {
@@ -126,7 +128,7 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
                 {
                     *Y = 0.0;
                     for (size_t l=0; l<L; ++l, X+=K) { *Y += log(*X); }
-                    *Y = exp(*Y/L);
+                    *Y = exp(*Y*den);
                 }
             }
         }
@@ -142,19 +144,19 @@ int geomean_c (float *Y, const float *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const float den = 1.0f / L;
     _Complex float y;
 
     if (N==0) {}
     else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        *Y++ = 0.0f; *Y-- = 0.0f;
+        y = 0.0f + 0.0if;
         for (size_t l=0; l<L; ++l, X+=2)
         {
-            y = clogf(*X + 1.0if**(X+1));
-            *Y++ += *(float *)&y; *Y-- += *((float *)&y+1);
+            y += clogf(*X + 1.0if**(X+1));
         }
-        y = cexpf(*Y/L + 1.0if**(Y+1)/L);
+        y = cexpf(y*den);
         *Y++ = *(float *)&y; *Y = *((float *)&y+1);
     }
     else
@@ -165,16 +167,15 @@ int geomean_c (float *Y, const float *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y++ = 0.0f; *Y-- = 0.0f;
+                y = 0.0f + 0.0if;
                 for (size_t l=0; l<L; ++l, X+=2)
                 {
-                    y = clogf(*X + 1.0if**(X+1));
-                    *Y++ += *(float *)&y; *Y-- += *((float *)&y+1);
+                    y += clogf(*X + 1.0if**(X+1));
                 }
-                y = cexpf(*Y/L + 1.0if**(Y+1)/L);
-                *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+                y = cexpf(y*den);
+                *Y++ = *(float *)&y; *Y = *((float *)&y+1);
             }
         }
         else
@@ -183,14 +184,13 @@ int geomean_c (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2)
                 {
-                    *Y++ = 0.0f; *Y-- = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=2*K)
+                    y = 0.0f + 0.0if;
+                    for (size_t l=0; l<L; ++l, X+=2*K, ++Y)
                     {
-                        y = clogf(*X + 1.0if**(X+1));
-                        *Y++ += *(float *)&y; *Y-- += *((float *)&y+1);
+                        y += clogf(*X + 1.0if**(X+1));
                     }
-                    y = cexpf(*Y/L + 1.0if**(Y+1)/L);
-                    *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+                    y = cexpf(y*den);
+                    *Y++ = *(float *)&y; *Y = *((float *)&y+1);
                 }
             }
         }
@@ -206,19 +206,19 @@ int geomean_z (double *Y, const double *X, const size_t R, const size_t C, const
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const double den = 1.0 / L;
     _Complex double y;
 
     if (N==0) {}
     else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        *Y++ = 0.0; *Y-- = 0.0;
+        y = 0.0 + 0.0i;
         for (size_t l=0; l<L; ++l, X+=2)
         {
-            y = clog(*X + 1.0i**(X+1));
-            *Y++ += *(double *)&y; *Y-- += *((double *)&y+1);
+            y += clog(*X + 1.0i**(X+1));
         }
-        y = cexp(*Y/L + 1.0i**(Y+1)/L);
+        y = cexp(y*den);
         *Y++ = *(double *)&y; *Y = *((double *)&y+1);
     }
     else
@@ -229,16 +229,15 @@ int geomean_z (double *Y, const double *X, const size_t R, const size_t C, const
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y++ = 0.0; *Y-- = 0.0;
+                y = 0.0 + 0.0i;
                 for (size_t l=0; l<L; ++l, X+=2)
                 {
-                    y = clog(*X + 1.0i**(X+1));
-                    *Y++ += *(double *)&y; *Y-- += *((double *)&y+1);
+                    y += clog(*X + 1.0i**(X+1));
                 }
-                y = cexp(*Y/L + 1.0i**(Y+1)/L);
-                *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+                y = cexp(y*den);
+                *Y++ = *(double *)&y; *Y = *((double *)&y+1);
             }
         }
         else
@@ -247,14 +246,13 @@ int geomean_z (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2)
                 {
-                    *Y++ = 0.0; *Y-- = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=2*K)
+                    y = 0.0 + 0.0i;
+                    for (size_t l=0; l<L; ++l, X+=2*K, ++Y)
                     {
-                        y = clog(*X + 1.0i**(X+1));
-                        *Y++ += *(double *)&y; *Y-- += *((double *)&y+1);
+                        y += clog(*X + 1.0i**(X+1));
                     }
-                    y = cexp(*Y/L + 1.0i**(Y+1)/L);
-                    *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+                    y = cexp(y*den);
+                    *Y++ = *(double *)&y; *Y = *((double *)&y+1);
                 }
             }
         }

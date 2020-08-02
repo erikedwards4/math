@@ -48,8 +48,9 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
     {
         cblas_scopy((int)L,X,1,X1,1);
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
-        sm = 0.0f;
-        for (size_t l=i1; l<=i2; ++l) { sm += X1[l]; }
+        sm = 0.0f; X1 += i1;
+        for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
+        X1 -= i2 + 1;
         *Y = sm * den;
     }
     else
@@ -60,26 +61,26 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L, X1-=i2+1, ++Y)
             {
                 cblas_scopy((int)L,X,1,X1,1);
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
-                sm = 0.0f;
-                for (size_t l=i1; l<=i2; ++l) { sm += X1[l]; }
-                *Y++ = sm * den;
+                sm = 0.0f; X1 += i1;
+                for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
+                *Y = sm * den;
             }
         }
         else
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0; b<B; ++b, ++X, X1-=i2+1, ++Y)
                 {
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
-                    sm = 0.0f;
-                    for (size_t l=i1; l<=i2; ++l) { sm += X1[l]; }
-                    *Y++ = sm * den;
+                    sm = 0.0f; X1 += i1;
+                    for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
+                    *Y = sm * den;
                 }
             }
         }
@@ -112,8 +113,9 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
     {
         cblas_dcopy((int)L,X,1,X1,1);
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
-        sm = 0.0;
-        for (size_t l=i1; l<=i2; ++l) { sm += X1[l]; }
+        sm = 0.0; X1 += i1;
+        for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
+        X1 -= i2 + 1;
         *Y = sm * den;
     }
     else
@@ -124,26 +126,26 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L)
+            for (size_t v=0; v<V; ++v, X+=L, X1-=i2+1, ++Y)
             {
                 cblas_dcopy((int)L,X,1,X1,1);
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
-                sm = 0.0;
-                for (size_t l=i1; l<=i2; ++l) { sm += X1[l]; }
-                *Y++ = sm * den;
+                sm = 0.0; X1 += i1;
+                for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
+                *Y = sm * den;
             }
         }
         else
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0; b<B; ++b, ++X, X1-=i2+1, ++Y)
                 {
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
-                    sm = 0.0;
-                    for (size_t l=i1; l<=i2; ++l) { sm += X1[l]; }
-                    *Y++ = sm * den;
+                    sm = 0.0; X1 += i1;
+                    for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
+                    *Y = sm * den;
                 }
             }
         }

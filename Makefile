@@ -155,7 +155,7 @@ col: srci/col.cpp c/col.c
 
 
 #Rearrange: 1 matrix input, 1 matrix output with elements rearranged
-Rearrange: transpose ctranspose #rot90
+Rearrange: transpose ctranspose rot90
 transpose: srci/transpose.cpp c/transpose.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 ctranspose: srci/ctranspose.cpp c/ctranspose.c
@@ -244,9 +244,9 @@ round: srci/round.cpp c/round.c
 
 Special: erf erfc tgamma lgamma
 erf: srci/erf.cpp c/erf.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm -lcerf
 erfc: srci/erfc.cpp c/erfc.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm -lcerf
 tgamma: srci/tgamma.cpp c/tgamma.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 lgamma: srci/lgamma.cpp c/lgamma.c

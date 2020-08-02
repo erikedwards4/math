@@ -2,7 +2,7 @@
 #include "lgamma.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
+const valarray<uint8_t> oktypes = {1,2};
 const size_t I = 1, O = 1;
 
 //Description
@@ -40,22 +40,6 @@ if (i1.T==1)
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
     if (codee::lgamma_inplace_s(X,i1.N()))
-    { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-    if (wo1)
-    {
-        try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
-    }
-    delete[] X;
-}
-else if (i1.T==101)
-{
-    float *X;
-    try { X = new float[2u*i1.N()]; }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::lgamma_inplace_c(X,i1.N()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

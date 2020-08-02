@@ -25,15 +25,15 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float ip = 1.0f / p;
+    const float den = 1.0f/L, ip = 1.0f/p;
 
     if (N==0) {}
     else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        *Y = powf(fabsf(X[0]),p);
-        for (size_t l=1; l<L; ++l) { *Y += powf(fabsf(X[l]),p); }
-        *Y = powf(*Y/L,ip);
+        *Y = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X) { *Y += powf(fabsf(*X),p); }
+        *Y = powf(*Y*den,ip);
     }
     else
     {
@@ -45,9 +45,9 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = powf(fabsf(*X),p); ++X;
-                for (size_t l=1; l<L; ++l, ++X) { *Y += powf(fabsf(*X),p); }
-                *Y = powf(*Y/L,ip);
+                *Y = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X) { *Y += powf(fabsf(*X),p); }
+                *Y = powf(*Y*den,ip);
             }
         }
         else if (G==1)
@@ -58,7 +58,7 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += powf(fabsf(*X),p); }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = powf(*Y/L,ip); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = powf(*Y*den,ip); }
         }
         else
         {
@@ -66,9 +66,9 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = powf(fabsf(*X),p); X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { *Y += powf(fabsf(*X),p); }
-                    *Y = powf(*Y/L,ip);
+                    *Y = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=K) { *Y += powf(fabsf(*X),p); }
+                    *Y = powf(*Y*den,ip);
                 }
             }
         }
@@ -84,15 +84,15 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double ip = 1.0 / p;
+    const double den = 1.0/L, ip = 1.0/p;
 
     if (N==0) {}
     else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        *Y = pow(fabs(X[0]),p);
-        for (size_t l=1; l<L; ++l) { *Y += pow(fabs(X[l]),p); }
-        *Y = pow(*Y/L,ip);
+        *Y = 0.0;
+        for (size_t l=0; l<L; ++l, ++X) { *Y += pow(fabs(*X),p); }
+        *Y = pow(*Y*den,ip);
     }
     else
     {
@@ -104,9 +104,9 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = pow(fabs(*X),p); ++X;
-                for (size_t l=1; l<L; ++l, ++X) { *Y += pow(fabs(*X),p); }
-                *Y = pow(*Y/L,ip);
+                *Y = 0.0;
+                for (size_t l=0; l<L; ++l, ++X) { *Y += pow(fabs(*X),p); }
+                *Y = pow(*Y*den,ip);
             }
         }
         else if (G==1)
@@ -117,7 +117,7 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += pow(fabs(*X),p); }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = pow(*Y/L,ip); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = pow(*Y*den,ip); }
         }
         else
         {
@@ -125,9 +125,9 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = pow(fabs(*X),p); X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { *Y += pow(fabs(*X),p); }
-                    *Y = pow(*Y/L,ip);
+                    *Y = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=K) { *Y += pow(fabs(*X),p); }
+                    *Y = pow(*Y*den,ip);
                 }
             }
         }
@@ -143,18 +143,18 @@ int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float ip = 1.0f / p;
+    const float den = 1.0f/L, ip = 1.0f/p;
 
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; n+=2) { *Y++ = sqrtf(X[n]*X[n]+X[n+1]*X[n+1]); }
+        for (size_t n=0; n<N; ++n, ++Y, X+=2) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
-        *Y = powf(sqrtf(X[0]*X[0]+X[1]*X[1]),p);
-        for (size_t l=1; l<L; l+=2) { *Y += powf(sqrtf(X[l]*X[l]+X[l+1]*X[l+1]),p); }
-        *Y = powf(*Y/L,ip);
+        *Y = 0.0f;
+        for (size_t l=0; l<L; ++l, X+=2) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+        *Y = powf(*Y*den,ip);
     }
     else
     {
@@ -166,20 +166,20 @@ int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = powf(sqrtf(*X**X+*(X+1)**(X+1)),p); X += 2;
-                for (size_t l=1; l<L; ++l, X+=2) { *Y += powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
-                *Y = powf(*Y/L,ip);
+                *Y = 0.0f;
+                for (size_t l=0; l<L; ++l, X+=2) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+                *Y = powf(*Y*den,ip);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, X+=2) { *Y++ = powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
+            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
             Y -= V;
             for (size_t l=1; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2) { *Y++ += powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
+                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = powf(*Y/L,ip); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = powf(*Y*den,ip); }
         }
         else
         {
@@ -187,9 +187,9 @@ int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    *Y = powf(sqrtf(*X**X+*(X+1)**(X+1)),p); X += 2*K;
-                    for (size_t l=1; l<L; ++l, X+=2*K) { *Y += powf(sqrtf(*X**X+*(X+1)**(X+1)),p); }
-                    *Y = powf(*Y/L,ip);
+                    *Y = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=2*K) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+                    *Y = powf(*Y*den,ip);
                 }
             }
         }
@@ -203,20 +203,20 @@ int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const
 {
     if (dim>3) { fprintf(stderr,"error in genmean_z: dim must be in [0 3]\n"); return 1; }
 
-    const size_t RC = R*C, SH = S*H, N = RC*SH;
+    const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double ip = 1.0 / p;
+    const double den = 1.0/L, ip = 1.0/p;
 
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; n+=2) { *Y++ = sqrt(X[n]*X[n]+X[n+1]*X[n+1]); }
+        for (size_t n=0; n<N; ++n, ++Y, X+=2) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
-        *Y = pow(sqrt(X[0]*X[0]+X[1]*X[1]),p);
-        for (size_t l=1; l<L; l+=2) { *Y += pow(sqrt(X[l]*X[l]+X[l+1]*X[l+1]),p); }
-        *Y = pow(*Y/L,ip);
+        *Y = 0.0;
+        for (size_t l=0; l<L; ++l, X+=2) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+        *Y = pow(*Y*den,ip);
     }
     else
     {
@@ -228,20 +228,20 @@ int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = pow(sqrt(*X**X+*(X+1)**(X+1)),p); X += 2;
-                for (size_t l=1; l<L; ++l, X+=2) { *Y += pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
-                *Y = pow(*Y/L,ip);
+                *Y = 0.0;
+                for (size_t l=0; l<L; ++l, X+=2) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+                *Y = pow(*Y*den,ip);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, X+=2) { *Y++ = pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
+            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
             Y -= V;
             for (size_t l=1; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2) { *Y++ += pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
+                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = pow(*Y/L,ip); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = pow(*Y*den,ip); }
         }
         else
         {
@@ -249,9 +249,9 @@ int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    *Y = pow(sqrt(*X**X+*(X+1)**(X+1)),p); X += 2*K;
-                    for (size_t l=1; l<L; ++l, X+=2*K) { *Y += pow(sqrt(*X**X+*(X+1)**(X+1)),p); }
-                    *Y = pow(*Y/L,ip);
+                    *Y = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=2*K) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+                    *Y = pow(*Y*den,ip);
                 }
             }
         }

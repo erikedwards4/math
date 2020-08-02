@@ -21,7 +21,7 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float ni = 1.0f/L, den = (biased) ? ni : 1.0f/(L-1);
+    const float den = 1.0f/L, den2 = (biased) ? den : 1.0f/(L-1);
 
     if (N==0) {}
     else if (L<2) { fprintf(stderr,"error in coeff_var_s: L must be > 1\n"); return 1; }
@@ -32,16 +32,16 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
         {
             *Y = 0.0f;
             for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-            *Y *= ni;
+            *Y *= den;
             for (size_t l=0; l<L; ++l) { x = *--X - *Y; sm2 += x*x; }
         }
         else
         {
             const float o = 1.0f;
-            *Y = cblas_sdot((int)L,X,1,&o,0) * ni;
+            *Y = cblas_sdot((int)L,X,1,&o,0) * den;
             for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; sm2 += x*x; }
         }
-        *Y = sqrtf(sm2*den) / *Y;
+        *Y = sqrtf(sm2*den2) / *Y;
     }
     else
     {
@@ -56,9 +56,9 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
             {
                 *Y = sm2 = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-                *Y *= ni; X -= L;
+                *Y *= den; X -= L;
                 for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; sm2 += x*x; }
-                *Y = sqrtf(sm2*den) / *Y;
+                *Y = sqrtf(sm2*den2) / *Y;
             }
         }
         else if (G==1)
@@ -71,13 +71,13 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
                 for (size_t v=0; v<V; ++v, ++X, ++mn) { *mn += *X; }
             }
             X -= N;
-            cblas_sscal((int)V,ni,mn,1);
+            cblas_sscal((int)V,den,mn,1);
             cblas_scopy((int)V,&z,0,Y,1);
             for (size_t l=0; l<L; ++l, mn-=V, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
             }
-            for (size_t v=0; v<V; ++v, ++mn, ++Y) { *Y = sqrtf(*Y*den) / *mn; }
+            for (size_t v=0; v<V; ++v, ++mn, ++Y) { *Y = sqrtf(*Y*den2) / *mn; }
             mn -= V; free(mn);
         }
         else
@@ -91,9 +91,9 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     *Y = sm2 = 0.0;
                     for (size_t l=0; l<L; ++l, ++X1) { *Y += *X1; }
-                    *Y *= ni;
+                    *Y *= den;
                     for (size_t l=0; l<L; ++l) { x = *--X1 - *Y; sm2 += x*x; }
-                    *Y = sqrtf(sm2*den) / *Y;
+                    *Y = sqrtf(sm2*den2) / *Y;
                 }
             }
         }
@@ -109,7 +109,7 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double ni = 1.0/L, den = (biased) ? ni : 1.0/(L-1);
+    const double den = 1.0/L, den2 = (biased) ? den : 1.0/(L-1);
 
     if (N==0) {}
     else if (L<2) { fprintf(stderr,"error in coeff_var_d: L must be > 1\n"); return 1; }
@@ -120,16 +120,16 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
         {
             *Y = 0.0;
             for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-            *Y *= ni;
+            *Y *= den;
             for (size_t l=0; l<L; ++l) { x = *--X - *Y; sm2 += x*x; }
         }
         else
         {
             const double o = 1.0;
-            *Y = cblas_ddot((int)L,X,1,&o,0) * ni;
+            *Y = cblas_ddot((int)L,X,1,&o,0) * den;
             for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; sm2 += x*x; }
         }
-        *Y = sqrt(sm2*den);
+        *Y = sqrt(sm2*den2);
     }
     else
     {
@@ -144,9 +144,9 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
             {
                 *Y = sm2 = 0.0;
                 for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-                *Y *= ni; X -= L;
+                *Y *= den; X -= L;
                 for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; sm2 += x*x; }
-                *Y = sqrt(sm2*den);
+                *Y = sqrt(sm2*den2);
             }
         }
         else if (G==1)
@@ -159,13 +159,13 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
                 for (size_t v=0; v<V; ++v, ++X, ++mn) { *mn += *X; }
             }
             X -= N;
-            cblas_dscal((int)V,ni,mn,1);
+            cblas_dscal((int)V,den,mn,1);
             cblas_dcopy((int)V,&z,0,Y,1);
             for (size_t l=0; l<L; ++l, mn-=V, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrt(*Y*den); }
+            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrt(*Y*den2); }
             free(mn);
         }
         else
@@ -179,9 +179,9 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     *Y = sm2 = 0.0;
                     for (size_t l=0; l<L; ++l, ++X1) { *Y += *X1; }
-                    *Y *= ni;
+                    *Y *= den;
                     for (size_t l=0; l<L; ++l) { x = *--X1 - *Y; sm2 += x*x; }
-                    *Y = sqrt(sm2*den);
+                    *Y = sqrt(sm2*den2);
                 }
             }
         }

@@ -23,7 +23,7 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float ni = 1.0f / L;
+    const float den = 1.0f / L;
 
     if (N==0) {}
     else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
@@ -33,12 +33,12 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             *Y = 0.0f;
             for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-            *Y *= ni;
+            *Y *= den;
         }
         else
         {
             const float o = 1.0f;
-            *Y = cblas_sdot((int)L,X,1,&o,0) * ni;
+            *Y = cblas_sdot((int)L,X,1,&o,0) * den;
         }
     }
     else
@@ -55,7 +55,7 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
                 {
                     *Y = 0.0f;
                     for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-                    *Y *= ni;
+                    *Y *= den;
                 }
             }
             else
@@ -63,7 +63,7 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
                 const float o = 1.0f;
                 for (size_t v=0; v<V; ++v, X+=L, ++Y)
                 {
-                    *Y = cblas_sdot((int)L,X,1,&o,0) * ni;
+                    *Y = cblas_sdot((int)L,X,1,&o,0) * den;
                 }
             }
         }
@@ -75,17 +75,17 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; }
             }
-            cblas_sscal((int)V,ni,Y,1);
+            cblas_sscal((int)V,den,Y,1);
         }
         else
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=L*K-1, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     *Y = 0.0f;
                     for (size_t l=0; l<L; ++l, X+=K) { *Y += *X; }
-                    *Y *= ni;
+                    *Y *= den;
                 }
             }
         }
@@ -101,7 +101,7 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double ni = 1.0 / L;
+    const double den = 1.0 / L;
 
     if (N==0) {}
     else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
@@ -111,12 +111,12 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             *Y = 0.0;
             for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-            *Y *= ni;
+            *Y *= den;
         }
         else
         {
             const double o = 1.0;
-            *Y = cblas_ddot((int)L,X,1,&o,0) * ni;
+            *Y = cblas_ddot((int)L,X,1,&o,0) * den;
         }
     }
     else
@@ -133,7 +133,7 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
                 {
                     *Y = 0.0;
                     for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-                    *Y *= ni;
+                    *Y *= den;
                 }
             }
             else
@@ -141,7 +141,7 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
                 const double o = 1.0;
                 for (size_t v=0; v<V; ++v, X+=L, ++Y)
                 {
-                    *Y = cblas_ddot((int)L,X,1,&o,0) * ni;
+                    *Y = cblas_ddot((int)L,X,1,&o,0) * den;
                 }
             }
         }
@@ -153,17 +153,17 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; }
             }
-            cblas_dscal((int)V,ni,Y,1);
+            cblas_dscal((int)V,den,Y,1);
         }
         else
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=L*K-1, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     *Y = 0.0;
                     for (size_t l=0; l<L; ++l, X+=K) { *Y += *X; }
-                    *Y *= ni;
+                    *Y *= den;
                 }
             }
         }
@@ -179,16 +179,16 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float ni = 1.0f / L;
+    const float den = 1.0f / L;
     float yr, yi;
 
     if (N==0) {}
     else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        yr = *X++; yi = *X++;
-        for (size_t l=1; l<L; ++l, ++X) { yr += *X++; yi += *X; }
-        *Y++ = yr * ni; *Y = yi *ni;
+        yr = yi = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X) { yr += *X++; yi += *X; }
+        *Y++ = yr * den; *Y = yi *den;
     }
     else
     {
@@ -200,9 +200,9 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                yr = *X++; yi = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { yr += *X++; yi += *X; }
-                *Y++ = yr * ni; *Y = yi * ni;
+                yr = yi = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X) { yr += *X++; yi += *X; }
+                *Y++ = yr * den; *Y = yi * den;
             }
         }
         else if (G==1)
@@ -213,17 +213,17 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y++ += *X++; *Y += *X; }
             }
-            cblas_csscal((int)V,ni,Y,1);
+            cblas_csscal((int)V,den,Y,1);
         }
         else
         {
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*L*K-2, ++Y)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    yr = *X++; yi = *X; X += 2*K-1;
-                    for (size_t l=1; l<L; ++l, X+=2*K-1) { yr += *X++; yi += *X; }
-                    *Y++ = yr * ni; *Y = yi * ni;
+                    yr = yi = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=2*K-1) { yr += *X++; yi += *X; }
+                    *Y++ = yr * den; *Y = yi * den;
                 }
             }
         }
@@ -239,16 +239,16 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double ni = 1.0 / L;
+    const double den = 1.0 / L;
     double yr, yi;
 
     if (N==0) {}
     else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
     else if (L==N)
     {
-        yr = *X++; yi = *X++;
-        for (size_t l=1; l<L; ++l, ++X) { yr += *X++; yi += *X; }
-        *Y++ = yr * ni; *Y = yi *ni;
+        yr = yi = 0.0;
+        for (size_t l=0; l<L; ++l, ++X) { yr += *X++; yi += *X; }
+        *Y++ = yr * den; *Y = yi *den;
     }
     else
     {
@@ -260,9 +260,9 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                yr = *X++; yi = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { yr += *X++; yi += *X; }
-                *Y++ = yr * ni; *Y = yi * ni;
+                yr = yi = 0.0;
+                for (size_t l=0; l<L; ++l, ++X) { yr += *X++; yi += *X; }
+                *Y++ = yr * den; *Y = yi * den;
             }
         }
         else if (G==1)
@@ -273,17 +273,17 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y++ += *X++; *Y += *X; }
             }
-            cblas_zdscal((int)V,ni,Y,1);
+            cblas_zdscal((int)V,den,Y,1);
         }
         else
         {
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*L*K-2, ++Y)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    yr = *X++; yi = *X; X += 2*K-1;
-                    for (size_t l=1; l<L; ++l, X+=2*K-1) { yr += *X++; yi += *X; }
-                    *Y++ = yr * ni; *Y = yi * ni;
+                    yr = yi = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=2*K-1) { yr += *X++; yi += *X; }
+                    *Y++ = yr * den; *Y = yi * den;
                 }
             }
         }

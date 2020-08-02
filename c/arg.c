@@ -23,8 +23,6 @@ int arg_z (double *Y, const double *X, const size_t N);
 
 int arg_inplace_s (float *X, const size_t N);
 int arg_inplace_d (double *X, const size_t N);
-int arg_inplace_c (float *X, const size_t N);
-int arg_inplace_z (double *X, const size_t N);
 
 
 int arg_s (float *Y, const float *X, const size_t N)
@@ -73,23 +71,6 @@ int arg_inplace_s (float *X, const size_t N)
 int arg_inplace_d (double *X, const size_t N)
 {
     for (size_t n=0; n<N; ++n, ++X) { *X = (double)(*X<0.0) * M_PI; }
-    
-    return 0;
-}
-
-
-int arg_inplace_c (float *X, const size_t N)
-{
-    for (size_t n=0, n2=0; n<N; ++n, n2+=2) { X[n] = atan2f(X[n2+1],X[n2]); }
-    //for (size_t n=0, n2=0; n<N; ++n, n2+=2) { X[n] = cargf(X[n2]+1.0if*X[n2+1]); }
-
-    return 0;
-}
-
-
-int arg_inplace_z (double *X, const size_t N)
-{
-    for (size_t n=0, n2=0; n<N; ++n, n2+=2) { X[n] = atan2(X[n2+1],X[n2]); }
     
     return 0;
 }

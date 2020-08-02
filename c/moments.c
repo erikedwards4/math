@@ -29,7 +29,7 @@ int moments_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t Ly = 4;
-    const float ni = 1.0f / Lx, den = (biased) ? ni : 1.0f/(Lx-1);
+    const float den = 1.0f / Lx, den2 = (biased) ? den : 1.0f/(Lx-1);
     const float w = (biased) ? sqrtf(Lx) : Lx*sqrtf(Lx-1)/(Lx-2);
 
     if (N==0) {}
@@ -41,16 +41,16 @@ int moments_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
         {
             *Y = 0.0f;
             for (size_t l=0; l<Lx; ++l, ++X) { *Y += *X; }
-            *Y *= ni;
+            *Y *= den;
             for (size_t l=0; l<Lx; ++l) { x = *--X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
         }
         else
         {
             const float o = 1.0f;
-            *Y = cblas_sdot((int)Lx,X,1,&o,0) * ni;
+            *Y = cblas_sdot((int)Lx,X,1,&o,0) * den;
             for (size_t l=0; l<Lx; ++l, ++X) { x = *X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
         }
-        *++Y = sm2 * den;
+        *++Y = sm2 * den2;
         *++Y = w * sm3 / (sm2*sqrtf(sm2));
         *++Y = Lx * sm4 / (sm2*sm2);
         if (!biased) { *Y =  3.0f + (*Y*(Lx+1)-3*(Lx-1)) * (Lx-1)/((Lx-2)*(Lx-3)); }
@@ -68,9 +68,9 @@ int moments_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
             {
                 *Y = sm2 = sm3 = sm4 = 0.0f;
                 for (size_t l=0; l<Lx; ++l, ++X) { *Y += *X; }
-                *Y *= ni; X -= Lx;
+                *Y *= den; X -= Lx;
                 for (size_t l=0; l<Lx; ++l, ++X) { x = *X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
-                *++Y = sm2 * den;
+                *++Y = sm2 * den2;
                 *++Y = w * sm3 / (sm2*sqrtf(sm2));
                 *++Y = Lx * sm4 / (sm2*sm2);
                 if (!biased) { *Y =  3.0f + (*Y*(Lx+1)-3*(Lx-1)) * (Lx-1)/((Lx-2)*(Lx-3)); }
@@ -89,13 +89,13 @@ int moments_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
-            cblas_sscal((int)V,ni,Y,1);
+            cblas_sscal((int)V,den,Y,1);
             for (size_t l=0; l<Lx; ++l, sm2-=V, sm3-=V, sm4-=V, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++sm2, ++sm3, ++sm4, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm3 += x*x2; *sm4 += x2*x2; }
             }
             Y += V;
-            for (size_t v=0; v<V; ++v, ++sm2, ++sm3, ++sm4, ++Y) { *Y = *sm2 * den; }
+            for (size_t v=0; v<V; ++v, ++sm2, ++sm3, ++sm4, ++Y) { *Y = *sm2 * den2; }
             sm2 -= V; sm3 -= V; sm4 -= V;
             for (size_t v=0; v<V; ++v, ++sm2, ++sm3, ++sm4, ++Y) { *Y = w * *sm3 / (*sm2*sqrtf(*sm2)); }
             sm2 -= V; sm3 -= V; sm4 -= V;
@@ -118,9 +118,9 @@ int moments_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
                     cblas_scopy((int)Lx,X,(int)K,X1,1);
                     *Y = sm2 = sm3 = sm4 = 0.0f;
                     for (size_t l=0; l<Lx; ++l, ++X1) { *Y += *X1; }
-                    *Y *= ni;
+                    *Y *= den;
                     for (size_t l=0; l<Lx; ++l) { x = *--X1 - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
-                    Y += K; *Y = sm2 * den;
+                    Y += K; *Y = sm2 * den2;
                     Y += K; *Y = w * sm3 / (sm2*sqrtf(sm2));
                     Y += K; *Y = Lx * sm4 / (sm2*sm2);
                     if (!biased) { *Y =  3.0f + (*Y*(Lx+1)-3*(Lx-1)) * (Lx-1)/((Lx-2)*(Lx-3)); }
@@ -141,7 +141,7 @@ int moments_d (double *Y, double *X, const size_t R, const size_t C, const size_
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t Ly = 4;
-    const double ni = 1.0 / Lx, den = (biased) ? ni : 1.0/(Lx-1);
+    const double den = 1.0 / Lx, den2 = (biased) ? den : 1.0/(Lx-1);
     const double w = (biased) ? sqrt(Lx) : Lx*sqrt(Lx-1)/(Lx-2);
 
     if (N==0) {}
@@ -153,16 +153,16 @@ int moments_d (double *Y, double *X, const size_t R, const size_t C, const size_
         {
             *Y = 0.0;
             for (size_t l=0; l<Lx; ++l, ++X) { *Y += *X; }
-            *Y *= ni;
+            *Y *= den;
             for (size_t l=0; l<Lx; ++l) { x = *--X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
         }
         else
         {
             const double o = 1.0;
-            *Y = cblas_ddot((int)Lx,X,1,&o,0) * ni;
+            *Y = cblas_ddot((int)Lx,X,1,&o,0) * den;
             for (size_t l=0; l<Lx; ++l, ++X) { x = *X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
         }
-        *++Y = sm2 * den;
+        *++Y = sm2 * den2;
         *++Y = w * sm3 / (sm2*sqrt(sm2));
         *++Y = Lx * sm4 / (sm2*sm2);
         if (!biased) { *Y =  3.0 + (*Y*(Lx+1)-3*(Lx-1)) * (Lx-1)/((Lx-2)*(Lx-3)); }
@@ -180,9 +180,9 @@ int moments_d (double *Y, double *X, const size_t R, const size_t C, const size_
             {
                 *Y = sm2 = sm3 = sm4 = 0.0;
                 for (size_t l=0; l<Lx; ++l, ++X) { *Y += *X; }
-                *Y *= ni; X -= Lx;
+                *Y *= den; X -= Lx;
                 for (size_t l=0; l<Lx; ++l, ++X) { x = *X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
-                *++Y = sm2 * den;
+                *++Y = sm2 * den2;
                 *++Y = w * sm3 / (sm2*sqrt(sm2));
                 *++Y = Lx * sm4 / (sm2*sm2);
                 if (!biased) { *Y =  3.0 + (*Y*(Lx+1)-3*(Lx-1)) * (Lx-1)/((Lx-2)*(Lx-3)); }
@@ -201,13 +201,13 @@ int moments_d (double *Y, double *X, const size_t R, const size_t C, const size_
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
-            cblas_dscal((int)V,ni,Y,1);
+            cblas_dscal((int)V,den,Y,1);
             for (size_t l=0; l<Lx; ++l, sm2-=V, sm3-=V, sm4-=V, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++sm2, ++sm3, ++sm4, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm3 += x*x2; *sm4 += x2*x2; }
             }
             Y += V;
-            for (size_t v=0; v<V; ++v, ++sm2, ++sm3, ++sm4, ++Y) { *Y = *sm2 * den; }
+            for (size_t v=0; v<V; ++v, ++sm2, ++sm3, ++sm4, ++Y) { *Y = *sm2 * den2; }
             sm2 -= V; sm3 -= V; sm4 -= V;
             for (size_t v=0; v<V; ++v, ++sm2, ++sm3, ++sm4, ++Y) { *Y = w * *sm3 / (*sm2*sqrt(*sm2)); }
             sm2 -= V; sm3 -= V; sm4 -= V;
@@ -230,9 +230,9 @@ int moments_d (double *Y, double *X, const size_t R, const size_t C, const size_
                     cblas_dcopy((int)Lx,X,(int)K,X1,1);
                     *Y = sm2 = sm3 = sm4 = 0.0;
                     for (size_t l=0; l<Lx; ++l, ++X1) { *Y += *X1; }
-                    *Y *= ni;
+                    *Y *= den;
                     for (size_t l=0; l<Lx; ++l) { x = *--X1 - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
-                    Y += K; *Y = sm2 * den;
+                    Y += K; *Y = sm2 * den2;
                     Y += K; *Y = w * sm3 / (sm2*sqrt(sm2));
                     Y += K; *Y = Lx * sm4 / (sm2*sm2);
                     if (!biased) { *Y =  3.0 + (*Y*(Lx+1)-3*(Lx-1)) * (Lx-1)/((Lx-2)*(Lx-3)); }
@@ -253,7 +253,7 @@ int moments_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t Ly = 4;
-    const float ni = 1.0f/Lx, den2 = (biased) ? ni : 1.0f/(Lx-1);
+    const float den = 1.0f/Lx, den2 = (biased) ? den : 1.0f/(Lx-1);
     const float w = (biased) ? sqrtf(Lx) : Lx*sqrtf(Lx-1)/(Lx-2);
     float xr, xi, x2r, x2i, x3r, x3i, xrr, xii, xri, den3, den4;
 
@@ -263,11 +263,11 @@ int moments_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
     {
         float mnr = 0.0f, mni = 0.0f, sm2 = 0.0f, sm3r = 0.0f, sm3i = 0.0f, sm4r = 0.0f, sm4i = 0.0f;
         for (size_t l=0; l<Lx; ++l) { mnr += *X++; mni += *X++; }
-        mnr *= ni; mni *= ni;
+        mnr *= den; mni *= den;
         X -= 2*Lx;
-        for (size_t l=0; l<Lx; ++l)
+        for (size_t l=0; l<Lx; ++l, ++X)
         {
-            xr = *X++ - mnr; xi = *X++ - mni;
+            xr = *X++ - mnr; xi = *X - mni;
             xrr = xr*xr; xii = xi*xi; xri = xr*xi;
             x2r = xrr - xii; x2i = xri + xri;
             sm2 += xrr + xii;
@@ -300,11 +300,11 @@ int moments_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
             {
                 mnr = mni = sm2 = sm3r = sm3i = sm4r = sm4i = 0.0f;
                 for (size_t l=0; l<Lx; ++l) { mnr += *X++; mni += *X++; }
-                mnr *= ni; mni *= ni;
+                mnr *= den; mni *= den;
                 X -= 2*Lx;
-                for (size_t l=0; l<Lx; ++l)
+                for (size_t l=0; l<Lx; ++l, ++X)
                 {
-                    xr = *X++ - mnr; xi = *X++ - mni;
+                    xr = *X++ - mnr; xi = *X - mni;
                     xrr = xr*xr; xii = xi*xi; xri = xr*xi;
                     x2r = xrr - xii; x2i = xri + xri;
                     sm2 += xrr + xii;
@@ -337,11 +337,11 @@ int moments_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
                     cblas_ccopy((int)Lx,X,(int)K,X1,1);
                     mnr = mni = sm2 = sm3r = sm3i = sm4r = sm4i = 0.0f;
                     for (size_t l=0; l<Lx; ++l) { mnr += *X1++; mni += *X1++; }
-                    mnr *= ni; mni *= ni;
+                    mnr *= den; mni *= den;
                     X1 -= 2*Lx;
-                    for (size_t l=0; l<Lx; ++l)
+                    for (size_t l=0; l<Lx; ++l, ++X1)
                     {
-                        xr = *X1++ - mnr; xi = *X1++ - mni;
+                        xr = *X1++ - mnr; xi = *X1 - mni;
                         xrr = xr*xr; xii = xi*xi; xri = xr*xi;
                         x2r = xrr - xii; x2i = xri + xri;
                         sm2 += xrr + xii;
@@ -378,7 +378,7 @@ int moments_z (double *Y, double *X, const size_t R, const size_t C, const size_
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const size_t Ly = 4;
-    const double ni = 1.0/Lx, den2 = (biased) ? ni : 1.0/(Lx-1);
+    const double den = 1.0/Lx, den2 = (biased) ? den : 1.0/(Lx-1);
     const double w = (biased) ? sqrt(Lx) : Lx*sqrt(Lx-1)/(Lx-2);
     double xr, xi, x2r, x2i, x3r, x3i, xrr, xii, xri, den3, den4;
 
@@ -388,11 +388,11 @@ int moments_z (double *Y, double *X, const size_t R, const size_t C, const size_
     {
         double mnr = 0.0, mni = 0.0, sm2 = 0.0, sm3r = 0.0, sm3i = 0.0, sm4r = 0.0, sm4i = 0.0;
         for (size_t l=0; l<Lx; ++l) { mnr += *X++; mni += *X++; }
-        mnr *= ni; mni *= ni;
+        mnr *= den; mni *= den;
         X -= 2*Lx;
-        for (size_t l=0; l<Lx; ++l)
+        for (size_t l=0; l<Lx; ++l, ++X)
         {
-            xr = *X++ - mnr; xi = *X++ - mni;
+            xr = *X++ - mnr; xi = *X - mni;
             xrr = xr*xr; xii = xi*xi; xri = xr*xi;
             x2r = xrr - xii; x2i = xri + xri;
             sm2 += xrr + xii;
@@ -425,11 +425,11 @@ int moments_z (double *Y, double *X, const size_t R, const size_t C, const size_
             {
                 mnr = mni = sm2 = sm3r = sm3i = sm4r = sm4i = 0.0;
                 for (size_t l=0; l<Lx; ++l) { mnr += *X++; mni += *X++; }
-                mnr *= ni; mni *= ni;
+                mnr *= den; mni *= den;
                 X -= 2*Lx;
-                for (size_t l=0; l<Lx; ++l)
+                for (size_t l=0; l<Lx; ++l, ++X)
                 {
-                    xr = *X++ - mnr; xi = *X++ - mni;
+                    xr = *X++ - mnr; xi = *X - mni;
                     xrr = xr*xr; xii = xi*xi; xri = xr*xi;
                     x2r = xrr - xii; x2i = xri + xri;
                     sm2 += xrr + xii;
@@ -462,11 +462,11 @@ int moments_z (double *Y, double *X, const size_t R, const size_t C, const size_
                     cblas_zcopy((int)Lx,X,(int)K,X1,1);
                     mnr = mni = sm2 = sm3r = sm3i = sm4r = sm4i = 0.0;
                     for (size_t l=0; l<Lx; ++l) { mnr += *X1++; mni += *X1++; }
-                    mnr *= ni; mni *= ni;
+                    mnr *= den; mni *= den;
                     X1 -= 2*Lx;
-                    for (size_t l=0; l<Lx; ++l)
+                    for (size_t l=0; l<Lx; ++l, ++X1)
                     {
-                        xr = *X1++ - mnr; xi = *X1++ - mni;
+                        xr = *X1++ - mnr; xi = *X1 - mni;
                         xrr = xr*xr; xii = xi*xi; xri = xr*xi;
                         x2r = xrr - xii; x2i = xri + xri;
                         sm2 += xrr + xii;

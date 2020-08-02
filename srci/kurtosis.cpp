@@ -49,7 +49,6 @@ if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) fou
 
 //Set output header info
 o1.F = i1.F; o1.T = i1.T;
-//o1.T = (i1.T<100) ? i1.T : i1.T-100;
 o1.R = (dim==0) ? 1u : i1.R;
 o1.C = (dim==1) ? 1u : i1.C;
 o1.S = (dim==2) ? 1u : i1.S;

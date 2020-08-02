@@ -52,19 +52,21 @@ if (i1.T==1)
 }
 else if (i1.T==101)
 {
-    float *X;
+    float *X, *Y;
     try { X = new float[2u*i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
+    try { Y = new float[o1.N()]; }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::square_inplace_c(X,i1.N()))
+    if (codee::square_c(Y,X,i1.N()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
-        try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+        try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
-    delete[] X;
+    delete[] X; delete[] Y;
 }
 
 //Finish

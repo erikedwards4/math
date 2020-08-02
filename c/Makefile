@@ -95,7 +95,7 @@ join3: join3.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Rearrange: 1 matrix input, 1 matrix output with elements rearranged
-Rearrange: transpose ctranspose #rot90
+Rearrange: transpose ctranspose rot90
 transpose: transpose.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 ctranspose: ctranspose.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 rot90: rot90.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -215,7 +215,7 @@ var: var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 skewness: skewness.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kurtosis: kurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-#Other_Means: trimmed_mean geometric_mean harmonic_mean generalized_mean
+#Other_Means: trimmed_mean geometric_mean harmonic_mean generalized_mean root_mean_square
 Other_Means: trimmean winsormean geomean harmean genmean rms
 trimmean: trimmean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 winsormean: winsormean.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -234,7 +234,6 @@ mad: mad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Other_Stats: prod
 prod: prod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-
 
 
 

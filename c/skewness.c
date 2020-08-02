@@ -28,7 +28,7 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float ni = 1.0f / L;
+    const float den = 1.0f / L;
     const float w = (biased) ? sqrtf(L) : L*sqrtf(L-1)/(L-2);
 
     if (N==0) {}
@@ -40,13 +40,13 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
         {
             *Y = 0.0f;
             for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-            *Y *= ni;
+            *Y *= den;
             for (size_t l=0; l<L; ++l) { x = *--X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; }
         }
         else
         {
             const float o = 1.0f;
-            *Y = cblas_sdot((int)L,X,1,&o,0) * ni;
+            *Y = cblas_sdot((int)L,X,1,&o,0) * den;
             for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; }
         }
         *Y = w * sm3 / (sm2*sqrtf(sm2));
@@ -64,7 +64,7 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
             {
                 *Y = sm2 = sm3 = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-                *Y *= ni; X -= L;
+                *Y *= den; X -= L;
                 for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; }
                 *Y = w * sm3 / (sm2*sqrtf(sm2));
             }
@@ -81,7 +81,7 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
-            cblas_sscal((int)V,ni,Y,1);
+            cblas_sscal((int)V,den,Y,1);
             for (size_t l=0; l<L; ++l, sm2-=V, sm3-=V, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++sm2, ++sm3, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm3 += x*x2; }
@@ -100,7 +100,7 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
                     cblas_scopy((int)L,X,(int)K,X1,1);
                     *Y = sm2 = sm3 = 0.0f;
                     for (size_t l=0; l<L; ++l, ++X1) { *Y += *X1; }
-                    *Y *= ni;
+                    *Y *= den;
                     for (size_t l=0; l<L; ++l) { x = *X1-- - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; }
                     *Y = w * sm3 / (sm2*sqrtf(sm2));
                 }
@@ -119,7 +119,7 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double ni = 1.0 / L;
+    const double den = 1.0 / L;
     const double w = (biased) ? sqrt(L) : L*sqrt(L-1)/(L-2);
     
     if (N==0) {}
@@ -131,13 +131,13 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
         {
             *Y = 0.0;
             for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-            *Y *= ni;
+            *Y *= den;
             for (size_t l=0; l<L; ++l) { x = *--X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; }
         }
         else
         {
             const double o = 1.0;
-            *Y = cblas_ddot((int)L,X,1,&o,0) * ni;
+            *Y = cblas_ddot((int)L,X,1,&o,0) * den;
             for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; }
         }
         *Y = w * sm3 / (sm2*sqrt(sm2));
@@ -155,7 +155,7 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
             {
                 *Y = sm2 = sm3 = 0.0;
                 for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
-                *Y *= ni; X -= L;
+                *Y *= den; X -= L;
                 for (size_t l=0; l<L; ++l, ++X) { x = *X - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; }
                 *Y = w * sm3 / (sm2*sqrt(sm2));
             }
@@ -172,7 +172,7 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
-            cblas_dscal((int)V,ni,Y,1);
+            cblas_dscal((int)V,den,Y,1);
             for (size_t l=0; l<L; ++l, sm2-=V, sm3-=V, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++sm2, ++sm3, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm3 += x*x2; }
@@ -191,7 +191,7 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
                     cblas_dcopy((int)L,X,(int)K,X1,1);
                     *Y = sm2 = sm3 = 0.0;
                     for (size_t l=0; l<L; ++l, ++X1) { *Y += *X1; }
-                    *Y *= ni;
+                    *Y *= den;
                     for (size_t l=0; l<L; ++l) { x = *X1-- - *Y; x2 = x*x; sm2 += x2; sm3 += x*x2; }
                     *Y = w * sm3 / (sm2*sqrt(sm2));
                 }
@@ -210,9 +210,9 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float ni = 1.0f / L;
+    const float den = 1.0f / L;
     const float w = (biased) ? sqrtf(L) : L*sqrtf(L-1)/(L-2);
-    float xr, xi, x2r, x2i, xrr, xii, xri, den;
+    float xr, xi, x2r, x2i, xrr, xii, xri, den3;
 
     if (N==0) {}
     else if (L<3) { fprintf(stderr,"error in skewness_c: L must be > 2\n"); return 1; }
@@ -220,7 +220,7 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
     {
         float mnr = 0.0f, mni = 0.0f, sm2 = 0.0f, sm3r = 0.0f, sm3i = 0.0f;
         for (size_t l=0; l<L; ++l) { mnr += *X++; mni += *X++; }
-        mnr *= ni; mni *= ni;
+        mnr *= den; mni *= den;
         X -= 2*L;
         for (size_t l=0; l<L; ++l)
         {
@@ -230,8 +230,8 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
             sm2 += xrr + xii;
             sm3r += xr*x2r - xi*x2i; sm3i += xr*x2i + xi*x2r;
         }
-        den = w / (sm2*sqrtf(sm2));
-        *Y++ = sm3r * den; *Y = sm3i * den;
+        den3 = w / (sm2*sqrtf(sm2));
+        *Y++ = sm3r * den3; *Y = sm3i * den3;
     }
     else
     {
@@ -246,7 +246,7 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
             {
                 mnr = mni = sm2 = sm3r = sm3i = 0.0f;
                 for (size_t l=0; l<L; ++l) { mnr += *X++; mni += *X++; }
-                mnr *= ni; mni *= ni;
+                mnr *= den; mni *= den;
                 X -= 2*L;
                 for (size_t l=0; l<L; ++l)
                 {
@@ -256,8 +256,8 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
                     sm2 += xrr + xii;
                     sm3r += xr*x2r - xi*x2i; sm3i += xr*x2i + xi*x2r;
                 }
-                den = w / (sm2*sqrtf(sm2));
-                *Y++ = sm3r * den; *Y++ = sm3i * den;
+                den3 = w / (sm2*sqrtf(sm2));
+                *Y++ = sm3r * den3; *Y++ = sm3i * den3;
             }
         }
         else
@@ -271,7 +271,7 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
                     cblas_ccopy((int)L,X,(int)K,X1,1);
                     mnr = mni = sm2 = sm3r = sm3i = 0.0f;
                     for (size_t l=0; l<L; ++l) { mnr += *X1++; mni += *X1++; }
-                    mnr *= ni; mni *= ni;
+                    mnr *= den; mni *= den;
                     X1 -= 2*L;
                     for (size_t l=0; l<L; ++l)
                     {
@@ -281,8 +281,8 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
                         sm2 += xrr + xii;
                         sm3r += xr*x2r - xi*x2i; sm3i += xr*x2i + xi*x2r;
                     }
-                    den = w / (sm2*sqrtf(sm2));
-                    *Y++ = sm3r * den; *Y++ = sm3i * den;
+                    den3 = w / (sm2*sqrtf(sm2));
+                    *Y++ = sm3r * den3; *Y++ = sm3i * den3;
                 }
             }
             free(X1);
@@ -299,9 +299,9 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double ni = 1.0 / L;
+    const double den = 1.0 / L;
     const double w = (biased) ? sqrt(L) : L*sqrt(L-1)/(L-2);
-    double xr, xi, x2r, x2i, xrr, xii, xri, den;
+    double xr, xi, x2r, x2i, xrr, xii, xri, den3;
 
     if (N==0) {}
     else if (L<3) { fprintf(stderr,"error in skewness_z: L must be > 2\n"); return 1; }
@@ -309,7 +309,7 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
     {
         double mnr = 0.0, mni = 0.0, sm2 = 0.0, sm3r = 0.0, sm3i = 0.0;
         for (size_t l=0; l<L; ++l) { mnr += *X++; mni += *X++; }
-        mnr *= ni; mni *= ni;
+        mnr *= den; mni *= den;
         X -= 2*L;
         for (size_t l=0; l<L; ++l)
         {
@@ -319,8 +319,8 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
             sm2 += xrr + xii;
             sm3r += xr*x2r - xi*x2i; sm3i += xr*x2i + xi*x2r;
         }
-        den = w / (sm2*sqrt(sm2));
-        *Y++ = sm3r * den; *Y = sm3i * den;
+        den3 = w / (sm2*sqrt(sm2));
+        *Y++ = sm3r * den3; *Y = sm3i * den3;
     }
     else
     {
@@ -335,7 +335,7 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
             {
                 mnr = mni = sm2 = sm3r = sm3i = 0.0;
                 for (size_t l=0; l<L; ++l) { mnr += *X++; mni += *X++; }
-                mnr *= ni; mni *= ni;
+                mnr *= den; mni *= den;
                 X -= 2*L;
                 for (size_t l=0; l<L; ++l)
                 {
@@ -345,8 +345,8 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
                     sm2 += xrr + xii;
                     sm3r += xr*x2r - xi*x2i; sm3i += xr*x2i + xi*x2r;
                 }
-                den = w / (sm2*sqrt(sm2));
-                *Y++ = sm3r * den; *Y++ = sm3i * den;
+                den3 = w / (sm2*sqrt(sm2));
+                *Y++ = sm3r * den3; *Y++ = sm3i * den3;
             }
         }
         else
@@ -360,7 +360,7 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
                     cblas_zcopy((int)L,X,(int)K,X1,1);
                     mnr = mni = sm2 = sm3r = sm3i = 0.0;
                     for (size_t l=0; l<L; ++l) { mnr += *X1++; mni += *X1++; }
-                    mnr *= ni; mni *= ni;
+                    mnr *= den; mni *= den;
                     X1 -= 2*L;
                     for (size_t l=0; l<L; ++l)
                     {
@@ -370,8 +370,8 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
                         sm2 += xrr + xii;
                         sm3r += xr*x2r - xi*x2i; sm3i += xr*x2i + xi*x2r;
                     }
-                    den = w / (sm2*sqrt(sm2));
-                    *Y++ = sm3r * den; *Y++ = sm3i * den;
+                    den3 = w / (sm2*sqrt(sm2));
+                    *Y++ = sm3r * den3; *Y++ = sm3i * den3;
                 }
             }
             free(X1);

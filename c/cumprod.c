@@ -356,8 +356,8 @@ int cumprod_inplace_c (float *X, const size_t R, const size_t C, const size_t S,
         for (size_t l=1; l<L; ++l)
         {
             xr = *X; xi = *(X+1);
-            *X++ = xr*c - xi*d;
-            *X = xr*d + xi*c;
+            *X = xr*c - xi*d;
+            *++X = xr*d + xi*c;
             c = *(X-1); d = *X++;
         }
     }
@@ -375,8 +375,8 @@ int cumprod_inplace_c (float *X, const size_t R, const size_t C, const size_t S,
                 for (size_t l=1; l<L; ++l)
                 {
                     xr = *X; xi = *(X+1);
-                    *X++ = xr*c - xi*d;
-                    *X = xr*d + xi*c;
+                    *X = xr*c - xi*d;
+                    *++X = xr*d + xi*c;
                     c = *(X-1); d = *X++;
                 }
             }
@@ -405,8 +405,8 @@ int cumprod_inplace_c (float *X, const size_t R, const size_t C, const size_t S,
                     for (size_t l=1; l<L; ++l, X+=2*K-2)
                     {
                         xr = *X; xi = *(X+1);
-                        *X++ = xr*c - xi*d;
-                        *X = xr*d + xi*c;
+                        *X = xr*c - xi*d;
+                        *++X = xr*d + xi*c;
                         c = *(X-1); d = *X++;
                     }
                 }
@@ -433,8 +433,8 @@ int cumprod_inplace_z (double *X, const size_t R, const size_t C, const size_t S
         for (size_t l=1; l<L; ++l)
         {
             xr = *X; xi = *(X+1);
-            *X++ = xr*c - xi*d;
-            *X = xr*d + xi*c;
+            *X = xr*c - xi*d;
+            *++X = xr*d + xi*c;
             c = *(X-1); d = *X++;
         }
     }
@@ -452,8 +452,8 @@ int cumprod_inplace_z (double *X, const size_t R, const size_t C, const size_t S
                 for (size_t l=1; l<L; ++l)
                 {
                     xr = *X; xi = *(X+1);
-                    *X++ = xr*c - xi*d;
-                    *X = xr*d + xi*c;
+                    *X = xr*c - xi*d;
+                    *++X = xr*d + xi*c;
                     c = *(X-1); d = *X++;
                 }
             }
@@ -482,8 +482,8 @@ int cumprod_inplace_z (double *X, const size_t R, const size_t C, const size_t S
                     for (size_t l=1; l<L; ++l, X+=2*K-2)
                     {
                         xr = *X; xi = *(X+1);
-                        *X++ = xr*c - xi*d;
-                        *X = xr*d + xi*c;
+                        *X = xr*c - xi*d;
+                        *++X = xr*d + xi*c;
                         c = *(X-1); d = *X++;
                     }
                 }

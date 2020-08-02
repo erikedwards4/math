@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "mad.c"
+#include "geostd.c"
 
 #ifdef I
 #undef I
@@ -39,21 +39,20 @@ int main(int argc, char *argv[])
     //Description
     string descr;
     descr += "Vec2scalar (reduction) operation.\n";
-    descr += "Gets MAD for each vector in X along dim.\n";
-    descr += "This is the median absolute deviation from the median,\n";
-    descr += "which is a robust measure of spread.\n";
+    descr += "Gets geometric standard deviation for each vector in X along dim.\n";
+    descr += "This is the exp of the std of logs for each vector.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to get mad along cols.\n";
-    descr += "Use -d1 to get mad along rows.\n";
-    descr += "Use -d2 to get mad along slices.\n";
-    descr += "Use -d3 to get mad along hyperslices.\n";
+    descr += "Use -d0 to get geometric std along cols.\n";
+    descr += "Use -d1 to get geometric std along rows.\n";
+    descr += "Use -d2 to get geometric std along slices.\n";
+    descr += "Use -d3 to get geometric std along hyperslices.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ mad X -o Y \n";
-    descr += "$ mad X > Y \n";
-    descr += "$ mad -d1 X > Y \n";
-    descr += "$ cat X | mad > Y \n";
+    descr += "$ geostd X -o Y \n";
+    descr += "$ geostd X > Y \n";
+    descr += "$ geostd -d1 X > Y \n";
+    descr += "$ cat X | geostd > Y \n";
 
 
     //Argtable
@@ -147,8 +146,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::mad_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::mad_inplace_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::geostd_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -166,8 +164,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::mad_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::mad_inplace_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::geostd_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

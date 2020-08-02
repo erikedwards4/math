@@ -34,7 +34,7 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cokurtosis_s: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float ni = 1.0f/L;
+    const float den = 1.0f / L;
     float xx1, xx2, mn1, mn2, ss1, ss2, ss12;
 
     if (N==0) {}
@@ -42,7 +42,7 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
     {
         mn1 = mn2 = ss1 = ss2 = ss12 = 0.0f;
         for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-        mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L;
+        mn1 *= den; mn2 *= den; X1 -= L; X2 -= L;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             xx1 = *X1 - mn1; xx1 *= xx1;
@@ -64,7 +64,7 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
             {
                 mn1 = mn2 = ss1 = ss2 = ss12 = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-                mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L;
+                mn1 *= den; mn2 *= den; X1 -= L; X2 -= L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     xx1 = *X1 - mn1; xx1 *= xx1;
@@ -85,7 +85,7 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
                 {
                     mn1 = mn2 = ss1 = ss2 = ss12 = 0.0f;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
-                    mn1 *= ni; mn2 *= ni; X1 -= L*K1; X2 -= L*K2;
+                    mn1 *= den; mn2 *= den; X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         xx1 = *X1 - mn1; xx1 *= xx1;
@@ -115,7 +115,7 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cokurtosis_d: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double ni = 1.0/L;
+    const double den = 1.0 / L;
     double xx1, xx2, mn1, mn2, ss1, ss2, ss12;
 
     if (N==0) {}
@@ -123,7 +123,7 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
     {
         mn1 = mn2 = ss1 = ss2 = ss12 = 0.0;
         for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-        mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L;
+        mn1 *= den; mn2 *= den; X1 -= L; X2 -= L;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             xx1 = *X1 - mn1; xx1 *= xx1;
@@ -145,7 +145,7 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
             {
                 mn1 = mn2 = ss1 = ss2 = ss12 = 0.0;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-                mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L;
+                mn1 *= den; mn2 *= den; X1 -= L; X2 -= L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     xx1 = *X1 - mn1; xx1 *= xx1;
@@ -166,7 +166,7 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
                 {
                     mn1 = mn2 = ss1 = ss2 = ss12 = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
-                    mn1 *= ni; mn2 *= ni; X1 -= L*K1; X2 -= L*K2;
+                    mn1 *= den; mn2 *= den; X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         xx1 = *X1 - mn1; xx1 *= xx1;
