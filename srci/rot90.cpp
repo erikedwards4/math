@@ -35,7 +35,8 @@ if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must
 
 //Set output header info
 o1.F = i1.F; o1.T = i1.T;
-o1.R = i1.C; o1.C = i1.R;
+o1.R = (k%2) ? i1.C : i1.R;
+o1.C = (k%2) ? i1.R : i1.C;
 o1.S = i1.S; o1.H = i1.H;
 
 //Other prep

@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -19,9 +17,7 @@ int nan_z (double *Y, const size_t N);
 
 int nan_s (float *Y, const size_t N)
 {
-    const float v = NAN;
-
-    cblas_scopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = NAN; }
 
     return 0;
 }
@@ -29,9 +25,7 @@ int nan_s (float *Y, const size_t N)
 
 int nan_d (double *Y, const size_t N)
 {
-    const double v = (double)NAN;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (double)NAN; }
 
     return 0;
 }
@@ -39,9 +33,7 @@ int nan_d (double *Y, const size_t N)
 
 int nan_c (float *Y, const size_t N)
 {
-    const float v[2] = {NAN,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = NAN; *++Y = 0.0f; }
 
     return 0;
 }
@@ -49,9 +41,7 @@ int nan_c (float *Y, const size_t N)
 
 int nan_z (double *Y, const size_t N)
 {
-    const double v[2] = {(double)NAN,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (double)NAN; *++Y = 0.0; }
 
     return 0;
 }

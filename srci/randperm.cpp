@@ -29,7 +29,7 @@ descr += "$ randperm -n50 -t2 > Y \n";
 
 //Argtable
 struct arg_int    *a_n = arg_intn("n","N","<uint>",0,1,"highest int in random shuffle [default=1]");
-struct arg_int    *a_m = arg_intn("m","M","<uint>",0,1,"num elements in output [default=1]");
+struct arg_int    *a_m = arg_intn("m","M","<uint>",0,1,"num elements in output [default=N]");
 struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
 struct arg_int *a_otyp = arg_intn("t","type","<uint>",0,1,"output data type [default=1]");
 struct arg_int *a_ofmt = arg_intn("f","fmt","<uint>",0,1,"output file format [default=147]");

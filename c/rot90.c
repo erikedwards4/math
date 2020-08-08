@@ -1,10 +1,6 @@
 //Rotates matrix X by 90 degrees K times.
 
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -20,37 +16,56 @@ int rot90_z (double *Y, const double *X, const size_t R, const size_t C, const c
 int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int K)
 {
     const size_t N = R*C;
-
-    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+    const int k = (K<0) ? 4+K%4 : K%4;
 
     if (N==0) {}
-    else if (K%4==0 || R==1 || C==1) { cblas_scopy((int)N,X,1,Y,1); }
-    else if (K%4==1)
+    else if (k==0 || N==1)
     {
-        if (iscolmajor)
-        {}
-        else
-        {}
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
-    else if (K%4==2)
+    else if (k==1)
     {
         if (iscolmajor)
         {
-            Y += N - 1;
-            for (n=0; n<N; ++n, ++X, --Y) { *Y = *X; }
+            Y += N - C;
+            for (size_t r=0; r<R; ++r, X-=N-1, Y-=2*C)
+            {
+                for (size_t c=0; c<C; ++c, X+=R, ++Y) { *Y = *X; }
+            }
         }
         else
-        {}
+        {
+            Y += R - 1;
+            for (size_t r=0; r<R; ++r, Y-=N+1)
+            {
+                for (size_t c=0; c<C; ++c, ++X, Y+=R) { *Y = *X; }
+            }
+        }
     }
-    else // (K%4==3)
+    else if (k==2)
+    {
+        Y += N - 1;
+        for (size_t n=0; n<N; ++n, ++X, --Y) { *Y = *X; }
+    }
+    else // (k==3)
     {
         if (iscolmajor)
-        {}
+        {
+            Y += C - 1;
+            for (size_t c=0; c<C; ++c, Y-=N+1)
+            {
+                for (size_t r=0; r<R; ++r, ++X, Y+=C) { *Y = *X; }
+            }
+        }
         else
-        {}
+        {
+            Y += N - R;
+            for (size_t c=0; c<C; ++c, X-=N-1, Y-=2*R)
+            {
+                for (size_t r=0; r<R; ++r, X+=C, ++Y) { *Y = *X; }
+            }
+        }
     }
-    
-    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -58,14 +73,56 @@ int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const cha
 
 int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int K)
 {
-    if (R==1 || C==1) { cblas_dcopy((int)(R*C),X,1,Y,1); }
-    else if (iscolmajor)
+    const size_t N = R*C;
+    const int k = (K<0) ? 4+K%4 : K%4;
+
+    if (N==0) {}
+    else if (k==0 || N==1)
     {
-        for (size_t c=0; c<C; ++c, X+=R, ++Y) { cblas_dcopy((int)(R),X,1,Y,(int)C); }
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
-    else
+    else if (k==1)
     {
-        for (size_t r=0; r<R; ++r, X+=C, ++Y) { cblas_dcopy((int)(C),X,1,Y,(int)R); }
+        if (iscolmajor)
+        {
+            Y += N - C;
+            for (size_t r=0; r<R; ++r, X-=N-1, Y-=2*C)
+            {
+                for (size_t c=0; c<C; ++c, X+=R, ++Y) { *Y = *X; }
+            }
+        }
+        else
+        {
+            Y += R - 1;
+            for (size_t r=0; r<R; ++r, Y-=N+1)
+            {
+                for (size_t c=0; c<C; ++c, ++X, Y+=R) { *Y = *X; }
+            }
+        }
+    }
+    else if (k==2)
+    {
+        Y += N - 1;
+        for (size_t n=0; n<N; ++n, ++X, --Y) { *Y = *X; }
+    }
+    else // (k==3)
+    {
+        if (iscolmajor)
+        {
+            Y += C - 1;
+            for (size_t c=0; c<C; ++c, Y-=N+1)
+            {
+                for (size_t r=0; r<R; ++r, ++X, Y+=C) { *Y = *X; }
+            }
+        }
+        else
+        {
+            Y += N - R;
+            for (size_t c=0; c<C; ++c, X-=N-1, Y-=2*R)
+            {
+                for (size_t r=0; r<R; ++r, X+=C, ++Y) { *Y = *X; }
+            }
+        }
     }
 
     return 0;
@@ -74,14 +131,56 @@ int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const c
 
 int rot90_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int K)
 {
-    if (R==1 || C==1) { cblas_ccopy((int)(R*C),X,1,Y,1); }
-    else if (iscolmajor)
+    const size_t N = R*C;
+    const int k = (K<0) ? 4+K%4 : K%4;
+
+    if (N==0) {}
+    else if (k==0 || N==1)
     {
-        for (size_t c=0; c<C; c+=2, X+=2*R, Y+=2) { cblas_ccopy((int)(R),X,1,Y,(int)C); }
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
-    else
+    else if (k==1)
     {
-        for (size_t r=0; r<R; r+=2, X+=2*C, Y+=2) { cblas_ccopy((int)(C),X,1,Y,(int)R); }
+        if (iscolmajor)
+        {
+            Y += 2*(N-C);
+            for (size_t r=0; r<R; ++r, X-=2*N-2, Y-=4*C)
+            {
+                for (size_t c=0; c<C; ++c, X+=2*R-1, ++Y) { *Y = *X; *++Y = *++X; }
+            }
+        }
+        else
+        {
+            Y += 2*(R-1);
+            for (size_t r=0; r<R; ++r, Y-=2*N+2)
+            {
+                for (size_t c=0; c<C; ++c, ++X, Y+=2*R-1) { *Y = *X; *++Y = *++X; }
+            }
+        }
+    }
+    else if (k==2)
+    {
+        Y += 2*(N-1);
+        for (size_t n=0; n<N; ++n, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
+    }
+    else // (k==3)
+    {
+        if (iscolmajor)
+        {
+            Y += 2*(C-1);
+            for (size_t c=0; c<C; ++c, Y-=2*N+2)
+            {
+                for (size_t r=0; r<R; ++r, ++X, Y+=2*C-1) { *Y = *X; *++Y = *++X; }
+            }
+        }
+        else
+        {
+            Y += 2*(N-R);
+            for (size_t c=0; c<C; ++c, X-=2*N-2, Y-=4*R)
+            {
+                for (size_t r=0; r<R; ++r, X+=2*C-1, ++Y) { *Y = *X; *++Y = *++X; }
+            }
+        }
     }
 
     return 0;
@@ -90,14 +189,56 @@ int rot90_c (float *Y, const float *X, const size_t R, const size_t C, const cha
 
 int rot90_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int K)
 {
-    if (R==1 || C==1) { cblas_zcopy((int)(R*C),X,1,Y,1); }
-    else if (iscolmajor)
+    const size_t N = R*C;
+    const int k = (K<0) ? 4+K%4 : K%4;
+
+    if (N==0) {}
+    else if (k==0 || N==1)
     {
-        for (size_t c=0; c<C; c+=2, X+=2*R, Y+=2) { cblas_zcopy((int)(R),X,1,Y,(int)C); }
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
-    else
+    else if (k==1)
     {
-        for (size_t r=0; r<R; r+=2, X+=2*C, Y+=2) { cblas_zcopy((int)(C),X,1,Y,(int)R); }
+        if (iscolmajor)
+        {
+            Y += 2*(N-C);
+            for (size_t r=0; r<R; ++r, X-=2*N-2, Y-=4*C)
+            {
+                for (size_t c=0; c<C; ++c, X+=2*R-1, ++Y) { *Y = *X; *++Y = *++X; }
+            }
+        }
+        else
+        {
+            Y += 2*(R-1);
+            for (size_t r=0; r<R; ++r, Y-=2*N+2)
+            {
+                for (size_t c=0; c<C; ++c, ++X, Y+=2*R-1) { *Y = *X; *++Y = *++X; }
+            }
+        }
+    }
+    else if (k==2)
+    {
+        Y += 2*(N-1);
+        for (size_t n=0; n<N; ++n, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
+    }
+    else // (k==3)
+    {
+        if (iscolmajor)
+        {
+            Y += 2*(C-1);
+            for (size_t c=0; c<C; ++c, Y-=2*N+2)
+            {
+                for (size_t r=0; r<R; ++r, ++X, Y+=2*C-1) { *Y = *X; *++Y = *++X; }
+            }
+        }
+        else
+        {
+            Y += 2*(N-R);
+            for (size_t c=0; c<C; ++c, X-=2*N-2, Y-=4*R)
+            {
+                for (size_t r=0; r<R; ++r, X+=2*C-1, ++Y) { *Y = *X; *++Y = *++X; }
+            }
+        }
     }
 
     return 0;

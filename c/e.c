@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 //#include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifndef M_E
     #define M_E 2.71828182845904523536
@@ -23,9 +21,7 @@ int e_z (double *Y, const size_t N);
 
 int e_s (float *Y, const size_t N)
 {
-    const float v = (float)M_E;
-
-    cblas_scopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_E; }
 
     return 0;
 }
@@ -33,9 +29,7 @@ int e_s (float *Y, const size_t N)
 
 int e_d (double *Y, const size_t N)
 {
-    const double v = M_E;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_E; }
 
     return 0;
 }
@@ -43,9 +37,7 @@ int e_d (double *Y, const size_t N)
 
 int e_c (float *Y, const size_t N)
 {
-    const float v[2] = {(float)M_E,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_E; *++Y = 0.0f; }
 
     return 0;
 }
@@ -53,9 +45,7 @@ int e_c (float *Y, const size_t N)
 
 int e_z (double *Y, const size_t N)
 {
-    const double v[2] = {M_E,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_E; *++Y = 0.0; }
 
     return 0;
 }

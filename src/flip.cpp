@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Matrix rearrange function.\n";
+    descr += "Vec2vec operation.\n";
     descr += "Flips X along dim (reverses order of elements).\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";

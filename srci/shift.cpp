@@ -9,7 +9,7 @@ int N;
 
 //Description
 string descr;
-descr += "Matrix rearrange function.\n";
+descr += "Vec2vec operation.\n";
 descr += "Shifts elements of X along dim by N steps.\n";
 descr += "The N edge elements are replaced with 0.\n";
 descr += "\n";
@@ -69,40 +69,22 @@ if (i1.T==1)
 }
 else if (i1.T==101)
 {
-    float *X, *Y;
+    float *X; //, *Y;
     try { X = new float[2u*i1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    try { Y = new float[2u*o1.N()]; }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+    //try { Y = new float[2u*o1.N()]; }
+    //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::shift_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
-    //if (codee::shift_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
+    //if (codee::shift_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
+    if (codee::shift_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
-        try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+        try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
-    delete[] X; delete[] Y;
+    delete[] X; //delete[] Y;
 }
 
 //Finish
-// if (i1.T==1)
-// {
-//     float *X, *Y;
-//     try { X = new float[i1.N()]; }
-//     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-//     try { Y = new float[o1.N()]; }
-//     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-//     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
-//     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-//     if (codee::shift_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
-//     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-//     if (wo1)
-//     {
-//         try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
-//         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
-//     }
-//     delete[] X; delete[] Y;
-// }

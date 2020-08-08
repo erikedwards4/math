@@ -4,8 +4,6 @@
 
 #include <stdio.h>
 #include <float.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -20,9 +18,7 @@ int realmin_z (double *Y, const size_t N);
 
 int realmin_s (float *Y, const size_t N)
 {
-    const float v = FLT_MIN;
-
-    cblas_scopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = FLT_MIN; }
 
     return 0;
 }
@@ -30,9 +26,7 @@ int realmin_s (float *Y, const size_t N)
 
 int realmin_d (double *Y, const size_t N)
 {
-    const double v = DBL_MIN;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = DBL_MIN; }
 
     return 0;
 }
@@ -40,9 +34,7 @@ int realmin_d (double *Y, const size_t N)
 
 int realmin_c (float *Y, const size_t N)
 {
-    const float v[2] = {FLT_MIN,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = FLT_MIN; *++Y = 0.0f; }
 
     return 0;
 }
@@ -50,9 +42,7 @@ int realmin_c (float *Y, const size_t N)
 
 int realmin_z (double *Y, const size_t N)
 {
-    const double v[2] = {DBL_MIN,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = DBL_MIN; *++Y = 0.0; }
 
     return 0;
 }

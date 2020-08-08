@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 //#include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifndef M_PI_2
     #define M_PI_2 1.57079632679489661923
@@ -23,9 +21,7 @@ int pi_2_z (double *Y, const size_t N);
 
 int pi_2_s (float *Y, const size_t N)
 {
-    const float v = (float)M_PI_2;
-
-    cblas_scopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_PI_2; }
 
     return 0;
 }
@@ -33,9 +29,7 @@ int pi_2_s (float *Y, const size_t N)
 
 int pi_2_d (double *Y, const size_t N)
 {
-    const double v = M_PI_2;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_PI_2; }
 
     return 0;
 }
@@ -43,9 +37,7 @@ int pi_2_d (double *Y, const size_t N)
 
 int pi_2_c (float *Y, const size_t N)
 {
-    const float v[2] = {(float)M_PI_2,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_PI_2; *++Y = 0.0f; }
 
     return 0;
 }
@@ -53,9 +45,7 @@ int pi_2_c (float *Y, const size_t N)
 
 int pi_2_z (double *Y, const size_t N)
 {
-    const double v[2] = {M_PI_2,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_PI_2; *++Y = 0.0; }
 
     return 0;
 }

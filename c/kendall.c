@@ -28,7 +28,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in kendall_s: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float den = 2.0f / (L*(L-1));
+    const float den = (float)(L*(L-1));
     int s1, s2, ssm = 0;
 
     if (N==0) {}
@@ -48,7 +48,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                 ssm += s1 * s2;
             }
         }
-        *Y = den * ssm;
+        *Y = 2*ssm/den;
     }
     else
     {
@@ -71,7 +71,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                         ssm += s1 * s2;
                     }
                 }
-                *Y = den * ssm;
+                *Y = 2*ssm/den;
             }
         }
         else
@@ -93,7 +93,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                             ssm += s1 * s2;
                         }
                     }
-                    *Y = den * ssm;
+                    *Y = 2*ssm/den;
                 }
             }
         }
@@ -116,7 +116,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in kendall_d: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double den = 2.0 / (L*(L-1));
+    const double den = (double)(L*(L-1));
     int s1, s2, ssm = 0;
 
     if (N==0) {}
@@ -136,7 +136,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                 ssm += s1 * s2;
             }
         }
-        *Y = den * ssm;
+        *Y = 2*ssm/den;
     }
     else
     {
@@ -159,7 +159,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                         ssm += s1 * s2;
                     }
                 }
-                *Y = den * ssm;
+                *Y = 2*ssm/den;
             }
         }
         else
@@ -181,7 +181,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                             ssm += s1 * s2;
                         }
                     }
-                    *Y = den * ssm;
+                    *Y = 2*ssm/den;
                 }
             }
         }

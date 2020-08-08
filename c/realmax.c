@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 #include <float.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -19,9 +17,7 @@ int realmax_z (double *Y, const size_t N);
 
 int realmax_s (float *Y, const size_t N)
 {
-    const float v = FLT_MAX;
-
-    cblas_scopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = FLT_MAX; }
 
     return 0;
 }
@@ -29,9 +25,7 @@ int realmax_s (float *Y, const size_t N)
 
 int realmax_d (double *Y, const size_t N)
 {
-    const double v = DBL_MAX;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = DBL_MAX; }
 
     return 0;
 }
@@ -39,9 +33,7 @@ int realmax_d (double *Y, const size_t N)
 
 int realmax_c (float *Y, const size_t N)
 {
-    const float v[2] = {FLT_MAX,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = FLT_MAX; *++Y = 0.0f; }
 
     return 0;
 }
@@ -49,9 +41,7 @@ int realmax_c (float *Y, const size_t N)
 
 int realmax_z (double *Y, const size_t N)
 {
-    const double v[2] = {DBL_MAX,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = DBL_MAX; *++Y = 0.0; }
 
     return 0;
 }

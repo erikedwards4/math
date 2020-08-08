@@ -154,7 +154,6 @@ int main(int argc, char *argv[])
             if (codee::toeplitz1_s(Y,X1,i1.N()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
-        
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
@@ -185,7 +184,6 @@ int main(int argc, char *argv[])
             if (codee::toeplitz1_d(Y,X1,i1.N()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
-        
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
@@ -216,7 +214,6 @@ int main(int argc, char *argv[])
             if (codee::toeplitz1_c(Y,X1,i1.N()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
-        
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
@@ -247,7 +244,6 @@ int main(int argc, char *argv[])
             if (codee::toeplitz1_z(Y,X1,i1.N()))
             { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         }
-        
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }

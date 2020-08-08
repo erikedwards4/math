@@ -28,8 +28,8 @@ int join2_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_scopy((int)B1,X1,1,Y,1); X1 += B1; Y += B1;
-        cblas_scopy((int)B2,X2,1,Y,1); X2 += B2; Y += B2;
+        for (size_t b=0; b<B1; ++b, ++X1, ++Y) { *Y = *X1; }
+        for (size_t b=0; b<B2; ++b, ++X2, ++Y) { *Y = *X2; }
     }
 
     return 0;
@@ -50,8 +50,8 @@ int join2_d (double *Y, const double *X1, const double *X2, const size_t R1, con
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_dcopy((int)B1,X1,1,Y,1); X1 += B1; Y += B1;
-        cblas_dcopy((int)B2,X2,1,Y,1); X2 += B2; Y += B2;
+        for (size_t b=0; b<B1; ++b, ++X1, ++Y) { *Y = *X1; }
+        for (size_t b=0; b<B2; ++b, ++X2, ++Y) { *Y = *X2; }
     }
 
     return 0;
@@ -72,8 +72,8 @@ int join2_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_ccopy((int)B1,X1,1,Y,1); X1 += 2*B1; Y += 2*B1;
-        cblas_ccopy((int)B2,X2,1,Y,1); X2 += 2*B2; Y += 2*B2;
+        for (size_t b=0; b<B1; ++b, ++X1, ++Y) { *Y++ = *X1++; *Y = *X1; }
+        for (size_t b=0; b<B2; ++b, ++X2, ++Y) { *Y++ = *X2++; *Y = *X2; }
     }
 
     return 0;
@@ -94,8 +94,8 @@ int join2_z (double *Y, const double *X1, const double *X2, const size_t R1, con
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_zcopy((int)B1,X1,1,Y,1); X1 += 2*B1; Y += 2*B1;
-        cblas_zcopy((int)B2,X2,1,Y,1); X2 += 2*B2; Y += 2*B2;
+        for (size_t b=0; b<B1; ++b, ++X1, ++Y) { *Y++ = *X1++; *Y = *X1; }
+        for (size_t b=0; b<B2; ++b, ++X2, ++Y) { *Y++ = *X2++; *Y = *X2; }
     }
 
     return 0;

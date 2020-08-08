@@ -373,9 +373,18 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
             {
                 for (size_t b=0; b<B; ++b, ++X)
                 {
-                    cblas_scopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= L;
+                    //X -= K*L; X1 -= L;
+                    //cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
-                    cblas_scopy((int)L,X1,1,X,(int)K);
+                    struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+                    //X -= K*L;
+                    //cblas_scopy((int)L,X1,1,X,(int)K);
+                    X1 += L-1; X -= K;
+                    for (size_t l=0; l<L; ++l, --X1, X-=K) { *X = *X1; }
+                    ++X1; X += K;
+                    clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
                 }
             }
             free(X1);

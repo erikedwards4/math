@@ -1,10 +1,8 @@
-//Sets all N elements of Y equal to isqrt2.
+//Sets all N elements of Y equal to 1/sqrt(2).
 //For complex cases, only real part is set to isqrt2.
 
 #include <stdio.h>
 //#include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifndef M_SQRT1_2
     #define M_SQRT1_2 0.707106781186547524401
@@ -23,9 +21,7 @@ int isqrt2_z (double *Y, const size_t N);
 
 int isqrt2_s (float *Y, const size_t N)
 {
-    const float v = (float)M_SQRT1_2;
-
-    cblas_scopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_SQRT1_2; }
 
     return 0;
 }
@@ -33,9 +29,7 @@ int isqrt2_s (float *Y, const size_t N)
 
 int isqrt2_d (double *Y, const size_t N)
 {
-    const double v = M_SQRT1_2;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_SQRT1_2; }
 
     return 0;
 }
@@ -43,9 +37,7 @@ int isqrt2_d (double *Y, const size_t N)
 
 int isqrt2_c (float *Y, const size_t N)
 {
-    const float v[2] = {(float)M_SQRT1_2,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_SQRT1_2; *++Y = 0.0f; }
 
     return 0;
 }
@@ -53,9 +45,7 @@ int isqrt2_c (float *Y, const size_t N)
 
 int isqrt2_z (double *Y, const size_t N)
 {
-    const double v[2] = {M_SQRT1_2,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_SQRT1_2; *++Y = 0.0; }
 
     return 0;
 }

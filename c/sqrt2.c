@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 //#include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifndef M_SQRT2
     #define M_SQRT2 1.41421356237309504880
@@ -23,14 +21,7 @@ int sqrt2_z (double *Y, const size_t N);
 
 int sqrt2_s (float *Y, const size_t N)
 {
-    const float v = (float)M_SQRT2;
-    //struct timespec tic, toc;
-    //clock_gettime(CLOCK_REALTIME,&tic);
-
-    cblas_scopy((int)N,&v,0,Y,1);
-
-    //clock_gettime(CLOCK_REALTIME,&toc);
-    //fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_SQRT2; }
 
     return 0;
 }
@@ -38,9 +29,7 @@ int sqrt2_s (float *Y, const size_t N)
 
 int sqrt2_d (double *Y, const size_t N)
 {
-    const double v = M_SQRT2;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_SQRT2; }
 
     return 0;
 }
@@ -48,9 +37,7 @@ int sqrt2_d (double *Y, const size_t N)
 
 int sqrt2_c (float *Y, const size_t N)
 {
-    const float v[2] = {(float)M_SQRT2,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_SQRT2; *++Y = 0.0f; }
 
     return 0;
 }
@@ -58,9 +45,7 @@ int sqrt2_c (float *Y, const size_t N)
 
 int sqrt2_z (double *Y, const size_t N)
 {
-    const double v[2] = {M_SQRT2,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_SQRT2; *++Y = 0.0; }
 
     return 0;
 }

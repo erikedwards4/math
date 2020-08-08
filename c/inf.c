@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -19,9 +17,7 @@ int inf_z (double *Y, const size_t N);
 
 int inf_s (float *Y, const size_t N)
 {
-    const float v = HUGE_VALF;
-
-    cblas_scopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = HUGE_VALF; }
 
     return 0;
 }
@@ -29,9 +25,7 @@ int inf_s (float *Y, const size_t N)
 
 int inf_d (double *Y, const size_t N)
 {
-    const double v = HUGE_VAL;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = HUGE_VAL; }
 
     return 0;
 }
@@ -39,9 +33,7 @@ int inf_d (double *Y, const size_t N)
 
 int inf_c (float *Y, const size_t N)
 {
-    const float v[2] = {HUGE_VALF,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = HUGE_VALF; *++Y = 0.0f; }
 
     return 0;
 }
@@ -49,9 +41,7 @@ int inf_c (float *Y, const size_t N)
 
 int inf_z (double *Y, const size_t N)
 {
-    const double v[2] = {HUGE_VAL,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = HUGE_VAL; *++Y = 0.0; }
 
     return 0;
 }

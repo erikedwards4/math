@@ -1,7 +1,6 @@
 //Gets kth diagonal of input X as column vector Y
 
 #include <stdio.h>
-#include <cblas.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -13,30 +12,42 @@ int diag_d (double *Y, const double *X, const size_t R, const size_t C, const ch
 int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k);
 int diag_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k);
 
-int diag_inplace_s (float *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diag_inplace_d (double *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diag_inplace_c (float *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diag_inplace_z (double *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-
 
 int diag_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
-    size_t L;  //length of output vec
+    const size_t K = (iscolmajor) ? R+1 : C+1;
 
-    if (k>=0 && (int)(int)C>k) { L = (C-(size_t)k<R) ? C-(size_t)k : R; }
-    else if (k<=0 && (int)(int)R>-k) { L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C; }
-    else { fprintf(stderr,"k out of range [1-R C-1]\n"); return 1; }
-
-    if (iscolmajor)
+    if (k>=0 && (int)C>k)
     {
-        if (k>0) { cblas_scopy((int)L,&X[k*(int)R],(int)R+1,Y,1); }
-        else { cblas_scopy((int)L,&X[-k],(int)R+1,Y,1); }
+        const size_t L = (C-(size_t)k<R) ? C-(size_t)k : R;
+        const int S = (iscolmajor) ? k*(int)R : k;
+        
+        X += S;
+        for (size_t l=0; l<L; ++l, X+=K, ++Y) { *Y = *X; }
+    }
+    else if (k<=0 && (int)R>-k)
+    {
+        const size_t L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C;
+        const int S = (iscolmajor) ? -k : -k*(int)C;
+        
+        X += S;
+        for (size_t l=0; l<L; ++l, X+=K, ++Y) { *Y = *X; }
     }
     else
     {
-        if (k>0) { cblas_scopy((int)L,&X[k],(int)C+1,Y,1); }
-        else { cblas_scopy((int)L,&X[-k*(int)C],(int)C+1,Y,1); }
+        fprintf(stderr,"error in diag_s: k out of range [1-R C-1]\n"); return 1;
     }
+
+    // if (iscolmajor)
+    // {
+    //     if (k>0) { cblas_scopy((int)L,&X[k*(int)R],(int)R+1,Y,1); }
+    //     else { cblas_scopy((int)L,&X[-k],(int)R+1,Y,1); }
+    // }
+    // else
+    // {
+    //     if (k>0) { cblas_scopy((int)L,&X[k],(int)C+1,Y,1); }
+    //     else { cblas_scopy((int)L,&X[-k*(int)C],(int)C+1,Y,1); }
+    // }
 
     return 0;
 }
@@ -44,21 +55,27 @@ int diag_s (float *Y, const float *X, const size_t R, const size_t C, const char
 
 int diag_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
-    size_t L;  //length of output vec
+    const size_t K = (iscolmajor) ? R+1 : C+1;
 
-    if (k>=0 && (int)(int)C>k) { L = (C-(size_t)k<R) ? C-(size_t)k : R; }
-    else if (k<=0 && (int)(int)R>-k) { L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C; }
-    else { fprintf(stderr,"k out of range [1-R C-1]\n"); return 1; }
-
-    if (iscolmajor)
+    if (k>=0 && (int)C>k)
     {
-        if (k>0) { cblas_dcopy((int)L,&X[k*(int)R],(int)R+1,Y,1); }
-        else { cblas_dcopy((int)L,&X[-k],(int)R+1,Y,1); }
+        const size_t L = (C-(size_t)k<R) ? C-(size_t)k : R;
+        const int S = (iscolmajor) ? k*(int)R : k;
+        
+        X += S;
+        for (size_t l=0; l<L; ++l, X+=K, ++Y) { *Y = *X; }
+    }
+    else if (k<=0 && (int)R>-k)
+    {
+        const size_t L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C;
+        const int S = (iscolmajor) ? -k : -k*(int)C;
+        
+        X += S;
+        for (size_t l=0; l<L; ++l, X+=K, ++Y) { *Y = *X; }
     }
     else
     {
-        if (k>0) { cblas_dcopy((int)L,&X[k],(int)C+1,Y,1); }
-        else { cblas_dcopy((int)L,&X[-k*(int)C],(int)C+1,Y,1); }
+        fprintf(stderr,"error in diag_d: k out of range [1-R C-1]\n"); return 1;
     }
 
     return 0;
@@ -67,21 +84,27 @@ int diag_d (double *Y, const double *X, const size_t R, const size_t C, const ch
 
 int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
-    size_t L;  //length of output vec
+    const size_t K = (iscolmajor) ? 2*R+1 : 2*C+1;
 
-    if (k>=0 && (int)C>k) { L = (C-(size_t)k<R) ? C-(size_t)k : R; }
-    else if (k<=0 && (int)R>-k) { L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C; }
-    else { fprintf(stderr,"k out of range [1-R C-1]\n"); return 1; }
-
-    if (iscolmajor)
+    if (k>=0 && (int)C>k)
     {
-        if (k>0) { cblas_ccopy((int)L,&X[2*(size_t)k*R],(int)R+1,Y,1); }
-        else { cblas_ccopy((int)L,&X[(size_t)(-2*k)],(int)R+1,Y,1); }
+        const size_t L = (C-(size_t)k<R) ? C-(size_t)k : R;
+        const int S = (iscolmajor) ? k*(int)R : k;
+        
+        X += 2*S;
+        for (size_t l=0; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
+    }
+    else if (k<=0 && (int)R>-k)
+    {
+        const size_t L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C;
+        const int S = (iscolmajor) ? -k : -k*(int)C;
+        
+        X += 2*S;
+        for (size_t l=0; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else
     {
-        if (k>0) { cblas_ccopy((int)L,&X[2*k],(int)C+1,Y,1); }
-        else { cblas_ccopy((int)L,&X[(size_t)(-2*k)*C],(int)C+1,Y,1); }
+        fprintf(stderr,"error in diag_c: k out of range [1-R C-1]\n"); return 1;
     }
 
     return 0;
@@ -90,113 +113,27 @@ int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char
 
 int diag_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
-    size_t L;  //length of output vec
+    const size_t K = (iscolmajor) ? 2*R+1 : 2*C+1;
 
-    if (k>=0 && (int)C>k) { L = (C-(size_t)k<R) ? C-(size_t)k : R; }
-    else if (k<=0 && (int)R>-k) { L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C; }
-    else { fprintf(stderr,"k out of range [1-R C-1]\n"); return 1; }
-
-    if (iscolmajor)
+    if (k>=0 && (int)C>k)
     {
-        if (k>0) { cblas_zcopy((int)L,&X[2*(size_t)k*R],(int)R+1,Y,1); }
-        else { cblas_zcopy((int)L,&X[(size_t)(-2*k)],(int)R+1,Y,1); }
+        const size_t L = (C-(size_t)k<R) ? C-(size_t)k : R;
+        const int S = (iscolmajor) ? k*(int)R : k;
+        
+        X += 2*S;
+        for (size_t l=0; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
+    }
+    else if (k<=0 && (int)R>-k)
+    {
+        const size_t L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C;
+        const int S = (iscolmajor) ? -k : -k*(int)C;
+        
+        X += 2*S;
+        for (size_t l=0; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else
     {
-        if (k>0) { cblas_zcopy((int)L,&X[2*k],(int)C+1,Y,1); }
-        else { cblas_zcopy((int)L,&X[(size_t)(-2*k)*C],(int)C+1,Y,1); }
-    }
-
-    return 0;
-}
-
-
-int diag_inplace_s (float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
-{
-    size_t L;  //length of output vec
-
-    if (k>=0 && (int)C>k) { L = (C-(size_t)k<R) ? C-(size_t)k : R; }
-    else if (k<=0 && (int)R>-k) { L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C; }
-    else { fprintf(stderr,"k out of range [1-R C-1]\n"); return 1; }
-
-    if (iscolmajor)
-    {
-        if (k>0) { cblas_scopy((int)L,&X[(size_t)k*R],(int)R+1,X,1); }
-        else { cblas_scopy((int)L,&X[-k],(int)R+1,X,1); }
-    }
-    else
-    {
-        if (k>0) { cblas_scopy((int)L,&X[k],(int)C+1,X,1); }
-        else { cblas_scopy((int)L,&X[(size_t)(-k)*C],(int)C+1,X,1); }
-    }
-
-    return 0;
-}
-
-
-int diag_inplace_d (double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
-{
-    size_t L;  //length of output vec
-
-    if (k>=0 && (int)C>k) { L = (C-(size_t)k<R) ? C-(size_t)k : R; }
-    else if (k<=0 && (int)R>-k) { L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C; }
-    else { fprintf(stderr,"k out of range [1-R C-1]\n"); return 1; }
-
-    if (iscolmajor)
-    {
-        if (k>0) { cblas_dcopy((int)L,&X[(size_t)k*R],(int)R+1,X,1); }
-        else { cblas_dcopy((int)L,&X[-k],(int)R+1,X,1); }
-    }
-    else
-    {
-        if (k>0) { cblas_dcopy((int)L,&X[k],(int)C+1,X,1); }
-        else { cblas_dcopy((int)L,&X[(size_t)(-k)*C],(int)C+1,X,1); }
-    }
-
-    return 0;
-}
-
-
-int diag_inplace_c (float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
-{
-    size_t L;  //length of output vec
-
-    if (k>=0 && (int)C>k) { L = (C-(size_t)k<R) ? C-(size_t)k : R; }
-    else if (k<=0 && (int)R>-k) { L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C; }
-    else { fprintf(stderr,"k out of range [1-R C-1]\n"); return 1; }
-
-    if (iscolmajor)
-    {
-        if (k>0) { cblas_ccopy((int)L,&X[2*(size_t)k*R],(int)R+1,X,1); }
-        else { cblas_ccopy((int)L,&X[(size_t)(-2*k)],(int)R+1,X,1); }
-    }
-    else
-    {
-        if (k>0) { cblas_ccopy((int)L,&X[2*k],(int)C+1,X,1); }
-        else { cblas_ccopy((int)L,&X[(size_t)(-2*k)*C],(int)C+1,X,1); }
-    }
-
-    return 0;
-}
-
-
-int diag_inplace_z (double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
-{
-    size_t L;  //length of output vec
-
-    if (k>=0 && (int)C>k) { L = (C-(size_t)k<R) ? C-(size_t)k : R; }
-    else if (k<=0 && (int)R>-k) { L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C; }
-    else { fprintf(stderr,"k out of range [1-R C-1]\n"); return 1; }
-
-    if (iscolmajor)
-    {
-        if (k>0) { cblas_zcopy((int)L,&X[2*(size_t)k*R],(int)R+1,X,1); }
-        else { cblas_zcopy((int)L,&X[(size_t)(-2*k)],(int)R+1,X,1); }
-    }
-    else
-    {
-        if (k>0) { cblas_zcopy((int)L,&X[2*k],(int)C+1,X,1); }
-        else { cblas_zcopy((int)L,&X[(size_t)(-2*k)*C],(int)C+1,X,1); }
+        fprintf(stderr,"error in diag_z: k out of range [1-R C-1]\n"); return 1;
     }
 
     return 0;

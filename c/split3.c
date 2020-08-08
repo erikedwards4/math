@@ -27,9 +27,9 @@ int split3_s (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, c
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_scopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
-        cblas_scopy((int)B,X,1,Y2,1); X += B; Y2 += B;
-        cblas_scopy((int)B,X,1,Y3,1); X += B; Y3 += B;
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y3) { *Y3 = *X; }
     }
 
     return 0;
@@ -49,9 +49,9 @@ int split3_d (double *Y1, double *Y2, double *Y3, const double *X, const size_t 
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_dcopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
-        cblas_dcopy((int)B,X,1,Y2,1); X += B; Y2 += B;
-        cblas_dcopy((int)B,X,1,Y3,1); X += B; Y3 += B;
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y3) { *Y3 = *X; }
     }
 
     return 0;
@@ -71,9 +71,9 @@ int split3_c (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, c
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_ccopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
-        cblas_ccopy((int)B,X,1,Y2,1); X += B; Y2 += B;
-        cblas_ccopy((int)B,X,1,Y3,1); X += B; Y3 += B;
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1++ = *X++; *Y1 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2++ = *X++; *Y2 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y3) { *Y3++ = *X++; *Y3 = *X; }
     }
 
     return 0;
@@ -93,9 +93,9 @@ int split3_z (double *Y1, double *Y2, double *Y3, const double *X, const size_t 
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_zcopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
-        cblas_zcopy((int)B,X,1,Y2,1); X += B; Y2 += B;
-        cblas_zcopy((int)B,X,1,Y3,1); X += B; Y3 += B;
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1++ = *X++; *Y1 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2++ = *X++; *Y2 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y3) { *Y3++ = *X++; *Y3 = *X; }
     }
 
     return 0;

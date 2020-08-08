@@ -9,7 +9,7 @@ int N;
 
 //Description
 string descr;
-descr += "Matrix rearrange function.\n";
+descr += "Vec2vec operation.\n";
 descr += "Circular shift of elements of X along dim by N steps.\n";
 descr += "The N edge elements are wrapped around to the opposite edge.\n";
 descr += "\n";
@@ -61,7 +61,6 @@ if (i1.T==1)
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
     if (codee::cshift_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
-    //if (codee::cshift_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -80,7 +79,6 @@ else if (i1.T==101)
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
     if (codee::cshift_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
-    //if (codee::cshift_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,N))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

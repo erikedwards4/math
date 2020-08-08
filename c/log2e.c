@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 //#include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifndef M_LOG2E
     #define M_LOG2E 1.44269504088896340736
@@ -23,9 +21,7 @@ int log2e_z (double *Y, const size_t N);
 
 int log2e_s (float *Y, const size_t N)
 {
-    const float v = (float)M_LOG2E;
-
-    cblas_scopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_LOG2E; }
 
     return 0;
 }
@@ -33,9 +29,7 @@ int log2e_s (float *Y, const size_t N)
 
 int log2e_d (double *Y, const size_t N)
 {
-    const double v = M_LOG2E;
-
-    cblas_dcopy((int)N,&v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_LOG2E; }
 
     return 0;
 }
@@ -43,9 +37,7 @@ int log2e_d (double *Y, const size_t N)
 
 int log2e_c (float *Y, const size_t N)
 {
-    const float v[2] = {(float)M_LOG2E,0.0f};
-
-    cblas_ccopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_LOG2E; *++Y = 0.0f; }
 
     return 0;
 }
@@ -53,9 +45,7 @@ int log2e_c (float *Y, const size_t N)
 
 int log2e_z (double *Y, const size_t N)
 {
-    const double v[2] = {M_LOG2E,0.0};
-
-    cblas_zcopy((int)N,v,0,Y,1);
+    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_LOG2E; *++Y = 0.0; }
 
     return 0;
 }

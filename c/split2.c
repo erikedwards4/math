@@ -27,8 +27,10 @@ int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_scopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
-        cblas_scopy((int)B,X,1,Y2,1); X += B; Y2 += B;
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
+        //cblas_scopy((int)B,X,1,Y1,1); X += B; Y1 += B; //slightly faster for some test with very large N
+        //cblas_scopy((int)B,X,1,Y2,1); X += B; Y2 += B;
     }
 
     return 0;
@@ -48,8 +50,8 @@ int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const siz
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_dcopy((int)B,X,1,Y1,1); X += B; Y1 += B; 
-        cblas_dcopy((int)B,X,1,Y2,1); X += B; Y2 += B;
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
     }
 
     return 0;
@@ -69,8 +71,8 @@ int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_ccopy((int)B,X,1,Y1,1); X += 2*B; Y1 += 2*B; 
-        cblas_ccopy((int)B,X,1,Y2,1); X += 2*B; Y2 += 2*B;
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1++ = *X++; *Y1 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2++ = *X++; *Y2 = *X; }
     }
 
     return 0;
@@ -90,8 +92,8 @@ int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const siz
 
     for (size_t g=0; g<G; ++g)
     {
-        cblas_zcopy((int)B,X,1,Y1,1); X += 2*B; Y1 += 2*B; 
-        cblas_zcopy((int)B,X,1,Y2,1); X += 2*B; Y2 += 2*B;
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1++ = *X++; *Y1 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2++ = *X++; *Y2 = *X; }
     }
 
     return 0;
