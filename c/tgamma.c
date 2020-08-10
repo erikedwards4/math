@@ -47,7 +47,7 @@ int tgamma_d (double *Y, const double *X, const size_t N)
 //     for (size_t n=0; n<N; ++n, X+=2, ++Y)
 //     {
 //         y = ctgammaf(*X + 1.0if**(X+1));
-//         *Y++ = *(float *)&y; *Y = *((float *)&y+1);
+//         *Y = *(float *)&y; *++Y = *((float *)&y+1);
 //     }
     
 //     return 0;
@@ -61,7 +61,7 @@ int tgamma_d (double *Y, const double *X, const size_t N)
 //     for (size_t n=0; n<N; ++n, X+=2, ++Y)
 //     {
 //         y = ctgamma(*X + 1.0i**(X+1));
-//         *Y++ = *(double *)&y; *Y = *((double *)&y+1);
+//         *Y = *(double *)&y; *++Y = *((double *)&y+1);
 //     }
     
 //     return 0;
@@ -91,7 +91,7 @@ int tgamma_inplace_d (double *X, const size_t N)
 //     for (size_t n=0; n<N; ++n, ++X)
 //     {
 //         y = ctgamma(*X + 1.0if**(X+1));
-//         *X++ = *(float *)&y; *X = *((float *)&y+1);
+//         *X = *(float *)&y; *++X = *((float *)&y+1);
 //     }
     
 //     return 0;
@@ -105,7 +105,7 @@ int tgamma_inplace_d (double *X, const size_t N)
 //     for (size_t n=0; n<N; ++n, ++X)
 //     {
 //         y = ctgamma(*X + 1.0i**(X+1));
-//         *X++ = *(double *)&y; *X = *((double *)&y+1);
+//         *X = *(double *)&y; *++X = *((double *)&y+1);
 //     }
     
 //     return 0;

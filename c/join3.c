@@ -1,7 +1,6 @@
 //Joins (stacks) 3 inputs X1, X2, X3 into 1 output Y
 
 #include <stdio.h>
-#include <cblas.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -77,9 +76,9 @@ int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const
 
     for (size_t g=0; g<G; ++g)
     {
-        for (size_t b=0; b<B1; ++b, ++X1, ++Y) { *Y++ = *X1++; *Y = *X1; }
-        for (size_t b=0; b<B2; ++b, ++X2, ++Y) { *Y++ = *X2++; *Y = *X2; }
-        for (size_t b=0; b<B3; ++b, ++X3, ++Y) { *Y++ = *X3++; *Y = *X3; }
+        for (size_t b=0; b<B1; ++b, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
+        for (size_t b=0; b<B2; ++b, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }
+        for (size_t b=0; b<B3; ++b, ++X3, ++Y) { *Y = *X3; *++Y = *++X3; }
     }
 
     return 0;
@@ -101,9 +100,9 @@ int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  c
 
     for (size_t g=0; g<G; ++g)
     {
-        for (size_t b=0; b<B1; ++b, ++X1, ++Y) { *Y++ = *X1++; *Y = *X1; }
-        for (size_t b=0; b<B2; ++b, ++X2, ++Y) { *Y++ = *X2++; *Y = *X2; }
-        for (size_t b=0; b<B3; ++b, ++X3, ++Y) { *Y++ = *X3++; *Y = *X3; }
+        for (size_t b=0; b<B1; ++b, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
+        for (size_t b=0; b<B2; ++b, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }
+        for (size_t b=0; b<B3; ++b, ++X3, ++Y) { *Y = *X3; *++Y = *++X3; }
     }
 
     return 0;

@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Vec2scalar operation.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
     descr += "Gets range (max-min) for each vector in X along dim.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
@@ -113,8 +113,7 @@ int main(int argc, char *argv[])
 
 
     //Set output header info
-    o1.F = i1.F;
-    o1.T = (i1.T<100) ? i1.T : i1.T-100;
+    o1.F = i1.F; o1.T = i1.T;
     o1.R = (dim==0) ? 1u : i1.R;
     o1.C = (dim==1) ? 1u : i1.C;
     o1.S = (dim==2) ? 1u : i1.S;

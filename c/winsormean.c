@@ -8,9 +8,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
 #include <lapacke.h>
-#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -41,10 +39,14 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
     if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in winsormean_s: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        cblas_scopy((int)L,X,1,X1,1);
+        for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        X1 -= L;
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_s: problem with LAPACKE function\n"); }
         X1 += i2; mx = *X1;
         X1 -= i2-i1; mn = *X1++;
@@ -61,9 +63,10 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, X1-=i2-i1+1, ++Y)
+            for (size_t v=0; v<V; ++v, X1-=i2-i1+1, ++Y)
             {
-                cblas_scopy((int)L,X,1,X1,1);
+                for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                X1 -= L;
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_s: problem with LAPACKE function\n"); }
                 X1 += i2; mx = *X1;
                 X1 -= i2-i1; mn = *X1++;
@@ -76,9 +79,10 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, X1-=i2-i1+1, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=i2-i1+1, ++Y)
                 {
-                    cblas_scopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_s: problem with LAPACKE function\n"); }
                     X1 += i2; mx = *X1;
                     X1 -= i2-i1; mn = *X1++;
@@ -112,10 +116,14 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
     if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in winsormean_d: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        cblas_dcopy((int)L,X,1,X1,1);
+        for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        X1 -= L;
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_d: problem with LAPACKE function\n"); }
         X1 += i2; mx = *X1;
         X1 -= i2-i1; mn = *X1++;
@@ -132,9 +140,10 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, X1-=i2-i1+1, ++Y)
+            for (size_t v=0; v<V; ++v, X1-=i2-i1+1, ++Y)
             {
-                cblas_dcopy((int)L,X,1,X1,1);
+                for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                X1 -= L;
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_d: problem with LAPACKE function\n"); }
                 X1 += i2; mx = *X1;
                 X1 -= i2-i1; mn = *X1++;
@@ -147,9 +156,10 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, X1-=i2-i1+1, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=i2-i1+1, ++Y)
                 {
-                    cblas_dcopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_d: problem with LAPACKE function\n"); }
                     X1 += i2; mx = *X1;
                     X1 -= i2-i1; mn = *X1++;
@@ -179,7 +189,11 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
     const size_t i1 = (size_t)ceilf(p1), i2 = (size_t)floorf(p2);
     float mn, mx, sm;
 
-    if (N==0 || L==1) {}
+    if (N==0) {}
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in winsormean_inplace_s: problem with LAPACKE function\n"); }
@@ -213,9 +227,10 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in winsormean_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, X1-=i2, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=i2, ++Y)
                 {
-                    cblas_scopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_inplace_s: problem with LAPACKE function\n"); }
                     X1 += i2; mx = *X1;
                     X1 -= i2-i1; mn = *X1++;
@@ -245,7 +260,11 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
     const size_t i1 = (size_t)ceil(p1), i2 = (size_t)floor(p2);
     double mn, mx, sm;
 
-    if (N==0 || L==1) {}
+    if (N==0) {}
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in winsormean_inplace_d: problem with LAPACKE function\n"); }
@@ -279,9 +298,10 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in winsormean_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, X1-=i2, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=i2, ++Y)
                 {
-                    cblas_dcopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_inplace_d: problem with LAPACKE function\n"); }
                     X1 += i2; mx = *X1;
                     X1 -= i2-i1; mn = *X1++;

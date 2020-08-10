@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
+    descr += "Vec2vec operation.\n";
     descr += "Gets percentiles in P along dim of X.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";

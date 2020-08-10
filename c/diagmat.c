@@ -1,7 +1,6 @@
 //Puts vector X on kth diagonal of matrix Y.
 
 #include <stdio.h>
-#include <cblas.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -18,21 +17,13 @@ int diagmat_z (double *Y, const double *X, const size_t R, const size_t C, const
 int diagmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
     const size_t L = (k>0) ? R : C;
-    const float z = 0.0f;
+    const size_t K = (iscolmajor) ? R+1 : C+1;
+    const int S = (iscolmajor) ? (k<0) ? -k : k*(int)R : (k<0) ? -k*(int)C : k;
 
-    cblas_scopy((int)(R*C),&z,0,Y,1);
-
-    if (iscolmajor)
-    {
-        if (k<0) { cblas_scopy((int)L,X,1,&Y[-k],(int)R+1); }
-        else { cblas_scopy((int)L,X,1,&Y[(size_t)k*R],(int)R+1); }
-    }
-    else
-    {
-        if (k<0) { cblas_scopy((int)L,X,1,&Y[(size_t)(-k)*C],(int)C+1); }
-        else { cblas_scopy((int)L,X,1,&Y[k],(int)C+1); }
-    }
-
+    for (size_t n=0; n<R*C; ++n, ++Y) { *Y = 0.0f; }
+    Y -= (int)(R*C) - S;
+    for (size_t l=0; l<L; ++l, ++X, Y+=K) { *Y = *X; }
+    
     return 0;
 }
 
@@ -40,20 +31,12 @@ int diagmat_s (float *Y, const float *X, const size_t R, const size_t C, const c
 int diagmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
     const size_t L = (k>0) ? R : C;
-    const double z = 0.0;
+    const size_t K = (iscolmajor) ? R+1 : C+1;
+    const int S = (iscolmajor) ? (k<0) ? -k : k*(int)R : (k<0) ? -k*(int)C : k;
 
-    cblas_dcopy((int)(R*C),&z,0,Y,1);
-
-    if (iscolmajor)
-    {
-        if (k<0) { cblas_dcopy((int)L,X,1,&Y[-k],(int)R+1); }
-        else { cblas_dcopy((int)L,X,1,&Y[(size_t)k*R],(int)R+1); }
-    }
-    else
-    {
-        if (k<0) { cblas_dcopy((int)L,X,1,&Y[(size_t)(-k)*C],(int)C+1); }
-        else { cblas_dcopy((int)L,X,1,&Y[k],(int)C+1); }
-    }
+    for (size_t n=0; n<R*C; ++n, ++Y) { *Y = 0.0; }
+    Y -= (int)(R*C) - S;
+    for (size_t l=0; l<L; ++l, ++X, Y+=K) { *Y = *X; }
 
     return 0;
 }
@@ -62,20 +45,12 @@ int diagmat_d (double *Y, const double *X, const size_t R, const size_t C, const
 int diagmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
     const size_t L = (k>0) ? R : C;
-    const float z[2] = {0.0f,0.0f};
+    const size_t K = (iscolmajor) ? R+1 : C+1;
+    const int S = (iscolmajor) ? (k<0) ? -2*k : 2*k*(int)R : (k<0) ? -2*k*(int)C : 2*k;
 
-    cblas_ccopy((int)(R*C),z,0,Y,1);
-
-    if (iscolmajor)
-    {
-        if (k<0) { cblas_ccopy((int)L,X,1,&Y[-2*k],(int)R+1); }
-        else { cblas_ccopy((int)L,X,1,&Y[(size_t)(2*k)*R],(int)R+1); }
-    }
-    else
-    {
-        if (k<0) { cblas_ccopy((int)L,X,1,&Y[(size_t)(-2*k)*C],(int)C+1); }
-        else { cblas_ccopy((int)L,X,1,&Y[2*k],(int)C+1); }
-    }
+    for (size_t n=0; n<2*R*C; ++n, ++Y) { *Y = 0.0f; }
+    Y -= 2*(int)(R*C) - S;
+    for (size_t l=0; l<L; ++l, ++X, Y+=2*K-1) { *Y = *X; *++Y = *++X; }
 
     return 0;
 }
@@ -84,20 +59,12 @@ int diagmat_c (float *Y, const float *X, const size_t R, const size_t C, const c
 int diagmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
     const size_t L = (k>0) ? R : C;
-    const double z[2] = {0.0,0.0};
+    const size_t K = (iscolmajor) ? R+1 : C+1;
+    const int S = (iscolmajor) ? (k<0) ? -2*k : 2*k*(int)R : (k<0) ? -2*k*(int)C : 2*k;
 
-    cblas_zcopy((int)(R*C),z,0,Y,1);
-
-    if (iscolmajor)
-    {
-        if (k<0) { cblas_zcopy((int)L,X,1,&Y[-2*k],(int)R+1); }
-        else { cblas_zcopy((int)L,X,1,&Y[(size_t)(2*k)*R],(int)R+1); }
-    }
-    else
-    {
-        if (k<0) { cblas_zcopy((int)L,X,1,&Y[(size_t)(-2*k)*C],(int)C+1); }
-        else { cblas_zcopy((int)L,X,1,&Y[2*k],(int)C+1); }
-    }
+    for (size_t n=0; n<2*R*C; ++n, ++Y) { *Y = 0.0; }
+    Y -= 2*(int)(R*C) - S;
+    for (size_t l=0; l<L; ++l, ++X, Y+=2*K-1) { *Y = *X; *++Y = *++X; }
 
     return 0;
 }

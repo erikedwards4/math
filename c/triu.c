@@ -23,7 +23,7 @@ int triu_s (float *Y, const float *X, const size_t R, const size_t C, const size
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_s: k must be in [1-R C-1]\n"); return 1; }
 
-     if (iscolmajor)
+    if (iscolmajor)
     {
         const size_t C0 = (k>0) ? (size_t)k : 0;                                    //number of all-0 cols
         const size_t CX = (k>(int)C-(int)R+1) ? 0 : (size_t)((int)C-(int)R-k+1);    //number of all-X cols

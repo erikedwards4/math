@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Vec2scalar operation.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
     descr += "Gets interquartile range (IQR) for each vector in X along dim.\n";
     descr += "This is the 75th minus the 25th percentile for each vector.\n";
     descr += "\n";

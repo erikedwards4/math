@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Vec2scalar operation.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
     descr += "Gets the L0 (Hamming) norm for each vector in X along dim.\n";
     descr += "This is just the count of nonzero values for each vector in X.\n";
     descr += "Although the count is an integer, output Y is float or double.\n";

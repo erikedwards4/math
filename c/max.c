@@ -5,8 +5,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -27,7 +25,10 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y = *X++;
@@ -82,7 +83,10 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y = *X++;
@@ -138,7 +142,10 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     float xx, mx;
 
     if (N==0) {}
-    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         mx = *X**X + *(X+1)**(X+1);
@@ -174,7 +181,7 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
             if (!(mxs=(float *)malloc(V*sizeof(float)))) { fprintf(stderr,"error in max_c: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t l=0; l<L; ++l, Y-=2*V, mxs-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, Y+=2, mxs++)
+                for (size_t v=0; v<V; ++v, X+=2, Y+=2, ++mxs)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (l==0 || xx>*mxs) { *mxs = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -213,7 +220,10 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     double xx, mx;
 
     if (N==0) {}
-    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         mx = *X**X + *(X+1)**(X+1);
@@ -249,7 +259,7 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
             if (!(mxs=(double *)malloc(V*sizeof(double)))) { fprintf(stderr,"error in max_z: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t l=0; l<L; ++l, Y-=2*V, mxs-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, Y+=2, mxs++)
+                for (size_t v=0; v<V; ++v, X+=2, Y+=2, ++mxs)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (l==0 || xx>*mxs) { *mxs = xx; *Y = *X; *(Y+1) = *(X+1); }

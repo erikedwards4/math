@@ -30,7 +30,10 @@ int amax_s (float *Y, const float *X, const size_t R, const size_t C, const size
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         size_t l = cblas_isamax((int)L,X,1);
@@ -88,7 +91,10 @@ int amax_d (double *Y, const double *X, const size_t R, const size_t C, const si
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         size_t l = cblas_idamax((int)L,X,1);

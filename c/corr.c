@@ -8,8 +8,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -35,25 +33,25 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in corr_s: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float ni = 1.0f/L;
-    float x1, x2, mn1 = 0.0f, mn2 = 0.0f, sd1 = 0.0f, sd2 = 0.0f;
+    const float den = 1.0f/L;
+    float x1, x2, mn1 = 0.0f, mn2 = 0.0f, sd1 = 0.0f, sd2 = 0.0f, sm2 = 0.0f;
 
     if (N==0) {}
     else if (L==1)
     {
-        const float o = 1.0f;
-        cblas_scopy((int)N,&o,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
         for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-        mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L; *Y = 0.0f;
+        mn1 *= den; mn2 *= den;
+        X1 -= L; X2 -= L;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             x1 = *X1 - mn1; x2 = *X2 - mn2;
-            sd1 += x1*x1; sd2 += x2*x2; *Y += x1*x2;
+            sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
         }
-        *Y /= sqrtf(sd1*sd2);
+        *Y = sm2 / sqrtf(sd1*sd2);
     }
     else
     {
@@ -66,15 +64,16 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                *Y = mn1 = mn2 = sd1 = sd2 = 0.0f;
+                mn1 = mn2 = sd1 = sd2 = sm2 = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-                mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L;
+                mn1 *= den; mn2 *= den;
+                X1 -= L; X2 -= L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     x1 = *X1 - mn1; x2 = *X2 - mn2;
-                    sd1 += x1*x1; sd2 += x2*x2; *Y += x1*x2;
+                    sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
                 }
-                *Y /= sqrtf(sd1*sd2);
+                *Y = sm2 * sqrtf(sd1*sd2);
             }
         }
         else
@@ -86,15 +85,16 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
             {
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    *Y = mn1 = mn2 = sd1 = sd2 = 0.0f;
+                    mn1 = mn2 = sd1 = sd2 = sm2 = 0.0f;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
-                    mn1 *= ni; mn2 *= ni; X1 -= L*K1; X2 -= L*K2;
+                    mn1 *= den; mn2 *= den;
+                    X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         x1 = *X1 - mn1; x2 = *X2 - mn2;
-                        sd1 += x1*x1; sd2 += x2*x2; *Y += x1*x2;
+                        sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
                     }
-                    *Y /= sqrtf(sd1*sd2);
+                    *Y = sm2 / sqrtf(sd1*sd2);
                 }
             }
         }
@@ -117,25 +117,25 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in corr_d: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double ni = 1.0/L;
-    double x1, x2, mn1 = 0.0, mn2 = 0.0, sd1 = 0.0, sd2 = 0.0;
+    const double den = 1.0/L;
+    double x1, x2, mn1 = 0.0, mn2 = 0.0, sd1 = 0.0, sd2 = 0.0, sm2 = 0.0;
 
     if (N==0) {}
     else if (L==1)
     {
-        const double o = 1.0;
-        cblas_dcopy((int)N,&o,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
         for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-        mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L; *Y = 0.0;
+        mn1 *= den; mn2 *= den;
+        X1 -= L; X2 -= L;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             x1 = *X1 - mn1; x2 = *X2 - mn2;
-            sd1 += x1*x1; sd2 += x2*x2; *Y += x1*x2;
+            sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
         }
-        *Y /= sqrt(sd1*sd2);
+        *Y = sm2 / sqrt(sd1*sd2);
     }
     else
     {
@@ -148,15 +148,16 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                *Y = mn1 = mn2 = sd1 = sd2 = 0.0;
+                mn1 = mn2 = sd1 = sd2 = sm2 = 0.0;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
-                mn1 *= ni; mn2 *= ni; X1 -= L; X2 -= L;
+                mn1 *= den; mn2 *= den;
+                X1 -= L; X2 -= L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     x1 = *X1 - mn1; x2 = *X2 - mn2;
-                    sd1 += x1*x1; sd2 += x2*x2; *Y += x1*x2;
+                    sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
                 }
-                *Y /= sqrt(sd1*sd2);
+                *Y = sm2 * sqrt(sd1*sd2);
             }
         }
         else
@@ -168,15 +169,16 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
             {
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    *Y = mn1 = mn2 = sd1 = sd2 = 0.0;
+                    mn1 = mn2 = sd1 = sd2 = sm2 = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
-                    mn1 *= ni; mn2 *= ni; X1 -= L*K1; X2 -= L*K2;
+                    mn1 *= den; mn2 *= den;
+                    X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         x1 = *X1 - mn1; x2 = *X2 - mn2;
-                        sd1 += x1*x1; sd2 += x2*x2; *Y += x1*x2;
+                        sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
                     }
-                    *Y /= sqrt(sd1*sd2);
+                    *Y = sm2 / sqrt(sd1*sd2);
                 }
             }
         }
@@ -199,37 +201,36 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in corr_c: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float ni = 1.0f/L;
-    float x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, yr, yi, den;
+    const float den = 1.0f/L;
+    float x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, yr, yi, den2;
 
     if (N==0) {}
     else if (L==1)
     {
-        const float o[2] = {1.0f,0.0f};
-        cblas_ccopy((int)N,o,0,Y,1);
+        for (size_t n=0; n<2*N; ++n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
         mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0f;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            mn1r += *X1++; mn1i += *X1;
-            mn2r += *X2++; mn2i += *X2;
+            mn1r += *X1; mn1i += *++X1;
+            mn2r += *X2; mn2i += *++X2;
         }
-        mn1r *= ni; mn1i *= ni;
-        mn2r *= ni; mn2i *= ni;
+        mn1r *= den; mn1i *= den;
+        mn2r *= den; mn2i *= den;
         X1 -= 2*L; X2 -= 2*L;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            x1r = *X1++ - mn1r; x1i = *X1 - mn1i;
-            x2r = *X2++ - mn2r; x2i = *X2 - mn2i;
+            x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
+            x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
             sd1 += x1r*x1r + x1i*x1i;
             sd2 += x2r*x2r + x2i*x2i;
             yr += x1r*x2r + x1i*x2i;
             yi -= x1r*x2i - x1i*x2r;
         }
-        den = sqrtf(sd1*sd2);
-        *Y++ = yr / den; *Y = yi / den;
+        den2 = sqrtf(sd1*sd2);
+        *Y = yr / den2; *++Y = yi / den2;
     }
     else
     {
@@ -245,23 +246,23 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
                 mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    mn1r += *X1++; mn1i += *X1;
-                    mn2r += *X2++; mn2i += *X2;
+                    mn1r += *X1; mn1i += *++X1;
+                    mn2r += *X2; mn2i += *++X2;
                 }
-                mn1r *= ni; mn1i *= ni;
-                mn2r *= ni; mn2i *= ni;
+                mn1r *= den; mn1i *= den;
+                mn2r *= den; mn2i *= den;
                 X1 -= 2*L; X2 -= 2*L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2, ++Y)
                 {
-                    x1r = *X1++ - mn1r; x1i = *X1 - mn1i;
-                    x2r = *X2++ - mn2r; x2i = *X2 - mn2i;
+                    x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
+                    x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
                     sd1 += x1r*x1r + x1i*x1i;
                     sd2 += x2r*x2r + x2i*x2i;
                     yr += x1r*x2r + x1i*x2i;
                     yi -= x1r*x2i - x1i*x2r;
                 }
-                den = sqrtf(sd1*sd2);
-                *Y++ = yr / den; *Y = yi / den;
+                den2 = sqrtf(sd1*sd2);
+                *Y = yr / den2; *++Y = yi / den2;
             }
         }
         else
@@ -276,23 +277,23 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
                     mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0f;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
-                        mn1r += *X1++; mn1i += *X1;
-                        mn2r += *X2++; mn2i += *X2;
+                        mn1r += *X1; mn1i += *++X1;
+                        mn2r += *X2; mn2i += *++X2;
                     }
-                    mn1r *= ni; mn1i *= ni;
-                    mn2r *= ni; mn2i *= ni;
+                    mn1r *= den; mn1i *= den;
+                    mn2r *= den; mn2i *= den;
                     X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1, ++Y)
                     {
-                        x1r = *X1++ - mn1r; x1i = *X1 - mn1i;
-                        x2r = *X2++ - mn2r; x2i = *X2 - mn2i;
+                        x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
+                        x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
                         sd1 += x1r*x1r + x1i*x1i;
                         sd2 += x2r*x2r + x2i*x2i;
                         yr += x1r*x2r + x1i*x2i;
                         yi -= x1r*x2i - x1i*x2r;
                     }
-                    den = sqrtf(sd1*sd2);
-                    *Y++ = yr / den; *Y = yi / den;
+                    den2 = sqrtf(sd1*sd2);
+                    *Y = yr / den2; *++Y = yi / den2;
                 }
             }
         }
@@ -315,37 +316,36 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
     const size_t L1 = (dim==0) ? R1 : (dim==1) ? C1 : (dim==2) ? S1 : H1;
     const size_t L2 = (dim==0) ? R2 : (dim==1) ? C2 : (dim==2) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in corr_z: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double ni = 1.0/L;
-    double x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, yr, yi, den;
+    const double den = 1.0/L;
+    double x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, yr, yi, den2;
 
     if (N==0) {}
     else if (L==1)
     {
-        const double o[2] = {1.0,0.0};
-        cblas_zcopy((int)N,o,0,Y,1);
+        for (size_t n=0; n<2*N; ++n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
         mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            mn1r += *X1++; mn1i += *X1;
-            mn2r += *X2++; mn2i += *X2;
+            mn1r += *X1; mn1i += *++X1;
+            mn2r += *X2; mn2i += *++X2;
         }
-        mn1r *= ni; mn1i *= ni;
-        mn2r *= ni; mn2i *= ni;
+        mn1r *= den; mn1i *= den;
+        mn2r *= den; mn2i *= den;
         X1 -= 2*L; X2 -= 2*L;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            x1r = *X1++ - mn1r; x1i = *X1 - mn1i;
-            x2r = *X2++ - mn2r; x2i = *X2 - mn2i;
+            x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
+            x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
             sd1 += x1r*x1r + x1i*x1i;
             sd2 += x2r*x2r + x2i*x2i;
             yr += x1r*x2r + x1i*x2i;
             yi -= x1r*x2i - x1i*x2r;
         }
-        den = sqrt(sd1*sd2);
-        *Y++ = yr / den; *Y = yi / den;
+        den2 = sqrt(sd1*sd2);
+        *Y = yr / den2; *++Y = yi / den2;
     }
     else
     {
@@ -361,23 +361,23 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
                 mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    mn1r += *X1++; mn1i += *X1;
-                    mn2r += *X2++; mn2i += *X2;
+                    mn1r += *X1; mn1i += *++X1;
+                    mn2r += *X2; mn2i += *++X2;
                 }
-                mn1r *= ni; mn1i *= ni;
-                mn2r *= ni; mn2i *= ni;
+                mn1r *= den; mn1i *= den;
+                mn2r *= den; mn2i *= den;
                 X1 -= 2*L; X2 -= 2*L;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2, ++Y)
                 {
-                    x1r = *X1++ - mn1r; x1i = *X1 - mn1i;
-                    x2r = *X2++ - mn2r; x2i = *X2 - mn2i;
+                    x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
+                    x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
                     sd1 += x1r*x1r + x1i*x1i;
                     sd2 += x2r*x2r + x2i*x2i;
                     yr += x1r*x2r + x1i*x2i;
                     yi -= x1r*x2i - x1i*x2r;
                 }
-                den = sqrt(sd1*sd2);
-                *Y++ = yr / den; *Y = yi / den;
+                den2 = sqrt(sd1*sd2);
+                *Y = yr / den2; *++Y = yi / den2;
             }
         }
         else
@@ -392,23 +392,23 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
                     mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
-                        mn1r += *X1++; mn1i += *X1;
-                        mn2r += *X2++; mn2i += *X2;
+                        mn1r += *X1; mn1i += *++X1;
+                        mn2r += *X2; mn2i += *++X2;
                     }
-                    mn1r *= ni; mn1i *= ni;
-                    mn2r *= ni; mn2i *= ni;
+                    mn1r *= den; mn1i *= den;
+                    mn2r *= den; mn2i *= den;
                     X1 -= L*K1; X2 -= L*K2;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1, ++Y)
                     {
-                        x1r = *X1++ - mn1r; x1i = *X1 - mn1i;
-                        x2r = *X2++ - mn2r; x2i = *X2 - mn2i;
+                        x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
+                        x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
                         sd1 += x1r*x1r + x1i*x1i;
                         sd2 += x2r*x2r + x2i*x2i;
                         yr += x1r*x2r + x1i*x2i;
                         yi -= x1r*x2i - x1i*x2r;
                     }
-                    den = sqrt(sd1*sd2);
-                    *Y++ = yr / den; *Y = yi / den;
+                    den2 = sqrt(sd1*sd2);
+                    *Y = yr / den2; *++Y = yi / den2;
                 }
             }
         }

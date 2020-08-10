@@ -1,7 +1,6 @@
 //Splits input X into 2 outputs Y1, Y2
 
 #include <stdio.h>
-#include <cblas.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -71,8 +70,8 @@ int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t
 
     for (size_t g=0; g<G; ++g)
     {
-        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1++ = *X++; *Y1 = *X; }
-        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2++ = *X++; *Y2 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
     }
 
     return 0;
@@ -92,8 +91,8 @@ int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const siz
 
     for (size_t g=0; g<G; ++g)
     {
-        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1++ = *X++; *Y1 = *X; }
-        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2++ = *X++; *Y2 = *X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
+        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
     }
 
     return 0;

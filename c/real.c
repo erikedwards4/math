@@ -2,8 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -16,7 +14,7 @@ int real_z (double *Y, const double *X, const size_t N);
 
 int real_c (float *Y, const float *X, const size_t N)
 {
-    cblas_scopy((int)N,X,2,Y,1);
+    for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = *X; }
 
     return 0;
 }
@@ -24,7 +22,7 @@ int real_c (float *Y, const float *X, const size_t N)
 
 int real_z (double *Y, const double *X, const size_t N)
 {
-    cblas_dcopy((int)N,X,2,Y,1);
+    for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = *X; }
     
     return 0;
 }

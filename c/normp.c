@@ -6,7 +6,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -28,12 +27,15 @@ int normp_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     const float ip = 1.0f / p;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        *Y = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X) { *Y += powf(fabsf(*X),p); }
-        *Y = powf(*Y,ip);
+        float sm = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X) { sm += powf(fabsf(*X),p); }
+        *Y = powf(sm,ip);
     }
     else
     {
@@ -43,18 +45,19 @@ int normp_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
+            float sm;
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { *Y += powf(fabsf(*X),p); }
-                *Y = powf(*Y,ip);
+                sm = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X) { sm += powf(fabsf(*X),p); }
+                *Y = powf(sm,ip);
             }
         }
         else if (G==1)
         {
-            const float z = 0.0f;
-            cblas_scopy((int)V,&z,0,Y,1);
-            for (size_t l=0; l<L; ++l, Y-=V)
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = powf(fabsf(*X),p); }
+            Y -= V;
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += powf(fabsf(*X),p); }
             }
@@ -62,13 +65,14 @@ int normp_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
+            float sm;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { *Y += powf(fabsf(*X),p); }
-                    *Y = powf(*Y,ip);
+                    sm = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=K) { sm += powf(fabsf(*X),p); }
+                    *Y = powf(sm,ip);
                 }
             }
         }
@@ -87,12 +91,15 @@ int normp_d (double *Y, const double *X, const size_t R, const size_t C, const s
     const double ip = 1.0 / p;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        *Y = 0.0;
-        for (size_t l=0; l<L; ++l, ++X) { *Y += pow(fabs(*X),p); }
-        *Y = pow(*Y,ip);
+        double sm = 0.0;
+        for (size_t l=0; l<L; ++l, ++X) { sm += pow(fabs(*X),p); }
+        *Y = pow(sm,ip);
     }
     else
     {
@@ -102,18 +109,19 @@ int normp_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
+            double sm;
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { *Y += pow(fabs(*X),p); }
-                *Y = pow(*Y,ip);
+                sm = 0.0;
+                for (size_t l=0; l<L; ++l, ++X) { sm += pow(fabs(*X),p); }
+                *Y = pow(sm,ip);
             }
         }
         else if (G==1)
         {
-            const double z = 0.0;
-            cblas_dcopy((int)V,&z,0,Y,1);
-            for (size_t l=0; l<L; ++l, Y-=V)
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = pow(fabs(*X),p); }
+            Y -= V;
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += pow(fabs(*X),p); }
             }
@@ -121,13 +129,14 @@ int normp_d (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
+            double sm;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { *Y += pow(fabs(*X),p); }
-                    *Y = pow(*Y,ip);
+                    sm = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=K) { sm += pow(fabs(*X),p); }
+                    *Y = pow(sm,ip);
                 }
             }
         }
@@ -152,9 +161,9 @@ int normp_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
-        *Y = 0.0f;
-        for (size_t l=0; l<L; ++l, X+=2) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
-        *Y = powf(*Y,ip);
+        float sm = 0.0f;
+        for (size_t l=0; l<L; ++l, X+=2) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+        *Y = powf(sm,ip);
     }
     else
     {
@@ -164,18 +173,19 @@ int normp_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
+            float sm;
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = 0.0f;
-                for (size_t l=0; l<L; ++l, X+=2) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
-                *Y = powf(*Y,ip);
+                sm = 0.0f;
+                for (size_t l=0; l<L; ++l, X+=2) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+                *Y = powf(sm,ip);
             }
         }
         else if (G==1)
         {
-            const float z = 0.0f;
-            cblas_scopy((int)V,&z,0,Y,1);
-            for (size_t l=0; l<L; ++l, Y-=V)
+            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+            Y -= V;
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
             }
@@ -183,13 +193,14 @@ int normp_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
+            float sm;
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    *Y = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
-                    *Y = powf(*Y,ip);
+                    sm = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=2*K) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+                    *Y = powf(sm,ip);
                 }
             }
         }
@@ -214,9 +225,9 @@ int normp_z (double *Y, const double *X, const size_t R, const size_t C, const s
     }
     else if (L==N)
     {
-        *Y = 0.0;
-        for (size_t l=0; l<L; ++l, X+=2) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
-        *Y = pow(*Y,ip);
+        double sm = 0.0;
+        for (size_t l=0; l<L; ++l, X+=2) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+        *Y = pow(sm,ip);
     }
     else
     {
@@ -226,18 +237,19 @@ int normp_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
+            double sm;
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = 0.0;
-                for (size_t l=0; l<L; ++l, X+=2) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
-                *Y = pow(*Y,ip);
+                sm = 0.0;
+                for (size_t l=0; l<L; ++l, X+=2) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+                *Y = pow(sm,ip);
             }
         }
         else if (G==1)
         {
-            const double z = 0.0;
-            cblas_dcopy((int)V,&z,0,Y,1);
-            for (size_t l=0; l<L; ++l, Y-=V)
+            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+            Y -= V;
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
             }
@@ -245,13 +257,14 @@ int normp_z (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
+            double sm;
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    *Y = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
-                    *Y = pow(*Y,ip);
+                    sm = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=2*K) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+                    *Y = pow(sm,ip);
                 }
             }
         }

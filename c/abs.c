@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
+//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {

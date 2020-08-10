@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Vec2scalar operation.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
     descr += "Gets maximum of absolute values for each vector in X along dim.\n";
     descr += "This is also the Inf-norm or max-norm of each vector in X.\n";
     descr += "\n";

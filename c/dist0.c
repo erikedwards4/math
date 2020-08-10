@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <float.h>
 #include <math.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {

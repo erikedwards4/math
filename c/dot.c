@@ -3,9 +3,11 @@
 
 //For complex inputs, this uses the unconjugated dot product.
 
+//Direct for loop is much faster for small N, faster for medium N,
+//and ~same speed for huge N (~1e6), compared to cblas_?dot.
+
 #include <stdio.h>
 #include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -33,7 +35,12 @@ int dot_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
     if (L1!=L2) { fprintf(stderr,"error in dot_s: vectors in X1 and X2 must have the same length\n"); return 1; }
 
     if (N==0) {}
-    else if (L==N) { *Y = cblas_sdot((int)L,X1,1,X2,1); }
+    else if (L==N)
+    {
+        float sm2 = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X1, ++X2) { sm2 += *X1 * *X2; }
+        *Y = sm2;
+    }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
@@ -42,10 +49,13 @@ int dot_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            const size_t J1 = (L==N1) ? 0 : L, J2 = (L==N2) ? 0 : L;
+            float sm2;
+            const int J1 = (L==N1) ? -(int)L : 0, J2 = (L==N2) ? -(int)L : 0;
             for (size_t v=0; v<V; ++v, X1+=J1, X2+=J2, ++Y)
             {
-                *Y = cblas_sdot((int)L,X1,1,X2,1);
+                sm2 = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X1, ++X2) { sm2 += *X1 * *X2; }
+                *Y = sm2;
             }
         }
         else if (G==1)
@@ -63,11 +73,14 @@ int dot_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
+            float sm2;
             for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1+=J1, X2+=J2, ++Y)
+                for (size_t b=0; b<B; ++b, X1-=K1*L-J1, X2-=K2*L-J2, ++Y)
                 {
-                    *Y = cblas_sdot((int)L,X1,(int)K1,X2,(int)K2);
+                    sm2 = 0.0f;
+                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { sm2 += *X1 * *X2; }
+                    *Y = sm2;
                 }
             }
         }
@@ -92,7 +105,12 @@ int dot_d (double *Y, const double *X1, const double *X2, const size_t R1, const
     if (L1!=L2) { fprintf(stderr,"error in dot_d: vectors in X1 and X2 must have the same length\n"); return 1; }
 
     if (N==0) {}
-    else if (L==N) { *Y = cblas_ddot((int)L,X1,1,X2,1); }
+    else if (L==N)
+    {
+        double sm2 = 0.0;
+        for (size_t l=0; l<L; ++l, ++X1, ++X2) { sm2 += *X1 * *X2; }
+        *Y = sm2;
+    }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
@@ -101,17 +119,20 @@ int dot_d (double *Y, const double *X1, const double *X2, const size_t R1, const
 
         if (K==1 && (G==1 || B==1))
         {
-            const size_t J1 = (L==N1) ? 0 : L, J2 = (L==N2) ? 0 : L;
+            double sm2;
+            const int J1 = (L==N1) ? -(int)L : 0, J2 = (L==N2) ? -(int)L : 0;
             for (size_t v=0; v<V; ++v, X1+=J1, X2+=J2, ++Y)
             {
-                *Y = cblas_ddot((int)L,X1,1,X2,1);
+                sm2 = 0.0;
+                for (size_t l=0; l<L; ++l, ++X1, ++X2) { sm2 += *X1 * *X2; }
+                *Y = sm2;
             }
         }
         else if (G==1)
         {
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             for (size_t v=0; v<V; ++v, X1+=J1, X2+=J2, ++Y) { *Y = *X1 * *X2; }
-            X1 += 1-J1; X2 += 1-J2; Y -= V;
+            X1 += 1-J1; X2 += 1-J2;  Y -= V;
             for (size_t l=1; l<L; ++l, X1+=1-J1, X2+=1-J2, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, X1+=J1, X2+=J2, ++Y) { *Y += *X1 * *X2; }
@@ -122,11 +143,14 @@ int dot_d (double *Y, const double *X1, const double *X2, const size_t R1, const
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
+            double sm2;
             for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1+=J1, X2+=J2, ++Y)
+                for (size_t b=0; b<B; ++b, X1-=K1*L-J1, X2-=K2*L-J2, ++Y)
                 {
-                    *Y = cblas_ddot((int)L,X1,(int)K1,X2,(int)K2);
+                    sm2 = 0.0;
+                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { sm2 += *X1 * *X2; }
+                    *Y = sm2;
                 }
             }
         }
@@ -151,7 +175,16 @@ int dot_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
     if (L1!=L2) { fprintf(stderr,"error in dot_c: vectors in X1 and X2 must have the same length\n"); return 1; }
 
     if (N==0) {}
-    else if (L==N) { cblas_cdotu_sub((int)L,X1,1,X2,1,(_Complex float *)Y); }
+    else if (L==N)
+    {
+        if (L<5000)
+        {
+            float sm2r = 0.0f, sm2i = 0.0f;
+            for (size_t l=0; l<L; ++l, X1+=2, X2+=2) { sm2r += *X1**X2 - *(X1+1)**(X2+1); sm2i += *X1**(X2+1) + *(X1+1)**X2; }
+            *Y = sm2r; *++Y = sm2i;
+        }
+        else { cblas_cdotu_sub((int)L,X1,1,X2,1,(_Complex float *)Y); }
+    }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
@@ -200,7 +233,16 @@ int dot_z (double *Y, const double *X1, const double *X2, const size_t R1, const
     if (L1!=L2) { fprintf(stderr,"error in dot_z: vectors in X1 and X2 must have the same length\n"); return 1; }
 
     if (N==0) {}
-    else if (L==N) { cblas_zdotu_sub((int)L,X1,1,X2,1,(_Complex double *)Y); }
+    else if (L==N)
+    {
+        if (L<5000)
+        {
+            double sm2r = 0.0, sm2i = 0.0;
+            for (size_t l=0; l<L; ++l, X1+=2, X2+=2) { sm2r += *X1**X2 - *(X1+1)**(X2+1); sm2i += *X1**(X2+1) + *(X1+1)**X2; }
+            *Y = sm2r; *++Y = sm2i;
+        }
+        else { cblas_zdotu_sub((int)L,X1,1,X2,1,(_Complex double *)Y); }
+    }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);

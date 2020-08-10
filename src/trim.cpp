@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
     descr += "Use -d2 to get trim along slices.\n";
     descr += "Use -d3 to get trim along hyperslices.\n";
     descr += "\n";
-    descr += "\n";
     descr += "Use -p (--p) to give the lower percentage in [0 50) [default=10].\n";
     descr += "Typical choices for p are 10 and 25.\n";
     descr += "\n";

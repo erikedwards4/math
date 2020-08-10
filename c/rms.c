@@ -5,8 +5,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -25,22 +23,19 @@ int rms_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float den = 1.0f/L, den2 = 1.0f/sqrtf(L);
+    const float den = 1.0f/L;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        if (L<5500)
-        {
-            *Y = 0.0f; //this is faster for small L, but slower (and less numerically accurate) for large L
-            for (size_t l=0; l<L; ++l, ++X) { *Y += *X * *X; }
-            *Y = sqrtf(*Y*den);
-        }
-        else
-        {
-            *Y = cblas_snrm2((int)L,X,1) * den2;
-        }
+        float sm2 = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X) { sm2 += *X * *X; }
+        *Y = sqrtf(sm2*den);
+        //*Y = cblas_snrm2((int)L,X,1) * den2;  //this is more numerically accurate for large L
     }
     else
     {
@@ -50,21 +45,12 @@ int rms_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            if (L<5500)
+            float sm2;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                for (size_t v=0; v<V; ++v, ++Y)
-                {
-                    *Y = 0.0f;
-                    for (size_t l=0; l<L; ++l, ++X) { *Y += *X * *X; }
-                    *Y = sqrtf(*Y*den);
-                }
-            }
-            else
-            {
-                for (size_t v=0; v<V; ++v, X+=L, ++Y)
-                {
-                    *Y = cblas_snrm2((int)L,X,1) * den2;
-                }
+                sm2 = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X) { sm2 += *X * *X; }
+                *Y = sqrtf(sm2*den);
             }
         }
         else if (G==1)
@@ -79,13 +65,14 @@ int rms_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
+            float sm2;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { *Y += *X * *X; }
-                    *Y = sqrtf(*Y*den);
+                    sm2 = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=K) { sm2 += *X * *X; }
+                    *Y = sqrtf(sm2*den);
                 }
             }
         }
@@ -101,22 +88,18 @@ int rms_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double den = 1.0/L, den2 = 1.0/sqrt(L);
+    const double den = 1.0/L;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        if (L<5500)
-        {
-            *Y = 0.0;
-            for (size_t l=0; l<L; ++l, ++X) { *Y += *X * *X; }
-            *Y = sqrt(*Y*den);
-        }
-        else
-        {
-            *Y = cblas_dnrm2((int)L,X,1) * den2;
-        }
+        double sm2 = 0.0;
+        for (size_t l=0; l<L; ++l, ++X) { sm2 += *X * *X; }
+        *Y = sqrt(sm2*den);
     }
     else
     {
@@ -126,21 +109,12 @@ int rms_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            if (L<5500)
+            double sm2;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                for (size_t v=0; v<V; ++v, ++Y)
-                {
-                    *Y = 0.0;
-                    for (size_t l=0; l<L; ++l, ++X) { *Y += *X * *X; }
-                    *Y = sqrt(*Y*den);
-                }
-            }
-            else
-            {
-                for (size_t v=0; v<V; ++v, X+=L, ++Y)
-                {
-                    *Y = cblas_dnrm2((int)L,X,1) * den2;
-                }
+                sm2 = 0.0;
+                for (size_t l=0; l<L; ++l, ++X) { sm2 += *X * *X; }
+                *Y = sqrt(sm2*den);
             }
         }
         else if (G==1)
@@ -155,13 +129,14 @@ int rms_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
+            double sm2;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { *Y += *X * *X; }
-                    *Y = sqrt(*Y*den);
+                    sm2 = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=K) { sm2 += *X * *X; }
+                    *Y = sqrt(sm2*den);
                 }
             }
         }
@@ -177,7 +152,7 @@ int rms_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const float den = 1.0f/L, den2 = 1.0f/sqrtf(L);
+    const float den = 1.0f/L;
 
     if (N==0) {}
     else if (L==1)
@@ -186,16 +161,10 @@ int rms_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     }
     else if (L==N)
     {
-        if (L<4500)
-        {
-            *Y = 0.0f;
-            for (size_t l=0; l<L; ++l, X+=2) { *Y += *X**X + *(X+1)**(X+1); }
-            *Y = sqrtf(*Y*den);
-        }
-        else
-        {
-            *Y = cblas_scnrm2((int)L,X,1) * den2;
-        }
+        float sm2 = 0.0f;
+        for (size_t l=0; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
+        *Y = sqrtf(sm2*den);
+        //*Y = cblas_scnrm2((int)L,X,1) * den2;
     }
     else
     {
@@ -205,21 +174,12 @@ int rms_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            if (L<4500)
+            float sm2;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                for (size_t v=0; v<V; ++v, ++Y)
-                {
-                    *Y = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=2) { *Y += *X**X + *(X+1)**(X+1); }
-                    *Y = sqrtf(*Y*den);
-                }
-            }
-            else
-            {
-                for (size_t v=0; v<V; ++v, X+=2*L, ++Y)
-                {
-                    *Y = cblas_scnrm2((int)L,X,1) * den2;
-                }
+                sm2 = 0.0f;
+                for (size_t l=0; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
+                *Y = sqrtf(sm2*den);
             }
         }
         else if (G==1)
@@ -234,13 +194,14 @@ int rms_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
+            float sm2;
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    *Y = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { *Y += *X**X + *(X+1)**(X+1); }
-                    *Y = sqrtf(*Y*den);
+                    sm2 = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=2*K) { sm2 += *X**X + *(X+1)**(X+1); }
+                    *Y = sqrtf(sm2*den);
                 }
             }
         }
@@ -256,7 +217,7 @@ int rms_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
-    const double den = 1.0/L, den2 = 1.0/sqrt(L);
+    const double den = 1.0/L;
 
     if (N==0) {}
     else if (L==1)
@@ -265,16 +226,10 @@ int rms_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
-        if (L<4500)
-        {
-            *Y = 0.0;
-            for (size_t l=0; l<L; ++l, X+=2) { *Y += *X**X + *(X+1)**(X+1); }
-            *Y = sqrt(*Y*den);
-        }
-        else
-        {
-            *Y = cblas_dznrm2((int)L,X,1) * den2;
-        }
+        double sm2 = 0.0;
+        for (size_t l=0; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
+        *Y = sqrt(sm2*den);
+        //*Y = cblas_dznrm2((int)L,X,1) * den2;
     }
     else
     {
@@ -284,21 +239,12 @@ int rms_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            if (L<4500)
+            double sm2;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
-                for (size_t v=0; v<V; ++v, ++Y)
-                {
-                    *Y = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=2) { *Y += *X**X + *(X+1)**(X+1); }
-                    *Y = sqrt(*Y*den);
-                }
-            }
-            else
-            {
-                for (size_t v=0; v<V; ++v, X+=2*L, ++Y)
-                {
-                    *Y = cblas_dznrm2((int)L,X,1) * den2;
-                }
+                sm2 = 0.0;
+                for (size_t l=0; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
+                *Y = sqrt(sm2*den);
             }
         }
         else if (G==1)
@@ -313,13 +259,14 @@ int rms_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
+            double sm2;
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
-                    *Y = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { *Y += *X**X + *(X+1)**(X+1); }
-                    *Y = sqrt(*Y*den);
+                    sm2 = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=2*K) { sm2 += *X**X + *(X+1)**(X+1); }
+                    *Y = sqrt(sm2*den);
                 }
             }
         }

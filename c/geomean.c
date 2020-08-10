@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <complex.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -29,12 +27,15 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
     const float den = 1.0f / L;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        *Y = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X) { *Y += logf(*X); }
-        *Y = expf(*Y*den);
+        float sm = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X) { sm += logf(*X); }
+        *Y = expf(sm*den);
     }
     else
     {
@@ -44,11 +45,12 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
+            float sm;
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { *Y += logf(*X); }
-                *Y = expf(*Y*den);
+                sm = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X) { sm += logf(*X); }
+                *Y = expf(sm*den);
             }
         }
         else if (G==1)
@@ -63,13 +65,14 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
         }
         else
         {
+            float sm;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { *Y += logf(*X); }
-                    *Y = expf(*Y*den);
+                    sm = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=K) { sm += logf(*X); }
+                    *Y = expf(sm*den);
                 }
             }
         }
@@ -88,12 +91,15 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
     const double den = 1.0 / L;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        *Y = 0.0;
-        for (size_t l=0; l<L; ++l, ++X) { *Y += log(*X); }
-        *Y = exp(*Y*den);
+        double sm = 0.0;
+        for (size_t l=0; l<L; ++l, ++X) { sm += log(*X); }
+        *Y = exp(sm*den);
     }
     else
     {
@@ -103,11 +109,12 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
 
         if (K==1 && (G==1 || B==1))
         {
+            double sm;
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { *Y += log(*X); }
-                *Y = exp(*Y*den);
+                sm = 0.0;
+                for (size_t l=0; l<L; ++l, ++X) { sm += log(*X); }
+                *Y = exp(sm*den);
             }
         }
         else if (G==1)
@@ -122,13 +129,14 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
         }
         else
         {
+            double sm;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { *Y += log(*X); }
-                    *Y = exp(*Y*den);
+                    sm = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=K) { sm += log(*X); }
+                    *Y = exp(sm*den);
                 }
             }
         }
@@ -148,7 +156,10 @@ int geomean_c (float *Y, const float *X, const size_t R, const size_t C, const s
     _Complex float y;
 
     if (N==0) {}
-    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         y = 0.0f + 0.0if;
@@ -157,7 +168,7 @@ int geomean_c (float *Y, const float *X, const size_t R, const size_t C, const s
             y += clogf(*X + 1.0if**(X+1));
         }
         y = cexpf(y*den);
-        *Y++ = *(float *)&y; *Y = *((float *)&y+1);
+        *Y = *(float *)&y; *++Y = *((float *)&y+1);
     }
     else
     {
@@ -175,7 +186,7 @@ int geomean_c (float *Y, const float *X, const size_t R, const size_t C, const s
                     y += clogf(*X + 1.0if**(X+1));
                 }
                 y = cexpf(y*den);
-                *Y++ = *(float *)&y; *Y = *((float *)&y+1);
+                *Y = *(float *)&y; *++Y = *((float *)&y+1);
             }
         }
         else
@@ -190,7 +201,7 @@ int geomean_c (float *Y, const float *X, const size_t R, const size_t C, const s
                         y += clogf(*X + 1.0if**(X+1));
                     }
                     y = cexpf(y*den);
-                    *Y++ = *(float *)&y; *Y = *((float *)&y+1);
+                    *Y = *(float *)&y; *++Y = *((float *)&y+1);
                 }
             }
         }
@@ -210,7 +221,10 @@ int geomean_z (double *Y, const double *X, const size_t R, const size_t C, const
     _Complex double y;
 
     if (N==0) {}
-    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         y = 0.0 + 0.0i;
@@ -219,7 +233,7 @@ int geomean_z (double *Y, const double *X, const size_t R, const size_t C, const
             y += clog(*X + 1.0i**(X+1));
         }
         y = cexp(y*den);
-        *Y++ = *(double *)&y; *Y = *((double *)&y+1);
+        *Y = *(double *)&y; *++Y = *((double *)&y+1);
     }
     else
     {
@@ -237,7 +251,7 @@ int geomean_z (double *Y, const double *X, const size_t R, const size_t C, const
                     y += clog(*X + 1.0i**(X+1));
                 }
                 y = cexp(y*den);
-                *Y++ = *(double *)&y; *Y = *((double *)&y+1);
+                *Y = *(double *)&y; *++Y = *((double *)&y+1);
             }
         }
         else
@@ -252,7 +266,7 @@ int geomean_z (double *Y, const double *X, const size_t R, const size_t C, const
                         y += clog(*X + 1.0i**(X+1));
                     }
                     y = cexp(y*den);
-                    *Y++ = *(double *)&y; *Y = *((double *)&y+1);
+                    *Y = *(double *)&y; *++Y = *((double *)&y+1);
                 }
             }
         }

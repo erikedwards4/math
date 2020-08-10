@@ -48,7 +48,7 @@ int atanh_c (float *Y, const float *X, const size_t N)
         //y = catanhf(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0if**(X+1);
         y = 0.5f + clogf((1.0f+x)/(1.0f-x));
-        *Y++ = *(float *)&y; *Y = *((float *)&y+1);
+        *Y = *(float *)&y; *++Y = *((float *)&y+1);
     }
     
     return 0;
@@ -64,7 +64,7 @@ int atanh_z (double *Y, const double *X, const size_t N)
         //y = catanh(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0i**(X+1);
         y = 0.5 + clog((1.0+x)/(1.0-x));
-        *Y++ = *(double *)&y; *Y = *((double *)&y+1);
+        *Y = *(double *)&y; *++Y = *((double *)&y+1);
     }
     
     return 0;
@@ -98,7 +98,7 @@ int atanh_inplace_c (float *X, const size_t N)
         //y = catanhf(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0if**(X+1);
         y = 0.5f + clogf((1.0f+x)/(1.0f-x));
-        *X++ = *(float *)&y; *X = *((float *)&y+1);
+        *X = *(float *)&y; *++X = *((float *)&y+1);
     }
     
     return 0;
@@ -114,7 +114,7 @@ int atanh_inplace_z (double *X, const size_t N)
         //y = catanh(X[n2]+1.0i*X[n2+1]);
         x = *X + 1.0i**(X+1);
         y = 0.5 + clog((1.0+x)/(1.0-x));
-        *X++ = *(double *)&y; *X = *((double *)&y+1);
+        *X = *(double *)&y; *++X = *((double *)&y+1);
     }
     
     return 0;

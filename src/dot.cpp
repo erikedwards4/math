@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     //Description
     string descr;
     descr += "Vecs2scalar function for 2 inputs with broadcasting.\n";
-    descr += "Gets dot product for each corresponding vector of X1, X2 along dim.\n";
+    descr += "Gets dot product between each pair of vectors in X1, X2 along dim.\n";
     descr += "Thus, output Y has length 1 along dim.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     descr += "Use -d2 to get dot product along slices.\n";
     descr += "Use -d3 to get dot product along hyperslices.\n";
     descr += "\n";
-    descr += "X1 and X2 must have the same size and data type, or\n";
+    descr += "X1 and X2 must have the same size and data type, or \n";
     descr += "either X1 or X2 can be a single vector of appropriate length.\n";
     descr += "In that case, the single vector will be broadcast to the other input.\n";
     descr += "\n";
@@ -123,8 +123,8 @@ int main(int argc, char *argv[])
     if (i1.T!=i2.T) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same data type" << endl; return 1; }
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 1 (X1) found to be empty" << endl; return 1; }
     if (i2.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) found to be empty" << endl; return 1; }
-    if (!major_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same row/col major format unless vectors" << endl; return 1; }
     if (!bcast_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same size or broadcast-compatible sizes" << endl; return 1; }
+    if (!major_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same row/col major format unless vectors" << endl; return 1; }
     size_t L1 = (dim==0) ? i1.R : (dim==1) ? i1.C : (dim==2) ? i1.S : i1.H;
     size_t L2 = (dim==0) ? i2.R : (dim==1) ? i2.C : (dim==2) ? i2.S : i2.H;
     if (L1!=L2) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same length along dim" << endl; return 1; }

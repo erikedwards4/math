@@ -3,10 +3,8 @@
 //This is the exp of the std of logs for each vector.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
-#include <complex.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -31,8 +29,7 @@ int geostd_s (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0) {}
     else if (L==1)
     {
-        const float o = 1.0f;
-        cblas_scopy((int)N,&o,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
@@ -109,8 +106,7 @@ int geostd_d (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0) {}
     else if (L==1)
     {
-        const double o = 1.0;
-        cblas_dcopy((int)N,&o,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {

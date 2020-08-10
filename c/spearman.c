@@ -10,9 +10,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <cblas.h>
-#include <lapacke.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -76,14 +73,10 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
     if (N==0) {}
     else if (L==1)
     {
-        const float o = 1.0f;
-        cblas_scopy((int)N,&o,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
-        //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-        //cblas_scopy((int)L,X1,1,(float *)XI1,2); //this works, but not faster
-        //cblas_scopy((int)L,X2,1,(float *)XI2,2);
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
             XI1[l].val = *X1; XI1[l].ind = l;
@@ -93,9 +86,8 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
         for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
         for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-        *Y = (den-dsm*6)/(float)den;
+        *Y = (den-dsm*6) / (float)den;
         r1 -= L; r2 -= L;
-        //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
     }
     else
     {
@@ -117,7 +109,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                 for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
                 for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-                *Y = (den-dsm*6)/(float)den;
+                *Y = (den-dsm*6) / (float)den;
             }
         }
         else
@@ -138,7 +130,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                     for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
                     for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-                    *Y = (den-dsm*6)/(float)den;
+                    *Y = (den-dsm*6) / (float)den;
                 }
             }
         }
@@ -176,8 +168,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
     if (N==0) {}
     else if (L==1)
     {
-        const double o = 1.0;
-        cblas_dcopy((int)N,&o,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
@@ -190,7 +181,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
         for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
         for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-        *Y = (den-dsm*6)/(double)den;
+        *Y = (den-dsm*6) / (double)den;
         r1 -= L; r2 -= L;
     }
     else
@@ -213,7 +204,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                 for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
                 for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-                *Y = (den-dsm*6)/(double)den;
+                *Y = (den-dsm*6) / (double)den;
             }
         }
         else
@@ -234,7 +225,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                     for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
                     for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-                    *Y = (den-dsm*6)/(double)den;
+                    *Y = (den-dsm*6) / (double)den;
                 }
             }
         }

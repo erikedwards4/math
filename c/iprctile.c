@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <cblas.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -64,8 +63,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
     if (N==0) {}
     else if (L==1)
     {
-        float z = 0.0f;
-        cblas_scopy((int)N,&z,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
@@ -127,8 +125,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
     if (N==0) {}
     else if (L==1)
     {
-        double z = 0.0;
-        cblas_dcopy((int)N,&z,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {

@@ -11,9 +11,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
 #include <lapacke.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -33,47 +31,57 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
     if (p<0.0f || p>50.0f) { fprintf(stderr,"error in trim_s: p must be in [0 50]"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    const float p1 = (p/100.0f)*(L-1), p2 = (1.0f-q/100.0f)*(L-1);
+    const float p1 = (p/100.0f)*(Lx-1), p2 = (1.0f-q/100.0f)*(Lx-1);
     size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
     const size_t Ly = i2-i1+1;
 
     float *X1;
-    if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in trim_s: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in trim_s: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
-    else if (L==N)
+    else if (Lx==1)
     {
-        cblas_scopy((int)L,X,1,X1,1);
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
-        cblas_scopy((int)Ly,&X1[i1],1,Y,1);
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
+    else if (Lx==N)
+    {
+        for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+        X1 -= Lx;
+        if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+        X1 += i1;
+        for (size_t l=0; l<Ly; ++l, ++X1, ++Y) { *Y = *X1; }
+        X1 -= i1 + Ly;
     }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
         const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
-        const size_t V = N/L, G = V/B;
+        const size_t V = N/Lx, G = V/B;
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, Y+=Ly)
+            for (size_t v=0; v<V; ++v, X1-=i1+Ly)
             {
-                cblas_scopy((int)L,X,1,X1,1);
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
-                cblas_scopy((int)Ly,&X1[i1],1,Y,1);
+                for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                X1 -= Lx;
+                if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+                X1 += i1;
+                for (size_t l=0; l<Ly; ++l, ++X1, ++Y) { *Y = *X1; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(Ly-1))
+            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=i1+Ly, Y-=K*Ly-1)
                 {
-                    cblas_scopy((int)L,X,(int)K,X1,1);
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
-                    cblas_scopy((int)Ly,&X1[i1],1,Y,(int)K);
+                    for (size_t l=0; l<Lx; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= Lx;
+                    if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+                    X1 += i1;
+                    for (size_t l=0; l<Ly; ++l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
         }
@@ -90,47 +98,57 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
     if (p<0.0 || p>50.0) { fprintf(stderr,"error in trim_d: p must be in [0 50]"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    const double p1 = (p/100.0)*(L-1), p2 = (1.0-q/100.0)*(L-1);
+    const double p1 = (p/100.0)*(Lx-1), p2 = (1.0-q/100.0)*(Lx-1);
     size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
     const size_t Ly = i2-i1+1;
 
     double *X1;
-    if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in trim_d: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in trim_d: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
-    else if (L==N)
+    else if (Lx==1)
     {
-        cblas_dcopy((int)L,X,1,X1,1);
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
-        cblas_dcopy((int)Ly,&X1[i1],1,Y,1);
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
+    else if (Lx==N)
+    {
+        for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+        X1 -= Lx;
+        if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+        X1 += i1;
+        for (size_t l=0; l<Ly; ++l, ++X1, ++Y) { *Y = *X1; }
+        X1 -= i1 + Ly;
     }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
         const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
-        const size_t V = N/L, G = V/B;
+        const size_t V = N/Lx, G = V/B;
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, Y+=Ly)
+            for (size_t v=0; v<V; ++v, X1-=i1+Ly)
             {
-                cblas_dcopy((int)L,X,1,X1,1);
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
-                cblas_dcopy((int)Ly,&X1[i1],1,Y,1);
+                for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                X1 -= Lx;
+                if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+                X1 += i1;
+                for (size_t l=0; l<Ly; ++l, ++X1, ++Y) { *Y = *X1; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(Ly-1))
+            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=i1+Ly, Y-=K*Ly-1)
                 {
-                    cblas_dcopy((int)L,X,(int)K,X1,1);
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
-                    cblas_dcopy((int)Ly,&X1[i1],1,Y,(int)K);
+                    for (size_t l=0; l<Lx; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= Lx;
+                    if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+                    X1 += i1;
+                    for (size_t l=0; l<Ly; ++l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
         }
@@ -147,45 +165,51 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
     if (p<0.0f || p>50.0f) { fprintf(stderr,"error in trim_inplace_s: p must be in [0 50]"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    const float p1 = (p/100.0f)*(L-1), p2 = (1.0f-q/100.0f)*(L-1);
+    const float p1 = (p/100.0f)*(Lx-1), p2 = (1.0f-q/100.0f)*(Lx-1);
     size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
     const size_t Ly = i2-i1+1;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
-    else if (L==N)
+    else if (Lx==1)
     {
-        if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
-        cblas_scopy((int)Ly,&X[i1],1,Y,1);
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
+    else if (Lx==N)
+    {
+        if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+        X += i1;
+        for (size_t l=0; l<Ly; ++l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
         const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
-        const size_t V = N/L, G = V/B;
+        const size_t V = N/Lx, G = V/B;
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L-i1, Y+=Ly)
+            for (size_t v=0; v<V; ++v, X+=Lx-Ly-i1)
             {
-                if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+                if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
                 X += i1;
-                cblas_scopy((int)Ly,X,1,Y,1);
+                for (size_t l=0; l<Ly; ++l, ++X, ++Y) { *Y = *X; }
             }
         }
         else
         {
             float *X1;
-            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in trim_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(Ly-1))
+            if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in trim_s: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=i1+Ly, Y-=K*Ly-1)
                 {
-                    cblas_scopy((int)L,X,(int)K,X1,1);
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
-                    cblas_scopy((int)Ly,&X1[i1],1,Y,(int)K);
+                    for (size_t l=0; l<Lx; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= Lx;
+                    if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+                    X1 += i1;
+                    for (size_t l=0; l<Ly; ++l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
             free(X1);
@@ -202,45 +226,51 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
     if (p<0.0 || p>50.0) { fprintf(stderr,"error in trim_inplace_d: p must be in [0 50]"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    const double p1 = (p/100.0)*(L-1), p2 = (1.0-q/100.0)*(L-1);
+    const double p1 = (p/100.0)*(Lx-1), p2 = (1.0-q/100.0)*(Lx-1);
     size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
     const size_t Ly = i2-i1+1;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
-    else if (L==N)
+    else if (Lx==1)
     {
-        if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
-        cblas_dcopy((int)Ly,&X[i1],1,Y,1);
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
+    else if (Lx==N)
+    {
+        if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+        X += i1;
+        for (size_t l=0; l<Ly; ++l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
         const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
         const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
-        const size_t V = N/L, G = V/B;
+        const size_t V = N/Lx, G = V/B;
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L-i1, Y+=Ly)
+            for (size_t v=0; v<V; ++v, X+=Lx-Ly-i1)
             {
-                if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+                if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
                 X += i1;
-                cblas_dcopy((int)Ly,X,1,Y,1);
+                for (size_t l=0; l<Ly; ++l, ++X, ++Y) { *Y = *X; }
             }
         }
         else
         {
             double *X1;
-            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in trim_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(Ly-1))
+            if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in trim_d: problem with malloc. "); perror("malloc"); return 1; }
+            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=i1+Ly, Y-=K*Ly-1)
                 {
-                    cblas_dcopy((int)L,X,(int)K,X1,1);
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
-                    cblas_dcopy((int)Ly,&X1[i1],1,Y,(int)K);
+                    for (size_t l=0; l<Lx; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= Lx;
+                    if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+                    X1 += i1;
+                    for (size_t l=0; l<Ly; ++l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
             free(X1);

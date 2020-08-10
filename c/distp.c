@@ -6,8 +6,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -58,9 +56,10 @@ int distp_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
+            float sm;
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                float sm = 0.0f;
+                sm = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     sm += powf(fabsf(*X1-*X2),p);
@@ -84,11 +83,12 @@ int distp_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
+            float sm;
             for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    float sm = 0.0f;
+                    sm = 0.0f;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         sm += powf(fabsf(*X1-*X2),p);
@@ -141,9 +141,10 @@ int distp_d (double *Y, const double *X1, const double *X2, const size_t R1, con
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
+            double sm;
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                double sm = 0.0;
+                sm = 0.0;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
                     sm += pow(fabs(*X1-*X2),p);
@@ -167,11 +168,12 @@ int distp_d (double *Y, const double *X1, const double *X2, const size_t R1, con
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
+            double sm;
             for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    double sm = 0.0;
+                    sm = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         sm += pow(fabs(*X1-*X2),p);
@@ -205,20 +207,20 @@ int distp_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; ++n, ++Y)
+        for (size_t n=0; n<N; ++n, ++X1, ++X2, ++Y)
         {
-            dr = *X1++ - *X2++;
-            di = *X1++ - *X2++;
+            dr = *X1 - *X2;
+            di = *++X1 - *++X2;
             *Y = sqrtf(dr*dr+di*di);
         }
     }
     else if (L==N)
     {
         float sm = 0.0f;
-        for (size_t l=0; l<L; ++l)
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            dr = *X1++ - *X2++;
-            di = *X1++ - *X2++;
+            dr = *X1 - *X2;
+            di = *++X1 - *++X2;
             sm += powf(dr*dr+di*di,p2);
         }
         *Y = powf(sm,ip);
@@ -235,10 +237,10 @@ int distp_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 float sm = 0.0f;
-                for (size_t l=0; l<L; ++l)
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    dr = *X1++ - *X2++;
-                    di = *X1++ - *X2++;
+                    dr = *X1 - *X2;
+                    di = *++X1 - *++X2;
                     sm += powf(dr*dr+di*di,p2);
                 }
                 *Y = powf(sm,ip);
@@ -256,8 +258,8 @@ int distp_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
                     float sm = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
-                        dr = *X1++ - *X2++;
-                        di = *X1 - *X2;
+                        dr = *X1 - *X2;
+                        di = *++X1 - *++X2;
                         sm += powf(dr*dr+di*di,p2);
                     }
                     *Y = powf(sm,ip);
@@ -289,20 +291,20 @@ int distp_z (double *Y, const double *X1, const double *X2, const size_t R1, con
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; ++n, ++Y)
+        for (size_t n=0; n<N; ++n, ++X1, ++X2, ++Y)
         {
-            dr = *X1++ - *X2++;
-            di = *X1++ - *X2++;
+            dr = *X1 - *X2;
+            di = *++X1 - *++X2;
             *Y = sqrt(dr*dr+di*di);
         }
     }
     else if (L==N)
     {
         double sm = 0.0;
-        for (size_t l=0; l<L; ++l)
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            dr = *X1++ - *X2++;
-            di = *X1++ - *X2++;
+            dr = *X1 - *X2;
+            di = *++X1 - *++X2;
             sm += pow(dr*dr+di*di,p2);
         }
         *Y = pow(sm,ip);
@@ -319,10 +321,10 @@ int distp_z (double *Y, const double *X1, const double *X2, const size_t R1, con
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 double sm = 0.0;
-                for (size_t l=0; l<L; ++l)
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    dr = *X1++ - *X2++;
-                    di = *X1++ - *X2++;
+                    dr = *X1 - *X2;
+                    di = *++X1 - *++X2;
                     sm += pow(dr*dr+di*di,p2);
                 }
                 *Y = pow(sm,ip);
@@ -340,8 +342,8 @@ int distp_z (double *Y, const double *X1, const double *X2, const size_t R1, con
                     double sm = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
-                        dr = *X1++ - *X2++;
-                        di = *X1 - *X2;
+                        dr = *X1 - *X2;
+                        di = *++X1 - *++X2;
                         sm += pow(dr*dr+di*di,p2);
                     }
                     *Y = pow(sm,ip);

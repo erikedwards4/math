@@ -53,7 +53,7 @@ int cosh_c (float *Y, const float *X, const size_t N)
         xp = cexpf(*X + 1.0if**(X+1));
         xm = cexpf(-*X - 1.0if**(X+1));
         y = 0.5f * (xp+xm);
-        *Y++ = *(float *)&y; *Y = *((float *)&y+1);
+        *Y = *(float *)&y; *++Y = *((float *)&y+1);
     }
     
     return 0;
@@ -69,7 +69,7 @@ int cosh_z (double *Y, const double *X, const size_t N)
         xp = cexp(*X + 1.0i**(X+1));
         xm = cexp(-*X - 1.0i**(X+1));
         y = 0.5 * (xp+xm);
-        *Y++ = *(double *)&y; *Y = *((double *)&y+1);
+        *Y = *(double *)&y; *++Y = *((double *)&y+1);
     }
     
     return 0;
@@ -108,7 +108,7 @@ int cosh_inplace_c (float *X, const size_t N)
         xp = cexpf(*X + 1.0if**(X+1));
         xm = cexpf(-*X - 1.0if**(X+1));
         y = 0.5f * (xp+xm);
-        *X++ = *(float *)&y; *X = *((float *)&y+1);
+        *X = *(float *)&y; *++X = *((float *)&y+1);
     }
     
     return 0;
@@ -124,7 +124,7 @@ int cosh_inplace_z (double *X, const size_t N)
         xp = cexp(*X + 1.0i**(X+1));
         xm = cexp(-*X - 1.0i**(X+1));
         y = 0.5 * (xp+xm);
-        *X++ = *(double *)&y; *X = *((double *)&y+1);
+        *X = *(double *)&y; *++X = *((double *)&y+1);
     }
     
     return 0;

@@ -44,10 +44,10 @@ int main(int argc, char *argv[])
     descr += "For complex X, this uses the definition |x| = |xr| + |xi|,\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to get amax indices along cols.\n";
-    descr += "Use -d1 to get amax indices along rows.\n";
-    descr += "Use -d2 to get amax indices along slices.\n";
-    descr += "Use -d3 to get amax indices along hyperslices.\n";
+    descr += "Use -d0 to get indices along cols.\n";
+    descr += "Use -d1 to get indices along rows.\n";
+    descr += "Use -d2 to get indices along slices.\n";
+    descr += "Use -d3 to get indices along hyperslices.\n";
     descr += "\n";
     descr += "Examples:\n";
     descr += "$ iamax X -o Y \n";

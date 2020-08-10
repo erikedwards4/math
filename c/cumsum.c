@@ -2,8 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -29,7 +27,10 @@ int cumsum_s (float *Y, const float *X, const size_t R, const size_t C, const si
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y++ = *X++;
@@ -82,7 +83,10 @@ int cumsum_d (double *Y, const double *X, const size_t R, const size_t C, const 
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y++ = *X++;
@@ -135,7 +139,10 @@ int cumsum_c (float *Y, const float *X, const size_t R, const size_t C, const si
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y++ = *X++; *Y++ = *X++;
@@ -152,15 +159,15 @@ int cumsum_c (float *Y, const float *X, const size_t R, const size_t C, const si
             for (size_t v=0; v<V; ++v)
             {
                 *Y++ = *X++; *Y++ = *X++;
-                for (size_t l=1; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
+                for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v) { *Y++ = *X++; *Y++ = *X++; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             for (size_t l=1; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++Y) { *Y = *(Y-2*V) + *X++; ++Y; *Y = *(Y-2*V) + *X++; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *(Y-2*V) + *X; ++Y; *Y = *(Y-2*V) + *++X; }
             }
         }
         else
@@ -188,7 +195,10 @@ int cumsum_z (double *Y, const double *X, const size_t R, const size_t C, const 
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y++ = *X++; *Y++ = *X++;
@@ -205,15 +215,15 @@ int cumsum_z (double *Y, const double *X, const size_t R, const size_t C, const 
             for (size_t v=0; v<V; ++v)
             {
                 *Y++ = *X++; *Y++ = *X++;
-                for (size_t l=1; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
+                for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v) { *Y++ = *X++; *Y++ = *X++; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             for (size_t l=1; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++Y) { *Y = *(Y-2*V) + *X++; ++Y; *Y = *(Y-2*V) + *X++; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *(Y-2*V) + *X; ++Y; *Y = *(Y-2*V) + *++X; }
             }
         }
         else

@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Vec2scalar operation.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
     descr += "Gets pth percentile for each vector in X along dim.\n";
     descr += "\n";
     descr += "Use -p (--p) to give the percentile in [0 100] [default=50].\n";

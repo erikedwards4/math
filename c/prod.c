@@ -2,8 +2,6 @@
 //Gets product of elements for each vector in X along dim.
 
 #include <stdio.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -24,11 +22,15 @@ int prod_s (float *Y, const float *X, const size_t R, const size_t C, const size
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        *Y = *X;
-        for (size_t l=1; l<L; ++l, ++X) { *Y *= *X; }
+        float pr = *X;
+        for (size_t l=1; l<L; ++l, ++X) { pr *= *X; }
+        *Y = pr;
     }
     else
     {
@@ -38,10 +40,12 @@ int prod_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1 && (G==1 || B==1))
         {
+            float pr;
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { *Y *= *X; }
+                pr = *X++;
+                for (size_t l=1; l<L; ++l, ++X) { pr *= *X; }
+                *Y = pr;
             }
         }
         else if (G==1)
@@ -55,12 +59,14 @@ int prod_s (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else
         {
+            float pr;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = *X; X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { *Y *= *X; }
+                    pr = *X; X += K;
+                    for (size_t l=1; l<L; ++l, X+=K) { pr *= *X; }
+                    *Y = pr;
                 }
             }
         }
@@ -78,11 +84,15 @@ int prod_d (double *Y, const double *X, const size_t R, const size_t C, const si
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        *Y = *X;
-        for (size_t l=1; l<L; ++l, ++X) { *Y *= *X; }
+        double pr = *X;
+        for (size_t l=1; l<L; ++l, ++X) { pr *= *X; }
+        *Y = pr;
     }
     else
     {
@@ -92,10 +102,12 @@ int prod_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
+            double pr;
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { *Y *= *X; }
+                pr = *X++;
+                for (size_t l=1; l<L; ++l, ++X) { pr *= *X; }
+                *Y = pr;
             }
         }
         else if (G==1)
@@ -109,12 +121,14 @@ int prod_d (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else
         {
+            double pr;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = *X; X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { *Y *= *X; }
+                    pr = *X; X += K;
+                    for (size_t l=1; l<L; ++l, X+=K) { pr *= *X; }
+                    *Y = pr;
                 }
             }
         }
@@ -133,7 +147,10 @@ int prod_c (float *Y, const float *X, const size_t R, const size_t C, const size
     float yr, yi;
 
     if (N==0) {}
-    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y = *X++; *(Y+1) = *X++;
@@ -183,7 +200,7 @@ int prod_c (float *Y, const float *X, const size_t R, const size_t C, const size
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y+=2)
                 {
-                    *Y = *X++; *(Y+1) = *(X+1); X += 2*K;
+                    *Y = *X; *(Y+1) = *(X+1); X += 2*K;
                     for (size_t l=1; l<L; ++l, X+=2*K)
                     {
                         yr = *X**Y - *(X+1)**(Y+1);
@@ -208,7 +225,10 @@ int prod_z (double *Y, const double *X, const size_t R, const size_t C, const si
     double yr, yi;
 
     if (N==0) {}
-    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y = *X++; *(Y+1) = *X++;
@@ -258,7 +278,7 @@ int prod_z (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y+=2)
                 {
-                    *Y = *X++; *(Y+1) = *(X+1); X += 2*K;
+                    *Y = *X; *(Y+1) = *(X+1); X += 2*K;
                     for (size_t l=1; l<L; ++l, X+=2*K)
                     {
                         yr = *X**Y - *(X+1)**(Y+1);

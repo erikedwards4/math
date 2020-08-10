@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
     descr += "Use -p (--p) to give the lower percentile in [0 50) [default=10].\n";
     descr += "Typical choices for p are 10 and 25.\n";
     descr += "\n";
-    descr += "Use -q (--q) to give the upper percentile in [0 50) [default=p1].\n";
-    descr += "Typically this is equal to p1.\n";
+    descr += "Use -q (--q) to give the upper percentile in [0 50) [default=p].\n";
+    descr += "Typically this is equal to p.\n";
     descr += "\n";
     descr += "For each vector, winsorizing works as follows:\n";
     descr += "The min value above the pth percentile replaces all values below it.\n";

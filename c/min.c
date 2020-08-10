@@ -9,8 +9,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -31,7 +29,10 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y = *X++;
@@ -86,7 +87,10 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y = *X++;
@@ -142,7 +146,10 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     float xx, mn;
 
     if (N==0) {}
-    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         mn = *X**X + *(X+1)**(X+1);
@@ -178,7 +185,7 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
             if (!(mns=(float *)malloc(V*sizeof(float)))) { fprintf(stderr,"error in min_c: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t l=0; l<L; ++l, Y-=2*V, mns-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, Y+=2, mns++)
+                for (size_t v=0; v<V; ++v, X+=2, Y+=2, ++mns)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (l==0 || xx<*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -217,7 +224,10 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     double xx, mn;
 
     if (N==0) {}
-    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         mn = *X**X + *(X+1)**(X+1);
@@ -253,7 +263,7 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
             if (!(mns=(double *)malloc(V*sizeof(double)))) { fprintf(stderr,"error in min_z: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t l=0; l<L; ++l, Y-=2*V, mns-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, Y+=2, mns++)
+                for (size_t v=0; v<V; ++v, X+=2, Y+=2, ++mns)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (l==0 || xx<*mns) { *mns = xx; *Y = *X; *(Y+1) = *(X+1); }

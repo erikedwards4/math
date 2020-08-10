@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -34,7 +33,13 @@ int asum_s (float *Y, const float *X, const size_t R, const size_t C, const size
     }
     else if (L==N)
     {
-        *Y = cblas_sasum((int)L,X,1);
+        if (L<20000)
+        {
+            float sm = 0.0f;
+            for (size_t l=0; l<L; ++l, ++X) { sm += fabsf(*X); }
+            *Y = sm;
+        }
+        else { *Y = cblas_sasum((int)L,X,1); }
     }
     else
     {
@@ -44,31 +49,43 @@ int asum_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, ++Y)
+            if (L<25)
             {
-               *Y = cblas_sasum((int)L,X,1);
+                float sm;
+                for (size_t v=0; v<V; ++v, ++Y)
+                {
+                    sm = 0.0f;
+                    for (size_t l=0; l<L; ++l, ++X) { sm += fabsf(*X); }
+                    *Y = sm;
+                }
+            }
+            else
+            {
+                for (size_t v=0; v<V; ++v, X+=L, ++Y)
+                {
+                    *Y = cblas_sasum((int)L,X,1);
+                }
             }
         }
         else if (G==1)
         {
-            // for (size_t v=0; v<V; ++v, ++X, ++Y)
-            // {
-            //    *Y = cblas_sasum((int)L,X,(int)V);
-            // }
-            const float z = 0.0f;
-            cblas_scopy((int)V,&z,0,Y,1);
-            for (size_t l=0; l<L; ++l, Y-=V)
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = fabsf(*X); }
+            Y -= V;
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += fabsf(*X); }
             }
         }
         else
         {
+            float sm;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                   *Y = cblas_sasum((int)L,X,(int)K);
+                    sm = 0.0f;
+                    for (size_t l=0; l<L; ++l, X+=K) { sm += fabsf(*X); }
+                    *Y = sm;
                 }
             }
         }
@@ -92,7 +109,13 @@ int asum_d (double *Y, const double *X, const size_t R, const size_t C, const si
     }
     else if (L==N)
     {
-        *Y = cblas_dasum((int)L,X,1);
+        if (L<20000)
+        {
+            double sm = 0.0;
+            for (size_t l=0; l<L; ++l, ++X) { sm += fabs(*X); }
+            *Y = sm;
+        }
+        else { *Y = cblas_dasum((int)L,X,1); }
     }
     else
     {
@@ -102,27 +125,43 @@ int asum_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, ++Y)
+            if (L<25)
             {
-               *Y = cblas_dasum((int)L,X,1);
+                double sm;
+                for (size_t v=0; v<V; ++v, ++Y)
+                {
+                    sm = 0.0;
+                    for (size_t l=0; l<L; ++l, ++X) { sm += fabs(*X); }
+                    *Y = sm;
+                }
+            }
+            else
+            {
+                for (size_t v=0; v<V; ++v, X+=L, ++Y)
+                {
+                    *Y = cblas_dasum((int)L,X,1);
+                }
             }
         }
         else if (G==1)
         {
-            const double z = 0.0;
-            cblas_dcopy((int)V,&z,0,Y,1);
-            for (size_t l=0; l<L; ++l, Y-=V)
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = fabs(*X); }
+            Y -= V;
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += fabs(*X); }
             }
         }
         else
         {
+            double sm;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                   *Y = cblas_dasum((int)L,X,(int)K);
+                    sm = 0.0;
+                    for (size_t l=0; l<L; ++l, X+=K) { sm += fabs(*X); }
+                    *Y = sm;
                 }
             }
         }
@@ -146,7 +185,13 @@ int asum_c (float *Y, const float *X, const size_t R, const size_t C, const size
     }
     else if (L==N)
     {
-        *Y = cblas_scasum((int)L,X,1);
+        if (L<5000)
+        {
+            float sm = 0.0f;
+            for (size_t l=0; l<L; ++l, X+=2) { sm += fabsf(*X) + fabsf(*(X+1)); }
+            *Y = sm;
+        }
+        else { *Y = cblas_scasum((int)L,X,1); }
     }
     else
     {
@@ -163,9 +208,9 @@ int asum_c (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else if (G==1)
         {
-            const float z = 0.0f;
-            cblas_scopy((int)V,&z,0,Y,1);
-            for (size_t l=0; l<L; ++l, Y-=V)
+            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = fabsf(*X) + fabsf(*(X+1)); }
+            Y -= V;
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += fabsf(*X) + fabsf(*(X+1)); }
             }
@@ -200,7 +245,13 @@ int asum_z (double *Y, const double *X, const size_t R, const size_t C, const si
     }
     else if (L==N)
     {
-        *Y = cblas_dzasum((int)L,X,1);
+        if (L<5000)
+        {
+            double sm = 0.0;
+            for (size_t l=0; l<L; ++l, X+=2) { sm += fabs(*X) + fabs(*(X+1)); }
+            *Y = sm;
+        }
+        else { *Y = cblas_dzasum((int)L,X,1); }
     }
     else
     {
@@ -217,9 +268,9 @@ int asum_z (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else if (G==1)
         {
-            const double z = 0.0;
-            cblas_dcopy((int)V,&z,0,Y,1);
-            for (size_t l=0; l<L; ++l, Y-=V)
+            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = fabs(*X) + fabs(*(X+1)); }
+            Y -= V;
+            for (size_t l=1; l<L; ++l, Y-=V)
             {
                 for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += fabs(*X) + fabs(*(X+1)); }
             }

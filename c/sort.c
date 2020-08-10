@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
 #include <lapacke.h>
 #include <time.h>
 
@@ -145,10 +144,14 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        cblas_scopy((int)N,X,1,Y,1);
+        for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = *X; }
+        Y -= L;
         if (LAPACKE_slasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
         //qsort(Y,L,sizeof(float),comp);
     }
@@ -160,9 +163,12 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, Y+=L)
+            //for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+            //Y -= N; //surprisingly, only same speed
+            for (size_t v=0; v<V; ++v, Y+=L)
             {
-                cblas_scopy((int)L,X,1,Y,1);
+                for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = *X; }
+                Y -= L;
                 if (LAPACKE_slasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
             }
         }
@@ -172,11 +178,12 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sort_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=L, Y-=K*L-1)
                 {
-                    cblas_scopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= L;
                     if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
-                    cblas_scopy((int)L,X1,1,Y,(int)K);
+                    for (size_t l=0; l<L; ++l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
             free(X1);
@@ -196,10 +203,13 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
     const char id = (ascend) ? 'I' : 'D';
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        cblas_dcopy((int)N,X,1,Y,1);
+        for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = *X; }
         if (LAPACKE_dlasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
     }
     else
@@ -210,9 +220,10 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, Y+=L)
+            for (size_t v=0; v<V; ++v, Y+=L)
             {
-                cblas_dcopy((int)L,X,1,Y,1);
+                for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = *X; }
+                Y -= L;
                 if (LAPACKE_dlasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
             }
         }
@@ -222,11 +233,12 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sort_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=L, Y-=K*L-1)
                 {
-                    cblas_dcopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= L;
                     if (LAPACKE_dlasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
-                    cblas_dcopy((int)L,X1,1,Y,(int)K);
+                    for (size_t l=0; l<L; ++l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
             free(X1);
@@ -246,10 +258,13 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_c : cmp_descend_c;
 
     if (N==0) {}
-    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        cblas_ccopy((int)N,X,1,Y,1);
+        for (size_t l=0; l<2*L; ++l, ++X, ++Y) { *Y = *X; }
         qsort(Y,L,2*sizeof(float),comp);
     }
     else
@@ -260,9 +275,10 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=2*L, Y+=2*L)
+            for (size_t v=0; v<V; ++v, Y+=2*L)
             {
-                cblas_ccopy((int)L,X,1,Y,1);
+                for (size_t l=0; l<2*L; ++l, ++X, ++Y) { *Y = *X; }
+                Y -= 2*L;
                 qsort(Y,L,2*sizeof(float),comp);
             }
         }
@@ -272,11 +288,13 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
             if (!(X1=(float *)malloc(2*L*sizeof(float)))) { fprintf(stderr,"error in sort_c: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1), Y+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X+=2, Y+=2)
+                for (size_t b=0; b<B; ++b, X1-=2*L, X-=K*L-1, Y-=K*L-1)
                 {
-                    cblas_ccopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=2*K-1, ++X1) { *X1 = *X; *++X1 = *++X; }
+                    X1 -= 2*L;
                     qsort(X1,L,2*sizeof(float),comp);
-                    cblas_ccopy((int)L,X1,1,Y,(int)K);
+                    X1 -= 2*L;
+                    for (size_t l=0; l<L; ++l, ++X1, Y+=2*K-1) { *Y = *X1; *++Y = *++X1; }
                 }
             }
             free(X1);
@@ -296,10 +314,13 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_z : cmp_descend_z;
 
     if (N==0) {}
-    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
-        cblas_zcopy((int)N,X,1,Y,1);
+        for (size_t l=0; l<2*L; ++l, ++X, ++Y) { *Y = *X; }
         qsort(Y,L,2*sizeof(double),comp);
     }
     else
@@ -310,9 +331,10 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=2*L, Y+=2*L)
+            for (size_t v=0; v<V; ++v, Y+=2*L)
             {
-                cblas_zcopy((int)L,X,1,Y,1);
+                for (size_t l=0; l<2*L; ++l, ++X, ++Y) { *Y = *X; }
+                Y -= 2*L;
                 qsort(Y,L,2*sizeof(double),comp);
             }
         }
@@ -322,11 +344,13 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
             if (!(X1=(double *)malloc(2*L*sizeof(double)))) { fprintf(stderr,"error in sort_z: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1), Y+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X+=2, Y+=2)
+                for (size_t b=0; b<B; ++b, X1-=2*L, X-=K*L-1, Y-=K*L-1)
                 {
-                    cblas_zcopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=2*K-1, ++X1) { *X1 = *X; *++X1 = *++X; }
+                    X1 -= 2*L;
                     qsort(X1,L,2*sizeof(double),comp);
-                    cblas_zcopy((int)L,X1,1,Y,(int)K);
+                    X1 -= 2*L;
+                    for (size_t l=0; l<L; ++l, ++X1, Y+=2*K-1) { *Y = *X1; *++Y = *++X1; }
                 }
             }
             free(X1);
@@ -371,20 +395,13 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0; b<B; ++b, ++X1, X+=K+1)
                 {
                     for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    //X -= K*L; X1 -= L;
-                    //cblas_scopy((int)L,X,(int)K,X1,1);
                     if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
-                    struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-                    //X -= K*L;
-                    //cblas_scopy((int)L,X1,1,X,(int)K);
                     X1 += L-1; X -= K;
                     for (size_t l=0; l<L; ++l, --X1, X-=K) { *X = *X1; }
-                    ++X1; X += K;
-                    clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
                 }
             }
             free(X1);
@@ -427,11 +444,13 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0; b<B; ++b, ++X1, X+=K+1)
                 {
-                    cblas_dcopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    X1 -= L;
                     if (LAPACKE_dlasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
-                    cblas_dcopy((int)L,X1,1,X,(int)K);
+                    X1 += L-1; X -= K;
+                    for (size_t l=0; l<L; ++l, --X1, X-=K) { *X = *X1; }
                 }
             }
             free(X1);
@@ -474,11 +493,13 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
             if (!(X1=(float *)malloc(2*L*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X+=2)
+                for (size_t b=0; b<B; ++b, X1+=2, X+=2*K+2)
                 {
-                    cblas_ccopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=2*K-1, ++X1) { *X1 = *X; *++X1 = *++X; }
+                    X1 -= 2*L;
                     qsort(X1,L,2*sizeof(float),comp);
-                    cblas_ccopy((int)L,X1,1,X,(int)K);
+                    X1 += 2*L-2; X -= 2*K;
+                    for (size_t l=0; l<L; ++l, X1-=2, X-=2*K) { *X = *X1; *(X+1) = *(X1+1); }
                 }
             }
             free(X1);
@@ -521,11 +542,13 @@ int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
             if (!(X1=(double *)malloc(2*L*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X+=2)
+                for (size_t b=0; b<B; ++b, X1+=2, X+=2*K+2)
                 {
-                    cblas_zcopy((int)L,X,(int)K,X1,1);
+                    for (size_t l=0; l<L; ++l, X+=2*K-1, ++X1) { *X1 = *X; *++X1 = *++X; }
+                    X1 -= 2*L;
                     qsort(X1,L,2*sizeof(double),comp);
-                    cblas_zcopy((int)L,X1,1,X,(int)K);
+                    X1 += 2*L-2; X -= 2*K;
+                    for (size_t l=0; l<L; ++l, X1-=2, X-=2*K) { *X = *X1; *(X+1) = *(X1+1); }
                 }
             }
             free(X1);

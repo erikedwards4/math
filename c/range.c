@@ -6,7 +6,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <cblas.h>
 #include <lapacke.h>
 
 #ifdef __cplusplus
@@ -27,7 +26,10 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     float mn, mx;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
+    }
     else if (L==N)
     {
         mn = mx = *X++;
@@ -63,11 +65,11 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in range_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X1-=L, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    cblas_scopy((int)L,X,(int)K,X1,1);
-                    mn = mx = *X1++;
-                    for (size_t l=1; l<L; ++l, X1++)
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    mn = mx = *--X1;
+                    for (size_t l=1; l<L; ++l, --X1)
                     {
                         if (*X1<mn) { mn = *X1; }
                         else if (*X1>mx) { mx = *X1; }
@@ -92,7 +94,10 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
     double mn, mx;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
+    }
     else if (L==N)
     {
         mn = mx = *X++;
@@ -128,11 +133,11 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in range_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X1-=L, ++X, ++Y)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    cblas_dcopy((int)L,X,(int)K,X1,1);
-                    mn = mx = *X1++;
-                    for (size_t l=1; l<L; ++l, X1++)
+                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    mn = mx = *--X1;
+                    for (size_t l=1; l<L; ++l, --X1)
                     {
                         if (*X1<mn) { mn = *X1; }
                         else if (*X1>mx) { mx = *X1; }

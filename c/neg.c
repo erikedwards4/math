@@ -5,7 +5,6 @@
 //and in-place version was defintely faster.
 
 #include <stdio.h>
-#include <cblas.h>
 
 #ifdef __cplusplus
 namespace codee {

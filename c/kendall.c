@@ -2,9 +2,6 @@
 //Kendall rank correlation coefficient for each pair of vectors.
 
 #include <stdio.h>
-#include <cblas.h>
-#include <lapacke.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -34,8 +31,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
     if (N==0) {}
     else if (L==1)
     {
-        const float o = 1.0f;
-        cblas_scopy((int)N,&o,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
@@ -48,7 +44,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                 ssm += s1 * s2;
             }
         }
-        *Y = 2*ssm/den;
+        *Y = 2 * ssm / den;
     }
     else
     {
@@ -71,7 +67,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                         ssm += s1 * s2;
                     }
                 }
-                *Y = 2*ssm/den;
+                *Y = 2 * ssm / den;
             }
         }
         else
@@ -93,7 +89,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                             ssm += s1 * s2;
                         }
                     }
-                    *Y = 2*ssm/den;
+                    *Y = 2 * ssm / den;
                 }
             }
         }
@@ -122,8 +118,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
     if (N==0) {}
     else if (L==1)
     {
-        const double o = 1.0;
-        cblas_dcopy((int)N,&o,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
@@ -136,7 +131,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                 ssm += s1 * s2;
             }
         }
-        *Y = 2*ssm/den;
+        *Y = 2 * ssm / den;
     }
     else
     {
@@ -159,7 +154,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                         ssm += s1 * s2;
                     }
                 }
-                *Y = 2*ssm/den;
+                *Y = 2 * ssm / den;
             }
         }
         else
@@ -181,7 +176,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                             ssm += s1 * s2;
                         }
                     }
-                    *Y = 2*ssm/den;
+                    *Y = 2 * ssm / den;
                 }
             }
         }

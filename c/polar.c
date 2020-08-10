@@ -5,8 +5,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -27,20 +25,20 @@ int polar_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
 
     if (N1==1)
     {
-        for (size_t n=0; n<N; ++n, ++X2) { *Y++ = *X1 * cosf(*X2); *Y++ = *X1 * sinf(*X2); }
+        for (size_t n=0; n<N; ++n, ++X2, ++Y) { *Y = *X1 * cosf(*X2); *++Y = *X1 * sinf(*X2); }
         //for (size_t n=0, n2=0; n<N; ++n, n2+=2) { Y[n2] = *X1 * cosf(*X2); Y[n2+1] = *X1 * sinf(*X2); }
     }
     else if (N2==1)
     {
         const float cosx = cosf(*X2), sinx = sinf(*X2);
-        for (size_t n=0; n<N; ++n, ++X1) { *Y++ = *X1 * cosx; *Y++ = *X1 * sinx; }
+        for (size_t n=0; n<N; ++n, ++X1, ++Y) { *Y = *X1 * cosx; *++Y = *X1 * sinx; }
         //for (size_t n=0, n2=0; n<N; ++n, n2+=2) { Y[n2] = *X1 * cosx; Y[n2+1] = *X1 * sinx; }
         //cblas_scopy((int)N,X1,1,Y,2); cblas_scopy((int)N,X1,1,&Y[1],2);
         //cblas_sscal((int)N,cosx,Y,2); cblas_sscal((int)N,sinx,&Y[1],2);
     }
     else if (N1==N2)
     {
-        for (size_t n=0; n<N; ++n, ++X1, ++X2) { *Y++ = *X1 * cosf(*X2); *Y++ = *X1 * sinf(*X2); }
+        for (size_t n=0; n<N; ++n, ++X1, ++X2, ++Y) { *Y = *X1 * cosf(*X2); *++Y = *X1 * sinf(*X2); }
         //for (size_t n=0, n2=0; n<N; ++n, n2+=2) { Y[n2] = *X1 * cosf(*X2); Y[n2+1] = *X1 * sinf(*X2); }
     }
     else if (iscolmajor)
@@ -100,16 +98,16 @@ int polar_d (double *Y, const double *X1, const double *X2, const size_t R1, con
 
     if (N1==1)
     {
-        for (size_t n=0; n<N; ++n, ++X2) { *Y++ = *X1 * cos(*X2); *Y++ = *X1 * sin(*X2); }
+        for (size_t n=0; n<N; ++n, ++X2, ++Y) { *Y = *X1 * cos(*X2); *++Y = *X1 * sin(*X2); }
     }    
     else if (N2==1)
     {
         const double cosx = cos(*X2), sinx = sin(*X2);
-        for (size_t n=0; n<N; ++n, ++X1) { *Y++ = *X1 * cosx; *Y++ = *X1 * sinx; }
+        for (size_t n=0; n<N; ++n, ++X1, ++Y) { *Y = *X1 * cosx; *++Y = *X1 * sinx; }
     }
     else if (N1==N2)
     {
-        for (size_t n=0; n<N; ++n, ++X1, ++X2) { *Y++ = *X1 * cos(*X2); *Y++ = *X1 * sin(*X2); }
+        for (size_t n=0; n<N; ++n, ++X1, ++X2, ++Y) { *Y = *X1 * cos(*X2); *++Y = *X1 * sin(*X2); }
     }
     else if (iscolmajor)
     {

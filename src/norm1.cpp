@@ -38,8 +38,11 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Gets 1-norm (sum of absolute-values) along dim of X.\n";
-    descr += "This is the 'taxicab' (L1) norm of each vector in X.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
+    descr += "Gets L1 norm (taxicab) for each vector in X along dim.\n";
+    descr += "\n";
+    descr += "This is the sum of absolute-values for each vector in X.\n";
+    descr += "This is identical to asum for the real-valued case only.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Use -d0 to get norm along cols.\n";

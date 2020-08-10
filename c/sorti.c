@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <cblas.h>
 #include <time.h>
 
 #ifdef __cplusplus
@@ -13,6 +12,7 @@ namespace codee {
 extern "C" {
 #endif
 
+//It is faster to keep the inds as the same data type as the vals.
 typedef struct { float val; float ind; } FLT;
 typedef struct { double val; double ind; } DBL;
 typedef struct { float r; float i; float ind; } CFLT;
@@ -141,8 +141,7 @@ int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     if (N==0) {}
     else if (L==1)
     {
-        const float z = 0.0f;
-        cblas_scopy((int)N,&z,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
@@ -198,8 +197,7 @@ int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const s
     if (N==0) {}
     else if (L==1)
     {
-        const double z = 0.0;
-        cblas_dcopy((int)N,&z,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
@@ -255,8 +253,7 @@ int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     if (N==0) {}
     else if (L==1)
     {
-        const float z = 0.0f;
-        cblas_scopy((int)N,&z,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
@@ -312,8 +309,7 @@ int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const s
     if (N==0) {}
     else if (L==1)
     {
-        const double z = 0.0;
-        cblas_dcopy((int)N,&z,0,Y,1);
+        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
@@ -369,8 +365,7 @@ int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
     if (N==0) {}
     else if (L==1)
     {
-        const float z = 0.0f;
-        cblas_scopy((int)N,&z,0,X,1);
+        for (size_t n=0; n<N; ++n, ++X) { *X = 0.0f; }
     }
     else if (L==N)
     {
@@ -426,8 +421,7 @@ int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
     if (N==0) {}
     else if (L==1)
     {
-        const double z = 0.0;
-        cblas_dcopy((int)N,&z,0,X,1);
+        for (size_t n=0; n<N; ++n, ++X) { *X = 0.0; }
     }
     else if (L==N)
     {

@@ -43,7 +43,7 @@ int reciprocal_c (float *Y, const float *X, const size_t N)
     {
         xr = *X++;
         sq = xr*xr + *X**X;
-        *Y++ = xr/sq; *Y = -*X/sq;
+        *Y = xr/sq; *++Y = -*X/sq;
     }
     
     return 0;
@@ -58,7 +58,7 @@ int reciprocal_z (double *Y, const double *X, const size_t N)
     {
         xr = *X++;
         sq = xr*xr + *X**X;
-        *Y++ = xr/sq; *Y = -*X/sq;
+        *Y = xr/sq; *++Y = -*X/sq;
     }
     
     return 0;
@@ -89,7 +89,7 @@ int reciprocal_inplace_c (float *X, const size_t N)
     {
         xr = *X; xi = *(X+1);
         sq = xr*xr + xi*xi;
-        *X++ = xr/sq; *X = -xi/sq;
+        *X = xr/sq; *++X = -xi/sq;
     }
     
     return 0;
@@ -104,7 +104,7 @@ int reciprocal_inplace_z (double *X, const size_t N)
     {
         xr = *X; xi = *(X+1);
         sq = xr*xr + xi*xi;
-        *X++ = xr/sq; *X = -xi/sq;
+        *X = xr/sq; *++X = -xi/sq;
     }
     
     return 0;

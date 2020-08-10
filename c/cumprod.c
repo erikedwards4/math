@@ -2,8 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -29,7 +27,10 @@ int cumprod_s (float *Y, const float *X, const size_t R, const size_t C, const s
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_scopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y++ = *X++;
@@ -82,7 +83,10 @@ int cumprod_d (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_dcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y++ = *X++;
@@ -135,7 +139,10 @@ int cumprod_c (float *Y, const float *X, const size_t R, const size_t C, const s
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_ccopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y++ = *X++; *Y++ = *X++;
@@ -156,15 +163,15 @@ int cumprod_c (float *Y, const float *X, const size_t R, const size_t C, const s
             for (size_t v=0; v<V; ++v)
             {
                 *Y++ = *X++; *Y++ = *X++;
-                for (size_t l=1; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
+                for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v) { *Y++ = *X++; *Y++ = *X++; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             for (size_t l=1; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++Y) { *Y = *(Y-2*V) + *X++; ++Y; *Y = *(Y-2*V) + *X++; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *(Y-2*V) + *X; ++Y; *Y = *(Y-2*V) + *++X; }
             }
         }
         else
@@ -192,7 +199,10 @@ int cumprod_z (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
     if (N==0) {}
-    else if (L==1) { cblas_zcopy((int)N,X,1,Y,1); }
+    else if (L==1)
+    {
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+    }
     else if (L==N)
     {
         *Y++ = *X++; *Y++ = *X++;
@@ -209,15 +219,15 @@ int cumprod_z (double *Y, const double *X, const size_t R, const size_t C, const
             for (size_t v=0; v<V; ++v)
             {
                 *Y++ = *X++; *Y++ = *X++;
-                for (size_t l=1; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
+                for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v) { *Y++ = *X++; *Y++ = *X++; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             for (size_t l=1; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++Y) { *Y = *(Y-2*V) + *X++; ++Y; *Y = *(Y-2*V) + *X++; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *(Y-2*V) + *X; ++Y; *Y = *(Y-2*V) + *++X; }
             }
         }
         else
@@ -353,12 +363,12 @@ int cumprod_inplace_c (float *X, const size_t R, const size_t C, const size_t S,
     else if (L==N)
     {
         c = *X++; d = *X++;
-        for (size_t l=1; l<L; ++l)
+        for (size_t l=1; l<L; ++l, ++X)
         {
             xr = *X; xi = *(X+1);
             *X = xr*c - xi*d;
             *++X = xr*d + xi*c;
-            c = *(X-1); d = *X++;
+            c = *(X-1); d = *X;
         }
     }
     else
@@ -372,12 +382,12 @@ int cumprod_inplace_c (float *X, const size_t R, const size_t C, const size_t S,
             for (size_t v=0; v<V; ++v)
             {
                 c = *X++; d = *X++;
-                for (size_t l=1; l<L; ++l)
+                for (size_t l=1; l<L; ++l, ++X)
                 {
                     xr = *X; xi = *(X+1);
                     *X = xr*c - xi*d;
                     *++X = xr*d + xi*c;
-                    c = *(X-1); d = *X++;
+                    c = *(X-1); d = *X;
                 }
             }
         }
@@ -386,12 +396,12 @@ int cumprod_inplace_c (float *X, const size_t R, const size_t C, const size_t S,
             X += 2*V;
             for (size_t l=1; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v)
+                for (size_t v=0; v<V; ++v, ++X)
                 {
                     c = *(X-2*V); d = *(X-2*V+1);
                     xr = *X; xi = *(X+1);
-                    *X++ = xr*c - xi*d;
-                    *X++ = xr*d + xi*c;
+                    *X = xr*c - xi*d;
+                    *++X = xr*d + xi*c;
                 }
             }
         }
@@ -401,13 +411,13 @@ int cumprod_inplace_c (float *X, const size_t R, const size_t C, const size_t S,
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2)
                 {
-                    c = *X++; d = *X++; X += 2*K-2;
-                    for (size_t l=1; l<L; ++l, X+=2*K-2)
+                    c = *X; d = *++X; X += 2*K-1;
+                    for (size_t l=1; l<L; ++l, X+=2*K-1)
                     {
                         xr = *X; xi = *(X+1);
                         *X = xr*c - xi*d;
                         *++X = xr*d + xi*c;
-                        c = *(X-1); d = *X++;
+                        c = *(X-1); d = *X;
                     }
                 }
             }
@@ -430,12 +440,12 @@ int cumprod_inplace_z (double *X, const size_t R, const size_t C, const size_t S
     else if (L==N)
     {
         c = *X++; d = *X++;
-        for (size_t l=1; l<L; ++l)
+        for (size_t l=1; l<L; ++l, ++X)
         {
             xr = *X; xi = *(X+1);
             *X = xr*c - xi*d;
             *++X = xr*d + xi*c;
-            c = *(X-1); d = *X++;
+            c = *(X-1); d = *X;
         }
     }
     else
@@ -449,12 +459,12 @@ int cumprod_inplace_z (double *X, const size_t R, const size_t C, const size_t S
             for (size_t v=0; v<V; ++v)
             {
                 c = *X++; d = *X++;
-                for (size_t l=1; l<L; ++l)
+                for (size_t l=1; l<L; ++l, ++X)
                 {
                     xr = *X; xi = *(X+1);
                     *X = xr*c - xi*d;
                     *++X = xr*d + xi*c;
-                    c = *(X-1); d = *X++;
+                    c = *(X-1); d = *X;
                 }
             }
         }
@@ -463,12 +473,12 @@ int cumprod_inplace_z (double *X, const size_t R, const size_t C, const size_t S
             X += 2*V;
             for (size_t l=1; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v)
+                for (size_t v=0; v<V; ++v, ++X)
                 {
                     c = *(X-2*V); d = *(X-2*V+1);
                     xr = *X; xi = *(X+1);
-                    *X++ = xr*c - xi*d;
-                    *X++ = xr*d + xi*c;
+                    *X = xr*c - xi*d;
+                    *++X = xr*d + xi*c;
                 }
             }
         }
@@ -478,13 +488,13 @@ int cumprod_inplace_z (double *X, const size_t R, const size_t C, const size_t S
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*L-2)
                 {
-                    c = *X++; d = *X++; X += 2*K-2;
-                    for (size_t l=1; l<L; ++l, X+=2*K-2)
+                    c = *X; d = *++X; X += 2*K-1;
+                    for (size_t l=1; l<L; ++l, X+=2*K-1)
                     {
                         xr = *X; xi = *(X+1);
                         *X = xr*c - xi*d;
                         *++X = xr*d + xi*c;
-                        c = *(X-1); d = *X++;
+                        c = *(X-1); d = *X;
                     }
                 }
             }

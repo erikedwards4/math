@@ -27,7 +27,6 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float pthresh = 2.0f * FLT_EPSILON, nthresh = -pthresh;
-    size_t cnt = 0;
 
     if (N==0) {}
     else if (L==1)
@@ -36,6 +35,7 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
+        size_t cnt = 0;
         for (size_t l=0; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
         *Y = cnt;
     }
@@ -47,11 +47,12 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            size_t cnt;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 cnt = 0;
                 for (size_t l=0; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
-                *Y++ = cnt;
+                *Y = cnt;
             }
         }
         else if (G==1)
@@ -65,13 +66,14 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
+            size_t cnt;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     cnt = 0;
                     for (size_t l=0; l<L; ++l, X+=K) { cnt += (*X>pthresh || *X<nthresh); }
-                    *Y++ = cnt;
+                    *Y = cnt;
                 }
             }
         }
@@ -88,7 +90,6 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double pthresh = 2.0 * DBL_EPSILON, nthresh = -pthresh;
-    size_t cnt = 0;
 
     if (N==0) {}
     else if (L==1)
@@ -97,6 +98,7 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
     }
     else if (L==N)
     {
+        size_t cnt = 0;
         for (size_t l=0; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
         *Y = cnt;
     }
@@ -108,11 +110,12 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            size_t cnt;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 cnt = 0;
                 for (size_t l=0; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
-                *Y++ = cnt;
+                *Y = cnt;
             }
         }
         else if (G==1)
@@ -126,13 +129,14 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
+            size_t cnt;
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1)
+                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     cnt = 0;
                     for (size_t l=0; l<L; ++l, X+=K) { cnt += (*X>pthresh || *X<nthresh); }
-                    *Y++ = cnt;
+                    *Y = cnt;
                 }
             }
         }
@@ -149,7 +153,6 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float pthresh = 2.0f * FLT_EPSILON, nthresh = -pthresh;
-    size_t cnt = 0;
 
     if (N==0) {}
     else if (L==1)
@@ -158,6 +161,7 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
+        size_t cnt = 0;
         for (size_t l=0; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
         *Y = cnt;
     }
@@ -169,11 +173,12 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            size_t cnt;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 cnt = 0;
                 for (size_t l=0; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-                *Y++ = cnt;
+                *Y = cnt;
             }
         }
         else if (G==1)
@@ -187,13 +192,14 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
+            size_t cnt;
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     cnt = 0;
                     for (size_t l=0; l<L; ++l, X+=2*K) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-                    *Y++ = cnt;
+                    *Y = cnt;
                 }
             }
         }
@@ -210,7 +216,6 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double pthresh = 2.0 * DBL_EPSILON, nthresh = -pthresh;
-    size_t cnt = 0;
 
     if (N==0) {}
     else if (L==1)
@@ -219,6 +224,7 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
     }
     else if (L==N)
     {
+        size_t cnt = 0;
         for (size_t l=0; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
         *Y = cnt;
     }
@@ -230,11 +236,12 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            size_t cnt;
+            for (size_t v=0; v<V; ++v, ++Y)
             {
                 cnt = 0;
                 for (size_t l=0; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-                *Y++ = cnt;
+                *Y = cnt;
             }
         }
         else if (G==1)
@@ -248,13 +255,14 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
+            size_t cnt;
             for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2)
+                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     cnt = 0;
                     for (size_t l=0; l<L; ++l, X+=2*K) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-                    *Y++ = cnt;
+                    *Y = cnt;
                 }
             }
         }

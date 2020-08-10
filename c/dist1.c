@@ -6,7 +6,6 @@
 
 #include <stdio.h>
 #include <math.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -40,11 +39,12 @@ int dist1_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
     }
     else if (L==N)
     {
-        *Y = 0.0f;
+        float sm = 0.0f;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            *Y += fabsf(*X1-*X2);
+            sm += fabsf(*X1-*X2);
         }
+        *Y = sm;
     }
     else
     {
@@ -55,13 +55,15 @@ int dist1_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
+            float sm;
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                *Y = 0.0f;
+                sm = 0.0f;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    *Y += fabsf(*X1-*X2);
+                    sm += fabsf(*X1-*X2);
                 }
+                *Y = sm;
             }
         }
         else if (G==1)
@@ -79,15 +81,17 @@ int dist1_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
+            float sm;
             for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    *Y = 0.0f;
+                    sm = 0.0f;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
-                        *Y += fabsf(*X1-*X2);
+                        sm += fabsf(*X1-*X2);
                     }
+                    *Y = sm;
                 }
             }
         }
@@ -118,11 +122,12 @@ int dist1_d (double *Y, const double *X1, const double *X2, const size_t R1, con
     }
     else if (L==N)
     {
-        *Y = 0.0;
+        double sm = 0.0;
         for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            *Y += fabs(*X1-*X2);
+            sm += fabs(*X1-*X2);
         }
+        *Y = sm;
     }
     else
     {
@@ -133,13 +138,15 @@ int dist1_d (double *Y, const double *X1, const double *X2, const size_t R1, con
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
+            double sm;
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                *Y = 0.0;
+                sm = 0.0;
                 for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    *Y += fabs(*X1-*X2);
+                    sm += fabs(*X1-*X2);
                 }
+                *Y = sm;
             }
         }
         else if (G==1)
@@ -157,15 +164,17 @@ int dist1_d (double *Y, const double *X1, const double *X2, const size_t R1, con
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
+            double sm;
             for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    *Y = 0.0;
+                    sm = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
                     {
-                        *Y += fabs(*X1-*X2);
+                        sm += fabs(*X1-*X2);
                     }
+                    *Y = sm;
                 }
             }
         }
@@ -193,22 +202,23 @@ int dist1_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; ++n, ++Y)
+        for (size_t n=0; n<N; ++n, ++X1, ++X2, ++Y)
         {
-            dr = *X1++ - *X2++;
-            di = *X1++ - *X2++;
+            dr = *X1 - *X2;
+            di = *++X1 - *++X2;
             *Y = sqrtf(dr*dr+di*di);
         }
     }
     else if (L==N)
     {
-        *Y = 0.0f;
-        for (size_t l=0; l<L; ++l)
+        float sm = 0.0f;
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            dr = *X1++ - *X2++;
-            di = *X1++ - *X2++;
-            *Y += sqrtf(dr*dr+di*di);
+            dr = *X1 - *X2;
+            di = *++X1 - *++X2;
+            sm += sqrtf(dr*dr+di*di);
         }
+        *Y = sm;
     }
     else
     {
@@ -219,15 +229,17 @@ int dist1_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? 2*L : 0, J2 = (L==N2) ? 2*L : 0;
+            float sm;
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                *Y = 0.0f;
-                for (size_t l=0; l<L; ++l)
+                sm = 0.0f;
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    dr = *X1++ - *X2++;
-                    di = *X1++ - *X2++;
-                    *Y += sqrtf(dr*dr+di*di);
+                    dr = *X1 - *X2;
+                    di = *++X1 - *++X2;
+                    sm += sqrtf(dr*dr+di*di);
                 }
+                *Y = sm;
             }
         }
         else
@@ -235,17 +247,19 @@ int dist1_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
             const size_t J1 = (L==N1) ? 0 : 2, J2 = (L==N2) ? 0 : 2;
             const size_t K1 = (L==N1) ? 2 : 2*K, K2 = (L==N2) ? 2 : 2*K;
             const size_t I1 = (L==N1) ? 0 : 2*B*(L-1), I2 = (L==N2) ? 0 : 2*B*(L-1);
+            float sm;
             for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    *Y = 0.0f;
+                    sm = 0.0f;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
-                        dr = *X1++ - *X2++;
-                        di = *X1 - *X2;
-                        *Y += sqrtf(dr*dr+di*di);
+                        dr = *X1 - *X2;
+                        di = *++X1 - *++X2;
+                        sm += sqrtf(dr*dr+di*di);
                     }
+                    *Y = sm;
                 }
             }
         }
@@ -273,22 +287,23 @@ int dist1_z (double *Y, const double *X1, const double *X2, const size_t R1, con
     if (N==0) {}
     else if (L==1)
     {
-        for (size_t n=0; n<N; ++n, ++Y)
+        for (size_t n=0; n<N; ++n, ++X1, ++X2, ++Y)
         {
-            dr = *X1++ - *X2++;
-            di = *X1++ - *X2++;
+            dr = *X1 - *X2;
+            di = *++X1 - *++X2;
             *Y = sqrt(dr*dr+di*di);
         }
     }
     else if (L==N)
     {
-        *Y = 0.0;
-        for (size_t l=0; l<L; ++l)
+        double sm = 0.0;
+        for (size_t l=0; l<L; ++l, ++X1, ++X2)
         {
-            dr = *X1++ - *X2++;
-            di = *X1++ - *X2++;
-            *Y += sqrt(dr*dr+di*di);
+            dr = *X1 - *X2;
+            di = *++X1 - *++X2;
+            sm += sqrt(dr*dr+di*di);
         }
+        *Y = sm;
     }
     else
     {
@@ -299,15 +314,17 @@ int dist1_z (double *Y, const double *X1, const double *X2, const size_t R1, con
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? 2*L : 0, J2 = (L==N2) ? 2*L : 0;
+            double sm;
             for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
-                *Y = 0.0;
-                for (size_t l=0; l<L; ++l)
+                sm = 0.0;
+                for (size_t l=0; l<L; ++l, ++X1, ++X2)
                 {
-                    dr = *X1++ - *X2++;
-                    di = *X1++ - *X2++;
-                    *Y += sqrt(dr*dr+di*di);
+                    dr = *X1 - *X2;
+                    di = *++X1 - *++X2;
+                    sm += sqrt(dr*dr+di*di);
                 }
+                *Y = sm;
             }
         }
         else
@@ -315,17 +332,19 @@ int dist1_z (double *Y, const double *X1, const double *X2, const size_t R1, con
             const size_t J1 = (L==N1) ? 0 : 2, J2 = (L==N2) ? 0 : 2;
             const size_t K1 = (L==N1) ? 2 : 2*K, K2 = (L==N2) ? 2 : 2*K;
             const size_t I1 = (L==N1) ? 0 : 2*B*(L-1), I2 = (L==N2) ? 0 : 2*B*(L-1);
+            double sm;
             for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
             {
                 for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    *Y = 0.0;
+                    sm = 0.0;
                     for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1)
                     {
-                        dr = *X1++ - *X2++;
-                        di = *X1 - *X2;
-                        *Y += sqrt(dr*dr+di*di);
+                        dr = *X1 - *X2;
+                        di = *++X1 - *++X2;
+                        sm += sqrt(dr*dr+di*di);
                     }
+                    *Y = sm;
                 }
             }
         }

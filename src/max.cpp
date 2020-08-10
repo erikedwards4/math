@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Vec2scalar operation.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
     descr += "Gets maximum for each vector in X along dim.\n";
     descr += "\n";
     descr += "For complex X, this finds the max of abs values,\n";

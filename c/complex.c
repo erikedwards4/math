@@ -25,18 +25,15 @@ int complex_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
 
     if (N1==1)
     {
-        cblas_scopy((int)N,X1,0,Y,2);
-        cblas_scopy((int)N,X2,1,&Y[1],2);
+        for (size_t n=0; n<N; ++n, ++X2, ++Y) { *Y = *X1; *++Y = *X2; }
     }    
     else if (N2==1)
     {
-        cblas_scopy((int)N,X1,1,Y,2);
-        cblas_scopy((int)N,X2,0,&Y[1],2);
+        for (size_t n=0; n<N; ++n, ++X1, ++Y) { *Y = *X1; *++Y = *X2; }
     }
     else if (N1==N2)
     {
-        cblas_scopy((int)N,X1,1,Y,2);
-        cblas_scopy((int)N,X2,1,&Y[1],2);
+        for (size_t n=0; n<N; ++n, ++X1, ++X2, ++Y) { *Y = *X1; *++Y = *X2; }
     }
     else if (iscolmajor)
     {
@@ -93,18 +90,15 @@ int complex_d (double *Y, const double *X1, const double *X2, const size_t R1, c
 
     if (N1==1)
     {
-        cblas_dcopy((int)N,X1,0,Y,2);
-        cblas_dcopy((int)N,X2,1,&Y[1],2);
+        for (size_t n=0; n<N; ++n, ++X2, ++Y) { *Y = *X1; *++Y = *X2; }
     }    
     else if (N2==1)
     {
-        cblas_dcopy((int)N,X1,1,Y,2);
-        cblas_dcopy((int)N,X2,0,&Y[1],2);
+        for (size_t n=0; n<N; ++n, ++X1, ++Y) { *Y = *X1; *++Y = *X2; }
     }
     else if (N1==N2)
     {
-        cblas_dcopy((int)N,X1,1,Y,2);
-        cblas_dcopy((int)N,X2,1,&Y[1],2);
+        for (size_t n=0; n<N; ++n, ++X1, ++X2, ++Y) { *Y = *X1; *++Y = *X2; }
     }
     else if (iscolmajor)
     {
