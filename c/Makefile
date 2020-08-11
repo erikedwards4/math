@@ -68,13 +68,11 @@ randperm: randperm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Construct: 1-2 vectors or matrices input, 1 matrix output constructed from the input(s)
-Construct: diagmat toeplitz tril triu repmat #prepad postpad
+Construct: diagmat toeplitz tril triu repmat
 diagmat: diagmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 toeplitz: toeplitz.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 tril: tril.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 triu: triu.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-prepad: prepad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-postpad: postpad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 repmat: repmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
@@ -248,7 +246,7 @@ shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod #center scale normalize
+Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod prepad postpad #center scale normalize
 sorti: sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 ranks: ranks.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -257,6 +255,8 @@ winsorize: winsorize.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 trim: trim.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cumsum: cumsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+prepad: prepad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+postpad: postpad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #center: center.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #scale: scale.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #normalize: normalize.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -331,6 +331,21 @@ conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 arg: arg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #norm is same as element-wise square
+
+
+
+#Linalg: linear algebra
+Linalg: matmul1 matmul2 matmul3 kronecker matnorm solve chol qr eig svd
+matmul1: matmul1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+matmul2: matmul2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+matmul3: matmul3.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+kronecker: kronecker.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+matnorm: matnorm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+solve: solve.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+chol: chol.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+qr: qr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+eig: eig.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+svd: svd.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 

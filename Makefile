@@ -127,7 +127,7 @@ piecewise_linear: srci/piecewise_linear.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp;
 
 
 #Construct: 1-2 vectors or matrices input, 1 matrix output constructed from the inputs
-Construct: diagmat toeplitz tril triu repmat #prepad postpad
+Construct: diagmat toeplitz tril triu repmat
 diagmat: srci/diagmat.cpp c/diagmat.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 toeplitz: srci/toeplitz.cpp c/toeplitz.c
@@ -135,10 +135,6 @@ toeplitz: srci/toeplitz.cpp c/toeplitz.c
 tril: srci/tril.cpp c/tril.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 triu: srci/triu.cpp c/triu.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-prepad: srci/prepad.cpp c/prepad.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-postpad: srci/postpad.cpp c/postpad.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 repmat: srci/repmat.cpp c/repmat.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
@@ -397,7 +393,7 @@ prod: srci/prod.cpp c/prod.c
 
 #Vecs2scalar: reduction operations for 2 inputs.
 #Each pair of vectors in X1 and X2 is reduced to a scalar.
-Vecs2scalar: Similarity Dist WStats
+Vecs2scalar: Similarity Dist #WStats
 
 Similarity: dot cov corr cos2 cokurtosis spearman kendall
 dot: srci/dot.cpp c/dot.c
@@ -459,6 +455,10 @@ cumsum: srci/cumsum.cpp c/cumsum.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 cumprod: srci/cumprod.cpp c/cumprod.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+prepad: srci/prepad.cpp c/prepad.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+postpad: srci/postpad.cpp c/postpad.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
 
 
@@ -484,13 +484,15 @@ proj: srci/proj.cpp c/proj.c
 
 #Linalg: linear algebra routines
 #Also see LAPACKE ?large for U*D*U'
-Linalg: matmul matmul3 kronecker matnorm solve chol qr eig svd
-matmul: srci/matmul.cpp c/matmul.c
+Linalg: matmul1 matmul2 matmul3 kronecker matnorm solve chol qr eig svd
+matmul1: srci/matmul1.cpp c/matmul1.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+matmul2: srci/matmul2.cpp c/matmul2.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 matmul3: srci/matmul3.cpp c/matmul3.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 kronecker: srci/kronecker.cpp c/kronecker.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 matnorm: srci/matnorm.cpp c/matnorm.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 solve: srci/solve.cpp c/solve.c

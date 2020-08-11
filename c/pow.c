@@ -165,27 +165,27 @@ int pow_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
     if (N1==1)
     {
         const _Complex float x = *X1 + 1.0if**(X1+1);
-        for (size_t n=0; n<N; ++n, X2+=2)
+        for (size_t n=0; n<N; ++n, X2+=2, ++Y)
         {
             y = cpowf(x,*X2+1.0if**(X2+1));
-            *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+            *Y = *(float *)&y; *++Y = *((float *)&y+1);
         }
     }    
     else if (N2==1)
     {
         const _Complex float p = *X2 + 1.0if**(X2+1);
-        for (size_t n=0; n<N; ++n, X1+=2)
+        for (size_t n=0; n<N; ++n, X1+=2, ++Y)
         {
             y = cpowf(*X1+1.0if**(X1+1),p);
-            *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+            *Y = *(float *)&y; *++Y = *((float *)&y+1);
         }
     }
     else if (N1==N2)
     {
-        for (size_t n=0; n<N; ++n, X1+=2, X2+=2)
+        for (size_t n=0; n<N; ++n, X1+=2, X2+=2, ++Y)
         {
             y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
-            *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+            *Y = *(float *)&y; *++Y = *((float *)&y+1);
         }
     }
     else if (iscolmajor)
@@ -200,10 +200,10 @@ int pow_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
             {
                 for (size_t c=0; c<C; ++c, X1+=c1i, X2+=c2i)
                 {
-                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i)
+                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i, ++Y)
                     {
                         y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
-                        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+                        *Y = *(float *)&y; *++Y = *((float *)&y+1);
                     }
                 }
             }
@@ -221,10 +221,10 @@ int pow_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
             {
                 for (size_t s=0; s<S; ++s, X1+=s1i, X2+=s2i)
                 {
-                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i)
+                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i, ++Y)
                     {
                         y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
-                        *Y++ = *(float *)&y; *Y++ = *((float *)&y+1);
+                        *Y = *(float *)&y; *++Y = *((float *)&y+1);
                     }
                 }
             }
@@ -247,27 +247,27 @@ int pow_z (double *Y, const double *X1, const double *X2, const size_t R1, const
     if (N1==1)
     {
         const _Complex double x = *X1 + 1.0i**(X1+1);
-        for (size_t n=0; n<N; ++n, X2+=2)
+        for (size_t n=0; n<N; ++n, X2+=2, ++Y)
         {
             y = cpow(x,*X2+1.0i**(X2+1));
-            *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+            *Y = *(double *)&y; *++Y = *((double *)&y+1);
         }
     }    
     else if (N2==1)
     {
         const _Complex double p = *X2 + 1.0i**(X2+1);
-        for (size_t n=0; n<N; ++n, X1+=2)
+        for (size_t n=0; n<N; ++n, X1+=2, ++Y)
         {
             y = cpow(*X1+1.0i**(X1+1),p);
-            *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+            *Y = *(double *)&y; *++Y = *((double *)&y+1);
         }
     }
     else if (N1==N2)
     {
-        for (size_t n=0; n<N; ++n, X1+=2, X2+=2)
+        for (size_t n=0; n<N; ++n, X1+=2, X2+=2, ++Y)
         {
             y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
-            *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+            *Y = *(double *)&y; *++Y = *((double *)&y+1);
         }
     }
     else if (iscolmajor)
@@ -282,10 +282,10 @@ int pow_z (double *Y, const double *X1, const double *X2, const size_t R1, const
             {
                 for (size_t c=0; c<C; ++c, X1+=c1i, X2+=c2i)
                 {
-                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i)
+                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i, ++Y)
                     {
                         y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
-                        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+                        *Y = *(double *)&y; *++Y = *((double *)&y+1);
                     }
                 }
             }
@@ -303,10 +303,10 @@ int pow_z (double *Y, const double *X1, const double *X2, const size_t R1, const
             {
                 for (size_t s=0; s<S; ++s, X1+=s1i, X2+=s2i)
                 {
-                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i, Y+=2)
+                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i, ++Y)
                     {
                         y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
-                        *Y++ = *(double *)&y; *Y++ = *((double *)&y+1);
+                        *Y = *(double *)&y; *++Y = *((double *)&y+1);
                     }
                 }
             }
@@ -454,18 +454,18 @@ int pow_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C1,
     if (N2==1)
     {
         const _Complex float x2 = *X2 + 1.0if**(X2+1);
-        for (size_t n=0; n<N; ++n)
+        for (size_t n=0; n<N; ++n, ++X1)
         {
             y = cpowf(*X1+1.0if**(X1+1),x2);
-            *X1++ = *(float *)&y; *X1++ = *((float *)&y+1);
+            *X1 = *(float *)&y; *++X1 = *((float *)&y+1);
         }
     }
     else if (N1==N2)
     {
-        for (size_t n=0; n<N; ++n, X2+=2)
+        for (size_t n=0; n<N; ++n, ++X1, X2+=2)
         {
             y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
-            *X1++ = *(float *)&y; *X1++ = *((float *)&y+1);
+            *X1 = *(float *)&y; *++X1 = *((float *)&y+1);
         }
     }
     else if (iscolmajor)
@@ -480,10 +480,10 @@ int pow_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C1,
             {
                 for (size_t c=0; c<C; ++c, X2+=c2i)
                 {
-                    for (size_t r=0; r<R; ++r, X2+=r2i)
+                    for (size_t r=0; r<R; ++r, ++X1, X2+=r2i)
                     {
                         y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
-                        *X1++ = *(float *)&y; *X1++ = *((float *)&y+1);
+                        *X1 = *(float *)&y; *++X1 = *((float *)&y+1);
                     }
                 }
             }
@@ -501,10 +501,10 @@ int pow_inplace_c (float *X1, const float *X2, const size_t R1, const size_t C1,
             {
                 for (size_t s=0; s<S; ++s, X2+=s2i)
                 {
-                    for (size_t h=0; h<H; ++h, X2+=h2i)
+                    for (size_t h=0; h<H; ++h, ++X1, X2+=h2i)
                     {
                         y = cpowf(*X1+1.0if**(X1+1),*X2+1.0if**(X2+1));
-                        *X1++ = *(float *)&y; *X1++ = *((float *)&y+1);
+                        *X1 = *(float *)&y; *++X1 = *((float *)&y+1);
                     }
                 }
             }
@@ -528,18 +528,18 @@ int pow_inplace_z (double *X1, const double *X2, const size_t R1, const size_t C
     if (N2==1)
     {
         const _Complex double x2 = *X2 + 1.0i**(X2+1);
-        for (size_t n=0; n<N; ++n)
+        for (size_t n=0; n<N; ++n, ++X1)
         {
             y = cpow(*X1+1.0i**(X1+1),x2);
-            *X1++ = *(double *)&y; *X1++ = *((double *)&y+1);
+            *X1 = *(double *)&y; *++X1 = *((double *)&y+1);
         }
     }
     else if (N1==N2)
     {
-        for (size_t n=0; n<N; ++n, X2+=2)
+        for (size_t n=0; n<N; ++n, ++X1, X2+=2)
         {
             y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
-            *X1++ = *(double *)&y; *X1++ = *((double *)&y+1);
+            *X1 = *(double *)&y; *++X1 = *((double *)&y+1);
         }
     }
     else if (iscolmajor)
@@ -554,10 +554,10 @@ int pow_inplace_z (double *X1, const double *X2, const size_t R1, const size_t C
             {
                 for (size_t c=0; c<C; ++c, X2+=c2i)
                 {
-                    for (size_t r=0; r<R; ++r, X2+=r2i)
+                    for (size_t r=0; r<R; ++r, ++X1, X2+=r2i)
                     {
                         y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
-                        *X1++ = *(double *)&y; *X1++ = *((double *)&y+1);
+                        *X1 = *(double *)&y; *++X1 = *((double *)&y+1);
                     }
                 }
             }
@@ -575,10 +575,10 @@ int pow_inplace_z (double *X1, const double *X2, const size_t R1, const size_t C
             {
                 for (size_t s=0; s<S; ++s, X2+=s2i)
                 {
-                    for (size_t h=0; h<H; ++h, X2+=h2i)
+                    for (size_t h=0; h<H; ++h, ++X1, X2+=h2i)
                     {
                         y = cpow(*X1+1.0i**(X1+1),*X2+1.0i**(X2+1));
-                        *X1++ = *(double *)&y; *X1++ = *((double *)&y+1);
+                        *X1 = *(double *)&y; *++X1 = *((double *)&y+1);
                     }
                 }
             }

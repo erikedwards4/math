@@ -53,10 +53,10 @@ int polar_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
             {
                 for (size_t c=0; c<C; ++c, X1+=c1i, X2+=c2i)
                 {
-                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i)
+                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i, ++Y)
                     {
-                        *Y++ = *X1 * cosf(*X2);
-                        *Y++ = *X1 * sinf(*X2);
+                        *Y = *X1 * cosf(*X2);
+                        *++Y = *X1 * sinf(*X2);
                     }
                 }
             }
@@ -74,10 +74,10 @@ int polar_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
             {
                 for (size_t s=0; s<S; ++s, X1+=s1i, X2+=s2i)
                 {
-                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i)
+                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i, ++Y)
                     {
-                        *Y++ = *X1 * cosf(*X2);
-                        *Y++ = *X1 * sinf(*X2);
+                        *Y = *X1 * cosf(*X2);
+                        *++Y = *X1 * sinf(*X2);
                     }
                 }
             }
@@ -121,10 +121,10 @@ int polar_d (double *Y, const double *X1, const double *X2, const size_t R1, con
             {
                 for (size_t c=0; c<C; ++c, X1+=c1i, X2+=c2i)
                 {
-                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i)
+                    for (size_t r=0; r<R; ++r, X1+=r1i, X2+=r2i, ++Y)
                     {
-                        *Y++ = *X1 * cos(*X2);
-                        *Y++ = *X1 * sin(*X2);
+                        *Y = *X1 * cos(*X2);
+                        *++Y = *X1 * sin(*X2);
                     }
                 }
             }
@@ -142,10 +142,10 @@ int polar_d (double *Y, const double *X1, const double *X2, const size_t R1, con
             {
                 for (size_t s=0; s<S; ++s, X1+=s1i, X2+=s2i)
                 {
-                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i)
+                    for (size_t h=0; h<H; ++h, X1+=h1i, X2+=h2i, ++Y)
                     {
-                        *Y++ = *X1 * cos(*X2);
-                        *Y++ = *X1 * sin(*X2);
+                        *Y = *X1 * cos(*X2);
+                        *++Y = *X1 * sin(*X2);
                     }
                 }
             }

@@ -11,15 +11,15 @@ namespace codee {
 extern "C" {
 #endif
 
-int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val);
-int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val);
-int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val);
-int prepad_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val);
+int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val);
+int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val);
+int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val);
+int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val);
 
 
-int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val)
+int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val)
 {
-    if (dim>3) { fprintf(stderr,"error in prepad_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in postpad_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -27,8 +27,8 @@ int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S
     if (N==0 && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
         for (size_t l=0; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
     }
     else
     {
@@ -40,14 +40,14 @@ int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S
         {
             for (size_t v=0; v<V; ++v)
             {
-                for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
                 for (size_t l=0; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
             }
         }
         else if (G==1)
         {
-            for (size_t n=0; n<V*P; ++n, ++Y) { *Y = val; }
             for (size_t n=0; n<V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=0; n<V*P; ++n, ++Y) { *Y = val; }
         }
         else
         {
@@ -56,8 +56,8 @@ int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S
             {
                 for (size_t b=0; b<B; ++b, X-=K*Lx-1, Y-=K*Ly-1)
                 {
-                    for (size_t p=0; p<P; ++p, Y+=K) { *Y = val; }
                     for (size_t l=0; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t p=0; p<P; ++p, Y+=K) { *Y = val; }
                 }
             }
         }
@@ -68,9 +68,9 @@ int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S
 
 
 
-int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val)
+int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val)
 {
-    if (dim>3) { fprintf(stderr,"error in prepad_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in postpad_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -78,8 +78,8 @@ int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t
     if (N==0 && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
         for (size_t l=0; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
     }
     else
     {
@@ -91,14 +91,14 @@ int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t
         {
             for (size_t v=0; v<V; ++v)
             {
-                for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
                 for (size_t l=0; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
             }
         }
         else if (G==1)
         {
-            for (size_t n=0; n<V*P; ++n, ++Y) { *Y = val; }
             for (size_t n=0; n<V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=0; n<V*P; ++n, ++Y) { *Y = val; }
         }
         else
         {
@@ -107,8 +107,8 @@ int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t
             {
                 for (size_t b=0; b<B; ++b, X-=K*Lx-1, Y-=K*Ly-1)
                 {
-                    for (size_t p=0; p<P; ++p, Y+=K) { *Y = val; }
                     for (size_t l=0; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t p=0; p<P; ++p, Y+=K) { *Y = val; }
                 }
             }
         }
@@ -118,9 +118,9 @@ int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t
 }
 
 
-int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val)
+int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val)
 {
-    if (dim>3) { fprintf(stderr,"error in prepad_c: dim must be in [0 3]\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in postpad_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -128,8 +128,8 @@ int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S
     if (N==0 && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
         for (size_t l=0; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
     }
     else
     {
@@ -141,14 +141,14 @@ int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S
         {
             for (size_t v=0; v<V; ++v)
             {
-                for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
                 for (size_t l=0; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
             }
         }
         else if (G==1)
         {
-            for (size_t n=0; n<2*V*P; ++n, ++Y) { *Y = val; }
             for (size_t n=0; n<2*V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=0; n<2*V*P; ++n, ++Y) { *Y = val; }
         }
         else
         {
@@ -157,8 +157,8 @@ int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*Lx-2, Y-=2*K*Ly-2)
                 {
-                    for (size_t p=0; p<P; ++p, Y+=2*K-1) { *Y = val; *++Y = val; }
                     for (size_t l=0; l<Lx; ++l, X+=2*K-1, Y+=2*K-1) { *Y = *X; *++Y = *++X; }
+                    for (size_t p=0; p<P; ++p, Y+=2*K-1) { *Y = val; *++Y = val; }
                 }
             }
         }
@@ -168,9 +168,9 @@ int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S
 }
 
 
-int prepad_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val)
+int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val)
 {
-    if (dim>3) { fprintf(stderr,"error in prepad_z: dim must be in [0 3]\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in postpad_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -178,8 +178,8 @@ int prepad_z (double *Y, double *X, const size_t R, const size_t C, const size_t
     if (N==0 && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
         for (size_t l=0; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
     }
     else
     {
@@ -191,14 +191,14 @@ int prepad_z (double *Y, double *X, const size_t R, const size_t C, const size_t
         {
             for (size_t v=0; v<V; ++v)
             {
-                for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
                 for (size_t l=0; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
             }
         }
         else if (G==1)
         {
-            for (size_t n=0; n<2*V*P; ++n, ++Y) { *Y = val; }
             for (size_t n=0; n<2*V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=0; n<2*V*P; ++n, ++Y) { *Y = val; }
         }
         else
         {
@@ -207,8 +207,8 @@ int prepad_z (double *Y, double *X, const size_t R, const size_t C, const size_t
             {
                 for (size_t b=0; b<B; ++b, X-=2*K*Lx-2, Y-=2*K*Ly-2)
                 {
-                    for (size_t p=0; p<P; ++p, Y+=2*K-1) { *Y = val; *++Y = val; }
                     for (size_t l=0; l<Lx; ++l, X+=2*K-1, Y+=2*K-1) { *Y = *X; *++Y = *++X; }
+                    for (size_t p=0; p<P; ++p, Y+=2*K-1) { *Y = val; *++Y = val; }
                 }
             }
         }

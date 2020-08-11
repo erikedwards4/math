@@ -182,7 +182,7 @@ int prod_c (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y++ = *X++; *Y = *X; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             Y -= 2*V;
             for (size_t l=1; l<L; ++l, Y-=2*V)
             {
@@ -260,7 +260,7 @@ int prod_z (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y++ = *X++; *Y = *X; }
+            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             Y -= 2*V;
             for (size_t l=1; l<L; ++l, Y-=2*V)
             {

@@ -37,13 +37,13 @@ int reciprocal_d (double *Y, const double *X, const size_t N)
 
 int reciprocal_c (float *Y, const float *X, const size_t N)
 {
-    float xr, sq;
+    float xr, xi, sq;
 
     for (size_t n=0; n<N; ++n, ++X, ++Y)
     {
-        xr = *X++;
-        sq = xr*xr + *X**X;
-        *Y = xr/sq; *++Y = -*X/sq;
+        xr = *X; xi = *++X;
+        sq = xr*xr + xi*xi;
+        *Y = xr/sq; *++Y = -xi/sq;
     }
     
     return 0;
@@ -52,13 +52,13 @@ int reciprocal_c (float *Y, const float *X, const size_t N)
 
 int reciprocal_z (double *Y, const double *X, const size_t N)
 {
-    double xr, sq;
+    double xr, xi, sq;
 
     for (size_t n=0; n<N; ++n, ++X, ++Y)
     {
-        xr = *X++;
-        sq = xr*xr + *X**X;
-        *Y = xr/sq; *++Y = -*X/sq;
+        xr = *X; xi = *++X;
+        sq = xr*xr + xi*xi;
+        *Y = xr/sq; *++Y = -xi/sq;
     }
     
     return 0;
