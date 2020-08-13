@@ -13,13 +13,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int moments_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
-int moments_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
-int moments_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
-int moments_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int moments_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int moments_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int moments_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int moments_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
 
 
-int moments_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
+int moments_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
     if (dim>3) { fprintf(stderr,"error in moments_s: dim must be in [0 3]\n"); return 1; }
 
@@ -125,7 +125,7 @@ int moments_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
 }
 
 
-int moments_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
+int moments_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
     if (dim>3) { fprintf(stderr,"error in moments_d: dim must be in [0 3]\n"); return 1; }
 
@@ -231,7 +231,7 @@ int moments_d (double *Y, double *X, const size_t R, const size_t C, const size_
 }
 
 
-int moments_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
+int moments_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
     if (dim>3) { fprintf(stderr,"error in moments_c: dim must be in [0 3]\n"); return 1; }
 
@@ -351,7 +351,7 @@ int moments_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
 }
 
 
-int moments_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
+int moments_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
 {
     if (dim>3) { fprintf(stderr,"error in moments_z: dim must be in [0 3]\n"); return 1; }
 

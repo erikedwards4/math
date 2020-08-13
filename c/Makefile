@@ -335,11 +335,23 @@ proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Linalg: linear algebra
-Linalg: matmul1 matmul2 matmul3 kronecker matnorm solve chol qr eig svd
+Linalg: Matmul Transform Other_Linalg
+
+Matmul: matmul1 matmul1t matmul2 matmul2t matmul3 matmul3t kronecker affine
 matmul1: matmul1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+matmul1t: matmul1t.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 matmul2: matmul2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+matmul2t: matmul2t.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 matmul3: matmul3.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+matmul3t: matmul3t.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kronecker: kronecker.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Transform: linear affine #projective
+linear: linear.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+affine: affine.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+projective: projective.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Other_Linalg: matnorm solve chol qr eig svd
 matnorm: matnorm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 solve: solve.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 chol: chol.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
