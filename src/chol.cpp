@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "cumsum.c"
+#include "chol.c"
 
 #ifdef I
 #undef I
@@ -33,35 +33,32 @@ int main(int argc, char *argv[])
     ifstream ifs1; ofstream ofs1;
     int8_t stdi1, stdo1, wo1;
     ioinfo i1, o1;
-    size_t dim;
+    char u;
 
 
     //Description
     string descr;
-    descr += "Vec2vec function.\n";
-    descr += "Cumulative sum for each vector in X along dim.\n";
-    descr += "Output Y has the same size as X.\n";
+    descr += "Linear algebra function.\n";
+    descr += "Cholesky decomposition of square, Hermitian, positive-definite matrix X.\n";
+    descr += "This returns lower-triangular Y such that X = Y*Y'.\n";
     descr += "\n";
-    descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to sum along cols.\n";
-    descr += "Use -d1 to sum along rows.\n";
-    descr += "Use -d2 to sum along slices.\n";
-    descr += "Use -d3 to sum along hyperslices.\n";
+    descr += "Include -u (--upper) to return upper triangular Y [default is lower].\n";
+    descr += "In this case X = Y'*Y.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ cumsum X -o Y \n";
-    descr += "$ cumsum -d1 X > Y \n";
-    descr += "$ cat X | cumsum -d2 > Y \n";
+    descr += "$ chol X -o Y \n";
+    descr += "$ chol X > Y \n";
+    descr += "$ cat X | chol -u > Y \n";
 
 
     //Argtable
     int nerrs;
     struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
-    struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
+    struct arg_lit    *a_u = arg_litn("u","upper",0,1,"return upper triangular Y [default is lower]");
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_fi, a_d, a_fo, a_help, a_end};
+    void *argtable[] = {a_fi, a_u, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -101,15 +98,14 @@ int main(int argc, char *argv[])
 
     //Get options
 
-    //Get dim
-    if (a_d->count==0) { dim = 0; }
-    else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-    else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+    //Get u
+    u = (a_u->count>0);
 
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
+    if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a matrix" << endl; return 1; }
+    if (!i1.issquare()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a square matrix" << endl; return 1; }
 
 
     //Set output header info
@@ -135,79 +131,67 @@ int main(int argc, char *argv[])
     //Process
     if (i1.T==1)
     {
-        float *X; //, *Y;
+        float *X;
         try { X = new float[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new float[o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::cumsum_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::cumsum_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::chol_inplace_s(X,i1.R,i1.iscolmajor(),u))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        delete[] X;
     }
     else if (i1.T==2)
     {
-        double *X; //, *Y;
+        double *X;
         try { X = new double[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new double[o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::cumsum_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::cumsum_inplace_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::chol_inplace_d(X,i1.R,i1.iscolmajor(),u))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        delete[] X;
     }
     else if (i1.T==101)
     {
-        float *X; //, *Y;
+        float *X;
         try { X = new float[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new float[2u*o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::cumsum_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::cumsum_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::chol_inplace_c(X,i1.R,i1.iscolmajor(),u))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        delete[] X;
     }
     else if (i1.T==102)
     {
-        double *X; //, *Y;
+        double *X;
         try { X = new double[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new double[2u*o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::cumsum_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::cumsum_inplace_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::chol_inplace_z(X,i1.R,i1.iscolmajor(),u))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        delete[] X;
     }
     else
     {

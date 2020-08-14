@@ -279,7 +279,7 @@ spearman: spearman.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kendall: kendall.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 #Distance metrics or related for 2 vectors
-Dist: dist1 dist2 distp dist_hamm dist_cos
+Dist: dist0 dist1 dist2 distp dist_cos
 dist0: dist0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 dist1: dist1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 dist2: dist2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -335,9 +335,9 @@ proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 #Linalg: linear algebra
-Linalg: Matmul Transform Other_Linalg
+Linalg: Matmul Transform Sim_Mat Dist_Mat Other_Linalg
 
-Matmul: matmul1 matmul1t matmul2 matmul2t matmul3 matmul3t kronecker affine
+Matmul: matmul1 matmul1t matmul2 matmul2t matmul3 matmul3t kronecker
 matmul1: matmul1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 matmul1t: matmul1t.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 matmul2: matmul2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -351,13 +351,26 @@ linear: linear.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 affine: affine.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 projective: projective.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Linalg: matnorm solve chol qr eig svd
-matnorm: matnorm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+Sim_Mat: gram cosmat covmat corrmat
+gram: gram.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cosmat: cosmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+covmat: covmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+corrmat: corrmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Dist_Mat: distmat0 distmat1 distmat2 distmatp distmat_cos
+distmat0: distmat0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+distmat1: distmat1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+distmat2: distmat2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+distmatp: distmatp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+distmat_cos: distmat_cos.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Other_Linalg: solve chol eig svd #qr matnorm
 solve: solve.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 chol: chol.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-qr: qr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 eig: eig.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 svd: svd.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+qr: qr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+matnorm: matnorm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 

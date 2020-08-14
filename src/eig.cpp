@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "/home/erik/codee/util/cmli.hpp"
-#include "cumsum.c"
+#include "eig.c"
 
 #ifdef I
 #undef I
@@ -29,39 +29,40 @@ int main(int argc, char *argv[])
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
     const valarray<uint8_t> oktypes = {1,2,101,102};
-    const size_t I = 1, O = 1;
-    ifstream ifs1; ofstream ofs1;
-    int8_t stdi1, stdo1, wo1;
-    ioinfo i1, o1;
-    size_t dim;
+    const size_t I = 1, O = 2;
+    ifstream ifs1; ofstream ofs1, ofs2;
+    int8_t stdi1, stdo1, stdo2, wo1, wo2;
+    ioinfo i1, o1, o2;
+    size_t K;
 
 
     //Description
     string descr;
-    descr += "Vec2vec function.\n";
-    descr += "Cumulative sum for each vector in X along dim.\n";
-    descr += "Output Y has the same size as X.\n";
+    descr += "Linear algebra function.\n";
+    descr += "Eigendecomposition of square, Hermitian-symmetric matrix X.\n";
+    descr += "Only the lower-triangular part of X is accessed.\n";
+    descr += "This returns U and V such that X = U * diagmat(V) * U'.\n";
     descr += "\n";
-    descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to sum along cols.\n";
-    descr += "Use -d1 to sum along rows.\n";
-    descr += "Use -d2 to sum along slices.\n";
-    descr += "Use -d3 to sum along hyperslices.\n";
+    descr += "The outputs U and V are the eigenvectors and eigenvalues, respectively.\n";
+    descr += "List each output filename following a -o opt, in the order U then V.\n";
+    descr += "\n";
+    descr += "Use -k (--K) to give the number of eigenvals and eigenvecs to keep [default=all].\n";
+    descr += "The K largest eigenvalues and corresponding eigenvectors are returned.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ cumsum X -o Y \n";
-    descr += "$ cumsum -d1 X > Y \n";
-    descr += "$ cat X | cumsum -d2 > Y \n";
+    descr += "$ eig X -o U -o V \n";
+    descr += "$ eig -k7 X -o U > V \n";
+    descr += "$ cat X | eig -o - -o V > U \n";
 
 
     //Argtable
     int nerrs;
     struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
-    struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
-    struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
+    struct arg_int    *a_k = arg_intn("k","K","<uint>",0,1,"num eigencomponents to keep [default=all]");
+    struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output files (U,V)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_fi, a_d, a_fo, a_help, a_end};
+    void *argtable[] = {a_fi, a_k, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -81,7 +82,10 @@ int main(int argc, char *argv[])
     //Check stdout
     if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0 || strcmp(a_fo->filename[0],"-")==0); }
     else { stdo1 = (!isatty(fileno(stdout))); }
-    wo1 = (stdo1 || a_fo->count>0);
+    if (a_fo->count>1) { stdo2 = (strlen(a_fo->filename[1])==0 || strcmp(a_fo->filename[1],"-")==0); }
+    else { stdo2 = (!isatty(fileno(stdout)) && a_fo->count==1 && stdo1==0); }
+    if (stdo1+stdo2>1) { cerr << progstr+": " << __LINE__ << errstr << "can only use stdout for one output" << endl; return 1; }
+    wo1 = (stdo1 || a_fo->count>0); wo2 = (stdo2 || a_fo->count>1);
 
 
     //Open input
@@ -101,32 +105,45 @@ int main(int argc, char *argv[])
 
     //Get options
 
-    //Get dim
-    if (a_d->count==0) { dim = 0; }
-    else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
-    else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+    //Get K
+    if (a_k->count==0) { K = i1.R; }
+    else if (a_k->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "K must be positive" << endl; return 1; }
+    else { K = size_t(a_k->ival[0]); }
+    if (K>i1.R) { cerr << progstr+": " << __LINE__ << errstr << "K must be <= R (nrows in X)" << endl; return 1; }
 
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
+    if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a matrix" << endl; return 1; }
+    if (!i1.issquare()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a square matrix" << endl; return 1; }
 
 
-    //Set output header info
-    o1.F = i1.F; o1.T = i1.T;
-    o1.R = i1.R; o1.C = i1.C; o1.S = i1.S; o1.H = i1.H;
+    //Set output header infos
+    o1.F = o2.F = i1.F;
+    o1.T = i1.T;
+    o2.T = i1.isreal() ? i1.T : i1.T-100;
+    o1.R = i1.R; o2.R = K;
+    o1.C = K; o2.C = 1u;
+    o1.S = o2.S = i1.S;
+    o1.H = o2.H = i1.H;
 
 
-    //Open output
+    //Open outputs
     if (wo1)
     {
         if (stdo1) { ofs1.copyfmt(cout); ofs1.basic_ios<char>::rdbuf(cout.rdbuf()); } else { ofs1.open(a_fo->filename[0]); }
         if (!ofs1) { cerr << progstr+": " << __LINE__ << errstr << "problem opening output file 1" << endl; return 1; }
     }
+    if (wo2)
+    {
+        if (stdo2) { ofs2.copyfmt(cout); ofs2.basic_ios<char>::rdbuf(cout.rdbuf()); } else { ofs2.open(a_fo->filename[1]); }
+        if (!ofs2) { cerr << progstr+": " << __LINE__ << errstr << "problem opening output file 2" << endl; return 1; }
+    }
 
 
-    //Write output header
+    //Write output headers
     if (wo1 && !write_output_header(ofs1,o1)) { cerr << progstr+": " << __LINE__ << errstr << "problem writing header for output file 1" << endl; return 1; }
+    if (wo2 && !write_output_header(ofs2,o2)) { cerr << progstr+": " << __LINE__ << errstr << "problem writing header for output file 2" << endl; return 1; }
 
 
     //Other prep
@@ -135,79 +152,95 @@ int main(int argc, char *argv[])
     //Process
     if (i1.T==1)
     {
-        float *X; //, *Y;
+        float *X, *V;
         try { X = new float[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new float[o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        try { V = new float[i1.R]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 2 (V)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::cumsum_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::cumsum_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::eig_inplace_s(X,V,i1.R,i1.iscolmajor(),K))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 1 (U)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        if (wo2)
+        {
+            try { ofs2.write(reinterpret_cast<char*>(V),o2.nbytes()); }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 2 (V)" << endl; return 1; }
+        }
+        delete[] X; delete[] V;
     }
     else if (i1.T==2)
     {
-        double *X; //, *Y;
+        double *X, *V;
         try { X = new double[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new double[o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        try { V = new double[i1.R]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 2 (V)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::cumsum_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::cumsum_inplace_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::eig_inplace_d(X,V,i1.R,i1.iscolmajor(),K))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 1 (U)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        if (wo2)
+        {
+            try { ofs2.write(reinterpret_cast<char*>(V),o2.nbytes()); }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 2 (V)" << endl; return 1; }
+        }
+        delete[] X; delete[] V;
     }
     else if (i1.T==101)
     {
-        float *X; //, *Y;
+        float *X, *V;
         try { X = new float[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new float[2u*o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        try { V = new float[2u*i1.R]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 2 (V)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::cumsum_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::cumsum_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::eig_inplace_c(X,V,i1.R,i1.iscolmajor(),K))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 1 (U)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        if (wo2)
+        {
+            try { ofs2.write(reinterpret_cast<char*>(V),o2.nbytes()); }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 2 (V)" << endl; return 1; }
+        }
+        delete[] X; delete[] V;
     }
     else if (i1.T==102)
     {
-        double *X; //, *Y;
+        double *X, *V;
         try { X = new double[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new double[2u*o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        try { V = new double[2u*i1.R]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file 2 (V)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::cumsum_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::cumsum_inplace_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::eig_inplace_z(X,V,i1.R,i1.iscolmajor(),K))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
-            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 1 (U)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        if (wo2)
+        {
+            try { ofs2.write(reinterpret_cast<char*>(V),o2.nbytes()); }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file 2 (V)" << endl; return 1; }
+        }
+        delete[] X; delete[] V;
     }
     else
     {
