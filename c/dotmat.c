@@ -1,9 +1,10 @@
 //Linear algebra function.
-//Multiplies a square matrix by itself transposed: Y = X*X'.
+//Gets matrix of dot products for each pair of vectors in X.
+//X is a matrix with C column vecs (d=0) or R row vecs (d=1).
+//Y is a square, symmetric matrix with size CxC (d=0) or RxR (d=1).
 
-//For complex case, this uses the Hermitian (conjugate) transpose.
-//But could not get cblas_cgemm and cblas_zgemm working!
-//So, only manual solutions here for complex case (optimal up to N=2500 anyway).
+//This is very similar to matmul1t, since Y is also the Gram matrix for X.
+//That is, Y = X'*X for col vecs (d=0) and Y = X*X' for row vecs (d=1).
 
 #include <stdio.h>
 #include <math.h>
@@ -14,13 +15,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const char tr);
-int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const char tr);
-int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const char tr);
-int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const char tr);
+int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int dotmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
 
 
-int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const char tr)
+int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     float sm2;
@@ -28,7 +29,7 @@ int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const 
     if (N==0) {}
     else if (N<2500)
     {
-        if (tr)
+        if (dim==0)
         {
             if (iscolmajor)
             {
@@ -91,7 +92,7 @@ int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const 
     }
     else
     {
-        if (tr)
+        if (dim==0)
         {
             if (iscolmajor)
             {
@@ -139,7 +140,7 @@ int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const 
 }
 
 
-int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const char tr)
+int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     double sm2;
@@ -147,7 +148,7 @@ int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, cons
     if (N==0) {}
     else if (N<2500)
     {
-        if (tr)
+        if (dim==0)
         {
             if (iscolmajor)
             {
@@ -210,7 +211,7 @@ int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, cons
     }
     else
     {
-        if (tr)
+        if (dim==0)
         {
             if (iscolmajor)
             {
@@ -258,7 +259,7 @@ int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, cons
 }
 
 
-int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const char tr)
+int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
@@ -266,7 +267,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
     if (N==0) {}
     else
     {
-        if (tr)
+        if (dim==0)
         {
             if (iscolmajor)
             {
@@ -402,7 +403,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
 }
 
 
-int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const char tr)
+int dotmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;
@@ -410,7 +411,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
     if (N==0) {}
     else
     {
-        if (tr)
+        if (dim==0)
         {
             if (iscolmajor)
             {

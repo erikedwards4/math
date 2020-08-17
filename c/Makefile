@@ -351,8 +351,8 @@ linear: linear.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 affine: affine.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 projective: projective.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sim_Mat: gram cosmat covmat corrmat
-gram: gram.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+Sim_Mat: dotmat cosmat covmat corrmat
+dotmat: dotmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cosmat: cosmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 covmat: covmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 corrmat: corrmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
