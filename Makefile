@@ -1,17 +1,12 @@
 #@author Erik Edwards
-#@date 2019-2020
+#@date 2018-present
 
 #math is my own library of functions for basic math operations in C and C++.
 #This is the makefile for the command-line tools in C++.
 
-#Project is organized as:
-
 SHELL=/bin/bash
-
 ss=../util/bin/srci2src
-
 CC=clang++
-
 
 ifeq ($(CC),clang++)
 	STD=-std=c++11
@@ -21,12 +16,13 @@ else
 	WFLAG=-Wall -Wextra
 endif
 
-CFLAGS=$(WFLAG) -O2 -ffast-math $(STD) -march=native -Ic
+CFLAGS=$(WFLAG) $(STD) -O2 -ffast-math -march=native -Ic
 #LIBS=-largtable2 -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
-all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg
-	rm -f 7 obj/*.o
+#Project is organized as:
+All: all
+all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg Clean
 
 
 #Generate: aka "Factory" functions
@@ -434,7 +430,7 @@ flip: srci/flip.cpp c/flip.c
 shift: srci/shift.cpp c/shift.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 cshift: srci/cshift.cpp c/cshift.c
-	$(ss) -tvd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 sort: srci/sort.cpp c/sort.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 
@@ -486,7 +482,7 @@ proj: srci/proj.cpp c/proj.c
 #Also see LAPACKE ?large for U*D*U'
 Linalg: Matmul Transform Sim_Mat Dist_Mat Other_Linalg
 
-Matmul: kronecker matmul1 matmul1t matmul2 matmul2t matmul3 #matmul3t
+Matmul: kronecker matmul1 matmul1t matmul2 matmul2t matmul3 matmul3t
 kronecker: srci/kronecker.cpp c/kronecker.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 matmul1: srci/matmul1.cpp c/matmul1.c
@@ -549,6 +545,8 @@ matnorm: srci/matnorm.cpp c/matnorm.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 
 
+#make clean
+Clean: clean
 clean:
 	find ./obj -type f -name *.o | xargs rm -f
 	rm -f 7 X* Y* x* y*

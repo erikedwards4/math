@@ -94,7 +94,6 @@ int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const
                     sm2 = 0.0;
                     for (size_t r2=0; r2<R; ++r2)
                     {
-                        //sm2 += *(X+r2*R+r1) * *(X+c*R+r2);
                         sm2 = fma(*(X+r2*R+r1),*(X+c*R+r2),sm2);
                     }
                     *Y = sm2;
@@ -110,7 +109,6 @@ int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const
                     sm2 = 0.0;
                     for (size_t c1=0; c1<C; ++c1)
                     {
-                        //sm2 += *(X+r*C+c1) * *(X+c1*R+c2);
                         sm2 = fma(*(X+r*C+c1),*(X+c1*R+c2),sm2);
                     }
                     *Y = sm2;
@@ -122,11 +120,11 @@ int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const
     {
         if (iscolmajor)
         {
-            cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)R,1.0,X,(int)R,X,(int)R,1.0,Y,(int)R);
+            cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)R,1.0,X,(int)R,X,(int)R,0.0,Y,(int)R);
         }
         else
         {
-            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)C,1.0,X,(int)C,X,(int)C,1.0,Y,(int)C);
+            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)C,1.0,X,(int)C,X,(int)C,0.0,Y,(int)C);
         }
     }
 
@@ -183,14 +181,14 @@ int matmul1_c (float *Y, const float *X, const size_t R, const size_t C, const c
     }
     else
     {
-        const float o[2] = {1.0f,0.0f};
+        const float z[2] = {0.0f,0.0f}, o[2] = {1.0f,0.0f};
         if (iscolmajor)
         {
-            cblas_cgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)R,o,X,(int)R,X,(int)R,o,Y,(int)R);
+            cblas_cgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)R,o,X,(int)R,X,(int)R,z,Y,(int)R);
         }
         else
         {
-            cblas_cgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)C,o,X,(int)C,X,(int)C,o,Y,(int)C);
+            cblas_cgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)C,o,X,(int)C,X,(int)C,z,Y,(int)C);
         }
     }
 
@@ -247,14 +245,14 @@ int matmul1_z (double *Y, const double *X, const size_t R, const size_t C, const
     }
     else
     {
-        const double o[2] = {1.0,0.0};
+        const double z[2] = {0.0,0.0}, o[2] = {1.0,0.0};
         if (iscolmajor)
         {
-            cblas_zgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)R,o,X,(int)R,X,(int)R,o,Y,(int)R);
+            cblas_zgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)R,o,X,(int)R,X,(int)R,z,Y,(int)R);
         }
         else
         {
-            cblas_zgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)C,o,X,(int)C,X,(int)C,o,Y,(int)C);
+            cblas_zgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R,(int)C,(int)C,o,X,(int)C,X,(int)C,z,Y,(int)C);
         }
     }
     

@@ -132,11 +132,11 @@ int matmul2_d (double *Y, const double *X1, const double *X2, const size_t R1, c
     {
         if (iscolmajor)
         {
-            cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)R2,1.0,X1,(int)R1,X2,(int)R2,1.0,Y,(int)R1);
+            cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)R2,1.0,X1,(int)R1,X2,(int)R2,0.0,Y,(int)R1);
         }
         else
         {
-            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)C1,1.0,X1,(int)C1,X2,(int)C2,1.0,Y,(int)C2);
+            cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)C1,1.0,X1,(int)C1,X2,(int)C2,0.0,Y,(int)C2);
         }
     }
 
@@ -199,14 +199,14 @@ int matmul2_c (float *Y, const float *X1, const float *X2, const size_t R1, cons
     }
     else
     {
-        const float o[2] = {1.0f,0.0f};
+        const float z[2] = {0.0f,0.0f}, o[2] = {1.0f,0.0f};
         if (iscolmajor)
         {
-            cblas_cgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)R2,o,X1,(int)R1,X2,(int)R2,o,Y,(int)R1);
+            cblas_cgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)R2,o,X1,(int)R1,X2,(int)R2,z,Y,(int)R1);
         }
         else
         {
-            cblas_cgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)C1,o,X1,(int)C1,X2,(int)C2,o,Y,(int)C2);
+            cblas_cgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)C1,o,X1,(int)C1,X2,(int)C2,z,Y,(int)C2);
         }
     }
 
@@ -269,14 +269,14 @@ int matmul2_z (double *Y, const double *X1, const double *X2, const size_t R1, c
     }
     else
     {
-        const double o[2] = {1.0,0.0};
+        const double z[2] = {0.0,0.0}, o[2] = {1.0,0.0};
         if (iscolmajor)
         {
-            cblas_zgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)R2,o,X1,(int)R1,X2,(int)R2,o,Y,(int)R1);
+            cblas_zgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)R2,o,X1,(int)R1,X2,(int)R2,z,Y,(int)R1);
         }
         else
         {
-            cblas_zgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)C1,o,X1,(int)C1,X2,(int)C2,o,Y,(int)C2);
+            cblas_zgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,(int)R1,(int)C2,(int)C1,o,X1,(int)C1,X2,(int)C2,z,Y,(int)C2);
         }
     }
 

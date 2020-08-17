@@ -246,9 +246,24 @@ int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const
         const char Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
+
+        //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
         
         if (LAPACKE_sgels(Ord,Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb))
         { fprintf(stderr,"error in solve_inplace_s: problem with LAPACKE_sgels function\n"); }
+
+        //This works, but is not any faster (skips Nan check, but not significant)
+        // float work_query, *work;
+        // int lwork = -1;
+        // if (LAPACKE_sgels_work(Ord,Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb,&work_query,lwork))
+        // { fprintf(stderr,"error in solve_inplace_s: problem with LAPACKE_sgels_work function\n"); }
+        // lwork = (int)work_query;
+        // if (!(work=(float *)malloc((size_t)lwork*sizeof(float)))) { fprintf(stderr,"error in solve_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+        // if (LAPACKE_sgels_work(Ord,Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb,work,lwork))
+        // { fprintf(stderr,"error in solve_inplace_s: problem with LAPACKE_sgels_work function\n"); }
+        // free(work);
+
+        //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
 
         if (iscolmajor)
         {

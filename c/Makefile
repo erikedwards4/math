@@ -1,5 +1,5 @@
 #@author Erik Edwards
-#@date 2017-2020
+#@date 2017-present
 
 #math is my own library of C functions for basic math operations in C.
 
@@ -7,7 +7,6 @@
 #Since these are not stand-alone programs (no main functions), the only outputs are object files to obj.
 
 SHELL=/bin/bash
-
 CC=clang
 
 ifeq ($(CC),$(filter $(CC),clang gcc))
@@ -23,10 +22,11 @@ else
 	WFLAG=-Wall -Wextra
 endif
 
-CFLAGS=$(WFLAG) -O3 $(STD) -march=native -fPIC
+CFLAGS=$(WFLAG) $(STD) -O3 -march=native -fPIC
 
 
-all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vec2vec Vec2vec2 Complex Linalg
+All: all
+all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vec2vec Vec2vec2 Complex Linalg Clean
 
 
 #Generate: aka "Factory" functions
@@ -380,7 +380,7 @@ libmath.a: all
 
 
 #make clean
+Clean: clean
 clean:
 	find ./obj -type f -name *.o | xargs rm -f
 	rm -f *.s
-

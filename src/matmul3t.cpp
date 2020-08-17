@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
     ifstream ifs1, ifs2, ifs3; ofstream ofs1;
     int8_t stdi1, stdi2, stdi3, stdo1, wo1;
     ioinfo i1, i2, i3, o1;
+    char tr;
 
 
     //Description
@@ -45,19 +46,23 @@ int main(int argc, char *argv[])
     descr += "Y = (X1*X2)*X3', or Y = X1*(X2*X3').\n";
     descr += "Thus, output Y has size R1xR3.\n";
     descr += "\n";
+    descr += "Include -t (--transpose) to transpose X1 instead of X3.\n";
+    descr += "In this case: Y = X1'*X2*X3, and has size C1xC3.\n";
+    descr += "\n";
     descr += "Examples:\n";
     descr += "$ matmul3t X1 X2 X3 -o Y \n";
     descr += "$ matmul3t X1 X2 X3 > Y \n";
-    descr += "$ cat X2 | matmul3t X1 - X3 > Y \n";
+    descr += "$ cat X2 | matmul3t -t X1 - X3 > Y \n";
 
 
     //Argtable
     int nerrs;
     struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input files (X1,X2,X3)");
+    struct arg_lit   *a_tr = arg_litn("t","transpose",0,1,"transpose X1 rather than X3 [default=false]");
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_fi, a_fo, a_help, a_end};
+    void *argtable[] = {a_fi, a_tr, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -106,6 +111,9 @@ int main(int argc, char *argv[])
 
     //Get options
 
+    //Get tr
+    tr = (a_tr->count>0);
+
 
     //Checks
     if (i1.T!=i2.T || i1.T!=i3.T) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same data type" << endl; return 1; }
@@ -116,13 +124,16 @@ int main(int argc, char *argv[])
     if (!i2.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) must be a matrix" << endl; return 1; }
     if (!i3.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 3 (X3) must be a matrix" << endl; return 1; }
     if (!major_compat(i1,i2) || !major_compat(i1,i3)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same row/col major format unless vectors" << endl; return 1; }
-    if (!matmul_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "C1 (ncols X1) must equal R2 (nrows X2) for matrix multiply" << endl; return 1; }
-    if (i2.C!=i3.C) { cerr << progstr+": " << __LINE__ << errstr << "C2 (ncols X2) must equal C3 (ncols X3)" << endl; return 1; }
+    if (tr && i1.R!=i2.R) { cerr << progstr+": " << __LINE__ << errstr << "R1 (nrows X1) must equal R2 (nrows X2) if transpose opt" << endl; return 1; }
+    if (tr && i2.C!=i3.R) { cerr << progstr+": " << __LINE__ << errstr << "C2 (ncols X2) must equal R3 (nrows X3) if transpose opt" << endl; return 1; }
+    if (!tr && i1.C!=i2.R) { cerr << progstr+": " << __LINE__ << errstr << "C1 (ncols X1) must equal R2 (nrows X2) if no transpose opt" << endl; return 1; }
+    if (!tr && i2.C!=i3.C) { cerr << progstr+": " << __LINE__ << errstr << "C2 (ncols X2) must equal C3 (ncols X3) if no transpose opt" << endl; return 1; }
 
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    o1.R = i1.R; o1.C = i3.R;
+    o1.R = (tr) ? i1.C : i1.R;
+    o1.C = (tr) ? i3.C : i3.R;
     o1.S = i1.S; o1.H = i1.H;
 
 
@@ -159,7 +170,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (codee::matmul3t_s(Y,X1,X2,X3,i1.R,i1.C,i2.C,i3.R,o1.iscolmajor()))
+        if (codee::matmul3t_s(Y,X1,X2,X3,i1.R,i1.C,i3.R,i3.C,o1.iscolmajor(),tr))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -185,7 +196,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (codee::matmul3t_d(Y,X1,X2,X3,i1.R,i1.C,i2.C,i3.R,o1.iscolmajor()))
+        if (codee::matmul3t_d(Y,X1,X2,X3,i1.R,i1.C,i3.R,i3.C,o1.iscolmajor(),tr))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -211,7 +222,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (codee::matmul3t_c(Y,X1,X2,X3,i1.R,i1.C,i2.C,i3.R,o1.iscolmajor()))
+        if (codee::matmul3t_c(Y,X1,X2,X3,i1.R,i1.C,i3.R,i3.C,o1.iscolmajor(),tr))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -237,7 +248,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
         try { ifs3.read(reinterpret_cast<char*>(X3),i3.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 3 (X3)" << endl; return 1; }
-        if (codee::matmul3t_z(Y,X1,X2,X3,i1.R,i1.C,i2.C,i3.R,o1.iscolmajor()))
+        if (codee::matmul3t_z(Y,X1,X2,X3,i1.R,i1.C,i3.R,i3.C,o1.iscolmajor(),tr))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
