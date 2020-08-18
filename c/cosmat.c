@@ -1,10 +1,13 @@
 //Linear algebra function.
-//Gets matrix of dot products for each pair of vectors in X.
+//Gets matrix of cos similarities for each pair of vectors in X.
 //X is a matrix with C column vecs (if d=0) or R row vecs (if d=1).
 //Y is a square, Hermitian matrix with size CxC (if d=0) or RxR (if d=1).
 
 //This is very similar to matmul1t, since Y is also the Gram matrix for X.
 //That is, Y = X'*X for col vecs (d=0) and Y = X*X' for row vecs (d=1).
+
+//I just started this, need to finish later. It is copied-pasted from dotmat.
+//Need to decide if this belongs here, or under us, or under a general ml or pr folder...
 
 #include <stdio.h>
 #include <math.h>
@@ -15,13 +18,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int dotmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int cosmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int cosmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int cosmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int cosmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
 
 
-int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int cosmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     float sm2;
@@ -92,11 +95,17 @@ int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const ch
     }
     else
     {
+        float den;
         if (dim==0)
         {
             if (iscolmajor)
             {
                 cblas_ssyrk(CblasColMajor,CblasUpper,CblasTrans,(int)C,(int)R,1.0f,X,(int)R,0.0f,Y,(int)C);
+                for (int c=0; c<(int)C; ++c, Y+=C+1)
+                {
+                    den = sqrtf(*Y);
+                    for (int r=0; r<(int)C; ++R) { *(Y) /=den; }
+                }
                 for (int c=0; c<(int)C-1; ++c)
                 {
                     Y += c + 1;
@@ -140,7 +149,7 @@ int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const ch
 }
 
 
-int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int cosmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     double sm2;
@@ -259,7 +268,7 @@ int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const 
 }
 
 
-int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int cosmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
@@ -403,7 +412,7 @@ int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const ch
 }
 
 
-int dotmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int cosmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;

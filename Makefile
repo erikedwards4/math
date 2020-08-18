@@ -16,13 +16,16 @@ else
 	WFLAG=-Wall -Wextra
 endif
 
-CFLAGS=$(WFLAG) $(STD) -O2 -ffast-math -march=native -Ic
+INCLS=-Ic -I../util
+CFLAGS=$(WFLAG) $(STD) -O2 -ffast-math -march=native $(INCLS)
 #LIBS=-largtable2 -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
-#Project is organized as:
 All: all
-all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg Clean
+all: Dirs Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg Clean
+
+Dirs:
+	mkdir -pm 777 bin obj
 
 
 #Generate: aka "Factory" functions
