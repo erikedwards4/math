@@ -1,5 +1,6 @@
 //@author Erik Edwards
-//@date 2019-2020
+//@date 2018-present
+//@license BSD 3-clause
 
 
 #include <iostream>
@@ -10,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "/home/erik/codee/util/cmli.hpp"
+#include "../util/cmli.hpp"
 #include <random>
 #include <complex>
 
@@ -29,8 +30,8 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2};
-    const size_t I = 1, O = 1;
+    const valarray<size_t> oktypes = {1u,2u};
+    const size_t I = 1u, O = 1u;
     ifstream ifs1; ofstream ofs1;
     int8_t stdi1, stdo1, wo1;
     ioinfo i1, o1;
@@ -109,7 +110,7 @@ int main(int argc, char *argv[])
     if ((i1.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -117,16 +118,16 @@ int main(int argc, char *argv[])
     //Get options
 
     //Get o1.F
-    if (a_ofmt->count==0) { o1.F = 147; }
+    if (a_ofmt->count==0) { o1.F = 147u; }
     else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
     else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-    else { o1.F = uint8_t(a_ofmt->ival[0]); }
+    else { o1.F = size_t(a_ofmt->ival[0]); }
 
     //Get o1.T
-    if (a_otyp->count==0) { o1.T = 1; }
+    if (a_otyp->count==0) { o1.T = 1u; }
     else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "output data type must be positive" << endl; return 1; }
     else if (a_otyp->ival[0]>103) { cerr << progstr+": " << __LINE__ << errstr << "output data type must be <= 103" << endl; return 1; }
-    else { o1.T = uint8_t(a_otyp->ival[0]); }
+    else { o1.T = size_t(a_otyp->ival[0]); }
     if ((o1.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
@@ -178,7 +179,7 @@ int main(int argc, char *argv[])
 
     //Get P
     P.resize(i1.N(),0.0);
-    if (i1.T==1)
+    if (i1.T==1u)
     {
         P1.resize(i1.N());
         try { ifs1.read(reinterpret_cast<char*>(&P1[0]),i1.nbytes()); }
@@ -198,7 +199,7 @@ int main(int argc, char *argv[])
     
 
     //Process
-    if (o1.T==1)
+    if (o1.T==1u)
     {
         valarray<float> Y(o1.N());
         discrete_distribution<uint> distr(&P[0],&P[i1.N()]);

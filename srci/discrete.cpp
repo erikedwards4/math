@@ -3,8 +3,8 @@
 #include <complex>
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2};
-const size_t I = 1, O = 1;
+const valarray<size_t> oktypes = {1u,2u};
+const size_t I = 1u, O = 1u;
 size_t n;
 valarray<double> P;  //Prepare different input data types for P
 valarray<float> P1; valarray<long double> P3;
@@ -46,16 +46,16 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 //Get options
 
 //Get o1.F
-if (a_ofmt->count==0) { o1.F = 147; }
+if (a_ofmt->count==0) { o1.F = 147u; }
 else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
 else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-else { o1.F = uint8_t(a_ofmt->ival[0]); }
+else { o1.F = size_t(a_ofmt->ival[0]); }
 
 //Get o1.T
-if (a_otyp->count==0) { o1.T = 1; }
+if (a_otyp->count==0) { o1.T = 1u; }
 else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "output data type must be positive" << endl; return 1; }
 else if (a_otyp->ival[0]>103) { cerr << progstr+": " << __LINE__ << errstr << "output data type must be <= 103" << endl; return 1; }
-else { o1.T = uint8_t(a_otyp->ival[0]); }
+else { o1.T = size_t(a_otyp->ival[0]); }
 if ((o1.T==oktypes).sum()==0)
 {
     cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
@@ -92,7 +92,7 @@ if (!i1.isvec()) { cerr << progstr+": " << __LINE__ << errstr << "input (P) must
 
 //Get P
 P.resize(i1.N(),0.0);
-if (i1.T==1)
+if (i1.T==1u)
 {
     P1.resize(i1.N());
     try { ifs1.read(reinterpret_cast<char*>(&P1[0]),i1.nbytes()); }
@@ -111,7 +111,7 @@ else
 if ((P<0.0).sum()>0) { cerr << progstr+": " << __LINE__ << errstr << "elements of P must be non-negative" << endl; return 1; }
 
 //Process
-if (o1.T==1)
+if (o1.T==1u)
 {
     valarray<float> Y(o1.N());
     discrete_distribution<uint> distr(&P[0],&P[i1.N()]);

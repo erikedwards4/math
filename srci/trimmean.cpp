@@ -2,8 +2,8 @@
 #include "trimmean.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2};
-const size_t I = 1, O = 1;
+const valarray<size_t> oktypes = {1u,2u};
+const size_t I = 1u, O = 1u;
 size_t dim;
 double p, q;
 
@@ -53,25 +53,25 @@ q = (a_q->count==0) ? p : a_q->dval[0];
 if (q<0.0 || q>=50.0) { cerr << progstr+": " << __LINE__ << errstr << "q must be in [0 50)" << endl; return 1; }
 
 //Get dim
-if (a_d->count==0) { dim = 0; }
+if (a_d->count==0) { dim = 0u; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
 else { dim = size_t(a_d->ival[0]); }
-if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
 
 //Checks
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
 
 //Set output header info
 o1.F = i1.F; o1.T = i1.T;
-o1.R = (dim==0) ? 1u : i1.R;
-o1.C = (dim==1) ? 1u : i1.C;
-o1.S = (dim==2) ? 1u : i1.S;
-o1.H = (dim==3) ? 1u : i1.H;
+o1.R = (dim==0u) ? 1u : i1.R;
+o1.C = (dim==1u) ? 1u : i1.C;
+o1.S = (dim==2u) ? 1u : i1.S;
+o1.H = (dim==3u) ? 1u : i1.H;
 
 //Other prep
 
 //Process
-if (i1.T==1)
+if (i1.T==1u)
 {
     float *X, *Y;
     try { X = new float[i1.N()]; }

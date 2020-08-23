@@ -2,8 +2,8 @@
 #include "primes.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2};
-const size_t I = 0, O = 1;
+const valarray<size_t> oktypes = {1u,2u};
+const size_t I = 0u, O = 1u;
 size_t P, cnt;
 size_t *X;
 
@@ -42,15 +42,15 @@ else if (a_p->ival[0]<2) { cerr << progstr+": " << __LINE__ << errstr << "P must
 else { P = size_t(a_p->ival[0]); }
 
 //Get o1.F
-if (a_ofmt->count==0) { o1.F = 147; }
+if (a_ofmt->count==0) { o1.F = 147u; }
 else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
 else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-else { o1.F = uint8_t(a_ofmt->ival[0]); }
+else { o1.F = size_t(a_ofmt->ival[0]); }
 
 //Get o1.T
-if (a_otyp->count==0) { o1.T = 1; }
+if (a_otyp->count==0) { o1.T = 1u; }
 else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "data type must be positive int" << endl; return 1; }
-else { o1.T = uint8_t(a_otyp->ival[0]); }
+else { o1.T = size_t(a_otyp->ival[0]); }
 if ((o1.T==oktypes).sum()==0)
 {
     cerr << progstr+": " << __LINE__ << errstr << "output data type must be in " << "{";
@@ -71,7 +71,7 @@ o1.R = o1.S = o1.H = 1u;
 //Other prep
 
 //Process
-if (o1.T==1)
+if (o1.T==1u)
 {
     float *Y;
     try { Y = new float[o1.N()]; }

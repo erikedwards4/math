@@ -2,8 +2,8 @@
 #include "fill.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
-const size_t I = 0, O = 1;
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const size_t I = 0u, O = 1u;
 double val;
 
 //Description
@@ -41,15 +41,15 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 val = (a_v->count==0) ? 0.0 : a_v->dval[0];
 
 //Get o1.F
-if (a_ofmt->count==0) { o1.F = 147; }
+if (a_ofmt->count==0) { o1.F = 147u; }
 else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
 else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-else { o1.F = uint8_t(a_ofmt->ival[0]); }
+else { o1.F = size_t(a_ofmt->ival[0]); }
 
 //Get o1.T
-if (a_otyp->count==0) { o1.T = 1; }
+if (a_otyp->count==0) { o1.T = 1u; }
 else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "data type must be positive int" << endl; return 1; }
-else { o1.T = uint8_t(a_otyp->ival[0]); }
+else { o1.T = size_t(a_otyp->ival[0]); }
 if ((o1.T==oktypes).sum()==0)
 {
     cerr << progstr+": " << __LINE__ << errstr << "output data type must be in " << "{";
@@ -85,7 +85,7 @@ if (o1.H!=1u && o1.only_3D()) { cerr << progstr+": " << __LINE__ << errstr << "4
 //Other prep
 
 //Process
-if (o1.T==1)
+if (o1.T==1u)
 {
     float *Y;
     try { Y = new float[o1.N()]; }
@@ -99,7 +99,7 @@ if (o1.T==1)
     }
     delete[] Y;
 }
-else if (o1.T==101)
+else if (o1.T==101u)
 {
     float *Y;
     try { Y = new float[2u*o1.N()]; }

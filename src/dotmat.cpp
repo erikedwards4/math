@@ -1,5 +1,6 @@
 //@author Erik Edwards
-//@date 2019-2020
+//@date 2018-present
+//@license BSD 3-clause
 
 
 #include <iostream>
@@ -10,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "/home/erik/codee/util/cmli.hpp"
+#include "../util/cmli.hpp"
 #include "dotmat.c"
 
 #ifdef I
@@ -28,8 +29,8 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2,101,102};
-    const size_t I = 1, O = 1;
+    const valarray<size_t> oktypes = {1u,2u,101u,102u};
+    const size_t I = 1u, O = 1u;
     ifstream ifs1; ofstream ofs1;
     int8_t stdi1, stdo1, wo1;
     ioinfo i1, o1;
@@ -40,8 +41,8 @@ int main(int argc, char *argv[])
     string descr;
     descr += "Linear algebra function for 1 input.\n";
     descr += "Gets matrix of dot products for each pair of vectors in X.\n";
-    descr += "X is a matrix with C column vecs (d=0) or R row vecs (d=1).\n";
-    descr += "Y is a square, symmetric matrix with size CxC (d=0) or RxR (d=1).\n";
+    descr += "X is a matrix with C column vecs (if d=0) or R row vecs (if d=1).\n";
+    descr += "Y is a square, Hermitian matrix with size CxC (if d=0) or RxR (if d=1).\n";
     descr += "\n";
     descr += "This is very similar to matmul1t, since Y is also the Gram matrix for X.\n";
     descr += "That is, Y = X'*X for col vecs (d=0) and Y = X*X' for row vecs (d=1).\n";
@@ -92,7 +93,7 @@ int main(int argc, char *argv[])
     if ((i1.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -100,7 +101,7 @@ int main(int argc, char *argv[])
     //Get options
 
     //Get dim
-    if (a_d->count==0) { dim = 0; }
+    if (a_d->count==0) { dim = 0u; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
     else { dim = size_t(a_d->ival[0]); }
     if (dim>1) { cerr << progstr+": " << __LINE__ << errstr << "dim must be 0 or 1" << endl; return 1; }
@@ -133,7 +134,7 @@ int main(int argc, char *argv[])
 
 
     //Process
-    if (i1.T==1)
+    if (i1.T==1u)
     {
         float *X, *Y;
         try { X = new float[i1.N()]; }
@@ -169,7 +170,7 @@ int main(int argc, char *argv[])
         }
         delete[] X; delete[] Y;
     }
-    else if (i1.T==101)
+    else if (i1.T==101u)
     {
         float *X, *Y;
         try { X = new float[2u*i1.N()]; }
@@ -187,7 +188,7 @@ int main(int argc, char *argv[])
         }
         delete[] X; delete[] Y;
     }
-    else if (i1.T==102)
+    else if (i1.T==102u)
     {
         double *X, *Y;
         try { X = new double[2u*i1.N()]; }

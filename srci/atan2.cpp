@@ -2,8 +2,8 @@
 #include "atan2.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2};
-const size_t I = 2, O = 1;
+const valarray<size_t> oktypes = {1u,2u};
+const size_t I = 2u, O = 1u;
 
 //Description
 string descr;
@@ -41,7 +41,7 @@ o1.H = (i1.H>i2.H) ? i1.H : i2.H;
 //Other prep
 
 //Process
-if (i1.T==1)
+if (i1.T==1u)
 {
     float *X1, *X2;
     try { X1 = new float[i1.N()]; }

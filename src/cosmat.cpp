@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "../util/cmli.hpp"
-#include "isqrt2.c"
+#include "cosmat.c"
 
 #ifdef I
 #undef I
@@ -30,42 +30,34 @@ int main(int argc, char *argv[])
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
     const valarray<size_t> oktypes = {1u,2u,101u,102u};
-    const size_t O = 1u;
-    ofstream ofs1;
-    int8_t stdo1, wo1;
-    ioinfo o1;
+    const size_t I = 1u, O = 1u;
+    ifstream ifs1; ofstream ofs1;
+    int8_t stdi1, stdo1, wo1;
+    ioinfo i1, o1;
+    size_t dim;
 
 
     //Description
     string descr;
-    descr += "Generate function (0 inputs, 1 output).\n";
-    descr += "Output Y is a tensor (up to 4-D) filled with 1/sqrt(2) (constant M_SQRT1_2).\n";
-    descr += "\n";
-    descr += "Use -t (--type) to specify output data type [default=1 -> float].\n";
-    descr += "Data type can also be 2 (double), 101 (float complex), 102 (double complex).\n";
-    descr += "\n";
-    descr += "Use -f (--fmt) to specify output file format [default=147 -> NumPy].\n";
-    descr += "File format can also be 1 (ArrayFire), 65 (Armadillo),\n";
-    descr += "101 (minimal row-major format), or 102 (minimal col-major format).\n";
+    descr += "Linear algebra function for 1 input.\n";
+    descr += "Gets matrix of cosine similarities for each pair of vectors in X.\n";
+    descr += "X is a matrix with C column vecs (if d=0) or R row vecs (if d=1).\n";
+    descr += "Y is a square, Hermitian matrix with size CxC (if d=0) or RxR (if d=1).\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ isqrt2 -r2 -c3 -o Y \n";
-    descr += "$ isqrt2 -r2 -c3 > Y \n";
-    descr += "$ isqrt2 -r2 -c3 -s2 -t2 > Y \n";
+    descr += "$ cosmat X -o Y \n";
+    descr += "$ cosmat -d1 X > Y \n";
+    descr += "$ cat X | cosmat > Y \n";
 
 
     //Argtable
     int nerrs;
-    struct arg_int   *a_nr = arg_intn("r","n_rows","<uint>",0,1,"num rows in output [default=1]");
-    struct arg_int   *a_nc = arg_intn("c","n_cols","<uint>",0,1,"num cols in output [default=1]");
-    struct arg_int   *a_ns = arg_intn("s","n_slices","<uint>",0,1,"num slices in output [default=1]");
-    struct arg_int   *a_nh = arg_intn("y","n_hyperslices","<uint>",0,1,"num hyperslices in output [default=1]");
-    struct arg_int *a_otyp = arg_intn("t","type","<uint>",0,1,"output data type [default=1]");
-    struct arg_int *a_ofmt = arg_intn("f","fmt","<uint>",0,1,"output file format [default=147]");
+    struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
+    struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_nr, a_nc, a_ns, a_nh, a_otyp, a_ofmt, a_fo, a_help, a_end};
+    void *argtable[] = {a_fi, a_d, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -77,57 +69,50 @@ int main(int argc, char *argv[])
     if (nerrs>0) { arg_print_errors(stderr,a_end,(progstr+": "+to_string(__LINE__)+errstr).c_str()); return 1; }
 
 
+    //Check stdin
+    stdi1 = (a_fi->count==0 || strlen(a_fi->filename[0])==0 || strcmp(a_fi->filename[0],"-")==0);
+    if (stdi1>0 && isatty(fileno(stdin))) { cerr << progstr+": " << __LINE__ << errstr << "no stdin detected" << endl; return 1; }
+
+
     //Check stdout
     if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0 || strcmp(a_fo->filename[0],"-")==0); }
     else { stdo1 = (!isatty(fileno(stdout))); }
     wo1 = (stdo1 || a_fo->count>0);
 
 
-    //Get options
+    //Open input
+    if (stdi1) { ifs1.copyfmt(cin); ifs1.basic_ios<char>::rdbuf(cin.rdbuf()); } else { ifs1.open(a_fi->filename[0]); }
+    if (!ifs1) { cerr << progstr+": " << __LINE__ << errstr << "problem opening input file" << endl; return 1; }
 
-    //Get o1.F
-    if (a_ofmt->count==0) { o1.F = 147u; }
-    else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
-    else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-    else { o1.F = size_t(a_ofmt->ival[0]); }
 
-    //Get o1.T
-    if (a_otyp->count==0) { o1.T = 1u; }
-    else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "data type must be positive int" << endl; return 1; }
-    else { o1.T = size_t(a_otyp->ival[0]); }
-    if ((o1.T==oktypes).sum()==0)
+    //Read input header
+    if (!read_input_header(ifs1,i1)) { cerr << progstr+": " << __LINE__ << errstr << "problem reading header for input file" << endl; return 1; }
+    if ((i1.T==oktypes).sum()==0)
     {
-        cerr << progstr+": " << __LINE__ << errstr << "output data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
-    //Get o1.R
-    if (a_nr->count==0) { o1.R = 1u; }
-    else if (a_nr->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "R (nrows) must be nonnegative" << endl; return 1; }
-    else { o1.R = size_t(a_nr->ival[0]); }
 
-    //Get o1.C
-    if (a_nc->count==0) { o1.C = 1u; }
-    else if (a_nc->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "C (ncols) must be nonnegative" << endl; return 1; }
-    else { o1.C = size_t(a_nc->ival[0]); }
+    //Get options
 
-    //Get o1.S
-    if (a_ns->count==0) { o1.S = 1u; }
-    else if (a_ns->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "S (nslices) must be nonnegative" << endl; return 1; }
-    else { o1.S = size_t(a_ns->ival[0]); }
-
-    //Get o1.H
-    if (a_nh->count==0) { o1.H = 1u; }
-    else if (a_nh->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "H (nhyperslices) must be nonnegative" << endl; return 1; }
-    else { o1.H = size_t(a_nh->ival[0]); }
+    //Get dim
+    if (a_d->count==0) { dim = 0u; }
+    else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
+    else { dim = size_t(a_d->ival[0]); }
+    if (dim>1) { cerr << progstr+": " << __LINE__ << errstr << "dim must be 0 or 1" << endl; return 1; }
 
 
     //Checks
-    if (o1.H!=1u && o1.only_3D()) { cerr << progstr+": " << __LINE__ << errstr << "4D (hypercubes) not supported for Armadillo file format" << endl; return 1; }
+    if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
+    if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must be a matrix" << endl; return 1; }
 
 
     //Set output header info
+    o1.F = i1.F; o1.T = i1.T;
+    o1.R = o1.C = (dim==0) ? i1.C : i1.R;
+    o1.S = i1.S; o1.H = i1.H;
 
 
     //Open output
@@ -146,61 +131,77 @@ int main(int argc, char *argv[])
 
 
     //Process
-    if (o1.T==1u)
+    if (i1.T==1u)
     {
-        float *Y;
+        float *X, *Y;
+        try { X = new float[i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new float[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::isqrt2_s(Y,o1.N()))
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::cosmat_s(Y,X,i1.R,i1.C,o1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] Y;
+        delete[] X; delete[] Y;
     }
-    else if (o1.T==2)
+    else if (i1.T==2)
     {
-        double *Y;
+        double *X, *Y;
+        try { X = new double[i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new double[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::isqrt2_d(Y,o1.N()))
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::cosmat_d(Y,X,i1.R,i1.C,o1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] Y;
+        delete[] X; delete[] Y;
     }
-    else if (o1.T==101u)
+    else if (i1.T==101u)
     {
-        float *Y;
+        float *X, *Y;
+        try { X = new float[2u*i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new float[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::isqrt2_c(Y,o1.N()))
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::cosmat_c(Y,X,i1.R,i1.C,o1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] Y;
+        delete[] X; delete[] Y;
     }
-    else if (o1.T==102u)
+    else if (i1.T==102u)
     {
-        double *Y;
+        double *X, *Y;
+        try { X = new double[2u*i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { Y = new double[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::isqrt2_z(Y,o1.N()))
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::cosmat_z(Y,X,i1.R,i1.C,o1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] Y;
+        delete[] X; delete[] Y;
     }
     else
     {

@@ -1,5 +1,6 @@
 //@author Erik Edwards
-//@date 2019-2020
+//@date 2018-present
+//@license BSD 3-clause
 
 
 #include <iostream>
@@ -10,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "/home/erik/codee/util/cmli.hpp"
+#include "../util/cmli.hpp"
 #include "split2.c"
 
 #ifdef I
@@ -28,8 +29,8 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2,101,102};
-    const size_t I = 1, O = 2;
+    const valarray<size_t> oktypes = {1u,2u,101u,102u};
+    const size_t I = 1u, O = 2u;
     ifstream ifs1; ofstream ofs1, ofs2;
     int8_t stdi1, stdo1, stdo2, wo1, wo2;
     ioinfo i1, o1, o2;
@@ -101,7 +102,7 @@ int main(int argc, char *argv[])
     if ((i1.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -109,10 +110,10 @@ int main(int argc, char *argv[])
     //Get options
 
     //Get dim
-    if (a_d->count==0) { dim = 0; }
+    if (a_d->count==0) { dim = 0u; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
     else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
 
 
     //Checks
@@ -154,7 +155,7 @@ int main(int argc, char *argv[])
 
 
     //Process
-    if (i1.T==1)
+    if (i1.T==1u)
     {
         float *X, *Y1, *Y2;
         try { X = new float[i1.N()]; }
@@ -204,7 +205,7 @@ int main(int argc, char *argv[])
         }
         delete[] X; delete[] Y1; delete[] Y2;
     }
-    else if (i1.T==101)
+    else if (i1.T==101u)
     {
         float *X, *Y1, *Y2;
         try { X = new float[2u*i1.N()]; }
@@ -229,7 +230,7 @@ int main(int argc, char *argv[])
         }
         delete[] X; delete[] Y1; delete[] Y2;
     }
-    else if (i1.T==102)
+    else if (i1.T==102u)
     {
         double *X, *Y1, *Y2;
         try { X = new double[2u*i1.N()]; }

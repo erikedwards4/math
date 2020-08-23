@@ -1,5 +1,6 @@
 #@author Erik Edwards
 #@date 2018-present
+#@license BSD 3-clause
 
 #math is my own library of functions for basic math operations in C and C++.
 #This is the makefile for the command-line tools in C++.
@@ -10,7 +11,7 @@ CC=clang++
 
 ifeq ($(CC),clang++)
 	STD=-std=c++11
-	WFLAG=-Weverything -Wno-c++98-compat -Wno-padded -Wno-old-style-cast -Wno-gnu-imaginary-constant
+	WFLAG=-Weverything -Wno-c++98-compat -Wno-old-style-cast -Wno-gnu-imaginary-constant
 else
 	STD=-std=gnu++14
 	WFLAG=-Wall -Wextra
@@ -509,7 +510,7 @@ affine: srci/affine.cpp c/affine.c
 projective: srci/projective.cpp c/projective.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 
-Sim_Mat: dotmat cosmat covmat corrmat #spearmat
+Sim_Mat: dotmat #cosmat covmat corrmat spearmat
 dotmat: srci/dotmat.cpp c/dotmat.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 cosmat: srci/cosmat.cpp c/cosmat.c
@@ -521,7 +522,7 @@ corrmat: srci/corrmat.cpp c/corrmat.c
 spearmat: srci/spearmat.cpp c/spearmat.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
-Dist_Mat: distmat0 distmat1 distmat2 distmatp distmat_cos
+Dist_Mat: #distmat0 distmat1 distmat2 distmatp distmat_cos
 distmat0: srci/distmat0.cpp c/distmat0.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 distmat1: srci/distmat1.cpp c/distmat1.c

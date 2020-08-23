@@ -2,8 +2,8 @@
 #include "randperm.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2};
-const size_t I = 0, O = 1;
+const valarray<size_t> oktypes = {1u,2u};
+const size_t I = 0u, O = 1u;
 size_t N, M;
 size_t dim;
 
@@ -38,21 +38,21 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 //Get options
 
 //Get dim
-if (a_d->count==0) { dim = 0; }
+if (a_d->count==0) { dim = 0u; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
 else { dim = size_t(a_d->ival[0]); }
-if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
 
 //Get o1.F
-if (a_ofmt->count==0) { o1.F = 147; }
+if (a_ofmt->count==0) { o1.F = 147u; }
 else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
 else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-else { o1.F = uint8_t(a_ofmt->ival[0]); }
+else { o1.F = size_t(a_ofmt->ival[0]); }
 
 //Get o1.T
-if (a_otyp->count==0) { o1.T = 1; }
+if (a_otyp->count==0) { o1.T = 1u; }
 else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "output data type must be positive" << endl; return 1; }
-else { o1.T = uint8_t(a_otyp->ival[0]); }
+else { o1.T = size_t(a_otyp->ival[0]); }
 if ((o1.T==oktypes).sum()==0)
 {
     cerr << progstr+": " << __LINE__ << errstr << "output data type must be in " << "{";
@@ -74,15 +74,15 @@ else { M = size_t(a_m->ival[0]); }
 if (M>N) { cerr << progstr+": " << __LINE__ << errstr << "M must be less than or equal to N" << endl; return 1; }
 
 //Set output header
-o1.R = (dim==0) ? M : 1u;
-o1.C = (dim==1) ? M : 1u;
-o1.S = (dim==2) ? M : 1u;
-o1.H = (dim==3) ? M : 1u;
+o1.R = (dim==0u) ? M : 1u;
+o1.C = (dim==1u) ? M : 1u;
+o1.S = (dim==2u) ? M : 1u;
+o1.H = (dim==3u) ? M : 1u;
 
 //Other prep
 
 //Process
-if (o1.T==1)
+if (o1.T==1u)
 {
     float *Y;
     try { Y = new float[o1.N()]; }

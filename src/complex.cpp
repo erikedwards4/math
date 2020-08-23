@@ -1,5 +1,6 @@
 //@author Erik Edwards
-//@date 2019-2020
+//@date 2018-present
+//@license BSD 3-clause
 
 
 #include <iostream>
@@ -10,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "/home/erik/codee/util/cmli.hpp"
+#include "../util/cmli.hpp"
 #include "complex.c"
 
 #ifdef I
@@ -28,8 +29,8 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2};
-    const size_t I = 2, O = 1;
+    const valarray<size_t> oktypes = {1u,2u};
+    const size_t I = 2u, O = 1u;
     ifstream ifs1, ifs2; ofstream ofs1;
     int8_t stdi1, stdi2, stdo1, wo1;
     ioinfo i1, i2, o1;
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
     if ((i1.T==oktypes).sum()==0 || (i2.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -112,7 +113,7 @@ int main(int argc, char *argv[])
 
 
     //Set output header info
-    o1.F = i1.F; o1.T = i1.T + 100;
+    o1.F = i1.F; o1.T = i1.T + 100u;
     o1.R = (i1.R>i2.R) ? i1.R : i2.R;
     o1.C = (i1.C>i2.C) ? i1.C : i2.C;
     o1.S = (i1.S>i2.S) ? i1.S : i2.S;
@@ -135,7 +136,7 @@ int main(int argc, char *argv[])
 
 
     //Process
-    if (i1.T==1)
+    if (i1.T==1u)
     {
         float *X1, *X2, *Y;
         try { X1 = new float[i1.N()]; }

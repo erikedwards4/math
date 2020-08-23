@@ -2,8 +2,8 @@
 #include "eig.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
-const size_t I = 1, O = 2;
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const size_t I = 1u, O = 2u;
 size_t K;
 
 //Description
@@ -45,7 +45,7 @@ if (!i1.issquare()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) m
 //Set output header info
 o1.F = o2.F = i1.F;
 o1.T = i1.T;
-o2.T = i1.isreal() ? i1.T : i1.T-100;
+o2.T = i1.isreal() ? i1.T : i1.T-100u;
 o1.R = i1.R; o2.R = K;
 o1.C = K; o2.C = 1u;
 o1.S = o2.S = i1.S;
@@ -54,7 +54,7 @@ o1.H = o2.H = i1.H;
 //Other prep
 
 //Process
-if (i1.T==1)
+if (i1.T==1u)
 {
     float *X, *V;
     try { X = new float[i1.N()]; }
@@ -77,7 +77,7 @@ if (i1.T==1)
     }
     delete[] X; delete[] V;
 }
-else if (i1.T==101)
+else if (i1.T==101u)
 {
     float *X, *V;
     try { X = new float[2u*i1.N()]; }

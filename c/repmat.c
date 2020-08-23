@@ -181,7 +181,7 @@ int repmat_c (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0 || NN==0) {}
     else if (NN==1)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
@@ -261,7 +261,7 @@ int repmat_z (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0 || NN==0) {}
     else if (NN==1)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {

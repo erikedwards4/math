@@ -1,8 +1,8 @@
 //@author Erik Edwards
-//@date 2019-2020
+//@date 2018-present
+//@license BSD 3-clause
 
 
-#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -11,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "/home/erik/codee/util/cmli.hpp"
+#include "../util/cmli.hpp"
 #include "solve.c"
 
 #ifdef I
@@ -22,7 +22,6 @@
 int main(int argc, char *argv[])
 {
     using namespace std;
-    timespec tic, toc;
 
 
     //Declarations
@@ -30,8 +29,8 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2,101,102};
-    const size_t I = 2, O = 1;
+    const valarray<size_t> oktypes = {1u,2u,101u,102u};
+    const size_t I = 2u, O = 1u;
     ifstream ifs1, ifs2; ofstream ofs1;
     int8_t stdi1, stdi2, stdo1, wo1;
     ioinfo i1, i2, o1;
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
     descr += "Input 2 (B) can be vector or matrix.\n";
     descr += "The output (X) is solution to minimize norm2(B-A*X).\n";
     descr += "\n";
-    descr += "Include -r (--transpose) to use A' (Hermitian transpose of A).\n";
+    descr += "Include -t (--transpose) to use A' (Hermitian transpose of A).\n";
     descr += "In this case, minimize: norm2(B-A'*X). \n";
     descr += "\n";
     descr += "Examples:\n";
@@ -105,7 +104,7 @@ int main(int argc, char *argv[])
     if ((i1.T==oktypes).sum()==0 || (i2.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -151,8 +150,7 @@ int main(int argc, char *argv[])
 
 
     //Process
-    clock_gettime(CLOCK_REALTIME,&tic);
-    if (i1.T==1)
+    if (i1.T==1u)
     {
         float *A, *B;
         try { A = new float[i1.N()]; }
@@ -192,7 +190,7 @@ int main(int argc, char *argv[])
         }
         delete[] A; delete[] B;
     }
-    else if (i1.T==101)
+    else if (i1.T==101u)
     {
         float *A, *B;
         try { A = new float[2u*i1.N()]; }
@@ -212,7 +210,7 @@ int main(int argc, char *argv[])
         }
         delete[] A; delete[] B;
     }
-    else if (i1.T==102)
+    else if (i1.T==102u)
     {
         double *A, *B;
         try { A = new double[2u*i1.N()]; }
@@ -236,8 +234,6 @@ int main(int argc, char *argv[])
     {
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
-    clock_gettime(CLOCK_REALTIME,&toc);
-    cerr << "elapsed time = " << (toc.tv_sec-tic.tv_sec)*1e3 + (toc.tv_nsec-tic.tv_nsec)/1e6 << " ms" << endl;
     
 
     //Exit

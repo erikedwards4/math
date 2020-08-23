@@ -2,8 +2,8 @@
 #include "distp.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
-const size_t I = 2, O = 1;
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const size_t I = 2u, O = 1u;
 size_t dim;
 double p;
 
@@ -47,10 +47,10 @@ p = (a_p->count==0) ? 2.0 : a_p->dval[0];
 if (p<=0.0) { cerr << progstr+": " << __LINE__ << errstr << "p must be positive" << endl; return 1; }
 
 //Get dim
-if (a_d->count==0) { dim = 0; }
+if (a_d->count==0) { dim = 0u; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
 else { dim = size_t(a_d->ival[0]); }
-if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
 
 //Checks
 if (i1.T!=i2.T) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same data type" << endl; return 1; }
@@ -58,22 +58,22 @@ if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 1 (X1) 
 if (i2.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) found to be empty" << endl; return 1; }
 if (!bcast_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same size or broadcast-compatible sizes" << endl; return 1; }
 if (!major_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same row/col major format unless vectors" << endl; return 1; }
-size_t L1 = (dim==0) ? i1.R : (dim==1) ? i1.C : (dim==2) ? i1.S : i1.H;
-size_t L2 = (dim==0) ? i2.R : (dim==1) ? i2.C : (dim==2) ? i2.S : i2.H;
+size_t L1 = (dim==0u) ? i1.R : (dim==1u) ? i1.C : (dim==2u) ? i1.S : i1.H;
+size_t L2 = (dim==0u) ? i2.R : (dim==1u) ? i2.C : (dim==2u) ? i2.S : i2.H;
 if (L1!=L2) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same length along dim" << endl; return 1; }
 
 //Set output header info
 o1.F = i1.F;
-o1.T = (i1.T<100) ? i1.T : i1.T-100;
-o1.R = (dim==0) ? 1 : (i1.R>i2.R) ? i1.R : i2.R;
-o1.C = (dim==1) ? 1 : (i1.C>i2.C) ? i1.C : i2.C;
-o1.S = (dim==2) ? 1 : (i1.S>i2.S) ? i1.S : i2.S;
-o1.H = (dim==3) ? 1 : (i1.H>i2.H) ? i1.H : i2.H;
+o1.T = (i1.T<100) ? i1.T : i1.T-100u;
+o1.R = (dim==0u) ? 1 : (i1.R>i2.R) ? i1.R : i2.R;
+o1.C = (dim==1u) ? 1 : (i1.C>i2.C) ? i1.C : i2.C;
+o1.S = (dim==2u) ? 1 : (i1.S>i2.S) ? i1.S : i2.S;
+o1.H = (dim==3u) ? 1 : (i1.H>i2.H) ? i1.H : i2.H;
 
 //Other prep
 
 //Process
-if (i1.T==1)
+if (i1.T==1u)
 {
     float *X1, *X2, *Y;
     try { X1 = new float[i1.N()]; }
@@ -95,7 +95,7 @@ if (i1.T==1)
     }
     delete[] X1; delete[] X2; delete[] Y;
 }
-else if (i1.T==101)
+else if (i1.T==101u)
 {
     float *X1, *X2, *Y;
     try { X1 = new float[2u*i1.N()]; }

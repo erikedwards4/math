@@ -1,5 +1,6 @@
 //@author Erik Edwards
-//@date 2019-2020
+//@date 2018-present
+//@license BSD 3-clause
 
 
 #include <iostream>
@@ -10,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "/home/erik/codee/util/cmli.hpp"
+#include "../util/cmli.hpp"
 #include <cfloat>
 #include <random>
 #include <complex>
@@ -30,8 +31,8 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2};
-    const size_t I = 2, O = 1;
+    const valarray<size_t> oktypes = {1u,2u};
+    const size_t I = 2u, O = 1u;
     ifstream ifs1, ifs2; ofstream ofs1;
     int8_t stdi1, stdi2, stdo1, wo1;
     ioinfo i1, i2, o1;
@@ -115,7 +116,7 @@ int main(int argc, char *argv[])
     if ((i1.T==oktypes).sum()==0 || (i2.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -126,7 +127,7 @@ int main(int argc, char *argv[])
     if (a_ofmt->count==0) { o1.F = i1.F; }
     else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
     else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-    else { o1.F = uint8_t(a_ofmt->ival[0]); }
+    else { o1.F = size_t(a_ofmt->ival[0]); }
 
     //Get o1.R
     if (a_nr->count==0) { o1.R = 1u; }
@@ -176,7 +177,7 @@ int main(int argc, char *argv[])
 
 
     //Process
-    if (o1.T==1)
+    if (o1.T==1u)
     {
         valarray<float> B(i1.N()), P(i2.N()), Y(o1.N());
         try { ifs1.read(reinterpret_cast<char*>(&B[0]),i1.nbytes()); }

@@ -2,8 +2,8 @@
 #include "imag.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
-const size_t I = 1, O = 1;
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const size_t I = 1u, O = 1u;
 
 //Description
 string descr;
@@ -26,14 +26,14 @@ if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) fou
 
 //Set output header info
 o1.F = i1.F;
-o1.T = i1.isreal() ? i1.T : i1.T-100;
+o1.T = i1.isreal() ? i1.T : i1.T-100u;
 o1.R = i1.R; o1.C = i1.C;
 o1.S = i1.S; o1.H = i1.H;
 
 //Other prep
 
 //Process
-if (i1.T==1)
+if (i1.T==1u)
 {
     float *X;
     try { X = new float[i1.N()](); }
@@ -45,7 +45,7 @@ if (i1.T==1)
     }
     delete[] X;
 }
-else if (i1.T==101)
+else if (i1.T==101u)
 {
     float *X, *Y;
     try { X = new float[2u*i1.N()]; }

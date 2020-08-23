@@ -2,8 +2,8 @@
 #include "matmul1t.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
-const size_t I = 1, O = 1;
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const size_t I = 1u, O = 1u;
 char tr;
 
 //Description
@@ -43,7 +43,7 @@ o1.S = i1.S; o1.H = i1.H;
 //Other prep
 
 //Process
-if (i1.T==1)
+if (i1.T==1u)
 {
     float *X, *Y;
     try { X = new float[i1.N()]; }
@@ -61,7 +61,7 @@ if (i1.T==1)
     }
     delete[] X; delete[] Y;
 }
-else if (i1.T==101)
+else if (i1.T==101u)
 {
     float *X, *Y;
     try { X = new float[2u*i1.N()]; }

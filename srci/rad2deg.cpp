@@ -2,8 +2,8 @@
 #include "rad2deg.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2};
-const size_t I = 1, O = 1;
+const valarray<size_t> oktypes = {1u,2u};
+const size_t I = 1u, O = 1u;
 
 //Description
 string descr;
@@ -32,7 +32,7 @@ o1.R = i1.R; o1.C = i1.C; o1.S = i1.S; o1.H = i1.H;
 //Other prep
 
 //Process
-if (i1.T==1)
+if (i1.T==1u)
 {
     float *X;
     try { X = new float[i1.N()]; }

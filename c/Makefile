@@ -1,10 +1,12 @@
 #@author Erik Edwards
 #@date 2017-present
+#@license BSD 3-clause
 
 #math is my own library of C functions for basic math operations in C.
 
 #This is the Makefile used during development of the C functions.
 #Since these are not stand-alone programs (no main functions), the only outputs are object files to obj.
+
 
 SHELL=/bin/bash
 CC=clang
@@ -374,13 +376,12 @@ matnorm: matnorm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
-#This works with clang++
-libmath.a: all
-	ar crs ../lib/libmath.a obj/*.o
+#If want to make a library archive for C++ use, this works with clang++
+#ar crs ../lib/libmath.a obj/*.o
 
 
 #make clean
 Clean: clean
 clean:
 	find ./obj -type f -name *.o | xargs rm -f
-	rm -f *.s
+	rm -f *.s tmp.*

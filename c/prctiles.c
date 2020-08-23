@@ -1,3 +1,4 @@
+//Vec2vec operation.
 //Gets all percentiles in P along dim of X.
 //P is of length Ly, so Y ends up with length Ly along dim.
 
@@ -90,7 +91,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
         {
             for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=Ly*K-1)
+                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
                 {
                     for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -183,7 +184,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
         {
             for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=Ly*K-1)
+                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
                 {
                     for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -271,7 +272,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
             if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=Ly*K-1)
+                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
                 {
                     for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -360,7 +361,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
             if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=Ly*K-1)
+                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
                 {
                     for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;

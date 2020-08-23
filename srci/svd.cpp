@@ -2,8 +2,8 @@
 #include "svd.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
-const size_t I = 1, O = 3;
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const size_t I = 1u, O = 3u;
 size_t Kmax, K;
 
 //Description
@@ -46,7 +46,7 @@ if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) must
 //Set output header info
 o1.F = o2.F = o3.F = i1.F;
 o1.T = o3.T = i1.T;
-o2.T = (i1.isreal()) ? i1.T : i1.T-100;
+o2.T = (i1.isreal()) ? i1.T : i1.T-100u;
 o1.R = i1.R;
 o1.C = K;
 o2.R = K;
@@ -59,7 +59,7 @@ o1.H = o2.H = o3.H = i1.H;
 //Other prep
 
 //Process
-if (i1.T==1)
+if (i1.T==1u)
 {
     float *X, *U, *S, *Vt;
     try { X = new float[i1.N()]; }
@@ -91,7 +91,7 @@ if (i1.T==1)
     }
     delete[] X; delete[] U; delete[] S; delete[] Vt;
 }
-else if (i1.T==101)
+else if (i1.T==101u)
 {
     float *X, *U, *S, *Vt;
     try { X = new float[2u*i1.N()]; }

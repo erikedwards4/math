@@ -2,8 +2,8 @@
 #include "logspace.c"
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
-const size_t I = 0, O = 1;
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const size_t I = 0u, O = 1u;
 double a, b;
 size_t dim;
 size_t N;
@@ -48,10 +48,10 @@ a = (a_a->count==0) ? 0.0 : a_a->dval[0];
 b = (a_b->count==0) ? 1.0 : a_b->dval[0];
 
 //Get dim
-if (a_d->count==0) { dim = 0; }
+if (a_d->count==0) { dim = 0u; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
 else { dim = size_t(a_d->ival[0]); }
-if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
 
 //Get N
 if (a_n->count==0) { N = 100u; }
@@ -59,15 +59,15 @@ else if (a_n->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "N (len
 else { N = size_t(a_n->ival[0]); }
 
 //Get o1.F
-if (a_ofmt->count==0) { o1.F = 147; }
+if (a_ofmt->count==0) { o1.F = 147u; }
 else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
 else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-else { o1.F = uint8_t(a_ofmt->ival[0]); }
+else { o1.F = size_t(a_ofmt->ival[0]); }
 
 //Get o1.T
-if (a_otyp->count==0) { o1.T = 1; }
+if (a_otyp->count==0) { o1.T = 1u; }
 else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "data type must be positive int" << endl; return 1; }
-else { o1.T = uint8_t(a_otyp->ival[0]); }
+else { o1.T = size_t(a_otyp->ival[0]); }
 if ((o1.T==oktypes).sum()==0)
 {
     cerr << progstr+": " << __LINE__ << errstr << "output data type must be in " << "{";
@@ -78,15 +78,15 @@ if ((o1.T==oktypes).sum()==0)
 //Checks
 
 //Set output header info
-o1.R = (dim==0) ? N : 1u;
-o1.C = (dim==1) ? N : 1u;
-o1.S = (dim==2) ? N : 1u;
-o1.H = (dim==3) ? N : 1u;
+o1.R = (dim==0u) ? N : 1u;
+o1.C = (dim==1u) ? N : 1u;
+o1.S = (dim==2u) ? N : 1u;
+o1.H = (dim==3u) ? N : 1u;
 
 //Other prep
 
 //Process
-if (o1.T==1)
+if (o1.T==1u)
 {
     float *Y;
     try { Y = new float[o1.N()]; }
@@ -100,7 +100,7 @@ if (o1.T==1)
     }
     delete[] Y;
 }
-else if (o1.T==101)
+else if (o1.T==101u)
 {
     float *Y;
     try { Y = new float[2u*o1.N()]; }

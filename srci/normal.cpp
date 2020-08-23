@@ -3,8 +3,8 @@
 #include <complex>
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2,101,102};
-const size_t I = 0, O = 1;
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const size_t I = 0u, O = 1u;
 double mn, std;
 random_device rd;  //random device to seed Mersenne twister engine
 mt19937 mt_eng(rd());
@@ -36,15 +36,15 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 //Get options
 
 //Get o1.F
-if (a_ofmt->count==0) { o1.F = 147; }
+if (a_ofmt->count==0) { o1.F = 147u; }
 else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
 else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-else { o1.F = uint8_t(a_ofmt->ival[0]); }
+else { o1.F = size_t(a_ofmt->ival[0]); }
 
 //Get o1.T
-if (a_otyp->count==0) { o1.T = 1; }
+if (a_otyp->count==0) { o1.T = 1u; }
 else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "output data type must be positive" << endl; return 1; }
-else { o1.T = uint8_t(a_otyp->ival[0]); }
+else { o1.T = size_t(a_otyp->ival[0]); }
 if ((o1.T==oktypes).sum()==0)
 {
     cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
@@ -86,7 +86,7 @@ if (std<0.0) { cerr << progstr+": " << __LINE__ << errstr << "s (stddev) must be
 //Other prep
 
 //Process
-if (o1.T==1)
+if (o1.T==1u)
 {
     valarray<float> Y(o1.N());
     normal_distribution<float> distr(mn,std);
@@ -99,7 +99,7 @@ if (o1.T==1)
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
 }
-else if (o1.T==101)
+else if (o1.T==101u)
 {
     valarray<complex<float>> Y(o1.N());
     normal_distribution<float> distr(mn,std);

@@ -1,5 +1,6 @@
 //@author Erik Edwards
-//@date 2019-2020
+//@date 2018-present
+//@license BSD 3-clause
 
 
 #include <iostream>
@@ -10,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "/home/erik/codee/util/cmli.hpp"
+#include "../util/cmli.hpp"
 #include "matmul3t.c"
 
 #ifdef I
@@ -28,8 +29,8 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2,101,102};
-    const size_t I = 3, O = 1;
+    const valarray<size_t> oktypes = {1u,2u,101u,102u};
+    const size_t I = 3u, O = 1u;
     ifstream ifs1, ifs2, ifs3; ofstream ofs1;
     int8_t stdi1, stdi2, stdi3, stdo1, wo1;
     ioinfo i1, i2, i3, o1;
@@ -104,7 +105,7 @@ int main(int argc, char *argv[])
     if ((i1.T==oktypes).sum()==0 || (i2.T==oktypes).sum()==0 || (i3.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -153,7 +154,7 @@ int main(int argc, char *argv[])
 
 
     //Process
-    if (i1.T==1)
+    if (i1.T==1u)
     {
         float *X1, *X2, *X3, *Y;
         try { X1 = new float[i1.N()]; }
@@ -205,7 +206,7 @@ int main(int argc, char *argv[])
         }
         delete[] X1; delete[] X2; delete[] X3; delete[] Y;
     }
-    else if (i1.T==101)
+    else if (i1.T==101u)
     {
         float *X1, *X2, *X3, *Y;
         try { X1 = new float[2u*i1.N()]; }
@@ -231,7 +232,7 @@ int main(int argc, char *argv[])
         }
         delete[] X1; delete[] X2; delete[] X3; delete[] Y;
     }
-    else if (i1.T==102)
+    else if (i1.T==102u)
     {
         double *X1, *X2, *X3, *Y;
         try { X1 = new double[2u*i1.N()]; }

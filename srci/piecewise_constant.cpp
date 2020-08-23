@@ -3,8 +3,8 @@
 #include <complex>
 
 //Declarations
-const valarray<uint8_t> oktypes = {1,2};
-const size_t I = 2, O = 1;
+const valarray<size_t> oktypes = {1u,2u};
+const size_t I = 2u, O = 1u;
 random_device rd;    //random device to seed Mersenne twister engine
 mt19937 mt_eng(rd()); 
 
@@ -46,7 +46,7 @@ struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
 if (a_ofmt->count==0) { o1.F = i1.F; }
 else if (a_ofmt->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be nonnegative" << endl; return 1; }
 else if (a_ofmt->ival[0]>255) { cerr << progstr+": " << __LINE__ << errstr << "output file format must be < 256" << endl; return 1; }
-else { o1.F = uint8_t(a_ofmt->ival[0]); }
+else { o1.F = size_t(a_ofmt->ival[0]); }
 
 //Get o1.R
 if (a_nr->count==0) { o1.R = 1u; }
@@ -80,7 +80,7 @@ o1.T = i1.T;
 //Other prep
 
 //Process
-if (o1.T==1)
+if (o1.T==1u)
 {
     valarray<float> B(i1.N()), P(i2.N()), Y(o1.N());
     try { ifs1.read(reinterpret_cast<char*>(&B[0]),i1.nbytes()); }
