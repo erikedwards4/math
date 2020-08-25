@@ -3,8 +3,9 @@
 //For complex case, finds max absolute value and outputs the complex number.
 //For complex case, this is the proper absolute value; see amax for the other one.
 
+//Computational note: it is much faster to use intermediate mx variable (on stack) than to compare to *Y.
+
 #include <stdio.h>
-#include <stdlib.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -23,6 +24,7 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    float mx;
 
     if (N==0) {}
     else if (L==1)
@@ -31,8 +33,9 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     }
     else if (L==N)
     {
-        *Y = *X++;
-        for (size_t l=1; l<L; ++l, ++X) { if (*X>*Y) { *Y = *X; } }
+        mx = *X++;
+        for (size_t l=1; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
+        *Y = mx;
     }
     else
     {
@@ -44,28 +47,30 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { if (*X>*Y) { *Y = *X; } }
+                mx = *X++;
+                for (size_t l=1; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
+                *Y = mx;
             }
         }
-        else if (G==1)
-        {
-            for (size_t l=0; l<L; ++l, Y-=V)
-            {
-                for (size_t v=0; v<V; ++v, ++X, ++Y)
-                {
-                    if (l==0 || *X>*Y) { *Y = *X; }
-                }
-            }
-        }
+        // else if (G==1)
+        // {
+        //     for (size_t l=0; l<L; ++l, Y-=V)
+        //     {
+        //         for (size_t v=0; v<V; ++v, ++X, ++Y)
+        //         {
+        //             if (l==0 || *X>*Y) { *Y = *X; }
+        //         }
+        //     }
+        // }
         else
         {
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = *X; X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { if (*X>*Y) { *Y = *X; } }
+                    mx = *X; X += K;
+                    for (size_t l=1; l<L; ++l, X+=K) { if (*X>mx) { mx = *X; } }
+                    *Y = mx;
                 }
             }
         }
@@ -81,6 +86,7 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    double mx;
 
     if (N==0) {}
     else if (L==1)
@@ -89,8 +95,9 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
-        *Y = *X++;
-        for (size_t l=1; l<L; ++l, ++X) { if (*X>*Y) { *Y = *X; } }
+        mx = *X++;
+        for (size_t l=1; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
+        *Y = mx;
     }
     else
     {
@@ -102,18 +109,9 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         {
             for (size_t v=0; v<V; ++v, ++Y)
             {
-                *Y = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { if (*X>*Y) { *Y = *X; } }
-            }
-        }
-        else if (G==1)
-        {
-            for (size_t l=0; l<L; ++l, Y-=V)
-            {
-                for (size_t v=0; v<V; ++v, ++X, ++Y)
-                {
-                    if (l==0 || *X>*Y) { *Y = *X; }
-                }
+                mx = *X++;
+                for (size_t l=1; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
+                *Y = mx;
             }
         }
         else
@@ -122,8 +120,9 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    *Y = *X; X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { if (*X>*Y) { *Y = *X; } }
+                    mx = *X; X += K;
+                    for (size_t l=1; l<L; ++l, X+=K) { if (*X>mx) { mx = *X; } }
+                    *Y = mx;
                 }
             }
         }
@@ -174,20 +173,6 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
                     if (xx>mx) { mx = xx; *Y = *X; *(Y+1) = *(X+1); }
                 }
             }
-        }
-        else if (G==1)
-        {
-            float *mxs;
-            if (!(mxs=(float *)malloc(V*sizeof(float)))) { fprintf(stderr,"error in max_c: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t l=0; l<L; ++l, Y-=2*V, mxs-=V)
-            {
-                for (size_t v=0; v<V; ++v, X+=2, Y+=2, ++mxs)
-                {
-                    xx = *X**X + *(X+1)**(X+1);
-                    if (l==0 || xx>*mxs) { *mxs = xx; *Y = *X; *(Y+1) = *(X+1); }
-                }
-            }
-            free(mxs);
         }
         else
         {
@@ -252,20 +237,6 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
                     if (xx>mx) { mx = xx; *Y = *X; *(Y+1) = *(X+1); }
                 }
             }
-        }
-        else if (G==1)
-        {
-            double *mxs;
-            if (!(mxs=(double *)malloc(V*sizeof(double)))) { fprintf(stderr,"error in max_z: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t l=0; l<L; ++l, Y-=2*V, mxs-=V)
-            {
-                for (size_t v=0; v<V; ++v, X+=2, Y+=2, ++mxs)
-                {
-                    xx = *X**X + *(X+1)**(X+1);
-                    if (l==0 || xx>*mxs) { *mxs = xx; *Y = *X; *(Y+1) = *(X+1); }
-                }
-            }
-            free(mxs);
         }
         else
         {
