@@ -147,13 +147,14 @@ erfc: erfc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 tgamma: tgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lgamma: lgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Nonlin: abs square cube sqrt cbrt reciprocal deadzone
+Nonlin: abs square cube sqrt cbrt reciprocal sign deadzone
 abs: abs.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 square: square.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cube: cube.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sqrt: sqrt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cbrt: cbrt.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 reciprocal: reciprocal.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+sign: sign.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 deadzone: deadzone.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 

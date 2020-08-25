@@ -249,7 +249,7 @@ lgamma: srci/lgamma.cpp c/lgamma.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 #Nonlin: other 1 input, 1 output static nonlinearities
-Nonlin: abs square cube sqrt cbrt reciprocal deadzone
+Nonlin: abs square cube sqrt cbrt reciprocal sign deadzone
 abs: srci/abs.cpp c/abs.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 square: srci/square.cpp c/square.c
@@ -261,6 +261,8 @@ sqrt: srci/sqrt.cpp c/sqrt.c
 cbrt: srci/cbrt.cpp c/cbrt.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 reciprocal: srci/reciprocal.cpp c/reciprocal.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+sign: srci/sign.cpp c/sign.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 deadzone: srci/deadzone.cpp c/deadzone.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
