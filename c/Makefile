@@ -198,10 +198,10 @@ imin: imin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 iamax: iamax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 iamin: iamin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Ranges: range iqr interdecile_range
+Ranges: range iqr idr
 range: range.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 iqr: iqr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-interdecile_range: interdecile_range.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+idr: idr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Norms: norm0 norm1 norm2 normp
 norm0: norm0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -240,7 +240,25 @@ prod: prod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #Vec2vec: 1 input, 1 output
 #Operates on each 1-D vector in X to produce a new 1-D vector in Y.
 #Y has the same size as X, except perhaps a change in the vector length.
-Vec2vec: Reorder Other_Vec2vec
+Vec2vec: Center Scale Normalize Reorder Other_Vec2vec
+
+Center: mean0 med0 geomean1
+mean0: mean0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+med0: med0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+geomean1: geomean1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Scale: zscore mscore gscore range1 iqr1 idr1
+zscore: zscore.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+mscore: mscore.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+gscore: gscore.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+range1: range1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+iqr1: iqr1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+idr1: idr1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Normalize: normalize1 normalize2 normalizep
+normalize1: normalize1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+normalize2: normalize2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+normalizep: normalizep.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Reorder: flip shift cshift sort
 flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -248,7 +266,7 @@ shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod prepad postpad #center scale normalize
+Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod prepad postpad
 sorti: sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 ranks: ranks.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -259,9 +277,6 @@ cumsum: cumsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 prepad: prepad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 postpad: postpad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-#center: center.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-#scale: scale.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-#normalize: normalize.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 

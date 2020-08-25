@@ -5,8 +5,6 @@
 //There is no need for an in-place version here.
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <lapacke.h>
 
 #ifdef __cplusplus
 namespace codee {
@@ -61,23 +59,19 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            float *X1;
-            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in range_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
-                    mn = mx = *--X1;
-                    for (size_t l=1; l<L; ++l, --X1)
+                    mn = mx = *X; X += K;
+                    for (size_t l=1; l<L; ++l, X+=K)
                     {
-                        if (*X1<mn) { mn = *X1; }
-                        else if (*X1>mx) { mx = *X1; }
+                        if (*X<mn) { mn = *X; }
+                        else if (*X>mx) { mx = *X; }
                     }
                     *Y = mx - mn;
                 }
             }
-            free(X1);
         }
     }
 
@@ -129,23 +123,19 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
-            double *X1;
-            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in range_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
-                    mn = mx = *--X1;
-                    for (size_t l=1; l<L; ++l, --X1)
+                    mn = mx = *X; X += K;
+                    for (size_t l=1; l<L; ++l, X+=K)
                     {
-                        if (*X1<mn) { mn = *X1; }
-                        else if (*X1>mx) { mx = *X1; }
+                        if (*X<mn) { mn = *X; }
+                        else if (*X>mx) { mx = *X; }
                     }
                     *Y = mx - mn;
                 }
             }
-            free(X1);
         }
     }
 

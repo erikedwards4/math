@@ -329,12 +329,12 @@ iamax: srci/iamax.cpp c/iamax.c
 iamin: srci/iamin.cpp c/iamin.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 
-Ranges: range iqr interdecile_range
+Ranges: range iqr idr
 range: srci/range.cpp c/range.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 iqr: srci/iqr.cpp c/iqr.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
-interdecile_range: srci/interdecile_range.cpp c/interdecile_range.c
+idr: srci/idr.cpp c/idr.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 
 Moments: mean var skewness kurtosis
@@ -426,7 +426,37 @@ dist_cos: srci/dist_cos.cpp c/dist_cos.c
 
 
 #Vec2vec: each vector in tensor X is transformed to a vector in tensor Y
-Vec2vec: Reorder Other_Vec2vec
+Vec2vec: Center Scale Normalize Reorder Other_Vec2vec
+
+Center: mean0 med0 geomean1
+mean0: srci/mean0.cpp c/mean0.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+med0: srci/med0.cpp c/med0.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke
+geomean1: srci/geomean1.cpp c/geomean1.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+
+Scale: zscore mscore gscore range1 iqr1 idr1
+zscore: srci/zscore.cpp c/zscore.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+mscore: srci/mscore.cpp c/mscore.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke
+gscore: srci/gscore.cpp c/gscore.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+range1: srci/range1.cpp c/range1.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+iqr1: srci/iqr1.cpp c/iqr1.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke
+idr1: srci/idr1.cpp c/idr1.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke
+
+Normalize: normalize1 normalize2 normalizep
+normalize1: srci/normalize1.cpp c/normalize1.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+normalize2: srci/normalize2.cpp c/normalize2.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+normalizep: srci/normalizep.cpp c/normalizep.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 Reorder: flip shift cshift sort
 flip: srci/flip.cpp c/flip.c
@@ -438,7 +468,7 @@ cshift: srci/cshift.cpp c/cshift.c
 sort: srci/sort.cpp c/sort.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 
-Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod #center scale normalize
+Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod
 sorti: srci/sorti.cpp c/sorti.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 ranks: srci/ranks.cpp c/ranks.c

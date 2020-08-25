@@ -15,16 +15,16 @@ namespace codee {
 extern "C" {
 #endif
 
-int interdecile_range_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int interdecile_range_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int idr_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
-int interdecile_range_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int interdecile_range_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
 
-int interdecile_range_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in interdecile_range_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in idr_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -36,7 +36,7 @@ int interdecile_range_s (float *Y, const float *X, const size_t R, const size_t 
     const float w4 = p2 - floorf(p2), w3 = 1.0f - w4;
 
     float *X1;
-    if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in interdecile_range_s: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in idr_s: problem with malloc. "); perror("malloc"); return 1; }
     
     if (N==0) {}
     else if (L==1)
@@ -47,7 +47,7 @@ int interdecile_range_s (float *Y, const float *X, const size_t R, const size_t 
     {
         for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in interdecile_range_s: problem with LAPACKE function\n"); }
+        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_s: problem with LAPACKE function\n"); }
         X1 += i1;
         *Y = w1**X1 + w2**(X1+1);
         X1 += i2 - i1;
@@ -66,7 +66,7 @@ int interdecile_range_s (float *Y, const float *X, const size_t R, const size_t 
             {
                 for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in interdecile_range_s: problem with LAPACKE function\n"); }
+                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_s: problem with LAPACKE function\n"); }
                 X1 += i1;
                 *Y = w1**X1 + w2**(X1+1);
                 X1 += i2 - i1;
@@ -82,7 +82,7 @@ int interdecile_range_s (float *Y, const float *X, const size_t R, const size_t 
                 {
                     for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in interdecile_range_s: problem with LAPACKE function\n"); }
+                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_s: problem with LAPACKE function\n"); }
                     X1 += i1;
                     *Y = w1**X1 + w2**(X1+1);
                     X1 += i2 - i1;
@@ -98,9 +98,9 @@ int interdecile_range_s (float *Y, const float *X, const size_t R, const size_t 
 }
 
 
-int interdecile_range_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int idr_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in interdecile_range_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in idr_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -112,7 +112,7 @@ int interdecile_range_d (double *Y, const double *X, const size_t R, const size_
     const double w4 = p2 - floor(p2), w3 = 1.0 - w4;
 
     double *X1;
-    if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in interdecile_range_d: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in idr_d: problem with malloc. "); perror("malloc"); return 1; }
     
     if (N==0) {}
     else if (L==1)
@@ -123,7 +123,7 @@ int interdecile_range_d (double *Y, const double *X, const size_t R, const size_
     {
         for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in interdecile_range_d: problem with LAPACKE function\n"); }
+        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_d: problem with LAPACKE function\n"); }
         X1 += i1;
         *Y = w1**X1 + w2**(X1+1);
         X1 += i2 - i1;
@@ -142,7 +142,7 @@ int interdecile_range_d (double *Y, const double *X, const size_t R, const size_
             {
                 for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in interdecile_range_d: problem with LAPACKE function\n"); }
+                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_d: problem with LAPACKE function\n"); }
                 X1 += i1;
                 *Y = w1**X1 + w2**(X1+1);
                 X1 += i2 - i1;
@@ -158,7 +158,7 @@ int interdecile_range_d (double *Y, const double *X, const size_t R, const size_
                 {
                     for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in interdecile_range_d: problem with LAPACKE function\n"); }
+                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_d: problem with LAPACKE function\n"); }
                     X1 += i1;
                     *Y = w1**X1 + w2**(X1+1);
                     X1 += i2 - i1;
@@ -174,9 +174,9 @@ int interdecile_range_d (double *Y, const double *X, const size_t R, const size_
 }
 
 
-int interdecile_range_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in interdecile_range_inplace_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in idr_inplace_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -194,7 +194,7 @@ int interdecile_range_inplace_s (float *Y, float *X, const size_t R, const size_
     }
     else if (L==N)
     {
-        if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in interdecile_range_inplace_s: problem with LAPACKE function\n"); }
+        if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_s: problem with LAPACKE function\n"); }
         X += i1;
         *Y = w1**X + w2**(X+1);
         X += i2 - i1;
@@ -210,7 +210,7 @@ int interdecile_range_inplace_s (float *Y, float *X, const size_t R, const size_
         {
             for (size_t v=0; v<V; ++v, X+=L-i2, ++Y)
             {
-                if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in interdecile_range_inplace_s: problem with LAPACKE function\n"); }
+                if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_s: problem with LAPACKE function\n"); }
                 X += i1;
                 *Y = w1**X + w2**(X+1);
                 X += i2 - i1;
@@ -220,14 +220,14 @@ int interdecile_range_inplace_s (float *Y, float *X, const size_t R, const size_
         else
         {
             float *X1;
-            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in interdecile_range_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in idr_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in interdecile_range_inplace_s: problem with LAPACKE function\n"); }
+                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_inplace_s: problem with LAPACKE function\n"); }
                     X1 += i1;
                     *Y = w1**X1 + w2**(X1+1);
                     X1 += i2 - i1;
@@ -243,9 +243,9 @@ int interdecile_range_inplace_s (float *Y, float *X, const size_t R, const size_
 }
 
 
-int interdecile_range_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in interdecile_range_inplace_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3) { fprintf(stderr,"error in idr_inplace_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
@@ -263,7 +263,7 @@ int interdecile_range_inplace_d (double *Y, double *X, const size_t R, const siz
     }
     else if (L==N)
     {
-        if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in interdecile_range_inplace_d: problem with LAPACKE function\n"); }
+        if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_d: problem with LAPACKE function\n"); }
         X += i1;
         *Y = w1**X + w2**(X+1);
         X += i2 - i1;
@@ -279,7 +279,7 @@ int interdecile_range_inplace_d (double *Y, double *X, const size_t R, const siz
         {
             for (size_t v=0; v<V; ++v, X+=L-i2, ++Y)
             {
-                if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in interdecile_range_inplace_d: problem with LAPACKE function\n"); }
+                if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_d: problem with LAPACKE function\n"); }
                 X += i1;
                 *Y = w1**X + w2**(X+1);
                 X += i2 - i1;
@@ -289,14 +289,14 @@ int interdecile_range_inplace_d (double *Y, double *X, const size_t R, const siz
         else
         {
             double *X1;
-            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in interdecile_range_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in idr_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=0; g<G; ++g, X+=B*(L-1))
             {
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in interdecile_range_inplace_d: problem with LAPACKE function\n"); }
+                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_inplace_d: problem with LAPACKE function\n"); }
                     X1 += i1;
                     *Y = w1**X1 + w2**(X1+1);
                     X1 += i2 - i1;

@@ -36,7 +36,7 @@ int norm2_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     else if (L==N)
     {
         float sm = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X) { sm += *X**X; }
+        for (size_t l=0; l<L; ++l, ++X) { sm += *X * *X; }
         *Y = sqrtf(sm);
     }
     else
@@ -51,7 +51,7 @@ int norm2_s (float *Y, const float *X, const size_t R, const size_t C, const siz
             for (size_t v=0; v<V; ++v, ++Y)
             {
                 sm = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { sm += *X**X; }
+                for (size_t l=0; l<L; ++l, ++X) { sm += *X * *X; }
                 *Y = sqrtf(sm);
             }
         }
@@ -61,7 +61,7 @@ int norm2_s (float *Y, const float *X, const size_t R, const size_t C, const siz
             Y -= V;
             for (size_t l=1; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X * *X; }
             }
             for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrtf(*Y); }
         }
@@ -73,7 +73,7 @@ int norm2_s (float *Y, const float *X, const size_t R, const size_t C, const siz
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { sm += *X**X; }
+                    for (size_t l=0; l<L; ++l, X+=K) { sm += *X * *X; }
                     *Y = sqrtf(sm);
                 }
             }
@@ -99,7 +99,7 @@ int norm2_d (double *Y, const double *X, const size_t R, const size_t C, const s
     else if (L==N)
     {
         double sm = 0.0;
-        for (size_t l=0; l<L; ++l, ++X) { sm += *X**X; }
+        for (size_t l=0; l<L; ++l, ++X) { sm += *X * *X; }
         *Y = sm;
     }
     else
@@ -114,7 +114,7 @@ int norm2_d (double *Y, const double *X, const size_t R, const size_t C, const s
             for (size_t v=0; v<V; ++v, ++Y)
             {
                 sm = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { sm += *X**X; }
+                for (size_t l=0; l<L; ++l, ++X) { sm += *X * *X; }
                 *Y = sm;
             }
         }
@@ -124,7 +124,7 @@ int norm2_d (double *Y, const double *X, const size_t R, const size_t C, const s
             Y -= V;
             for (size_t l=1; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
+                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X * *X; }
             }
             for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrt(*Y); }
         }
@@ -136,7 +136,7 @@ int norm2_d (double *Y, const double *X, const size_t R, const size_t C, const s
                 for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { sm += *X**X; }
+                    for (size_t l=0; l<L; ++l, X+=K) { sm += *X * *X; }
                     *Y = sm;
                 }
             }
@@ -162,7 +162,7 @@ int norm2_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     else if (L==N)
     {
         float sm2 = 0.0f;
-        for (size_t l=0; l<2*L; ++l, ++X) { sm2 += *X**X; }
+        for (size_t l=0; l<2*L; ++l, ++X) { sm2 += *X * *X; }
         *Y = sqrtf(sm2);
     }
     else
@@ -177,7 +177,7 @@ int norm2_c (float *Y, const float *X, const size_t R, const size_t C, const siz
             for (size_t v=0; v<V; ++v, ++Y)
             {
                 sm2 = 0.0f;
-                for (size_t l=0; l<2*L; ++l, ++X) { sm2 += *X**X; }
+                for (size_t l=0; l<2*L; ++l, ++X) { sm2 += *X * *X; }
                 *Y = sqrtf(sm2);
             }
         }
@@ -225,7 +225,7 @@ int norm2_z (double *Y, const double *X, const size_t R, const size_t C, const s
     else if (L==N)
     {
         double sm2 = 0.0;
-        for (size_t l=0; l<2*L; ++l, ++X) { sm2 += *X**X; }
+        for (size_t l=0; l<2*L; ++l, ++X) { sm2 += *X * *X; }
         *Y = sqrt(sm2);
     }
     else
@@ -240,7 +240,7 @@ int norm2_z (double *Y, const double *X, const size_t R, const size_t C, const s
             for (size_t v=0; v<V; ++v, ++Y)
             {
                 sm2 = 0.0;
-                for (size_t l=0; l<2*L; ++l, ++X) { sm2 += *X**X; }
+                for (size_t l=0; l<2*L; ++l, ++X) { sm2 += *X * *X; }
                 *Y = sqrt(sm2);
             }
         }

@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "../util/cmli.hpp"
-#include "interdecile_range.c"
+#include "normalize1.c"
 
 #ifdef I
 #undef I
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<size_t> oktypes = {1u,2u};
+    const valarray<size_t> oktypes = {1u,2u,101u,102u};
     const size_t I = 1u, O = 1u;
     ifstream ifs1; ofstream ofs1;
     int8_t stdi1, stdo1, wo1;
@@ -39,27 +39,24 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Vec2scalar (reduction) operation.\n";
-    descr += "Gets the interdecile range for each vector in X along dim.\n";
-    descr += "This is the 90th minus the 10th percentile for each vector.\n";
+    descr += "Normalizes each vector in X along dim to have unit norm1.\n";
+    descr += "That is, the L1 norm is divided out for each vector in X.\n";
     descr += "\n";
-    descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to get interdecile range along cols.\n";
-    descr += "Use -d1 to get interdecile range along rows.\n";
-    descr += "Use -d2 to get interdecile range along slices.\n";
-    descr += "Use -d3 to get interdecile range along hyperslices.\n";
+    descr += "Output (Y) has the same size and data type as X.\n";
+    descr += "\n";
+    descr += "Use -d (--dim) to give the dimension along which to operate.\n";
+    descr += "Default is along cols, unless X is a row vector.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ interdecile_range X -o Y \n";
-    descr += "$ interdecile_range X > Y \n";
-    descr += "$ interdecile_range -d1 X > Y \n";
-    descr += "$ cat X | interdecile_range > Y \n";
+    descr += "$ normalize1 X -o Y \n";
+    descr += "$ normalize1 -d1 X > Y \n";
+    descr += "$ cat X | normalize1 > Y \n";
 
 
     //Argtable
     int nerrs;
     struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
-    struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
+    struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension along which to operate [default=0]");
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
@@ -104,22 +101,23 @@ int main(int argc, char *argv[])
     //Get options
 
     //Get dim
-    if (a_d->count==0) { dim = 0u; }
+    if (a_d->count==0) { dim = i1.isvec() ? i1.nonsingleton1() : 0u; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
     else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
+    if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
+    if (dim==0u && i1.R<2u) { cerr << progstr+": " << __LINE__ << errstr << "cannot work along a singleton dimension" << endl; return 1; }
+    if (dim==1u && i1.C<2u) { cerr << progstr+": " << __LINE__ << errstr << "cannot work along a singleton dimension" << endl; return 1; }
+    if (dim==2u && i1.S<2u) { cerr << progstr+": " << __LINE__ << errstr << "cannot work along a singleton dimension" << endl; return 1; }
+    if (dim==3u && i1.H<2u) { cerr << progstr+": " << __LINE__ << errstr << "cannot work along a singleton dimension" << endl; return 1; }
 
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    o1.R = (dim==0) ? 1u : i1.R;
-    o1.C = (dim==1) ? 1u : i1.C;
-    o1.S = (dim==2) ? 1u : i1.S;
-    o1.H = (dim==3) ? 1u : i1.H;
+    o1.R = i1.R; o1.C = i1.C; o1.S = i1.S; o1.H = i1.H;
 
 
     //Open output
@@ -140,41 +138,67 @@ int main(int argc, char *argv[])
     //Process
     if (i1.T==1u)
     {
-        float *X, *Y;
+        float *X;
         try { X = new float[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new float[o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::interdecile_range_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::interdecile_range_inplace_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::normalize1_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; delete[] Y;
+        delete[] X;
     }
     else if (i1.T==2)
     {
-        double *X, *Y;
+        double *X;
         try { X = new double[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        try { Y = new double[o1.N()]; }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::interdecile_range_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::interdecile_range_inplace_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::normalize1_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; delete[] Y;
+        delete[] X;
+    }
+    else if (i1.T==101u)
+    {
+        float *X;
+        try { X = new float[2u*i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::normalize1_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+        if (wo1)
+        {
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
+        }
+        delete[] X;
+    }
+    else if (i1.T==102u)
+    {
+        double *X;
+        try { X = new double[2u*i1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
+        try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
+        if (codee::normalize1_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+        if (wo1)
+        {
+            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+            catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
+        }
+        delete[] X;
     }
     else
     {

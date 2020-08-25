@@ -13,10 +13,10 @@ descr += "Vec2vec operation.\n";
 descr += "Winsorizes each vector of X along dim.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-descr += "Use -d0 to get winsormean along cols.\n";
-descr += "Use -d1 to get winsormean along rows.\n";
-descr += "Use -d2 to get winsormean along slices.\n";
-descr += "Use -d3 to get winsormean along hyperslices.\n";
+descr += "Use -d0 to winsorize along cols.\n";
+descr += "Use -d1 to winsorize along rows.\n";
+descr += "Use -d2 to winsorize along slices.\n";
+descr += "Use -d3 to winsorize along hyperslices.\n";
 descr += "\n";
 descr += "Use -p (--p) to give the lower percentile in [0 50) [default=10].\n";
 descr += "Typical choices for p are 10 and 25.\n";
@@ -53,10 +53,10 @@ q = (a_q->count==0) ? p : a_q->dval[0];
 if (q<0.0 || q>=50.0) { cerr << progstr+": " << __LINE__ << errstr << "q must be in [0 50)" << endl; return 1; }
 
 //Get dim
-if (a_d->count==0) { dim = 0u; }
+if (a_d->count==0) { dim = i1.isvec() ? i1.nonsingleton1() : 0u; }
 else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
 else { dim = size_t(a_d->ival[0]); }
-if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
+if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 //Checks
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
@@ -86,21 +86,3 @@ if (i1.T==1u)
 }
 
 //Finish
-// if (i1.T==1u)
-// {
-//     float *X, *Y;
-//     try { X = new float[i1.N()]; }
-//     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-//     try { Y = new float[o1.N()]; }
-//     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-//     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
-//     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-//     if (codee::winsorize_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,float(p),float(q)))
-//     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-//     if (wo1)
-//     {
-//         try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
-//         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
-//     }
-//     delete[] X; delete[] Y;
-// }
