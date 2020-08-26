@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     if (a_d->count==0) { dim = 0u; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
     else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
+    if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
     //Get N
     if (a_n->count==0) { N = 100u; }
@@ -129,10 +129,10 @@ int main(int argc, char *argv[])
 
 
     //Set output header info
-    o1.R = (dim==0) ? N : 1u;
-    o1.C = (dim==1) ? N : 1u;
-    o1.S = (dim==2) ? N : 1u;
-    o1.H = (dim==3) ? N : 1u;
+    o1.R = (dim==0u) ? N : 1u;
+    o1.C = (dim==1u) ? N : 1u;
+    o1.S = (dim==2u) ? N : 1u;
+    o1.H = (dim==3u) ? N : 1u;
 
 
     //Open output

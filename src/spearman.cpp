@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     if (a_d->count==0) { dim = 0u; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
     else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
+    if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 
     //Checks
@@ -125,17 +125,17 @@ int main(int argc, char *argv[])
     if (i2.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) found to be empty" << endl; return 1; }
     if (!bcast_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same size or broadcast-compatible sizes" << endl; return 1; }
     if (!major_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have the same row/col major format unless vectors" << endl; return 1; }
-    size_t L1 = (dim==0) ? i1.R : (dim==1) ? i1.C : (dim==2) ? i1.S : i1.H;
-    size_t L2 = (dim==0) ? i2.R : (dim==1) ? i2.C : (dim==2) ? i2.S : i2.H;
+    size_t L1 = (dim==0u) ? i1.R : (dim==1u) ? i1.C : (dim==2u) ? i1.S : i1.H;
+    size_t L2 = (dim==0u) ? i2.R : (dim==1u) ? i2.C : (dim==2u) ? i2.S : i2.H;
     if (L1!=L2) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same length along dim" << endl; return 1; }
 
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    o1.R = (dim==0) ? 1 : (i1.R>i2.R) ? i1.R : i2.R;
-    o1.C = (dim==1) ? 1 : (i1.C>i2.C) ? i1.C : i2.C;
-    o1.S = (dim==2) ? 1 : (i1.S>i2.S) ? i1.S : i2.S;
-    o1.H = (dim==3) ? 1 : (i1.H>i2.H) ? i1.H : i2.H;
+    o1.R = (dim==0u) ? 1 : (i1.R>i2.R) ? i1.R : i2.R;
+    o1.C = (dim==1u) ? 1 : (i1.C>i2.C) ? i1.C : i2.C;
+    o1.S = (dim==2u) ? 1 : (i1.S>i2.S) ? i1.S : i2.S;
+    o1.H = (dim==3u) ? 1 : (i1.H>i2.H) ? i1.H : i2.H;
 
 
     //Open output

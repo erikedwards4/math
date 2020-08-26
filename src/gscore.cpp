@@ -42,9 +42,11 @@ int main(int argc, char *argv[])
     descr += "\"G\"-scores each vector in X along dim.\n";
     descr += "For each vector in X, the log values are z-scored,\n";
     descr += "and then the exp is taken.\n";
-    descr += "This is appropriate for all-positive X only.\n";
+    descr += "\n";
+    descr += "This is appropriate only for all-positive X.\n";
     descr += "\n";
     descr += "Output (Y) has the same size and data type as X.\n";
+    descr += "Y has geomean equal to 1, and geostd equal to exp(1).\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension along which to operate.\n";
     descr += "Default is along cols, unless X is a row vector.\n";

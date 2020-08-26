@@ -303,7 +303,7 @@ asum: srci/asum.cpp c/asum.c
 cnt: srci/cnt.cpp c/cnt.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
-Prctiles: prctile median max min amax #amin 
+Prctiles: prctile median max min amax #amin
 prctile: srci/prctile.cpp c/prctile.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 median: srci/median.cpp c/median.c
@@ -317,7 +317,7 @@ amax: srci/amax.cpp c/amax.c
 amin: srci/amin.cpp c/amin.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas -lm
 
-Iprctiles: iprctile imed imax imin iamax #iamin 
+Iprctiles: iprctile imed imax imin iamax #iamin
 iprctile: srci/iprctile.cpp c/iprctile.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 imed: srci/imed.cpp c/imed.c
@@ -470,7 +470,7 @@ cshift: srci/cshift.cpp c/cshift.c
 sort: srci/sort.cpp c/sort.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 
-Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod
+Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod softmax betamax
 sorti: srci/sorti.cpp c/sorti.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 ranks: srci/ranks.cpp c/ranks.c
@@ -491,6 +491,10 @@ prepad: srci/prepad.cpp c/prepad.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 postpad: srci/postpad.cpp c/postpad.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+softmax: srci/softmax.cpp c/softmax.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+betamax: srci/betamax.cpp c/betamax.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 
 

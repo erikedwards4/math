@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Z-scores each vector in X.\n";
+    descr += "Z-scores each vector in X along dim.\n";
     descr += "The mean and std is estimated for each vector in X.\n";
     descr += "\n";
     descr += "Output (Y) has the same size and data type as X.\n";
@@ -116,7 +116,6 @@ int main(int argc, char *argv[])
 
 
     //Checks
-    if (!i1.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input must be 1D or 2D" << endl; return 1; }
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
     if (dim==0u && i1.R<2u) { cerr << progstr+": " << __LINE__ << errstr << "cannot work along a singleton dimension" << endl; return 1; }
     if (dim==1u && i1.C<2u) { cerr << progstr+": " << __LINE__ << errstr << "cannot work along a singleton dimension" << endl; return 1; }
@@ -152,7 +151,8 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::zscore_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b)) { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+        if (codee::zscore_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b))
+        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
@@ -167,7 +167,8 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::zscore_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b)) { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+        if (codee::zscore_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b))
+        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
@@ -182,7 +183,8 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::zscore_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b)) { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+        if (codee::zscore_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b))
+        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
@@ -197,7 +199,8 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::zscore_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b)) { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+        if (codee::zscore_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,b))
+        { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }

@@ -267,7 +267,7 @@ shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod prepad postpad
+Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod prepad postpad softmax betamax
 sorti: sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 ranks: ranks.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -278,6 +278,8 @@ cumsum: cumsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cumprod: cumprod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 prepad: prepad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 postpad: postpad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+softmax: softmax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+betamax: betamax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 

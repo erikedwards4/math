@@ -112,27 +112,27 @@ int main(int argc, char *argv[])
     //Get options
 
     //Get dim
-    if (a_d->count==0) { dim = 0u; }
+    if (a_d->count==0) { dim = i1.isvec() ? i1.nonsingleton1() : 0u; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
     else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
+    if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
-    if (dim==0 && i1.R%3) { cerr << progstr+": " << __LINE__ << errstr << "num rows X must be a multiple of 3 for dim=0" << endl; return 1; }
-    if (dim==1 && i1.C%3) { cerr << progstr+": " << __LINE__ << errstr << "num cols X must be a multiple of 3 for dim=1" << endl; return 1; }
-    if (dim==2 && i1.S%3) { cerr << progstr+": " << __LINE__ << errstr << "num slices X must be a multiple of 3 for dim=2" << endl; return 1; }
-    if (dim==3 && i1.H%3) { cerr << progstr+": " << __LINE__ << errstr << "num hyperslices X must be a multiple of 3 for dim=3" << endl; return 1; }
+    if (dim==0u && i1.R%3) { cerr << progstr+": " << __LINE__ << errstr << "num rows X must be a multiple of 3 for dim=0" << endl; return 1; }
+    if (dim==1u && i1.C%3) { cerr << progstr+": " << __LINE__ << errstr << "num cols X must be a multiple of 3 for dim=1" << endl; return 1; }
+    if (dim==2u && i1.S%3) { cerr << progstr+": " << __LINE__ << errstr << "num slices X must be a multiple of 3 for dim=2" << endl; return 1; }
+    if (dim==3u && i1.H%3) { cerr << progstr+": " << __LINE__ << errstr << "num hyperslices X must be a multiple of 3 for dim=3" << endl; return 1; }
 
 
     //Set output header infos
     o1.F = o2.F = o3.F = i1.F;
     o1.T = o2.T = o3.T = i1.T;
-    o1.R = o2.R = o3.R = (dim==0) ? i1.R/3 : i1.R;
-    o1.C = o2.C = o3.C = (dim==1) ? i1.C/3 : i1.C;
-    o1.S = o2.S = o3.S = (dim==2) ? i1.S/3 : i1.S;
-    o1.H = o2.H = o3.H = (dim==3) ? i1.H/3 : i1.H;
+    o1.R = o2.R = o3.R = (dim==0u) ? i1.R/3 : i1.R;
+    o1.C = o2.C = o3.C = (dim==1u) ? i1.C/3 : i1.C;
+    o1.S = o2.S = o3.S = (dim==2u) ? i1.S/3 : i1.S;
+    o1.H = o2.H = o3.H = (dim==3u) ? i1.H/3 : i1.H;
 
 
     //Open outputs

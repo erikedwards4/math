@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "../util/cmli.hpp"
-#include "winsorize.c"
+#include "betamax.c"
 
 #ifdef I
 #undef I
@@ -35,48 +35,44 @@ int main(int argc, char *argv[])
     int8_t stdi1, stdo1, wo1;
     ioinfo i1, o1;
     size_t dim;
-    double p, q;
+    double base;
 
 
     //Description
     string descr;
-    descr += "Vec2vec operation.\n";
-    descr += "Winsorizes each vector of X along dim.\n";
+    descr += "Vec2vec function.\n";
+    descr += "\"Betamax\" function for each vector in X along dim.\n";
+    descr += "Output Y has the same size as X.\n";
+    descr += "\n";
+    descr += "This is just like softmax, except uses a different base (b).\n";
+    descr += "This is computed using exp(beta*X) instead of exp(X),\n";
+    descr += "where beta = log(b) and b = exp(beta). \n";
+    descr += "This is equivalent to using b^x instead of e^x.\n";
+    descr += "\n";
+    descr += "Use -b (--base) to specify the base [default=e].\n";
+    descr += "Be sure to enter b and not beta.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to winsorize along cols.\n";
-    descr += "Use -d1 to winsorize along rows.\n";
-    descr += "Use -d2 to winsorize along slices.\n";
-    descr += "Use -d3 to winsorize along hyperslices.\n";
-    descr += "\n";
-    descr += "Use -p (--p) to give the lower percentile in [0 50) [default=10].\n";
-    descr += "Typical choices for p are 10 and 25.\n";
-    descr += "\n";
-    descr += "Use -q (--q) to give the upper percentile in [0 50) [default=p].\n";
-    descr += "Typically this is equal to p.\n";
-    descr += "\n";
-    descr += "For each vector, winsorizing works as follows:\n";
-    descr += "The min value above the pth percentile replaces all values below it.\n";
-    descr += "The max value below the (1-q)th percentile replaces all values above it.\n";
-    descr += "The output vector has the same length and overall order as the input vector.\n";
-    descr += "Thus, Y has the same size as X.\n";
+    descr += "Use -d0 to operate along cols.\n";
+    descr += "Use -d1 to operate along rows.\n";
+    descr += "Use -d2 to operate along slices.\n";
+    descr += "Use -d3 to operate along hyperslices.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ winsorize X -o Y \n";
-    descr += "$ winsorize -p25 -d1 X > Y \n";
-    descr += "$ cat X | winsorize -p5 -d2 > Y \n";
+    descr += "$ betamax -b2 X -o Y \n";
+    descr += "$ betamax -b3 -d1 X > Y \n";
+    descr += "$ cat X | betamax -b2.5 -d2 > Y \n";
 
 
     //Argtable
     int nerrs;
     struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
+    struct arg_dbl    *a_b = arg_dbln("b","base","<dbl>",0,1,"base value [default=e]");
     struct arg_int    *a_d = arg_intn("d","dim","<uint>",0,1,"dimension [default=0]");
-    struct arg_dbl    *a_p = arg_dbln("p","p","<dbl>",0,1,"lower percentile in [0 50) [default=10]");
-    struct arg_dbl    *a_q = arg_dbln("q","q","<dbl>",0,1,"upper percentile in [0 50) [default=p]");
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_fi, a_d, a_p, a_q, a_fo, a_help, a_end};
+    void *argtable[] = {a_fi, a_b, a_d, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -116,13 +112,8 @@ int main(int argc, char *argv[])
 
     //Get options
 
-    //Get p
-    p = (a_p->count==0) ? 10.0 : a_p->dval[0];
-    if (p<0.0 || p>50.0) { cerr << progstr+": " << __LINE__ << errstr << "p must be in [0 50]" << endl; return 1; }
-
-    //Get q
-    q = (a_q->count==0) ? p : a_q->dval[0];
-    if (q<0.0 || q>=50.0) { cerr << progstr+": " << __LINE__ << errstr << "q must be in [0 50)" << endl; return 1; }
+    //Get base
+    base = (a_b->count==0) ? exp(1.0) : a_b->dval[0];
 
     //Get dim
     if (a_d->count==0) { dim = i1.isvec() ? i1.nonsingleton1() : 0u; }
@@ -158,35 +149,39 @@ int main(int argc, char *argv[])
     //Process
     if (i1.T==1u)
     {
-        float *X;
+        float *X; //, *Y;
         try { X = new float[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
+        //try { Y = new float[o1.N()]; }
+        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::winsorize_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,float(p),float(q)))
+        if (codee::betamax_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,float(base)))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X;
+        delete[] X; //delete[] Y;
     }
     else if (i1.T==2)
     {
-        double *X;
+        double *X; //, *Y;
         try { X = new double[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
+        //try { Y = new double[o1.N()]; }
+        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        if (codee::winsorize_inplace_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,double(p),double(q)))
+        if (codee::betamax_inplace_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,double(base)))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X;
+        delete[] X; //delete[] Y;
     }
     else
     {

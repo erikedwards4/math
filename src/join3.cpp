@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     if (a_d->count==0) { dim = 0u; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
     else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1u,2u,3}" << endl; return 1; }
+    if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 
     //Checks
@@ -124,18 +124,18 @@ int main(int argc, char *argv[])
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 1 (X1) found to be empty" << endl; return 1; }
     if (i2.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (X2) found to be empty" << endl; return 1; }
     if (i3.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 3 (X3) found to be empty" << endl; return 1; }
-    if (dim!=0 && (i1.R!=i2.R || i1.R!=i3.R)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num rows for dim!=0" << endl; return 1; }
-    if (dim!=1 && (i1.C!=i2.C || i1.C!=i3.C)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num cols for dim!=1" << endl; return 1; }
-    if (dim!=2 && (i1.S!=i2.S || i1.S!=i3.S)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num slices for dim!=2" << endl; return 1; }
-    if (dim!=3 && (i1.H!=i2.H || i1.H!=i3.H)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num hyperslices for dim!=3" << endl; return 1; }
+    if (dim!=0u && (i1.R!=i2.R || i1.R!=i3.R)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num rows for dim!=0" << endl; return 1; }
+    if (dim!=1u && (i1.C!=i2.C || i1.C!=i3.C)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num cols for dim!=1" << endl; return 1; }
+    if (dim!=2u && (i1.S!=i2.S || i1.S!=i3.S)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num slices for dim!=2" << endl; return 1; }
+    if (dim!=3u && (i1.H!=i2.H || i1.H!=i3.H)) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have same num hyperslices for dim!=3" << endl; return 1; }
 
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    o1.R = (dim==0) ? i1.R+i2.R+i3.R : i1.R;
-    o1.C = (dim==1) ? i1.C+i2.C+i3.C : i1.C;
-    o1.S = (dim==2) ? i1.S+i2.S+i3.S : i1.S;
-    o1.H = (dim==3) ? i1.H+i2.H+i3.H : i1.H;
+    o1.R = (dim==0u) ? i1.R+i2.R+i3.R : i1.R;
+    o1.C = (dim==1u) ? i1.C+i2.C+i3.C : i1.C;
+    o1.S = (dim==2u) ? i1.S+i2.S+i3.S : i1.S;
+    o1.H = (dim==3u) ? i1.H+i2.H+i3.H : i1.H;
 
 
     //Open output
