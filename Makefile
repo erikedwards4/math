@@ -23,7 +23,7 @@ CFLAGS=$(WFLAG) $(STD) -O2 -ffast-math -march=native $(INCLS)
 
 
 All: all
-all: Dirs Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg Clean
+all: Dirs Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg Clean
 
 Dirs:
 	mkdir -pm 777 bin obj
@@ -32,7 +32,7 @@ Dirs:
 #Generate: aka "Factory" functions
 #These take 0 inputs (other than parameters) and generate 1 output.
 #The Random functions are all done in C++
-Generate: Constants Other_Generate Random
+Generate: Constants Other_Gen Random
 
 #Constants: 0 inputs, 1 output with a single constant repeated
 Constants: zeros ones twos e ln2 ln10 log2e log10e sqrt2 isqrt2 pi ipi pi_2 pi_4 sqrt2 isqrt2 eps realmin realmax inf nan fill
@@ -77,8 +77,8 @@ nan: srci/nan.cpp c/nan.c
 fill: srci/fill.cpp c/fill.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
-#Other_Generate: 0 inputs, 1 output
-Other_Generate: eye linspace logspace primes randperm
+#Other_Gen: 0 inputs, 1 output
+Other_Gen: eye linspace logspace primes randperm
 eye: srci/eye.cpp c/eye.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 linspace: srci/linspace.cpp c/linspace.c
@@ -126,6 +126,9 @@ piecewise_linear: srci/piecewise_linear.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp;
 
 
 
+#Matmanip: various manipulations of matrix shape and sub-matrix elements
+Matmanip: Construct Matsel Rearrange Split_Join
+
 #Construct: 1-2 vectors or matrices input, 1 matrix output constructed from the inputs
 Construct: diagmat toeplitz tril triu repmat
 diagmat: srci/diagmat.cpp c/diagmat.c
@@ -139,7 +142,6 @@ triu: srci/triu.cpp c/triu.c
 repmat: srci/repmat.cpp c/repmat.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
-
 #Matsel: 1 matrix input, 1 vector output selected from the matrix
 Matsel: diag row col
 diag: srci/diag.cpp c/diag.c
@@ -149,7 +151,6 @@ row: srci/row.cpp c/row.c
 col: srci/col.cpp c/col.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
-
 #Rearrange: 1 matrix input, 1 matrix output with elements rearranged
 Rearrange: transpose ctranspose rot90
 transpose: srci/transpose.cpp c/transpose.c
@@ -158,7 +159,6 @@ ctranspose: srci/ctranspose.cpp c/ctranspose.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 rot90: srci/rot90.cpp c/rot90.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-
 
 #Split_Join: utilities to split matrix into several, or join several matrices into one.
 Split_Join: split2 split3 join2 join3

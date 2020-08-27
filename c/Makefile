@@ -2,10 +2,11 @@
 #@date 2017-present
 #@license BSD 3-clause
 
-#math is my own library of C functions for basic math operations in C.
+#math is my own library of C functions for general math operations.
 
 #This is the Makefile used during development of the C functions.
 #Since these are not stand-alone programs (no main functions), the only outputs are object files to obj.
+#It is not necessary to run this when making the C++ command-line tools.
 
 
 SHELL=/bin/bash
@@ -28,13 +29,16 @@ CFLAGS=$(WFLAG) $(STD) -O3 -march=native -fPIC
 
 
 All: all
-all: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vec2vec Vec2vec2 Complex Linalg Clean
+all: Dirs Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vec2vec Vec2vec2 Complex Linalg Clean
+
+Dirs:
+	mkdir -pm 777 obj
 
 
 #Generate: aka "Factory" functions
 #These take 0 inputs (other than parameters) and generate 1 output.
 #The Random functions are all done in C++
-Generate: Constants Other_Generate #Random
+Generate: Constants Other_Gen #Random
 
 #Constants: 0 inputs, 1 output with a single constant repeated
 Constants: zeros ones twos e ln2 ln10 log2e log10e sqrt2 isqrt2 pi ipi pi_2 pi_4 eps realmin realmax inf nan fill
@@ -59,8 +63,8 @@ inf: inf.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 nan: nan.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 fill: fill.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-#Other_Generate: 0 inputs, 1 output
-Other_Generate: eye linspace logspace primes randperm
+#Other_Gen: 0 inputs, 1 output
+Other_Gen: eye linspace logspace primes randperm
 eye: eye.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 linspace: linspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 logspace: logspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -68,6 +72,9 @@ primes: primes.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 randperm: randperm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
+
+#Matmanip:
+Matmanip: Construct Matsel Rearrange Split_Join
 
 #Construct: 1-2 vectors or matrices input, 1 matrix output constructed from the input(s)
 Construct: diagmat toeplitz tril triu repmat
@@ -77,13 +84,17 @@ tril: tril.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 triu: triu.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 repmat: repmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-
 #Matsel: 1 matrix input, 1 vector output selected from the matrix
 Matsel: diag row col
 diag: diag.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 row: row.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 col: col.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
+#Rearrange: 1 matrix input, 1 matrix output with elements rearranged
+Rearrange: transpose ctranspose rot90
+transpose: transpose.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+ctranspose: ctranspose.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+rot90: rot90.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 #Split_Join: split 1 matrix into 2-3 matrices, or join 2-3 matrices into 1 matrix
 #The join functions accomplish horzcat and vertcat.
@@ -92,13 +103,6 @@ split2: split2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 split3: split3.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 join2: join2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 join3: join3.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-
-
-#Rearrange: 1 matrix input, 1 matrix output with elements rearranged
-Rearrange: transpose ctranspose rot90
-transpose: transpose.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-ctranspose: ctranspose.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-rot90: rot90.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 

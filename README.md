@@ -59,22 +59,20 @@ For example:
 
 
 ## List of functions
-All: Generate Construct Matsel Rearrange Split_Join Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg  
+All: Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg  
 
-Generate: Constants Random Other_Generate  
+Generate: Constants Random Other_Gen  
 Constants: zeros ones twos e ln2 ln10 log2e log10e sqrt2 isqrt2 pi ipi pi_2 pi_4 sqrt2 isqrt2 eps realmin realmax inf nan fill  
 Random: uniform_int uniform_real bernoulli binomial negative_binomial geometric poisson exponential gamma weibull extreme_value normal lognormal chi_squared cauchy fisher_f student_t   discrete piecewise_constant piecewise_linear  
-Other_Generate: eye linspace logspace primes randperm  
- 
+Other_Gen: eye linspace logspace primes randperm  
+
+Matmanip: Construct Matsel Rearrange Split_Join
 Construct: diagmat toeplitz tril triu repmat  
-
 Matsel: diag row col  
-
 Rearrange: transpose ctranspose flip sort shift cshift  
-
 Split_Join: split2 split3 join2 join3  
 
-Elementwise1: Operators Trig Exp_Log Round Special  
+Elementwise1: Operators Trig Exp_Log Round Special Nonlin  
 Operators: plusplus minusminus neg  
 Trig: sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh rad2deg deg2rad  
 Exp_Log: exp exp2 exp10 log log2 log10  
@@ -83,8 +81,6 @@ Special: erf erfc tgamma lgamma
 Nonlin: abs square cube sqrt cbrt reciprocal sign deadzone  
 
 Elementwise2: plus minus times rdivide pow hypot atan2 adiff  
-
-Complex: complex polar real imag conj arg norm proj  
 
 Vec2scalar: Sums Prctiles Iprctiles Ranges Norms Moments Other_Means Other_Spreads Other_Stats  
 Sums: sum asum cnt  
@@ -107,6 +103,8 @@ Scale: zscore mscore gscore range1 iqr1 idr1
 Normalize: normalize1 normalize2 normalizep  
 Reorder: flip shift cshift sort  
 Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod softmax betamax  
+
+Complex: complex polar real imag conj arg norm proj  
 
 Linalg: Matmul Transform Sim_Mat Dist_Mat Other_Linalg  
 Matmul: kronecker matmul1 matmul1t matmul2 matmul2t matmul3 matmul3t  
