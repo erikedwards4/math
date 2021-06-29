@@ -1,28 +1,30 @@
 //Includes
-#include <random>
-#include <complex>
-#include "pcg_random.hpp"
+#include <cfloat>
+#include "randu.c"
 
 //Declarations
 const valarray<size_t> oktypes = {1u,2u,101u,102u};
 const size_t I = 0u, O = 1u;
-double lam;
+double a, b;
 
 //Description
 string descr;
-descr += "Random function: exponential_distribution.\n";
-descr += "Outputs tensor of nonnegative floats from an exponential distribution. \n";
-descr += "with rate parameter lambda > 0.\n";
+descr += "Uniformly-distributed random floats.\n";
+descr += "Outputs tensor of floats from a uniform distribution on the interval [a b). \n";
 descr += "\n";
-descr += "For complex output, real/imag parts are set separately.\n";
+descr += "This uses modified code from PCG random, but does not require it to be installed.\n";
+descr += "This function behaves identically to uniform_real, but uses a faster generator.\n";
+descr += "\n";
+descr += "For complex output, real/imag parts are separately set to the same interval.\n";
 descr += "\n";
 descr += "Examples:\n";
-descr += "$ exponential -l2.5 -r2 -c3 -o Y \n";
-descr += "$ exponential -l2.5 -r2 -c3 > Y \n";
-descr += "$ exponential -l2.5 -r2 -c3 -t102 > Y \n";
+descr += "$ randu -a-1.5 -b1.5 -r2 -c3 -o Y \n";
+descr += "$ randu -a-9 -b9 -r2 -c3 -t1 > Y \n";
+descr += "$ randu -b100 -r2 -c3 -t102 > Y \n";
 
 //Argtable
-struct arg_dbl  *a_lam = arg_dbln("l","lambda","<dbl>",0,1,"lambda rate parameter [default=1]");
+struct arg_dbl    *a_a = arg_dbln("a","a","<dbl>",0,1,"start of interval [a b) [default=0]");
+struct arg_dbl    *a_b = arg_dbln("b","b","<dbl>",0,1,"end of interval [a b) [default=1]");
 struct arg_int   *a_nr = arg_intn("r","R","<uint>",0,1,"num rows in output [default=1]");
 struct arg_int   *a_nc = arg_intn("c","C","<uint>",0,1,"num cols in output [default=1]");
 struct arg_int   *a_ns = arg_intn("s","S","<uint>",0,1,"num slices in output [default=1]");
@@ -45,7 +47,7 @@ else if (a_otyp->ival[0]<1) { cerr << progstr+": " << __LINE__ << errstr << "out
 else { o1.T = size_t(a_otyp->ival[0]); }
 if ((o1.T==oktypes).sum()==0)
 {
-    cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
+    cerr << progstr+": " << __LINE__ << errstr << "output data type must be in " << "{";
     for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
     cerr << endl; return 1;
 }
@@ -70,52 +72,49 @@ if (a_nh->count==0) { o1.H = 1u; }
 else if (a_nh->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "H (nhyperslices) must be nonnegative" << endl; return 1; }
 else { o1.H = size_t(a_nh->ival[0]); }
 
-//Get lam (lam<0.0.gives negative output)
-lam = (a_lam->count>0) ? a_lam->dval[0] : 1.0;
+//Get a
+a = (a_a->count>0) ? a_a->dval[0] : 0.0;
+if (o1.T==1 && a<=-double(FLT_MAX)) { cerr << progstr+": " << __LINE__ << errstr << "a must be > " << -double(FLT_MAX) << endl; return 1; }
+
+//Get b
+b = (a_b->count>0) ? a_b->dval[0] : 1.0;
+if (b<a) { cerr << progstr+": " << __LINE__ << errstr << "b must be >= a" << endl; return 1; }
+if (o1.T==1 && b>double(FLT_MAX)) { cerr << progstr+": " << __LINE__ << errstr << "b must be <= " << double(FLT_MAX) << endl; return 1; }
 
 //Checks
 
 //Set output header
 
 //Other prep
-//The top 2 lines would be for C++ random (no PCG)
-//random_device rd;  //random device to seed Mersenne twister engine
-//mt19937 mt_eng(rd());
-pcg_extras::seed_seq_from<std::random_device> seed_source;
-//these are a list of worthwhile generator engines (c is for cryptographic security, i.e. lowest predictability, but k is for equidistribution)
-//pcg32 pcg_eng(seed_source);            //if need fast default generator
-//pcg64 pcg_eng(seed_source);            //64-bit generator, 2^128 period, 2^127 streams
-//pcg64_unique pcg_eng(seed_source);     //64-bit generator, 2^128 period, every instance has its own unique stream
-//pcg32_k64 pcg_eng(seed_source);        //32-bit 64-dimensionally equidistributed generator, 2^2112 period, 2^63 streams (about the same state size and period as arc4random)
-pcg64_k1024 pcg_eng(seed_source);      //64-bit 64-dimensionally equidistributed generator, 2^65664 period, 2^63 streams (larger period than the mersenne twister)
-//pcg64_c1024 pcg_eng(seed_source);      //64-bit generator, 2^65664 period, 2^63 streams; uniform but not equidistributed; harder to predict than the above generator
 
 //Process
 if (o1.T==1u)
 {
-    valarray<float> Y(o1.N());
-    exponential_distribution<float> distr(lam);
-    try { generate_n(begin(Y),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-    if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
+    float *Y;
+    try { Y = new float[o1.N()]; }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+    if (codee::randu_s(Y,(float)a,(float)b,o1.N()))
+    { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
         try { ofs1.write(reinterpret_cast<char*>(&Y[0]),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
+    delete[] Y;
 }
 else if (o1.T==101u)
 {
-    valarray<complex<float>> Y(o1.N());
-    exponential_distribution<float> distr(lam);
-    try { generate_n(begin(Y),o1.N(),[&distr,&pcg_eng](){complex<float> y(distr(pcg_eng),distr(pcg_eng)); return y;}); }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-    if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
+    float *Y;
+    try { Y = new float[2u*o1.N()]; }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+    if (codee::randu_c(Y,(float)a,(float)b,o1.N()))
+    { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
         try { ofs1.write(reinterpret_cast<char*>(&Y[0]),o1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
     }
+    delete[] Y;
 }
 
 //Finish

@@ -14,6 +14,7 @@
 #include "../util/cmli.hpp"
 #include <random>
 #include <complex>
+#include "pcg_random.hpp"
 
 #ifdef I
 #undef I
@@ -37,8 +38,6 @@ int main(int argc, char *argv[])
     ioinfo o1;
     double p;
     uint t;
-    random_device rd;  //random device to seed Mersenne twister engine
-    mt19937 mt_eng(rd());
 
 
     //Description
@@ -152,15 +151,27 @@ int main(int argc, char *argv[])
 
 
     //Other prep
-
+    //The top 2 lines would be for C++ random (no PCG)
+    //random_device rd;  //random device to seed Mersenne twister engine
+    //mt19937 mt_eng(rd());
+    pcg_extras::seed_seq_from<std::random_device> seed_source;
+    //these are a list of worthwhile generator engines (c is for cryptographic security, i.e. lowest predictability, but k is for equidistribution)
+    //pcg32 pcg_eng(seed_source);            //if need fast default generator
+    //pcg64 pcg_eng(seed_source);            //64-bit generator, 2^128 period, 2^127 streams
+    //pcg64_unique pcg_eng(seed_source);     //64-bit generator, 2^128 period, every instance has its own unique stream
+    //pcg32_k64 pcg_eng(seed_source);        //32-bit 64-dimensionally equidistributed generator, 2^2112 period, 2^63 streams (about the same state size and period as arc4random)
+    pcg64_k1024 pcg_eng(seed_source);      //64-bit 64-dimensionally equidistributed generator, 2^65664 period, 2^63 streams (larger period than the mersenne twister)
+    //pcg64_c1024 pcg_eng(seed_source);      //64-bit generator, 2^65664 period, 2^63 streams; uniform but not equidistributed; harder to predict than the above generator
+    
 
     //Process
     if (o1.T==1u)
     {
-        valarray<float> Y(o1.N());
+        valarray<uint> Yi(o1.N()); valarray<float> Y(o1.N());
         binomial_distribution<uint> distr(t,p);
-        try { generate_n(begin(Y),o1.N(),[&distr,&mt_eng](){return distr(mt_eng);}); }
+        try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
+        for (size_t n=0; n<o1.N(); ++n) { Y[n] = float(Yi[n]); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -170,10 +181,11 @@ int main(int argc, char *argv[])
     }
     else if (o1.T==2)
     {
-        valarray<double> Y(o1.N());
+        valarray<uint> Yi(o1.N()); valarray<double> Y(o1.N());
         binomial_distribution<uint> distr(t,p);
-        try { generate_n(begin(Y),o1.N(),[&distr,&mt_eng](){return distr(mt_eng);}); }
+        try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
+        for (size_t n=0; n<o1.N(); ++n) { Y[n] = double(Yi[n]); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -183,10 +195,11 @@ int main(int argc, char *argv[])
     }
     else if (o1.T==101u)
     {
-        valarray<complex<float>> Y(o1.N());
+        valarray<complex<uint>> Yi(o1.N()); valarray<complex<float>> Y(o1.N());
         binomial_distribution<uint> distr(t,p);
-        try { generate_n(begin(Y),o1.N(),[&distr,&mt_eng](){complex<float> y(distr(mt_eng),distr(mt_eng)); return y;}); }
+        try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){complex<uint> y(distr(pcg_eng),distr(pcg_eng)); return y;}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
+        for (size_t n=0; n<o1.N(); ++n) { Y[n] = complex<float>(float(real(Yi[n])),float(imag(Yi[n]))); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -196,10 +209,11 @@ int main(int argc, char *argv[])
     }
     else if (o1.T==102u)
     {
-        valarray<complex<double>> Y(o1.N());
+        valarray<complex<uint>> Yi(o1.N()); valarray<complex<double>> Y(o1.N());
         binomial_distribution<uint> distr(t,p);
-        try { generate_n(begin(Y),o1.N(),[&distr,&mt_eng](){complex<double> y(distr(mt_eng),distr(mt_eng)); return y;}); }
+        try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){complex<uint> y(distr(pcg_eng),distr(pcg_eng)); return y;}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
+        for (size_t n=0; n<o1.N(); ++n) { Y[n] = complex<double>(double(real(Yi[n])),double(imag(Yi[n]))); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {

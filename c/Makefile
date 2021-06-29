@@ -38,7 +38,7 @@ Dirs:
 #Generate: aka "Factory" functions
 #These take 0 inputs (other than parameters) and generate 1 output.
 #The Random functions are all done in C++
-Generate: Constants Other_Gen #Random
+Generate: Constants Other_Gen Rand
 
 #Constants: 0 inputs, 1 output with a single constant repeated
 Constants: zeros ones twos e ln2 ln10 log2e log10e sqrt2 isqrt2 pi ipi pi_2 pi_4 eps realmin realmax inf nan fill
@@ -70,6 +70,11 @@ linspace: linspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 logspace: logspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 primes: primes.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 randperm: randperm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+#Rand: 0 inputs, 1 output
+Rand: randi randu randn
+randi: randi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+randu: randu.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
@@ -145,11 +150,12 @@ ceil: ceil.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 round: round.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 trunc: trunc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Special: erf erfc tgamma lgamma
+Special: erf erfc tgamma lgamma #sinc bessel
 erf: erf.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 erfc: erfc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 tgamma: tgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lgamma: lgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+sinc: sinc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Nonlin: abs square cube sqrt cbrt reciprocal sign deadzone
 abs: abs.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

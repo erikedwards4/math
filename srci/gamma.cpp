@@ -1,13 +1,12 @@
 //Includes
 #include <random>
 #include <complex>
+#include "pcg_random.hpp"
 
 //Declarations
 const valarray<size_t> oktypes = {1u,2u,101u,102u};
 const size_t I = 0u, O = 1u;
 double a, b;
-random_device rd;  //random device to seed Mersenne twister engine
-mt19937 mt_eng(rd());
 
 //Description
 string descr;
@@ -84,13 +83,24 @@ b = (a_b->count>0) ? a_b->dval[0] : 1.0;
 //Set output header
 
 //Other prep
+//The top 2 lines would be for C++ random (no PCG)
+//random_device rd;  //random device to seed Mersenne twister engine
+//mt19937 mt_eng(rd());
+pcg_extras::seed_seq_from<std::random_device> seed_source;
+//these are a list of worthwhile generator engines (c is for cryptographic security, i.e. lowest predictability, but k is for equidistribution)
+//pcg32 pcg_eng(seed_source);            //if need fast default generator
+//pcg64 pcg_eng(seed_source);            //64-bit generator, 2^128 period, 2^127 streams
+//pcg64_unique pcg_eng(seed_source);     //64-bit generator, 2^128 period, every instance has its own unique stream
+//pcg32_k64 pcg_eng(seed_source);        //32-bit 64-dimensionally equidistributed generator, 2^2112 period, 2^63 streams (about the same state size and period as arc4random)
+pcg64_k1024 pcg_eng(seed_source);      //64-bit 64-dimensionally equidistributed generator, 2^65664 period, 2^63 streams (larger period than the mersenne twister)
+//pcg64_c1024 pcg_eng(seed_source);      //64-bit generator, 2^65664 period, 2^63 streams; uniform but not equidistributed; harder to predict than the above generator
 
 //Process
 if (o1.T==1u)
 {
     valarray<float> Y(o1.N());
     gamma_distribution<float> distr(a,b);
-    try { generate_n(begin(Y),o1.N(),[&distr,&mt_eng](){return distr(mt_eng);}); }
+    try { generate_n(begin(Y),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
     if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
     if (wo1)
@@ -103,7 +113,7 @@ else if (o1.T==101u)
 {
     valarray<complex<float>> Y(o1.N());
     gamma_distribution<float> distr(a,b);
-    try { generate_n(begin(Y),o1.N(),[&distr,&mt_eng](){complex<float> y(distr(mt_eng),distr(mt_eng)); return y;}); }
+    try { generate_n(begin(Y),o1.N(),[&distr,&pcg_eng](){complex<float> y(distr(pcg_eng),distr(pcg_eng)); return y;}); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
     if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
     if (wo1)

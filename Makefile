@@ -11,7 +11,7 @@ CC=clang++
 
 ifeq ($(CC),clang++)
 	STD=-std=c++11
-	WFLAG=-Weverything -Wno-c++98-compat -Wno-old-style-cast -Wno-gnu-imaginary-constant
+	WFLAG=-Weverything -Wno-c++98-compat -Wno-old-style-cast -Wno-gnu-imaginary-constant -Wno-date-time
 else
 	STD=-std=gnu++14
 	WFLAG=-Wall -Wextra
@@ -91,8 +91,15 @@ randperm: srci/randperm.cpp c/randperm.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
 #Random: 0 inputs, 1 output with random numbers
-#These use C++ only (the random library for now; PCG random in future)
-Random: Uniform Bernoulli Poisson Normal Sampling
+#The Rand functions do not require PCG random to be installed
+#These otherse can use C++ only (the random library), and were originally programmed to do so,
+#but are currently coded to use PCG random here (must sudo apt-get install libpcg-cpp-dev)
+#If PCG random is not available, then comment out after Rand
+Random: Rand Uniform Bernoulli Poisson Normal Sampling
+
+Rand:randi randu #randn
+randi: srci/randi.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-c++98-compat-pedantic; $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+randu: srci/randu.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-c++98-compat-pedantic; $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 Uniform: uniform_int uniform_real
 uniform_int: srci/uniform_int.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
@@ -238,7 +245,7 @@ trunc: srci/trunc.cpp c/trunc.c
 round: srci/round.cpp c/round.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
-Special: erf erfc tgamma lgamma
+Special: erf erfc tgamma lgamma #sinc bessel
 erf: srci/erf.cpp c/erf.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm -lcerf
 erfc: srci/erfc.cpp c/erfc.c
@@ -246,6 +253,8 @@ erfc: srci/erfc.cpp c/erfc.c
 tgamma: srci/tgamma.cpp c/tgamma.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 lgamma: srci/lgamma.cpp c/lgamma.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+sinc: srci/sinc.cpp c/sinc.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 #Nonlin: other 1 input, 1 output static nonlinearities

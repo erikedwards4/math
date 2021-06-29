@@ -1,12 +1,11 @@
 //Includes
 #include <random>
 #include <complex>
+#include "pcg_random.hpp"
 
 //Declarations
 const valarray<size_t> oktypes = {1u,2u};
 const size_t I = 2u, O = 1u;
-random_device rd;    //random device to seed Mersenne twister engine
-mt19937 mt_eng(rd()); 
 
 //Description
 string descr;
@@ -78,6 +77,17 @@ if (i2.N()!=i1.N()-1u) { cerr << progstr+": " << __LINE__ << errstr << "length(P
 o1.T = i1.T;
 
 //Other prep
+//The top 2 lines would be for C++ random (no PCG)
+//random_device rd;  //random device to seed Mersenne twister engine
+//mt19937 mt_eng(rd());
+pcg_extras::seed_seq_from<std::random_device> seed_source;
+//these are a list of worthwhile generator engines (c is for cryptographic security, i.e. lowest predictability, but k is for equidistribution)
+//pcg32 pcg_eng(seed_source);            //if need fast default generator
+//pcg64 pcg_eng(seed_source);            //64-bit generator, 2^128 period, 2^127 streams
+//pcg64_unique pcg_eng(seed_source);     //64-bit generator, 2^128 period, every instance has its own unique stream
+//pcg32_k64 pcg_eng(seed_source);        //32-bit 64-dimensionally equidistributed generator, 2^2112 period, 2^63 streams (about the same state size and period as arc4random)
+pcg64_k1024 pcg_eng(seed_source);      //64-bit 64-dimensionally equidistributed generator, 2^65664 period, 2^63 streams (larger period than the mersenne twister)
+//pcg64_c1024 pcg_eng(seed_source);      //64-bit generator, 2^65664 period, 2^63 streams; uniform but not equidistributed; harder to predict than the above generator
 
 //Process
 if (o1.T==1u)
@@ -89,7 +99,7 @@ if (o1.T==1u)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading data for input file 2 (P)" << endl; return 1; }
     if ((P<0.0f).sum()>0) { cerr << progstr+": " << __LINE__ << errstr << "elements of P must be nonnegative" << endl; return 1; }
     piecewise_constant_distribution<float> distr(&B[0],&B[i1.N()],&P[0]);
-    try { generate_n(begin(Y),o1.N(),[&distr,&mt_eng](){return distr(mt_eng);}); }
+    try { generate_n(begin(Y),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
     if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
     if (wo1)

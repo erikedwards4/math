@@ -16,7 +16,7 @@ the matrix order as row-major or column-major, and so on.
 
 The C++ command-line programs are written in a consistent style that was developed for command-line tools in general.  
 All of these command-line tools use argtable2 (http://argtable.sourceforge.net/) for parsing inputs and option flags.  
-For any of these, use -h (--help) as a flag to get help (description and usage examples).  
+For any of these, use -h (--help) as a flag to get description and usage examples.  
 
 Input/output is supported for NumPy tensors (https://numpy.org/),  
 and several C++ tensor formats: Armadillo (http://arma.sourceforge.net/),  
@@ -26,34 +26,31 @@ ArrayFire (https://arrayfire.com/), and my own minimal format for Eigen (http://
 ## Dependencies
 Requires argtable2, openBLAS, LAPACKE.  
 For Ubuntu, these are available by apt-get:  
-```console
+```
 sudo apt-get install libargtable2-0 libblas3 libopenblas-base liblapack3 liblapacke
 ```
 
+You must first install the util library:  
+https://github.com/erikedwards4/util  
+And install math into the same parent directory as util.  
+Preferably: /opt/codee/util and /opt/codee/math  
+
 
 ## Installation
-```console
+```
 cd /opt/codee
 git clone https://github.com/erikedwards4/math
 cd /opt/codee/math
 make
 ```
 
-Each C function can also be compiled separately; see c subdirectory Makefile for details.  
-To make an archive library:  
-```console
-cd /opt/codee/math/c
-make libmath.a CC=clang
-```
-This creates /opt/codee/math/lib/libmath.a with all of the C object files.  
-This could be useful if trying to use the C functions in other applications.  
-Change clang to clang++ to compile for use with C++ applications.  
+Each C function can also be compiled and used separately; see c subdirectory Makefile for details.  
 
 
 ## Usage
 See each resulting command-line tool for help (use -h or --help option).  
 For example:  
-```console
+```
 /opt/codee/math/bin/log2 --help
 ```
 
@@ -77,7 +74,7 @@ Operators: plusplus minusminus neg
 Trig: sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh rad2deg deg2rad  
 Exp_Log: exp exp2 exp10 log log2 log10  
 Round: floor ceil trunc round  
-Special: erf erfc tgamma lgamma  
+Special: erf erfc tgamma lgamma sinc  
 Nonlin: abs square cube sqrt cbrt reciprocal sign deadzone  
 
 Elementwise2: plus minus times rdivide pow hypot atan2 adiff  
@@ -121,4 +118,3 @@ Feel free to contact the author (erik.edwards4@gmail.com) if any suggestions!
 
 ## License
 [BSD 3-Clause](https://choosealicense.com/licenses/bsd-3-clause/)
-

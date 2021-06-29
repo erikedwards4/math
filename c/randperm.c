@@ -23,7 +23,7 @@ int randperm_d (double *Y, const size_t M, const size_t N);
 
 int randperm_s (float *Y, const size_t M, const size_t N)
 {
-    if (M>N) {  fprintf(stderr, "error in randperm_s: M must be <= N\n"); return 1; }
+    if (M>N) { fprintf(stderr, "error in randperm_s: M must be <= N\n"); return 1; }
 
     //Generate ints 1:N
     size_t *X;
@@ -55,7 +55,7 @@ int randperm_s (float *Y, const size_t M, const size_t N)
 
 int randperm_d (double *Y, const size_t M, const size_t N)
 {
-    if (M>N) {  fprintf(stderr, "error in randperm_d: M must be <= N\n"); return 1; }
+    if (M>N) { fprintf(stderr, "error in randperm_d: M must be <= N\n"); return 1; }
 
     //Generate ints 1:N
     size_t *X;
