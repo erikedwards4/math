@@ -1,8 +1,7 @@
 //Gets random floats from a normal distribution with mu=0 and sig=1..
 //This uses modified code from PCG randoms minimal C library,
 //but remains stand-alone (no install of PCG required).
-//I use the textbook cos and sin formulae, but I recompute the rand num at each element
-//(doubles the computation time, but just feels safer then using the same result twice).
+//I use the textbook cos and sin formulae to make Gaussian.
 
 #include <stdio.h>
 #include <stdint.h>
