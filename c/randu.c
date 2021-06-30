@@ -31,14 +31,11 @@ int randu_s (float *Y, const float a, const float b, const size_t N)
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
+        struct timespec ts;
 
         //Init random num generator
-        #ifdef __cplusplus
-            state = (uint64_t)time(nullptr) + inc;
-        #else
-            state = (uint64_t)time(NULL) + inc;
-        #endif
-        state = state*6364136223846793005ull + inc;
+	    if (timespec_get(&ts,TIME_UTC)==0) { fprintf(stderr, "error in randu_s: timespec_get.\n"); perror("timespec_get"); return 1; }
+	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
         if (a==0.0f && b==1.0f)
@@ -83,14 +80,11 @@ int randu_d (double *Y, const double a, const double b, const size_t N)
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
+        struct timespec ts;
 
         //Init random num generator
-        #ifdef __cplusplus
-            state = (uint64_t)time(nullptr) + inc;
-        #else
-            state = (uint64_t)time(NULL) + inc;
-        #endif
-        state = state*6364136223846793005ull + inc;
+	    if (timespec_get(&ts,TIME_UTC)==0) { fprintf(stderr, "error in randu_d: timespec_get.\n"); perror("timespec_get"); return 1; }
+	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
         if (a==0.0 && b==1.0)
@@ -135,14 +129,11 @@ int randu_c (float *Y, const float a, const float b, const size_t N)
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
+        struct timespec ts;
 
         //Init random num generator
-        #ifdef __cplusplus
-            state = (uint64_t)time(nullptr) + inc;
-        #else
-            state = (uint64_t)time(NULL) + inc;
-        #endif
-        state = state*6364136223846793005ull + inc;
+	    if (timespec_get(&ts,TIME_UTC)==0) { fprintf(stderr, "error in randu_c: timespec_get.\n"); perror("timespec_get"); return 1; }
+	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
         if (a==0.0f && b==1.0f)
@@ -159,7 +150,7 @@ int randu_c (float *Y, const float a, const float b, const size_t N)
         else
         {
             const float sc = b - a;
-            for (size_t n=0u; n<N; ++n, ++Y)
+            for (size_t n=0u; n<2u*N; ++n, ++Y)
             {
                 state = state*6364136223846793005ull + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -187,14 +178,11 @@ int randu_z (double *Y, const double a, const double b, const size_t N)
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
+        struct timespec ts;
 
         //Init random num generator
-        #ifdef __cplusplus
-            state = (uint64_t)time(nullptr) + inc;
-        #else
-            state = (uint64_t)time(NULL) + inc;
-        #endif
-        state = state*6364136223846793005ull + inc;
+	    if (timespec_get(&ts,TIME_UTC)==0) { fprintf(stderr, "error in randu_z: timespec_get.\n"); perror("timespec_get"); return 1; }
+	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
         if (a==0.0 && b==1.0)
@@ -211,7 +199,7 @@ int randu_z (double *Y, const double a, const double b, const size_t N)
         else
         {
             const double sc = b - a;
-            for (size_t n=0u; n<N; ++n, ++Y)
+            for (size_t n=0u; n<2u*N; ++n, ++Y)
             {
                 state = state*6364136223846793005ull + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);

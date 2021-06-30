@@ -1,4 +1,4 @@
-//Gets random floats from a normal distribution with mu=0 and sig=1..
+//Gets random floats from a normal distribution with mu and sig.
 //This uses modified code from PCG randoms minimal C library,
 //but remains stand-alone (no install of PCG required).
 //I use the textbook cos and sin formulae to make Gaussian.
@@ -12,19 +12,15 @@
     #define M_PI 3.14159265358979323846
 #endif
 
-#ifndef M_SQRT2
-    #define M_SQRT2 1.41421356237309504880
-#endif
-
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
 
-int randn_s (float *Y, const float a, const float b, const size_t N);
-int randn_d (double *Y, const double a, const double b, const size_t N);
-int randn_c (float *Y, const float a, const float b, const size_t N);
-int randn_z (double *Y, const double a, const double b, const size_t N);
+int randn_s (float *Y, const float mu, const float sig, const size_t N);
+int randn_d (double *Y, const double mu, const double sig, const size_t N);
+int randn_c (float *Y, const float mu, const float sig, const size_t N);
+int randn_z (double *Y, const double mu, const double sig, const size_t N);
 
 
 int randn_s (float *Y, const float mu, const float sig, const size_t N)
@@ -43,14 +39,11 @@ int randn_s (float *Y, const float mu, const float sig, const size_t N)
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
+        struct timespec ts;
 
         //Init random num generator
-        #ifdef __cplusplus
-            state = (uint64_t)time(nullptr) + inc;
-        #else
-            state = (uint64_t)time(NULL) + inc;
-        #endif
-        state = state*6364136223846793005ull + inc;
+	    if (timespec_get(&ts,TIME_UTC)==0) { fprintf(stderr, "error in randn_s: timespec_get.\n"); perror("timespec_get"); return 1; }
+	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
         if (mu==0.0f && sig==1.0f)
@@ -143,14 +136,11 @@ int randn_d (double *Y, const double mu, const double sig, const size_t N)
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
+        struct timespec ts;
 
         //Init random num generator
-        #ifdef __cplusplus
-            state = (uint64_t)time(nullptr) + inc;
-        #else
-            state = (uint64_t)time(NULL) + inc;
-        #endif
-        state = state*6364136223846793005ull + inc;
+	    if (timespec_get(&ts,TIME_UTC)==0) { fprintf(stderr, "error in randn_d: timespec_get.\n"); perror("timespec_get"); return 1; }
+	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
         if (mu==0.0 && sig==1.0)
@@ -242,14 +232,11 @@ int randn_c (float *Y, const float mu, const float sig, const size_t N)
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
+        struct timespec ts;
 
         //Init random num generator
-        #ifdef __cplusplus
-            state = (uint64_t)time(nullptr) + inc;
-        #else
-            state = (uint64_t)time(NULL) + inc;
-        #endif
-        state = state*6364136223846793005ull + inc;
+	    if (timespec_get(&ts,TIME_UTC)==0) { fprintf(stderr, "error in randn_c: timespec_get.\n"); perror("timespec_get"); return 1; }
+	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
         if (mu==0.0f && sig==1.0f)
@@ -311,14 +298,11 @@ int randn_z (double *Y, const double mu, const double sig, const size_t N)
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
+        struct timespec ts;
 
         //Init random num generator
-        #ifdef __cplusplus
-            state = (uint64_t)time(nullptr) + inc;
-        #else
-            state = (uint64_t)time(NULL) + inc;
-        #endif
-        state = state*6364136223846793005ull + inc;
+	    if (timespec_get(&ts,TIME_UTC)==0) { fprintf(stderr, "error in randn_z: timespec_get.\n"); perror("timespec_get"); return 1; }
+	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
         if (mu==0.0 && sig==1.0)
