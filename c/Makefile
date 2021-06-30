@@ -72,9 +72,12 @@ primes: primes.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 randperm: randperm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 #Rand: 0 inputs, 1 output
+#These are the fastest and go-to versions.
+#They use modified code from PCG random, but are stand-alone (no install of PCG required)
 Rand: randi randu randn
 randi: randi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 randu: randu.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+randn: randn.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 

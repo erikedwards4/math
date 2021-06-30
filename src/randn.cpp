@@ -12,7 +12,8 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "../util/cmli.hpp"
-#include "randi.c"
+#include <cfloat>
+#include "randn.c"
 
 #ifdef I
 #undef I
@@ -34,30 +35,28 @@ int main(int argc, char *argv[])
     ofstream ofs1;
     int8_t stdo1, wo1;
     ioinfo o1;
-    int a, b;
+    double mn, std;
 
 
     //Description
     string descr;
-    descr += "Uniformly-distributed random integers.\n";
-    descr += "Outputs tensor of ints from a uniform distribution on the interval [a b). \n";
-    descr += "Although outputs are integers, the data type is a float.\n";
+    descr += "Normally-distributed random floats.\n";
+    descr += "Outputs tensor of floats from a normal distribution with mu and sig. \n";
     descr += "\n";
     descr += "This uses modified code from PCG random, but does not require it to be installed.\n";
-    descr += "This function behaves identically to uniform_int, but uses a faster generator.\n";
     descr += "\n";
-    descr += "For complex output, real/imag parts are separately set to the same interval.\n";
+    descr += "For complex output, real/imag parts are separately set to the same params.\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ randi -a-1.5 -b1.5 -r2 -c3 -o Y \n";
-    descr += "$ randi -a-9 -b9 -r2 -c3 -t1 > Y \n";
-    descr += "$ randi -b100 -r2 -c3 -t102 > Y \n";
+    descr += "$ randn -r2 -c3 -o Y \n";
+    descr += "$ randn -m4.1 -d2.5 -r2 -c3 -t1 > Y \n";
+    descr += "$ randn -m-1.5 -d3 -r2 -c3 -t102 > Y \n";
 
 
     //Argtable
     int nerrs;
-    struct arg_int    *a_a = arg_intn("a","a","<int>",0,1,"start of interval [a b) [default=0]");
-    struct arg_int    *a_b = arg_intn("b","b","<int>",0,1,"end of interval [a b) [default=1]");
+    struct arg_dbl   *a_mn = arg_dbln("m","mean","<dbl>",0,1,"mean parameter [default=0.0]");
+    struct arg_dbl  *a_std = arg_dbln("d","stddev","<dbl>",0,1,"std dev parameter [default=1.0]");
     struct arg_int   *a_nr = arg_intn("r","R","<uint>",0,1,"num rows in output [default=1]");
     struct arg_int   *a_nc = arg_intn("c","C","<uint>",0,1,"num cols in output [default=1]");
     struct arg_int   *a_ns = arg_intn("s","S","<uint>",0,1,"num slices in output [default=1]");
@@ -67,7 +66,7 @@ int main(int argc, char *argv[])
     struct arg_file  *a_fo = arg_filen("o","ofile","<file>",0,O,"output file (Y)");
     struct arg_lit *a_help = arg_litn("h","help",0,1,"display this help and exit");
     struct arg_end  *a_end = arg_end(5);
-    void *argtable[] = {a_a, a_b, a_nr, a_nc, a_ns, a_nh, a_otyp, a_ofmt, a_fo, a_help, a_end};
+    void *argtable[] = {a_mn, a_std, a_nr, a_nc, a_ns, a_nh, a_otyp, a_ofmt, a_fo, a_help, a_end};
     if (arg_nullcheck(argtable)!=0) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating argtable" << endl; return 1; }
     nerrs = arg_parse(argc, argv, argtable);
     if (a_help->count>0)
@@ -124,12 +123,15 @@ int main(int argc, char *argv[])
     else if (a_nh->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "H (nhyperslices) must be nonnegative" << endl; return 1; }
     else { o1.H = size_t(a_nh->ival[0]); }
 
-    //Get a
-    a = (a_a->count>0) ? a_a->ival[0] : 0;
+    //Get mn
+    mn = (a_mn->count>0) ? a_mn->dval[0] : 0.0;
+    if (o1.T==1 && mn>=double(FLT_MAX)) { cerr << progstr+": " << __LINE__ << errstr << "m (mean) must be < " << double(FLT_MAX) << endl; return 1; }
+    if (o1.T==1 && mn<=-double(FLT_MAX)) { cerr << progstr+": " << __LINE__ << errstr << "m (mean) must be > " << -double(FLT_MAX) << endl; return 1; }
 
-    //Get b
-    b = (a_b->count>0) ? a_b->ival[0] : 1;
-    if (b<a) { cerr << progstr+": " << __LINE__ << errstr << "b must be >= a" << endl; return 1; }
+    //Get std
+    std = (a_std->count>0) ? a_std->dval[0] : 1.0;
+    if (std<0.0) { cerr << progstr+": " << __LINE__ << errstr << "s (stddev) must be nonnegative " << endl; return 1; }
+    if (o1.T==1 && mn>=double(FLT_MAX)) { cerr << progstr+": " << __LINE__ << errstr << "s (stddev) must be < " << double(FLT_MAX) << endl; return 1; }
 
 
     //Set output header info
@@ -156,7 +158,7 @@ int main(int argc, char *argv[])
         float *Y;
         try { Y = new float[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::randi_s(Y,a,b,o1.N()))
+        if (codee::randn_s(Y,(float)mn,(float)std,o1.N()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -170,7 +172,7 @@ int main(int argc, char *argv[])
         double *Y;
         try { Y = new double[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::randi_d(Y,a,b,o1.N()))
+        if (codee::randn_d(Y,(double)mn,(double)std,o1.N()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -184,7 +186,7 @@ int main(int argc, char *argv[])
         float *Y;
         try { Y = new float[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::randi_c(Y,a,b,o1.N()))
+        if (codee::randn_c(Y,(float)mn,(float)std,o1.N()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -198,7 +200,7 @@ int main(int argc, char *argv[])
         double *Y;
         try { Y = new double[2u*o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        if (codee::randi_z(Y,a,b,o1.N()))
+        if (codee::randn_z(Y,(double)mn,(double)std,o1.N()))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

@@ -28,13 +28,13 @@ int randi_s (float *Y, const int a, const int b, const size_t N)
     }
     else
     {
+        const uint32_t bound = (uint32_t)(b-a+1);
+        const uint32_t thresh = -bound % bound;
         uint32_t r, xorshifted, rot;
-        uint32_t bound = (uint32_t)(b-a+1);
-        uint32_t thresh = -bound % bound;
-        uint64_t state=0u, inc;
+        uint64_t state = 0u;
+        const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
 
         //Init random num generator
-        inc = ((uint64_t)(&state) << 1u) | 1u;
         #ifdef __cplusplus
             state = (uint64_t)time(nullptr) + inc;
         #else
@@ -74,13 +74,13 @@ int randi_d (double *Y, const int a, const int b, const size_t N)
     }
     else
     {
+        const uint32_t bound = (uint32_t)(b-a+1);
+        const uint32_t thresh = -bound % bound;
         uint32_t r, xorshifted, rot;
-        uint32_t bound = (uint32_t)(b-a+1);
-        uint32_t thresh = -bound % bound;
-        uint64_t state=0u, inc;
+        uint64_t state = 0u;
+        const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
 
         //Init random num generator
-        inc = ((uint64_t)(&state) << 1u) | 1u;
         #ifdef __cplusplus
             state = (uint64_t)time(nullptr) + inc;
         #else
@@ -120,13 +120,13 @@ int randi_c (float *Y, const int a, const int b, const size_t N)
     }
     else
     {
+        const uint32_t bound = (uint32_t)(b-a+1);
+        const uint32_t thresh = -bound % bound;
         uint32_t r, xorshifted, rot;
-        uint32_t bound = (uint32_t)(b-a+1);
-        uint32_t thresh = -bound % bound;
-        uint64_t state=0u, inc;
+        uint64_t state = 0u;
+        const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
 
         //Init random num generator
-        inc = ((uint64_t)(&state) << 1u) | 1u;
         #ifdef __cplusplus
             state = (uint64_t)time(nullptr) + inc;
         #else
@@ -166,13 +166,13 @@ int randi_z (double *Y, const int a, const int b, const size_t N)
     }
     else
     {
+        const uint32_t bound = (uint32_t)(b-a+1);
+        const uint32_t thresh = -bound % bound;
         uint32_t r, xorshifted, rot;
-        uint32_t bound = (uint32_t)(b-a+1);
-        uint32_t thresh = -bound % bound;
-        uint64_t state=0u, inc;
+        uint64_t state = 0u;
+        const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
 
         //Init random num generator
-        inc = ((uint64_t)(&state) << 1u) | 1u;
         #ifdef __cplusplus
             state = (uint64_t)time(nullptr) + inc;
         #else
