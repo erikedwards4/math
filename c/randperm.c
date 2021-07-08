@@ -30,6 +30,7 @@ int randperm_s (float *Y, const size_t M, const size_t N)
 
     uint32_t r1, r, xorshifted, rot, bound, thresh;
     uint64_t state = 0u;
+    const uint64_t mul = 6364136223846793005u;
     const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
     struct timespec ts;
     size_t k;
@@ -49,7 +50,7 @@ int randperm_s (float *Y, const size_t M, const size_t N)
 	{
         //Get random index k from m to N-1 (m<=k<N)
 		//k = (size_t)((N-m)*drand48());
-        state = state*6364136223846793005ull + inc;
+        state = state*mul + inc;
         xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
         rot = state >> 59u;
         r1 = r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
@@ -57,7 +58,7 @@ int randperm_s (float *Y, const size_t M, const size_t N)
         thresh = -bound % bound;
         while (r<thresh)
         {
-            state = state*6364136223846793005ull + inc;
+            state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
             rot = state >> 59u;
             r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
@@ -83,6 +84,7 @@ int randperm_d (double *Y, const size_t M, const size_t N)
 
     uint32_t r1, r, xorshifted, rot, bound, thresh;
     uint64_t state = 0u;
+    const uint64_t mul = 6364136223846793005u;
     const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
     struct timespec ts;
     size_t k;
@@ -103,7 +105,7 @@ int randperm_d (double *Y, const size_t M, const size_t N)
 	{
 		//Get random index k from m to N-1 (m<=k<N)
 		//k = (size_t)((N-m)*drand48());
-        state = state*6364136223846793005ull + inc;
+        state = state*mul + inc;
         xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
         rot = state >> 59u;
         r1 = r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
@@ -111,7 +113,7 @@ int randperm_d (double *Y, const size_t M, const size_t N)
         thresh = -bound % bound;
         while (r<thresh)
         {
-            state = state*6364136223846793005ull + inc;
+            state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
             rot = state >> 59u;
             r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));

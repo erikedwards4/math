@@ -41,11 +41,11 @@ int main(int argc, char *argv[])
     //Description
     string descr;
     descr += "Normally-distributed random floats.\n";
-    descr += "Outputs tensor of floats from a normal distribution with mu and sig. \n";
+    descr += "Outputs tensor of floats from a normal distribution with mean and stddev. \n";
     descr += "\n";
     descr += "This uses modified code from PCG random, but does not require it to be installed.\n";
     descr += "\n";
-    descr += "For complex output, real/imag parts are separately set to the same params.\n";
+    descr += "For complex output, real/imag parts are separately set using the same params.\n";
     descr += "\n";
     descr += "Examples:\n";
     descr += "$ randn -r2 -c3 -o Y \n";
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
     //Get std
     std = (a_std->count>0) ? a_std->dval[0] : 1.0;
     if (std<0.0) { cerr << progstr+": " << __LINE__ << errstr << "s (stddev) must be nonnegative " << endl; return 1; }
-    if (o1.T==1 && mn>=double(FLT_MAX)) { cerr << progstr+": " << __LINE__ << errstr << "s (stddev) must be < " << double(FLT_MAX) << endl; return 1; }
+    if (o1.T==1 && std>=double(FLT_MAX)) { cerr << progstr+": " << __LINE__ << errstr << "s (stddev) must be < " << double(FLT_MAX) << endl; return 1; }
 
 
     //Set output header info

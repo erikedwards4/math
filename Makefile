@@ -88,7 +88,7 @@ logspace: srci/logspace.cpp c/logspace.c
 primes: srci/primes.cpp c/primes.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 randperm: srci/randperm.cpp c/randperm.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-c++98-compat-pedantic; $(CC) obj/$@.o -obin/$@ -largtable2
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
 #Random: 0 inputs, 1 output with random numbers
 #The Rand functions do not require PCG random to be installed
@@ -98,9 +98,9 @@ randperm: srci/randperm.cpp c/randperm.c
 Random: Rand Uniform Bernoulli Poisson Normal Sampling
 
 Rand:randi randu randn
-randi: srci/randi.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-c++98-compat-pedantic; $(CC) obj/$@.o -obin/$@ -largtable2 -lm
-randu: srci/randu.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-c++98-compat-pedantic; $(CC) obj/$@.o -obin/$@ -largtable2 -lm
-randn: srci/randn.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-c++98-compat-pedantic; $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+randi: srci/randi.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+randu: srci/randu.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+randn: srci/randn.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 Uniform: uniform_int uniform_real
 uniform_int: srci/uniform_int.cpp; $(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2

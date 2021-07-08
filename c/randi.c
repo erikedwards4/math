@@ -32,6 +32,7 @@ int randi_s (float *Y, const int a, const int b, const size_t N)
         const uint32_t thresh = -bound % bound;
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
+        const uint64_t mul = 6364136223846793005u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
         struct timespec ts;
 
@@ -42,13 +43,13 @@ int randi_s (float *Y, const int a, const int b, const size_t N)
         //Generate
         for (size_t n=0u; n<N; ++n, ++Y)
         {
-            state = state*6364136223846793005ull + inc;
+            state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
             rot = state >> 59u;
             r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
             while (r<thresh)
             {
-                state = state*6364136223846793005ull + inc;
+                state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
                 rot = state >> 59u;
                 r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
@@ -75,6 +76,7 @@ int randi_d (double *Y, const int a, const int b, const size_t N)
         const uint32_t thresh = -bound % bound;
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
+        const uint64_t mul = 6364136223846793005u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
         struct timespec ts;
 
@@ -85,13 +87,13 @@ int randi_d (double *Y, const int a, const int b, const size_t N)
         //Generate
         for (size_t n=0u; n<N; ++n, ++Y)
         {
-            state = state*6364136223846793005ull + inc;
+            state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
             rot = state >> 59u;
             r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
             while (r<thresh)
             {
-                state = state*6364136223846793005ull + inc;
+                state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
                 rot = state >> 59u;
                 r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
@@ -118,6 +120,7 @@ int randi_c (float *Y, const int a, const int b, const size_t N)
         const uint32_t thresh = -bound % bound;
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
+        const uint64_t mul = 6364136223846793005u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
         struct timespec ts;
 
@@ -128,13 +131,13 @@ int randi_c (float *Y, const int a, const int b, const size_t N)
         //Generate
         for (size_t n=0u; n<2u*N; ++n, ++Y)
         {
-            state = state*6364136223846793005ull + inc;
+            state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
             rot = state >> 59u;
             r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
             while (r<thresh)
             {
-                state = state*6364136223846793005ull + inc;
+                state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
                 rot = state >> 59u;
                 r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
@@ -161,6 +164,7 @@ int randi_z (double *Y, const int a, const int b, const size_t N)
         const uint32_t thresh = -bound % bound;
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
+        const uint64_t mul = 6364136223846793005u;
         const uint64_t inc = ((uint64_t)(&state) << 1u) | 1u;
         struct timespec ts;
 
@@ -171,13 +175,13 @@ int randi_z (double *Y, const int a, const int b, const size_t N)
         //Generate
         for (size_t n=0u; n<2u*N; ++n, ++Y)
         {
-            state = state*6364136223846793005ull + inc;
+            state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
             rot = state >> 59u;
             r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
             while (r<thresh)
             {
-                state = state*6364136223846793005ull + inc;
+                state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
                 rot = state >> 59u;
                 r = (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
