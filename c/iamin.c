@@ -24,10 +24,10 @@ int iamin_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
@@ -41,16 +41,16 @@ int iamin_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, ++Y)
+            for (size_t v=0u; v<V; ++v, X+=L, ++Y)
             {
                 *Y = (float)cblas_isamin((int)L,X,1);
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
                     *Y = (float)cblas_isamin((int)L,X,(int)K);
                 }
@@ -69,10 +69,10 @@ int iamin_d (double *Y, const double *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
@@ -86,16 +86,16 @@ int iamin_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L, ++Y)
+            for (size_t v=0u; v<V; ++v, X+=L, ++Y)
             {
                 *Y = (double)cblas_idamin((int)L,X,1);
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
                     *Y = (double)cblas_idamin((int)L,X,(int)K);
                 }
@@ -114,10 +114,10 @@ int iamin_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
@@ -131,16 +131,16 @@ int iamin_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=2*L, ++Y)
+            for (size_t v=0u; v<V; ++v, X+=2*L, ++Y)
             {
                 *Y = (float)cblas_icamin((int)L,X,1);
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X+=2, ++Y)
+                for (size_t b=0u; b<B; ++b, X+=2, ++Y)
                 {
                     *Y = (float)cblas_icamin((int)L,X,2*(int)K);
                 }
@@ -159,10 +159,10 @@ int iamin_z (double *Y, const double *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
@@ -176,16 +176,16 @@ int iamin_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=2*L, ++Y)
+            for (size_t v=0u; v<V; ++v, X+=2*L, ++Y)
             {
                 *Y = (double)cblas_izamin((int)L,X,1);
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X+=2, ++Y)
+                for (size_t b=0u; b<B; ++b, X+=2, ++Y)
                 {
                     *Y = (double)cblas_izamin((int)L,X,2*(int)K);
                 }

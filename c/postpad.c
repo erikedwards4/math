@@ -27,8 +27,8 @@ int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
     if (N==0 && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t l=0; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
-        for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
+        for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
     }
     else
     {
@@ -38,26 +38,26 @@ int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
-                for (size_t l=0; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
-                for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
+                for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
             }
         }
         else if (G==1)
         {
-            for (size_t n=0; n<V*Lx; ++n, ++X, ++Y) { *Y = *X; }
-            for (size_t n=0; n<V*P; ++n, ++Y) { *Y = val; }
+            for (size_t n=0u; n<V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=0u; n<V*P; ++n, ++Y) { *Y = val; }
         }
         else
         {
             const size_t Ly = Lx + P;
-            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, Y-=K*Ly-1)
                 {
-                    for (size_t l=0; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
-                    for (size_t p=0; p<P; ++p, Y+=K) { *Y = val; }
+                    for (size_t l=0u; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t p=0u; p<P; ++p, Y+=K) { *Y = val; }
                 }
             }
         }
@@ -78,8 +78,8 @@ int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_
     if (N==0 && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t l=0; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
-        for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
+        for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
     }
     else
     {
@@ -89,26 +89,26 @@ int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
-                for (size_t l=0; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
-                for (size_t p=0; p<P; ++p, ++Y) { *Y = val; }
+                for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
             }
         }
         else if (G==1)
         {
-            for (size_t n=0; n<V*Lx; ++n, ++X, ++Y) { *Y = *X; }
-            for (size_t n=0; n<V*P; ++n, ++Y) { *Y = val; }
+            for (size_t n=0u; n<V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=0u; n<V*P; ++n, ++Y) { *Y = val; }
         }
         else
         {
             const size_t Ly = Lx + P;
-            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, Y-=K*Ly-1)
                 {
-                    for (size_t l=0; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
-                    for (size_t p=0; p<P; ++p, Y+=K) { *Y = val; }
+                    for (size_t l=0u; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t p=0u; p<P; ++p, Y+=K) { *Y = val; }
                 }
             }
         }
@@ -128,8 +128,8 @@ int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
     if (N==0 && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t l=0; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
-        for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
+        for (size_t l=0u; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=0u; p<2*P; ++p, ++Y) { *Y = val; }
     }
     else
     {
@@ -139,26 +139,26 @@ int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
-                for (size_t l=0; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
-                for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
+                for (size_t l=0u; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=0u; p<2*P; ++p, ++Y) { *Y = val; }
             }
         }
         else if (G==1)
         {
-            for (size_t n=0; n<2*V*Lx; ++n, ++X, ++Y) { *Y = *X; }
-            for (size_t n=0; n<2*V*P; ++n, ++Y) { *Y = val; }
+            for (size_t n=0u; n<2*V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=0u; n<2*V*P; ++n, ++Y) { *Y = val; }
         }
         else
         {
             const size_t Ly = Lx + P;
-            for (size_t g=0; g<G; ++g, X+=2*B*(Lx-1), Y+=2*B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(Lx-1), Y+=2*B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*Lx-2, Y-=2*K*Ly-2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*Lx-2, Y-=2*K*Ly-2)
                 {
-                    for (size_t l=0; l<Lx; ++l, X+=2*K-1, Y+=2*K-1) { *Y = *X; *++Y = *++X; }
-                    for (size_t p=0; p<P; ++p, Y+=2*K-1) { *Y = val; *++Y = val; }
+                    for (size_t l=0u; l<Lx; ++l, X+=2*K-1, Y+=2*K-1) { *Y = *X; *++Y = *++X; }
+                    for (size_t p=0u; p<P; ++p, Y+=2*K-1) { *Y = val; *++Y = val; }
                 }
             }
         }
@@ -178,8 +178,8 @@ int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_
     if (N==0 && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t l=0; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
-        for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
+        for (size_t l=0u; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=0u; p<2*P; ++p, ++Y) { *Y = val; }
     }
     else
     {
@@ -189,26 +189,26 @@ int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
-                for (size_t l=0; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
-                for (size_t p=0; p<2*P; ++p, ++Y) { *Y = val; }
+                for (size_t l=0u; l<2*Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=0u; p<2*P; ++p, ++Y) { *Y = val; }
             }
         }
         else if (G==1)
         {
-            for (size_t n=0; n<2*V*Lx; ++n, ++X, ++Y) { *Y = *X; }
-            for (size_t n=0; n<2*V*P; ++n, ++Y) { *Y = val; }
+            for (size_t n=0u; n<2*V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=0u; n<2*V*P; ++n, ++Y) { *Y = val; }
         }
         else
         {
             const size_t Ly = Lx + P;
-            for (size_t g=0; g<G; ++g, X+=2*B*(Lx-1), Y+=2*B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(Lx-1), Y+=2*B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*Lx-2, Y-=2*K*Ly-2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*Lx-2, Y-=2*K*Ly-2)
                 {
-                    for (size_t l=0; l<Lx; ++l, X+=2*K-1, Y+=2*K-1) { *Y = *X; *++Y = *++X; }
-                    for (size_t p=0; p<P; ++p, Y+=2*K-1) { *Y = val; *++Y = val; }
+                    for (size_t l=0u; l<Lx; ++l, X+=2*K-1, Y+=2*K-1) { *Y = *X; *++Y = *++X; }
+                    for (size_t p=0u; p<P; ++p, Y+=2*K-1) { *Y = val; *++Y = val; }
                 }
             }
         }

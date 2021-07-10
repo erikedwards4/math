@@ -27,16 +27,16 @@ int betamax_s (float *Y, const float *X, const size_t R, const size_t C, const s
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     float sm = 0.0f;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = 1.0f; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = powf(base,*X); sm += *Y; }
-        //for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = expf(*X*beta); sm += *Y; }
-        for (size_t l=0; l<L; ++l) { *--Y /= sm; }
+        for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = powf(base,*X); sm += *Y; }
+        //for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = expf(*X*beta); sm += *Y; }
+        for (size_t l=0u; l<L; ++l) { *--Y /= sm; }
     }
     else
     {
@@ -46,23 +46,23 @@ int betamax_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 sm = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = powf(base,*X); sm += *Y; }
+                for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = powf(base,*X); sm += *Y; }
                 Y -= L;
-                for (size_t l=0; l<L; ++l, ++Y) { *Y /= sm; }
+                for (size_t l=0u; l<L; ++l, ++Y) { *Y /= sm; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K, Y+=K) { *Y = powf(base,*X); sm += *Y; }
-                    for (size_t l=0; l<L; ++l) { Y-=K; *Y /= sm; }
+                    for (size_t l=0u; l<L; ++l, X+=K, Y+=K) { *Y = powf(base,*X); sm += *Y; }
+                    for (size_t l=0u; l<L; ++l) { Y-=K; *Y /= sm; }
                 }
             }
         }
@@ -80,15 +80,15 @@ int betamax_d (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     double sm = 0.0;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = 1.0; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = pow(base,*X); sm += *Y; }
-        for (size_t l=0; l<L; ++l) { *--Y /= sm; }
+        for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = pow(base,*X); sm += *Y; }
+        for (size_t l=0u; l<L; ++l) { *--Y /= sm; }
     }
     else
     {
@@ -98,23 +98,23 @@ int betamax_d (double *Y, const double *X, const size_t R, const size_t C, const
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 sm = 0.0;
-                for (size_t l=0; l<L; ++l, ++X, ++Y) { *Y = pow(base,*X); sm += *Y; }
+                for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = pow(base,*X); sm += *Y; }
                 Y -= L;
-                for (size_t l=0; l<L; ++l, ++Y) { *Y /= sm; }
+                for (size_t l=0u; l<L; ++l, ++Y) { *Y /= sm; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K, Y+=K) { *Y = pow(base,*X); sm += *Y; }
-                    for (size_t l=0; l<L; ++l) { Y-=K; *Y /= sm; }
+                    for (size_t l=0u; l<L; ++l, X+=K, Y+=K) { *Y = pow(base,*X); sm += *Y; }
+                    for (size_t l=0u; l<L; ++l) { Y-=K; *Y /= sm; }
                 }
             }
         }
@@ -132,15 +132,15 @@ int betamax_inplace_s (float *X, const size_t R, const size_t C, const size_t S,
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     float sm = 0.0f;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 1.0f; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 1.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { *X = powf(base,*X); sm += *X; }
-        for (size_t l=0; l<L; ++l) { *--X /= sm; }
+        for (size_t l=0u; l<L; ++l, ++X) { *X = powf(base,*X); sm += *X; }
+        for (size_t l=0u; l<L; ++l) { *--X /= sm; }
     }
     else
     {
@@ -150,23 +150,23 @@ int betamax_inplace_s (float *X, const size_t R, const size_t C, const size_t S,
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 sm = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { *X = powf(base,*X); sm += *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = powf(base,*X); sm += *X; }
                 X -= L;
-                for (size_t l=0; l<L; ++l, ++X) { *X /= sm; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X /= sm; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0u; b<B; ++b, ++X)
                 {
                     sm = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { *X = powf(base,*X); sm += *X; }
-                    for (size_t l=0; l<L; ++l) { X-=K; *X /= sm; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *X = powf(base,*X); sm += *X; }
+                    for (size_t l=0u; l<L; ++l) { X-=K; *X /= sm; }
                 }
             }
         }
@@ -184,15 +184,15 @@ int betamax_inplace_d (double *X, const size_t R, const size_t C, const size_t S
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     double sm = 0.0;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 1.0; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 1.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { *X = pow(base,*X); sm += *X; }
-        for (size_t l=0; l<L; ++l) { *--X /= sm; }
+        for (size_t l=0u; l<L; ++l, ++X) { *X = pow(base,*X); sm += *X; }
+        for (size_t l=0u; l<L; ++l) { *--X /= sm; }
     }
     else
     {
@@ -202,23 +202,23 @@ int betamax_inplace_d (double *X, const size_t R, const size_t C, const size_t S
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 sm = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { *X = pow(base,*X); sm += *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = pow(base,*X); sm += *X; }
                 X -= L;
-                for (size_t l=0; l<L; ++l, ++X) { *X /= sm; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X /= sm; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0u; b<B; ++b, ++X)
                 {
                     sm = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { *X = pow(base,*X); sm += *X; }
-                    for (size_t l=0; l<L; ++l) { X-=K; *X /= sm; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *X = pow(base,*X); sm += *X; }
+                    for (size_t l=0u; l<L; ++l) { X-=K; *X /= sm; }
                 }
             }
         }

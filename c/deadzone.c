@@ -17,7 +17,7 @@ int deadzone_inplace_d (double *X, const size_t N, const double delta);
 
 int deadzone_s (float *Y, const float *X, const size_t N, const float delta)
 {
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = (*X>delta) - (*X<-delta); }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = (*X>delta) - (*X<-delta); }
 
     return 0;
 }
@@ -25,7 +25,7 @@ int deadzone_s (float *Y, const float *X, const size_t N, const float delta)
 
 int deadzone_d (double *Y, const double *X, const size_t N, const double delta)
 {
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = (*X>delta) - (*X<-delta); }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = (*X>delta) - (*X<-delta); }
     
     return 0;
 }
@@ -33,7 +33,7 @@ int deadzone_d (double *Y, const double *X, const size_t N, const double delta)
 
 int deadzone_inplace_s (float *X, const size_t N, const float delta)
 {
-    for (size_t n=0; n<N; ++n, ++X) { *X = (*X>delta) - (*X<-delta); }
+    for (size_t n=0u; n<N; ++n, ++X) { *X = (*X>delta) - (*X<-delta); }
 
     return 0;
 }
@@ -41,7 +41,7 @@ int deadzone_inplace_s (float *X, const size_t N, const float delta)
 
 int deadzone_inplace_d (double *X, const size_t N, const double delta)
 {
-    for (size_t n=0; n<N; ++n, ++X) { *X = (*X>delta) - (*X<-delta); }
+    for (size_t n=0u; n<N; ++n, ++X) { *X = (*X>delta) - (*X<-delta); }
     
     return 0;
 }

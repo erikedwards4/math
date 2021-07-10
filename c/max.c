@@ -26,15 +26,15 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     float mx;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         mx = *X++;
-        for (size_t l=1; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
+        for (size_t l=1u; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
         *Y = mx;
     }
     else
@@ -45,18 +45,18 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 mx = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
+                for (size_t l=1u; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
                 *Y = mx;
             }
         }
         // else if (G==1)
         // {
-        //     for (size_t l=0; l<L; ++l, Y-=V)
+        //     for (size_t l=0u; l<L; ++l, Y-=V)
         //     {
-        //         for (size_t v=0; v<V; ++v, ++X, ++Y)
+        //         for (size_t v=0u; v<V; ++v, ++X, ++Y)
         //         {
         //             if (l==0 || *X>*Y) { *Y = *X; }
         //         }
@@ -64,12 +64,12 @@ int max_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         // }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     mx = *X; X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { if (*X>mx) { mx = *X; } }
+                    for (size_t l=1u; l<L; ++l, X+=K) { if (*X>mx) { mx = *X; } }
                     *Y = mx;
                 }
             }
@@ -88,15 +88,15 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     double mx;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         mx = *X++;
-        for (size_t l=1; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
+        for (size_t l=1u; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
         *Y = mx;
     }
     else
@@ -107,21 +107,21 @@ int max_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 mx = *X++;
-                for (size_t l=1; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
+                for (size_t l=1u; l<L; ++l, ++X) { if (*X>mx) { mx = *X; } }
                 *Y = mx;
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     mx = *X; X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { if (*X>mx) { mx = *X; } }
+                    for (size_t l=1u; l<L; ++l, X+=K) { if (*X>mx) { mx = *X; } }
                     *Y = mx;
                 }
             }
@@ -140,16 +140,16 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     float xx, mx;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         mx = *X**X + *(X+1)**(X+1);
         *Y = *X; *(Y+1) = *(X+1); X += 2;
-        for (size_t l=1; l<L; ++l, X+=2)
+        for (size_t l=1u; l<L; ++l, X+=2)
         {
             xx = *X**X + *(X+1)**(X+1);
             if (xx>mx) { mx = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -163,11 +163,11 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, Y+=2)
+            for (size_t v=0u; v<V; ++v, Y+=2)
             {
                 mx = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2;
-                for (size_t l=1; l<L; ++l, X+=2)
+                for (size_t l=1u; l<L; ++l, X+=2)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx>mx) { mx = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -176,13 +176,13 @@ int max_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y+=2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, Y+=2)
                 {
                     mx = *X**X + *(X+1)**(X+1);
                     *Y = *X; *(Y+1) = *(X+1); X += 2*K;
-                    for (size_t l=1; l<L; ++l, X+=2*K)
+                    for (size_t l=1u; l<L; ++l, X+=2*K)
                     {
                         xx = *X**X + *(X+1)**(X+1);
                         if (xx>mx) { mx = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -204,16 +204,16 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     double xx, mx;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         mx = *X**X + *(X+1)**(X+1);
         *Y = *X; *(Y+1) = *(X+1); X += 2;
-        for (size_t l=1; l<L; ++l, X+=2)
+        for (size_t l=1u; l<L; ++l, X+=2)
         {
             xx = *X**X + *(X+1)**(X+1);
             if (xx>mx) { mx = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -227,11 +227,11 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, Y+=2)
+            for (size_t v=0u; v<V; ++v, Y+=2)
             {
                 mx = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2;
-                for (size_t l=1; l<L; ++l, X+=2)
+                for (size_t l=1u; l<L; ++l, X+=2)
                 {
                     xx = *X**X + *(X+1)**(X+1);
                     if (xx>mx) { mx = xx; *Y = *X; *(Y+1) = *(X+1); }
@@ -240,13 +240,13 @@ int max_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y+=2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, Y+=2)
                 {
                     mx = *X**X + *(X+1)**(X+1);
                     *Y = *X; *(Y+1) = *(X+1); X += 2*K;
-                    for (size_t l=1; l<L; ++l, X+=2*K)
+                    for (size_t l=1u; l<L; ++l, X+=2*K)
                     {
                         xx = *X**X + *(X+1)**(X+1);
                         if (xx>mx) { mx = xx; *Y = *X; *(Y+1) = *(X+1); }

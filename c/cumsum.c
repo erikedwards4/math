@@ -26,15 +26,15 @@ int cumsum_s (float *Y, const float *X, const size_t R, const size_t C, const si
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         *Y++ = *X++;
-        for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
+        for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
     }
     else
     {
@@ -44,28 +44,28 @@ int cumsum_s (float *Y, const float *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 *Y++ = *X++;
-                for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
+                for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; }
-            for (size_t l=1; l<L; ++l)
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
+            for (size_t l=1u; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *(Y-V) + *X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *(Y-V) + *X; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, Y-=K*L-1)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, Y-=K*L-1)
                 {
                     *Y = *X; X += K; Y += K;
-                    for (size_t l=1; l<L; ++l, X+=K, Y+=K) { *Y = *(Y-K) + *X; }
+                    for (size_t l=1u; l<L; ++l, X+=K, Y+=K) { *Y = *(Y-K) + *X; }
                 }
             }
         }
@@ -82,15 +82,15 @@ int cumsum_d (double *Y, const double *X, const size_t R, const size_t C, const 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         *Y++ = *X++;
-        for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
+        for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
     }
     else
     {
@@ -100,28 +100,28 @@ int cumsum_d (double *Y, const double *X, const size_t R, const size_t C, const 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 *Y++ = *X++;
-                for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
+                for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; }
-            for (size_t l=1; l<L; ++l)
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
+            for (size_t l=1u; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *(Y-V) + *X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *(Y-V) + *X; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, Y-=K*L-1)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, Y-=K*L-1)
                 {
                     *Y = *X; X += K; Y += K;
-                    for (size_t l=1; l<L; ++l, X+=K, Y+=K) { *Y = *(Y-K) + *X; }
+                    for (size_t l=1u; l<L; ++l, X+=K, Y+=K) { *Y = *(Y-K) + *X; }
                 }
             }
         }
@@ -138,15 +138,15 @@ int cumsum_c (float *Y, const float *X, const size_t R, const size_t C, const si
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         *Y++ = *X++; *Y++ = *X++;
-        for (size_t l=1; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
+        for (size_t l=1u; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
     }
     else
     {
@@ -156,28 +156,28 @@ int cumsum_c (float *Y, const float *X, const size_t R, const size_t C, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 *Y++ = *X++; *Y++ = *X++;
-                for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
+                for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
-            for (size_t l=1; l<L; ++l)
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t l=1u; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *(Y-2*V) + *X; ++Y; *Y = *(Y-2*V) + *++X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *(Y-2*V) + *X; ++Y; *Y = *(Y-2*V) + *++X; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1), Y+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1), Y+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y-=2*K*L-2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, Y-=2*K*L-2)
                 {
                     *Y = *X; *(Y+1) = *(X+1); X += 2*K; Y += 2*K;
-                    for (size_t l=1; l<L; ++l, X+=2*K, Y+=2*K) { *Y = *(Y-2*K) + *X; *(Y+1) = *(Y-2*K+1) + *(X+1); }
+                    for (size_t l=1u; l<L; ++l, X+=2*K, Y+=2*K) { *Y = *(Y-2*K) + *X; *(Y+1) = *(Y-2*K+1) + *(X+1); }
                 }
             }
         }
@@ -194,15 +194,15 @@ int cumsum_z (double *Y, const double *X, const size_t R, const size_t C, const 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         *Y++ = *X++; *Y++ = *X++;
-        for (size_t l=1; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
+        for (size_t l=1u; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
     }
     else
     {
@@ -212,28 +212,28 @@ int cumsum_z (double *Y, const double *X, const size_t R, const size_t C, const 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 *Y++ = *X++; *Y++ = *X++;
-                for (size_t l=1; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
+                for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
-            for (size_t l=1; l<L; ++l)
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t l=1u; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *(Y-2*V) + *X; ++Y; *Y = *(Y-2*V) + *++X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *(Y-2*V) + *X; ++Y; *Y = *(Y-2*V) + *++X; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1), Y+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1), Y+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, Y-=2*K*L-2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, Y-=2*K*L-2)
                 {
                     *Y = *X; *(Y+1) = *(X+1); X += 2*K; Y += 2*K;
-                    for (size_t l=1; l<L; ++l, X+=2*K, Y+=2*K) { *Y = *(Y-2*K) + *X; *(Y+1) = *(Y-2*K+1) + *(X+1); }
+                    for (size_t l=1u; l<L; ++l, X+=2*K, Y+=2*K) { *Y = *(Y-2*K) + *X; *(Y+1) = *(Y-2*K+1) + *(X+1); }
                 }
             }
         }
@@ -254,7 +254,7 @@ int cumsum_inplace_s (float *X, const size_t R, const size_t C, const size_t S, 
     else if (L==N)
     {
         ++X;
-        for (size_t l=1; l<L; ++l, ++X) { *X += *(X-1); }
+        for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-1); }
     }
     else
     {
@@ -264,28 +264,28 @@ int cumsum_inplace_s (float *X, const size_t R, const size_t C, const size_t S, 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 ++X;
-                for (size_t l=1; l<L; ++l, ++X) { *X += *(X-1); }
+                for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-1); }
             }
         }
         else if (G==1)
         {
             X += V;
-            for (size_t l=1; l<L; ++l)
+            for (size_t l=1u; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++X) { *X += *(X-V); }
+                for (size_t v=0u; v<V; ++v, ++X) { *X += *(X-V); }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1)
                 {
                     X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { *X += *(X-K); }
+                    for (size_t l=1u; l<L; ++l, X+=K) { *X += *(X-K); }
                 }
             }
         }
@@ -306,7 +306,7 @@ int cumsum_inplace_d (double *X, const size_t R, const size_t C, const size_t S,
     else if (L==N)
     {
         ++X;
-        for (size_t l=1; l<L; ++l, ++X) { *X += *(X-1); }
+        for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-1); }
     }
     else
     {
@@ -316,28 +316,28 @@ int cumsum_inplace_d (double *X, const size_t R, const size_t C, const size_t S,
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 ++X;
-                for (size_t l=1; l<L; ++l, ++X) { *X += *(X-1); }
+                for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-1); }
             }
         }
         else if (G==1)
         {
             X += V;
-            for (size_t l=1; l<L; ++l)
+            for (size_t l=1u; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++X) { *X += *(X-V); }
+                for (size_t v=0u; v<V; ++v, ++X) { *X += *(X-V); }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1)
                 {
                     X += K;
-                    for (size_t l=1; l<L; ++l, X+=K) { *X += *(X-K); }
+                    for (size_t l=1u; l<L; ++l, X+=K) { *X += *(X-K); }
                 }
             }
         }
@@ -358,7 +358,7 @@ int cumsum_inplace_c (float *X, const size_t R, const size_t C, const size_t S, 
     else if (L==N)
     {
         X += 2;
-        for (size_t l=1; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
+        for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
     }
     else
     {
@@ -368,28 +368,28 @@ int cumsum_inplace_c (float *X, const size_t R, const size_t C, const size_t S, 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 X += 2;
-                for (size_t l=1; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
+                for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
             }
         }
         else if (G==1)
         {
             X += 2*V;
-            for (size_t l=1; l<L; ++l)
+            for (size_t l=1u; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++X) { *X += *(X-2*V); ++X; *X += *(X-2*V); }
+                for (size_t v=0u; v<V; ++v, ++X) { *X += *(X-2*V); ++X; *X += *(X-2*V); }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2)
                 {
                     X += 2*K;
-                    for (size_t l=1; l<L; ++l, X+=2*K-1) { *X += *(X-2*K); ++X; *X += *(X-2*K); }
+                    for (size_t l=1u; l<L; ++l, X+=2*K-1) { *X += *(X-2*K); ++X; *X += *(X-2*K); }
                 }
             }
         }
@@ -410,7 +410,7 @@ int cumsum_inplace_z (double *X, const size_t R, const size_t C, const size_t S,
     else if (L==N)
     {
         X += 2;
-        for (size_t l=1; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
+        for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
     }
     else
     {
@@ -420,28 +420,28 @@ int cumsum_inplace_z (double *X, const size_t R, const size_t C, const size_t S,
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 X += 2;
-                for (size_t l=1; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
+                for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
             }
         }
         else if (G==1)
         {
             X += 2*V;
-            for (size_t l=1; l<L; ++l)
+            for (size_t l=1u; l<L; ++l)
             {
-                for (size_t v=0; v<V; ++v, ++X) { *X += *(X-2*V); ++X; *X += *(X-2*V); }
+                for (size_t v=0u; v<V; ++v, ++X) { *X += *(X-2*V); ++X; *X += *(X-2*V); }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2)
                 {
                     X += 2*K;
-                    for (size_t l=1; l<L; ++l, X+=2*K-1) { *X += *(X-2*K); ++X; *X += *(X-2*K); }
+                    for (size_t l=1u; l<L; ++l, X+=2*K-1) { *X += *(X-2*K); ++X; *X += *(X-2*K); }
                 }
             }
         }

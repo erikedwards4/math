@@ -40,17 +40,17 @@ int tril_s (float *Y, const float *X, const size_t R, const size_t C, const size
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0; h<H; ++h)
+        for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0; s<S; ++s)
+            for (size_t s=0u; s<S; ++s)
             {
-                for (size_t n=0; n<R*CX; ++n, ++X, ++Y) { *Y = *X; }
+                for (size_t n=0u; n<R*CX; ++n, ++X, ++Y) { *Y = *X; }
                 for (size_t c=CX; c<C-C0; ++c)
                 {
                     for (int n=0; n<(int)c-k; ++n, ++X, ++Y) { *Y = 0.0f; }
                     for (int n=0; n<(int)R-(int)c+k; ++n, ++X, ++Y) { *Y = *X; }
                 }
-                for (size_t n=0; n<R*C0; ++n, ++X, ++Y) { *Y = 0.0f; }
+                for (size_t n=0u; n<R*C0; ++n, ++X, ++Y) { *Y = 0.0f; }
             }
         }
     }
@@ -59,13 +59,13 @@ int tril_s (float *Y, const float *X, const size_t R, const size_t C, const size
         const size_t SH = S*H;
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
-        for (size_t n=0; n<R0*C*SH; ++n, ++X, ++Y) { *Y = 0.0f; }
+        for (size_t n=0u; n<R0*C*SH; ++n, ++X, ++Y) { *Y = 0.0f; }
         for (size_t r=R0; r<R-RX; ++r)
         {
             for (int n=0; n<(int)SH*((int)r+k+1); ++n, ++X, ++Y) { *Y = *X; }
             for (int n=0; n<(int)SH*((int)C-(int)r-k-1); ++n, ++X, ++Y) { *Y = 0.0f; }
         }
-        for (size_t n=0; n<RX*C*SH; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<RX*C*SH; ++n, ++X, ++Y) { *Y = *X; }
     }
 
     //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
@@ -82,17 +82,17 @@ int tril_d (double *Y, const double *X, const size_t R, const size_t C, const si
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0; h<H; ++h)
+        for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0; s<S; ++s)
+            for (size_t s=0u; s<S; ++s)
             {
-                for (size_t n=0; n<R*CX; ++n, ++X, ++Y) { *Y = *X; }
+                for (size_t n=0u; n<R*CX; ++n, ++X, ++Y) { *Y = *X; }
                 for (size_t c=CX; c<C-C0; ++c)
                 {
                     for (int n=0; n<(int)c-k; ++n, ++X, ++Y) { *Y = 0.0; }
                     for (int n=0; n<(int)R-(int)c+k; ++n, ++X, ++Y) { *Y = *X; }
                 }
-                for (size_t n=0; n<R*C0; ++n, ++X, ++Y) { *Y = 0.0; }
+                for (size_t n=0u; n<R*C0; ++n, ++X, ++Y) { *Y = 0.0; }
             }
         }
     }
@@ -101,13 +101,13 @@ int tril_d (double *Y, const double *X, const size_t R, const size_t C, const si
         const size_t SH = S*H;
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
-        for (size_t n=0; n<R0*C*SH; ++n, ++X, ++Y) { *Y = 0.0; }
+        for (size_t n=0u; n<R0*C*SH; ++n, ++X, ++Y) { *Y = 0.0; }
         for (size_t r=R0; r<R-RX; ++r)
         {
             for (int n=0; n<(int)SH*((int)r+k+1); ++n, ++X, ++Y) { *Y = *X; }
             for (int n=0; n<(int)SH*((int)C-(int)r-k-1); ++n, ++X, ++Y) { *Y = 0.0; }
         }
-        for (size_t n=0; n<RX*C*SH; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<RX*C*SH; ++n, ++X, ++Y) { *Y = *X; }
     }
 
     return 0;
@@ -122,17 +122,17 @@ int tril_c (float *Y, const float *X, const size_t R, const size_t C, const size
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0; h<H; ++h)
+        for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0; s<S; ++s)
+            for (size_t s=0u; s<S; ++s)
             {
-                for (size_t n=0; n<R*CX; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t n=0u; n<R*CX; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
                 for (size_t c=CX; c<C-C0; ++c)
                 {
                     for (int n=0; n<(int)c-k; ++n, X+=2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
                     for (int n=0; n<(int)R-(int)c+k; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
                 }
-                for (size_t n=0; n<R*C0; ++n, X+=2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
+                for (size_t n=0u; n<R*C0; ++n, X+=2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
             }
         }
     }
@@ -141,13 +141,13 @@ int tril_c (float *Y, const float *X, const size_t R, const size_t C, const size
         const size_t SH = S*H;
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
-        for (size_t n=0; n<R0*C*SH; ++n, X+=2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
+        for (size_t n=0u; n<R0*C*SH; ++n, X+=2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
         for (size_t r=R0; r<R-RX; ++r)
         {
             for (int n=0; n<(int)SH*((int)r+k+1); ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             for (int n=0; n<(int)SH*((int)C-(int)r-k-1); ++n, X+=2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
         }
-        for (size_t n=0; n<RX*C*SH; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+        for (size_t n=0u; n<RX*C*SH; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
     }
 
     return 0;
@@ -162,17 +162,17 @@ int tril_z (double *Y, const double *X, const size_t R, const size_t C, const si
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0; h<H; ++h)
+        for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0; s<S; ++s)
+            for (size_t s=0u; s<S; ++s)
             {
-                for (size_t n=0; n<R*CX; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t n=0u; n<R*CX; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
                 for (size_t c=CX; c<C-C0; ++c)
                 {
                     for (int n=0; n<(int)c-k; ++n, X+=2, ++Y) { *Y = 0.0; *++Y = 0.0; }
                     for (int n=0; n<(int)R-(int)c+k; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
                 }
-                for (size_t n=0; n<R*C0; ++n, X+=2, ++Y) { *Y = 0.0; *++Y = 0.0; }
+                for (size_t n=0u; n<R*C0; ++n, X+=2, ++Y) { *Y = 0.0; *++Y = 0.0; }
             }
         }
     }
@@ -181,13 +181,13 @@ int tril_z (double *Y, const double *X, const size_t R, const size_t C, const si
         const size_t SH = S*H;
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
-        for (size_t n=0; n<R0*C*SH; ++n, X+=2, ++Y) { *Y = 0.0; *++Y = 0.0; }
+        for (size_t n=0u; n<R0*C*SH; ++n, X+=2, ++Y) { *Y = 0.0; *++Y = 0.0; }
         for (size_t r=R0; r<R-RX; ++r)
         {
             for (int n=0; n<(int)SH*((int)r+k+1); ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             for (int n=0; n<(int)SH*((int)C-(int)r-k-1); ++n, X+=2, ++Y) { *Y = 0.0; *++Y = 0.0; }
         }
-        for (size_t n=0; n<RX*C*SH; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+        for (size_t n=0u; n<RX*C*SH; ++n, ++X, ++Y) { *Y = *X; *++Y = *++X; }
     }
 
     return 0;
@@ -202,9 +202,9 @@ int tril_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0; h<H; ++h)
+        for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0; s<S; ++s)
+            for (size_t s=0u; s<S; ++s)
             {
                 X += R*CX;
                 for (size_t c=CX; c<C-C0; ++c)
@@ -212,7 +212,7 @@ int tril_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
                     for (int n=0; n<(int)c-k; ++n, ++X) { *X = 0.0f; }
                     X += (int)R - (int)c + k;
                 }
-                for (size_t n=0; n<R*C0; ++n, ++X) { *X = 0.0f; }
+                for (size_t n=0u; n<R*C0; ++n, ++X) { *X = 0.0f; }
             }
         }
     }
@@ -221,7 +221,7 @@ int tril_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
         const size_t SH = S*H;
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
-        for (size_t n=0; n<R0*C*SH; ++n, ++X) { *X = 0.0f; }
+        for (size_t n=0u; n<R0*C*SH; ++n, ++X) { *X = 0.0f; }
         for (size_t r=R0; r<R-RX; ++r)
         {
             X += (int)SH * ((int)r+k+1);
@@ -241,9 +241,9 @@ int tril_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0; h<H; ++h)
+        for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0; s<S; ++s)
+            for (size_t s=0u; s<S; ++s)
             {
                 X += R*CX;
                 for (size_t c=CX; c<C-C0; ++c)
@@ -251,7 +251,7 @@ int tril_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
                     for (int n=0; n<(int)c-k; ++n, ++X) { *X = 0.0; }
                     X += (int)R - (int)c + k;
                 }
-                for (size_t n=0; n<R*C0; ++n, ++X) { *X = 0.0; }
+                for (size_t n=0u; n<R*C0; ++n, ++X) { *X = 0.0; }
             }
         }
     }
@@ -260,7 +260,7 @@ int tril_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
         const size_t SH = S*H;
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
-        for (size_t n=0; n<R0*C*SH; ++n, ++X) { *X = 0.0; }
+        for (size_t n=0u; n<R0*C*SH; ++n, ++X) { *X = 0.0; }
         for (size_t r=R0; r<R-RX; ++r)
         {
             X += (int)SH * ((int)r+k+1);
@@ -280,9 +280,9 @@ int tril_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0; h<H; ++h)
+        for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0; s<S; ++s)
+            for (size_t s=0u; s<S; ++s)
             {
                 X += 2*R*CX;
                 for (size_t c=CX; c<C-C0; ++c)
@@ -290,7 +290,7 @@ int tril_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
                     for (int n=0; n<(int)c-k; ++n, ++X) { *X = 0.0f; *++X = 0.0f; }
                     X += 2*((int)R-(int)c+k);
                 }
-                for (size_t n=0; n<R*C0; ++n, ++X) { *X = 0.0f; *++X = 0.0f; }
+                for (size_t n=0u; n<R*C0; ++n, ++X) { *X = 0.0f; *++X = 0.0f; }
             }
         }
     }
@@ -299,7 +299,7 @@ int tril_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
         const size_t SH = S*H;
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
-        for (size_t n=0; n<R0*C*SH; ++n, ++X) { *X = 0.0f; *++X = 0.0f; }
+        for (size_t n=0u; n<R0*C*SH; ++n, ++X) { *X = 0.0f; *++X = 0.0f; }
         for (size_t r=R0; r<R-RX; ++r)
         {
             X += 2*(int)SH*((int)r+k+1);
@@ -319,9 +319,9 @@ int tril_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
     {
         const size_t C0 = (k<(int)C-(int)R) ? (size_t)((int)C-(int)R-k) : 0;    //number of all-0 cols
         const size_t CX = (k>-1) ? (size_t)(k+1) : 0;                           //number of all-X cols
-        for (size_t h=0; h<H; ++h)
+        for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0; s<S; ++s)
+            for (size_t s=0u; s<S; ++s)
             {
                 X += 2*R*CX;
                 for (size_t c=CX; c<C-C0; ++c)
@@ -329,7 +329,7 @@ int tril_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
                     for (int n=0; n<(int)c-k; ++n, ++X) { *X = 0.0; *++X = 0.0; }
                     X += 2*((int)R-(int)c+k);
                 }
-                for (size_t n=0; n<R*C0; ++n, ++X) { *X = 0.0; *++X = 0.0; }
+                for (size_t n=0u; n<R*C0; ++n, ++X) { *X = 0.0; *++X = 0.0; }
             }
         }
     }
@@ -338,7 +338,7 @@ int tril_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
         const size_t SH = S*H;
         const size_t R0 = (k<0) ? (size_t)(-k) : 0;                                 //number of all-0 rows
         const size_t RX = (k>(int)C-(int)R-1) ? (size_t)((int)R-(int)C+k+1) : 0;    //number of all-X rows
-        for (size_t n=0; n<R0*C*SH; ++n, ++X) { *X = 0.0; *++X = 0.0; }
+        for (size_t n=0u; n<R0*C*SH; ++n, ++X) { *X = 0.0; *++X = 0.0; }
         for (size_t r=R0; r<R-RX; ++r)
         {
             X += 2*(int)SH*((int)r+k+1);

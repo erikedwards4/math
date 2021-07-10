@@ -24,10 +24,10 @@ int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t
     const size_t B = (iscolmajor) ? ((dim==0) ? R/2 : (dim==1) ? R*C/2 : (dim==2) ? R*C*S/2 : R*C*S*H/2) : ((dim==0) ? H*S*C*R/2 : (dim==1) ? H*S*C/2 : (dim==2) ? H*S/2 : H/2);
     const size_t G = R*C*S*H/(2*B);
 
-    for (size_t g=0; g<G; ++g)
+    for (size_t g=0u; g<G; ++g)
     {
-        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
-        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
+        for (size_t b=0u; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
+        for (size_t b=0u; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
         //cblas_scopy((int)B,X,1,Y1,1); X += B; Y1 += B; //slightly faster for some test with very large N
         //cblas_scopy((int)B,X,1,Y2,1); X += B; Y2 += B;
     }
@@ -47,10 +47,10 @@ int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const siz
     const size_t B = (iscolmajor) ? ((dim==0) ? R/2 : (dim==1) ? R*C/2 : (dim==2) ? R*C*S/2 : R*C*S*H/2) : ((dim==0) ? H*S*C*R/2 : (dim==1) ? H*S*C/2 : (dim==2) ? H*S/2 : H/2);
     const size_t G = R*C*S*H/(2*B);
 
-    for (size_t g=0; g<G; ++g)
+    for (size_t g=0u; g<G; ++g)
     {
-        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
-        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
+        for (size_t b=0u; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
+        for (size_t b=0u; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
     }
 
     return 0;
@@ -68,10 +68,10 @@ int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t
     const size_t B = (iscolmajor) ? ((dim==0) ? R/2 : (dim==1) ? R*C/2 : (dim==2) ? R*C*S/2 : R*C*S*H/2) : ((dim==0) ? H*S*C*R/2 : (dim==1) ? H*S*C/2 : (dim==2) ? H*S/2 : H/2);
     const size_t G = R*C*S*H/(2*B);
 
-    for (size_t g=0; g<G; ++g)
+    for (size_t g=0u; g<G; ++g)
     {
-        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
-        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
+        for (size_t b=0u; b<B; ++b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
+        for (size_t b=0u; b<B; ++b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
     }
 
     return 0;
@@ -89,10 +89,10 @@ int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const siz
     const size_t B = (iscolmajor) ? ((dim==0) ? R/2 : (dim==1) ? R*C/2 : (dim==2) ? R*C*S/2 : R*C*S*H/2) : ((dim==0) ? H*S*C*R/2 : (dim==1) ? H*S*C/2 : (dim==2) ? H*S/2 : H/2);
     const size_t G = R*C*S*H/(2*B);
 
-    for (size_t g=0; g<G; ++g)
+    for (size_t g=0u; g<G; ++g)
     {
-        for (size_t b=0; b<B; ++b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
-        for (size_t b=0; b<B; ++b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
+        for (size_t b=0u; b<B; ++b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
+        for (size_t b=0u; b<B; ++b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
     }
 
     return 0;

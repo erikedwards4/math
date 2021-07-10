@@ -36,14 +36,14 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
     const float den = 1.0f / L;
     float xx1, xx2, mn1, mn2, ss1, ss2, ss12;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (L==N)
     {
         mn1 = mn2 = ss1 = ss2 = ss12 = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
         mn1 *= den; mn2 *= den;
         X1 -= L; X2 -= L;
-        for (size_t l=0; l<L; ++l, ++X1, ++X2)
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
         {
             xx1 = *X1 - mn1; xx1 *= xx1;
             xx2 = *X2 - mn2; xx2 *= xx2;
@@ -60,13 +60,13 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 mn1 = mn2 = ss1 = ss2 = ss12 = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
                 mn1 *= den; mn2 *= den;
                 X1 -= L; X2 -= L;
-                for (size_t l=0; l<L; ++l, ++X1, ++X2)
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
                 {
                     xx1 = *X1 - mn1; xx1 *= xx1;
                     xx2 = *X2 - mn2; xx2 *= xx2;
@@ -80,15 +80,15 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     mn1 = mn2 = ss1 = ss2 = ss12 = 0.0f;
-                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
+                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
                     mn1 *= den; mn2 *= den;
                     X1 -= L*K1; X2 -= L*K2;
-                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         xx1 = *X1 - mn1; xx1 *= xx1;
                         xx2 = *X2 - mn2; xx2 *= xx2;
@@ -120,13 +120,13 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
     const double den = 1.0 / L;
     double xx1, xx2, mn1, mn2, ss1, ss2, ss12;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (L==N)
     {
         mn1 = mn2 = ss1 = ss2 = ss12 = 0.0;
-        for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
         mn1 *= den; mn2 *= den; X1 -= L; X2 -= L;
-        for (size_t l=0; l<L; ++l, ++X1, ++X2)
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
         {
             xx1 = *X1 - mn1; xx1 *= xx1;
             xx2 = *X2 - mn2; xx2 *= xx2;
@@ -143,13 +143,13 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 mn1 = mn2 = ss1 = ss2 = ss12 = 0.0;
-                for (size_t l=0; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
                 mn1 *= den; mn2 *= den;
                 X1 -= L; X2 -= L;
-                for (size_t l=0; l<L; ++l, ++X1, ++X2)
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
                 {
                     xx1 = *X1 - mn1; xx1 *= xx1;
                     xx2 = *X2 - mn2; xx2 *= xx2;
@@ -163,15 +163,15 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     mn1 = mn2 = ss1 = ss2 = ss12 = 0.0;
-                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
+                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
                     mn1 *= den; mn2 *= den;
                     X1 -= L*K1; X2 -= L*K2;
-                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         xx1 = *X1 - mn1; xx1 *= xx1;
                         xx2 = *X2 - mn2; xx2 *= xx2;

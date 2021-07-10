@@ -30,22 +30,22 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         if (L<100)
         {
             *Y = 0.0f;
-            for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
+            for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
         }
         else
         {
             float sm = 0.0f;
-            for (size_t l=0; l<L; ++l, ++X) { sm += *X; }
+            for (size_t l=0u; l<L; ++l, ++X) { sm += *X; }
             *Y = sm;
         }
     }
@@ -59,19 +59,19 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         {
             if (L<10)
             {
-                for (size_t v=0; v<V; ++v, ++Y)
+                for (size_t v=0u; v<V; ++v, ++Y)
                 {
                     *Y = 0.0f;
-                    for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
+                    for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
                 }
             }
             else
             {
                 float sm;
-                for (size_t v=0; v<V; ++v, ++Y)
+                for (size_t v=0u; v<V; ++v, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0; l<L; ++l, ++X) { sm += *X; }
+                    for (size_t l=0u; l<L; ++l, ++X) { sm += *X; }
                     *Y = sm;
                 }
             }
@@ -79,22 +79,22 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         else if (G==1)
         {
             //float sm[V]; //this is only C99 allowed, and not faster!
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; }
             }
         }
         else
         {
             float sm;
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { *Y += *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *Y += *X; }
                     *Y = sm;
                 }
             }
@@ -112,22 +112,22 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         if (L<100)
         {
             *Y = 0.0;
-            for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
+            for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
         }
         else
         {
             double sm = 0.0;
-            for (size_t l=0; l<L; ++l, ++X) { sm += *X; }
+            for (size_t l=0u; l<L; ++l, ++X) { sm += *X; }
             *Y = sm;
         }
     }
@@ -141,41 +141,41 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         {
             if (L<10)
             {
-                for (size_t v=0; v<V; ++v, ++Y)
+                for (size_t v=0u; v<V; ++v, ++Y)
                 {
                     *Y = 0.0;
-                    for (size_t l=0; l<L; ++l, ++X) { *Y += *X; }
+                    for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
                 }
             }
             else
             {
                 double sm;
-                for (size_t v=0; v<V; ++v, ++Y)
+                for (size_t v=0u; v<V; ++v, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0; l<L; ++l, ++X) { sm += *X; }
+                    for (size_t l=0u; l<L; ++l, ++X) { sm += *X; }
                     *Y = sm;
                 }
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; }
             }
         }
         else
         {
             double sm;
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { *Y += *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *Y += *X; }
                     *Y = sm;
                 }
             }
@@ -193,15 +193,15 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         float yr = 0.0f, yi = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X) { yr += *X; yi += *++X; }
+        for (size_t l=0u; l<L; ++l, ++X) { yr += *X; yi += *++X; }
         *Y = yr; *++Y = yi;
     }
     else
@@ -213,31 +213,31 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (K==1 && (G==1 || B==1))
         {
             float yr, yi;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 yr = yi = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { yr += *X; yi += *++X; }
+                for (size_t l=0u; l<L; ++l, ++X) { yr += *X; yi += *++X; }
                 *Y = yr; *++Y = yi;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             Y -= 2*V;
-            for (size_t l=1; l<L; ++l, Y-=2*V)
+            for (size_t l=1u; l<L; ++l, Y-=2*V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
             }
         }
         else
         {
             float yr, yi;
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     yr = yi = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=2*K-1) { yr += *X; yi += *++X; }
+                    for (size_t l=0u; l<L; ++l, X+=2*K-1) { yr += *X; yi += *++X; }
                     *Y = yr; *++Y = yi;
                 }
             }
@@ -255,15 +255,15 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         double yr = 0.0, yi = 0.0;
-        for (size_t l=0; l<L; ++l, ++X) { yr += *X; yi += *++X; }
+        for (size_t l=0u; l<L; ++l, ++X) { yr += *X; yi += *++X; }
         *Y = yr; *++Y = yi;
     }
     else
@@ -275,31 +275,31 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (K==1 && (G==1 || B==1))
         {
             double yr, yi;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 yr = yi = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { yr += *X; yi += *++X; }
+                for (size_t l=0u; l<L; ++l, ++X) { yr += *X; yi += *++X; }
                 *Y = yr; *++Y = yi;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             Y -= 2*V;
-            for (size_t l=1; l<L; ++l, Y-=2*V)
+            for (size_t l=1u; l<L; ++l, Y-=2*V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
             }
         }
         else
         {
             double yr, yi;
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     yr = yi = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=2*K-1) { yr += *X; yi += *++X; }
+                    for (size_t l=0u; l<L; ++l, X+=2*K-1) { yr += *X; yi += *++X; }
                     *Y = yr; *++Y = yi;
                 }
             }

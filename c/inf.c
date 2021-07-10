@@ -17,7 +17,7 @@ int inf_z (double *Y, const size_t N);
 
 int inf_s (float *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = HUGE_VALF; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = HUGE_VALF; }
 
     return 0;
 }
@@ -25,7 +25,7 @@ int inf_s (float *Y, const size_t N)
 
 int inf_d (double *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = HUGE_VAL; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = HUGE_VAL; }
 
     return 0;
 }
@@ -33,7 +33,7 @@ int inf_d (double *Y, const size_t N)
 
 int inf_c (float *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = HUGE_VALF; *++Y = 0.0f; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = HUGE_VALF; *++Y = 0.0f; }
 
     return 0;
 }
@@ -41,7 +41,7 @@ int inf_c (float *Y, const size_t N)
 
 int inf_z (double *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = HUGE_VAL; *++Y = 0.0; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = HUGE_VAL; *++Y = 0.0; }
 
     return 0;
 }

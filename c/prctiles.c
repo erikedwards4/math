@@ -37,7 +37,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
     if (!(i1=(size_t *)malloc(Ly*sizeof(size_t)))) { fprintf(stderr,"error in prctiles_s: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w1=(float *)malloc(Ly*sizeof(float)))) { fprintf(stderr,"error in prctiles_s: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w2=(float *)malloc(Ly*sizeof(float)))) { fprintf(stderr,"error in prctiles_s: problem with malloc. "); perror("malloc"); return 1; }
-    for (size_t l=0; l<Ly; ++l)
+    for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0f || P[l]>100.0f) { fprintf(stderr,"error in prctiles_s: prctiles must be in [0 100]\n"); return 1; }
         float p1 = (P[l]/100.0f)*(Lx-1);
@@ -49,16 +49,16 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
     if (N==0 || Ly==0) {}
     else if (Lx==1 && Ly==1)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (Lx==N)
     {
-        for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
         X1 -= Lx;
         if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_s: problem with LAPACKE function\n"); }
         X1 += *i1++;
         *Y++ = *w1++**X1 + *w2++**(X1+1);
-        for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
+        for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
         {
             X1 += *i1 - *(i1-1);
             *Y = *w1**X + *w2**(X1+1);
@@ -73,14 +73,14 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=0u; v<V; ++v, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
             {
-                for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
                 if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_s: problem with LAPACKE function\n"); }
                 X1 += *i1++;
                 *Y++ = *w1++**X1 + *w2++**(X1+1);
-                for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
+                for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
                 {
                     X1 += *i1 - *(i1-1);
                     *Y = *w1**X1 + *w2**(X1+1);
@@ -89,17 +89,17 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
                 {
-                    for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                    for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
                     if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
                     X1 += *i1++;
                     *Y = *w1++**X1 + *w2++**(X1+1);
                     Y += K;
-                    for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
+                    for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
                     {
                         X1 += *i1 - *(i1-1);
                         *Y = *w1**X1 + *w2**(X1+1);
@@ -130,7 +130,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
     if (!(i1=(size_t *)malloc(Ly*sizeof(size_t)))) { fprintf(stderr,"error in prctiles_d: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w1=(double *)malloc(Ly*sizeof(double)))) { fprintf(stderr,"error in prctiles_d: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w2=(double *)malloc(Ly*sizeof(double)))) { fprintf(stderr,"error in prctiles_d: problem with malloc. "); perror("malloc"); return 1; }
-    for (size_t l=0; l<Ly; ++l)
+    for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0 || P[l]>100.0) { fprintf(stderr,"error in prctiles_d: prctiles must be in [0 100]\n"); return 1; }
         double p1 = (P[l]/100.0)*(Lx-1);
@@ -142,16 +142,16 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
     if (N==0 || Ly==0) {}
     else if (Lx==1 && Ly==1)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (Lx==N)
     {
-        for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
         X1 -= Lx;
         if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_d: problem with LAPACKE function\n"); }
         X1 += *i1++;
         *Y++ = *w1++**X1 + *w2++**(X1+1);
-        for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
+        for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
         {
             X1 += *i1 - *(i1-1);
             *Y = *w1**X + *w2**(X1+1);
@@ -166,14 +166,14 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=0u; v<V; ++v, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
             {
-                for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
                 if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_d: problem with LAPACKE function\n"); }
                 X1 += *i1++;
                 *Y++ = *w1++**X1 + *w2++**(X1+1);
-                for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
+                for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
                 {
                     X1 += *i1 - *(i1-1);
                     *Y = *w1**X1 + *w2**(X1+1);
@@ -182,17 +182,17 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
                 {
-                    for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                    for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
                     if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
                     X1 += *i1++;
                     *Y = *w1++**X1 + *w2++**(X1+1);
                     Y += K;
-                    for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
+                    for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
                     {
                         X1 += *i1 - *(i1-1);
                         *Y = *w1**X1 + *w2**(X1+1);
@@ -220,7 +220,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
     if (!(i1=(size_t *)malloc(Ly*sizeof(size_t)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w1=(float *)malloc(Ly*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w2=(float *)malloc(Ly*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-    for (size_t l=0; l<Ly; ++l)
+    for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0f || P[l]>100.0f) { fprintf(stderr,"error in prctiles_inplace_s: prctiles must be in [0 100]\n"); return 1; }
         float p1 = (P[l]/100.0f)*(Lx-1);
@@ -232,14 +232,14 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
     if (N==0 || Ly==0) {}
     else if (Lx==1 && Ly==1)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (Lx==N)
     {
         if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
         X += *i1++;
         *Y++ = *w1++**X + *w2++**(X+1);
-        for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
+        for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
         {
             X += *i1 - *(i1-1);
             *Y = *w1**X + *w2**(X+1);
@@ -254,12 +254,12 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=Lx-*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=0u; v<V; ++v, X+=Lx-*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
                 X += *i1++;
                 *Y++ = *w1++**X + *w2++**(X+1);
-                for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
+                for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
                 {
                     X += *i1 - *(i1-1);
                     *Y = *w1**X + *w2**(X+1);
@@ -270,17 +270,17 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
         {
             float *X1;
             if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
                 {
-                    for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                    for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
                     if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
                     X1 += *i1++;
                     *Y = *w1++**X1 + *w2++**(X1+1);
                     Y += K;
-                    for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
+                    for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
                     {
                         X1 += *i1 - *(i1-1);
                         *Y = *w1**X1 + *w2**(X1+1);
@@ -309,7 +309,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
     if (!(i1=(size_t *)malloc(Ly*sizeof(size_t)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w1=(double *)malloc(Ly*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w2=(double *)malloc(Ly*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-    for (size_t l=0; l<Ly; ++l)
+    for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0 || P[l]>100.0) { fprintf(stderr,"error in prctiles_inplace_d: prctiles must be in [0 100]\n"); return 1; }
         double p1 = (P[l]/100.0)*(Lx-1);
@@ -321,14 +321,14 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
     if (N==0 || Ly==0) {}
     else if (Lx==1 && Ly==1)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (Lx==N)
     {
         if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
         X += *i1++;
         *Y++ = *w1++**X + *w2++**(X+1);
-        for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
+        for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
         {
             X += *i1 - *(i1-1);
             *Y = *w1**X + *w2**(X+1);
@@ -343,12 +343,12 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=Lx-*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=0u; v<V; ++v, X+=Lx-*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
                 X += *i1++;
                 *Y++ = *w1++**X + *w2++**(X+1);
-                for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
+                for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
                 {
                     X += *i1 - *(i1-1);
                     *Y = *w1**X + *w2**(X+1);
@@ -359,17 +359,17 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
         {
             double *X1;
             if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
                 {
-                    for (size_t l=0; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                    for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
                     if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
                     X1 += *i1++;
                     *Y = *w1++**X1 + *w2++**(X1+1);
                     Y += K;
-                    for (size_t l=1; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
+                    for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
                     {
                         X1 += *i1 - *(i1-1);
                         *Y = *w1**X1 + *w2**(X1+1);

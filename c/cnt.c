@@ -24,15 +24,15 @@ int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = (float)(*X!=0.0f); }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = (float)(*X!=0.0f); }
     }
     else if (L==N)
     {
         size_t cnt = 0;
-        for (size_t l=0; l<L; ++l, ++X) { cnt += (*X!=0.0f); }
+        for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X!=0.0f); }
         *Y = cnt;
     }
     else
@@ -44,31 +44,31 @@ int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (K==1 && (G==1 || B==1))
         {
             size_t cnt;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 cnt = 0;
-                for (size_t l=0; l<L; ++l, ++X) { cnt += (*X!=0.0f); }
+                for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X!=0.0f); }
                 *Y = cnt;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = (float)(*X!=0.0f); }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = (float)(*X!=0.0f); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += (float)(*X!=0.0f); }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += (float)(*X!=0.0f); }
             }
         }
         else
         {
             size_t cnt;
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     cnt = 0;
-                    for (size_t l=0; l<L; ++l, X+=K) { cnt += (*X!=0.0f); }
+                    for (size_t l=0u; l<L; ++l, X+=K) { cnt += (*X!=0.0f); }
                     *Y = cnt;
                 }
             }
@@ -86,15 +86,15 @@ int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = (double)(*X!=0.0); }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = (double)(*X!=0.0); }
     }
     else if (L==N)
     {
         size_t cnt = 0;
-        for (size_t l=0; l<L; ++l, ++X) { cnt += (*X!=0.0); }
+        for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X!=0.0); }
         *Y = cnt;
     }
     else
@@ -106,31 +106,31 @@ int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (K==1 && (G==1 || B==1))
         {
             size_t cnt;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 cnt = 0;
-                for (size_t l=0; l<L; ++l, ++X) { cnt += (*X!=0.0); }
+                for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X!=0.0); }
                 *Y = cnt;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = (double)(*X!=0.0); }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = (double)(*X!=0.0); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += (double)(*X!=0.0); }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += (double)(*X!=0.0); }
             }
         }
         else
         {
             size_t cnt;
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     cnt = 0;
-                    for (size_t l=0; l<L; ++l, X+=K) { cnt += (*X!=0.0); }
+                    for (size_t l=0u; l<L; ++l, X+=K) { cnt += (*X!=0.0); }
                     *Y = cnt;
                 }
             }
@@ -148,15 +148,15 @@ int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = (float)(*X!=0.0f || *(X+1)!=0.0f); }
+        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = (float)(*X!=0.0f || *(X+1)!=0.0f); }
     }
     else if (L==N)
     {
         size_t cnt = 0;
-        for (size_t l=0; l<L; ++l, X+=2) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
+        for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
         *Y = cnt;
     }
     else
@@ -168,31 +168,31 @@ int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (K==1 && (G==1 || B==1))
         {
             size_t cnt;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 cnt = 0;
-                for (size_t l=0; l<L; ++l, X+=2) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
+                for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
                 *Y = cnt;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = (float)(*X!=0.0f || *(X+1)!=0.0f); }
+            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = (float)(*X!=0.0f || *(X+1)!=0.0f); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += (float)(*X!=0.0f || *(X+1)!=0.0f); }
+                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += (float)(*X!=0.0f || *(X+1)!=0.0f); }
             }
         }
         else
         {
             size_t cnt;
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     cnt = 0;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
+                    for (size_t l=0u; l<L; ++l, X+=2*K) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
                     *Y = cnt;
                 }
             }
@@ -210,15 +210,15 @@ int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = (double)(*X!=0.0 || *(X+1)!=0.0); }
+        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = (double)(*X!=0.0 || *(X+1)!=0.0); }
     }
     else if (L==N)
     {
         size_t cnt = 0;
-        for (size_t l=0; l<L; ++l, X+=2) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
+        for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
         *Y = cnt;
     }
     else
@@ -230,31 +230,31 @@ int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (K==1 && (G==1 || B==1))
         {
             size_t cnt;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 cnt = 0;
-                for (size_t l=0; l<L; ++l, X+=2) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
+                for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
                 *Y = cnt;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = (double)(*X!=0.0 || *(X+1)!=0.0); }
+            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = (double)(*X!=0.0 || *(X+1)!=0.0); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += (double)(*X!=0.0 || *(X+1)!=0.0); }
+                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += (double)(*X!=0.0 || *(X+1)!=0.0); }
             }
         }
         else
         {
             size_t cnt;
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     cnt = 0;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
+                    for (size_t l=0u; l<L; ++l, X+=2*K) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
                     *Y = cnt;
                 }
             }

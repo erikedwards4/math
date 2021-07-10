@@ -28,7 +28,7 @@ int deg2rad_s (float *Y, const float *X, const size_t N)
 {
     const float d2r = (float)(M_PI/180.0);
 
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X * d2r; }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X * d2r; }
 
     return 0;
 }
@@ -38,7 +38,7 @@ int deg2rad_d (double *Y, const double *X, const size_t N)
 {
     const double d2r = M_PI / 180.0;
 
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X * d2r; }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X * d2r; }
     
     return 0;
 }
@@ -54,7 +54,7 @@ int deg2rad_inplace_s (float *X, const size_t N)
 
     //cblas_sscal((int)N,d2r,X,1);
 
-    for (size_t n=0; n<N; ++n, ++X) { *X *= d2r; }
+    for (size_t n=0u; n<N; ++n, ++X) { *X *= d2r; }
 
     return 0;
 }
@@ -64,7 +64,7 @@ int deg2rad_inplace_d (double *X, const size_t N)
 {
     const double d2r = M_PI / 180.0;
 
-    for (size_t n=0; n<N; ++n, ++X) { *X *= d2r; }
+    for (size_t n=0u; n<N; ++n, ++X) { *X *= d2r; }
     
     return 0;
 }

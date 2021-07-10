@@ -20,7 +20,7 @@ int kronecker_s (float *Y, const float *X1, const float *X2, const size_t R1, co
     const size_t R = R1*R2, C = C1*C2, S = S1*S2, H = H1*H2;
     const size_t N = R*C*S*H, N2 = R2*C2*S2*H2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (S*H==1)
     {
         if (iscolmajor)
@@ -128,7 +128,7 @@ int kronecker_d (double *Y, const double *X1, const double *X2, const size_t R1,
     const size_t R = R1*R2, C = C1*C2, S = S1*S2, H = H1*H2;
     const size_t N = R*C*S*H, N2 = R2*C2*S2*H2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (S*H==1)
     {
         if (iscolmajor)
@@ -237,7 +237,7 @@ int kronecker_c (float *Y, const float *X1, const float *X2, const size_t R1, co
     const size_t N = R*C*S*H, N2 = R2*C2*S2*H2;
     float x1r, x1i, x2r, x2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (S*H==1)
     {
         if (iscolmajor)
@@ -358,7 +358,7 @@ int kronecker_z (double *Y, const double *X1, const double *X2, const size_t R1,
     const size_t N = R*C*S*H, N2 = R2*C2*S2*H2;
     double x1r, x1i, x2r, x2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (S*H==1)
     {
         if (iscolmajor)

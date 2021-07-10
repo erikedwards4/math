@@ -39,7 +39,7 @@ int affine_s (float *Y, const float *X, const float *A, const float *B, const si
     const size_t Na = Lx*Ly;
     float sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (Lx==N)
     {
         if (Na<30000)
@@ -68,7 +68,7 @@ int affine_s (float *Y, const float *X, const float *A, const float *B, const si
         {
             if (Na<1000)
             {
-                for (size_t v=0; v<V; ++v, A-=Lx*Ly, B-=Ly)
+                for (size_t v=0u; v<V; ++v, A-=Lx*Ly, B-=Ly)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++B, ++Y)
                     {
@@ -81,7 +81,7 @@ int affine_s (float *Y, const float *X, const float *A, const float *B, const si
             }
             else
             {
-                for (size_t v=0; v<V; ++v, X+=Lx, B-=Ly, Y+=Ly)
+                for (size_t v=0u; v<V; ++v, X+=Lx, B-=Ly, Y+=Ly)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++B, ++Y) { *Y = *B; }
                     Y -= Ly;
@@ -91,9 +91,9 @@ int affine_s (float *Y, const float *X, const float *A, const float *B, const si
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=BS*(Lx-1), Y+=BS*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=BS*(Lx-1), Y+=BS*(Ly-1))
             {
-                for (size_t b=0; b<BS; ++b, ++X, A-=Lx*Ly, B-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<BS; ++b, ++X, A-=Lx*Ly, B-=Ly, Y-=K*Ly-1)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, X-=K*Lx, ++B, Y+=K)
                     {
@@ -117,7 +117,7 @@ int affine_d (double *Y, const double *X, const double *A, const double *B, cons
     const size_t Na = Lx*Ly;
     double sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (Lx==N)
     {
         if (Na<30000)
@@ -146,7 +146,7 @@ int affine_d (double *Y, const double *X, const double *A, const double *B, cons
         {
             if (Na<1000)
             {
-                for (size_t v=0; v<V; ++v, A-=Lx*Ly, B-=Ly)
+                for (size_t v=0u; v<V; ++v, A-=Lx*Ly, B-=Ly)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++B, ++Y)
                     {
@@ -159,7 +159,7 @@ int affine_d (double *Y, const double *X, const double *A, const double *B, cons
             }
             else
             {
-                for (size_t v=0; v<V; ++v, X+=Lx, B-=Ly, Y+=Ly)
+                for (size_t v=0u; v<V; ++v, X+=Lx, B-=Ly, Y+=Ly)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++B, ++Y) { *Y = *B; }
                     Y -= Ly;
@@ -169,9 +169,9 @@ int affine_d (double *Y, const double *X, const double *A, const double *B, cons
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=BS*(Lx-1), Y+=BS*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=BS*(Lx-1), Y+=BS*(Ly-1))
             {
-                for (size_t b=0; b<BS; ++b, ++X, A-=Lx*Ly, B-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<BS; ++b, ++X, A-=Lx*Ly, B-=Ly, Y-=K*Ly-1)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, X-=K*Lx, ++B, Y+=K)
                     {
@@ -195,7 +195,7 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
     const size_t Na = Lx*Ly;
     float xr, xi, ar, ai, sm2r, sm2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (Lx==N)
     {
         if (Lx<30000)
@@ -231,7 +231,7 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
         {
             if (Na<4500)
             {
-                for (size_t v=0; v<V; ++v, A-=2*Na, B-=2*Ly)
+                for (size_t v=0u; v<V; ++v, A-=2*Na, B-=2*Ly)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++B, ++Y)
                     {
@@ -251,7 +251,7 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
             else
             {
                 const float o[2] = {1.0f,0.0f};
-                for (size_t v=0; v<V; ++v, X+=2*Lx, B-=2*Ly, Y+=2*Ly)
+                for (size_t v=0u; v<V; ++v, X+=2*Lx, B-=2*Ly, Y+=2*Ly)
                 {
                     for (size_t ly=0; ly<2*Ly; ++ly, ++B, ++Y) { *Y = *B; }
                     Y -= 2*Ly;
@@ -261,9 +261,9 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*BS*(Lx-1), Y+=2*BS*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=2*BS*(Lx-1), Y+=2*BS*(Ly-1))
             {
-                for (size_t b=0; b<BS; ++b, X+=2, A-=2*Na, B-=2*Ly, Y-=2*K*Ly-2)
+                for (size_t b=0u; b<BS; ++b, X+=2, A-=2*Na, B-=2*Ly, Y-=2*K*Ly-2)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, X-=2*K*Lx, ++B, Y+=2*K-1)
                     {
@@ -293,7 +293,7 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
     const size_t Na = Lx*Ly;
     double xr, xi, ar, ai, sm2r, sm2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (Lx==N)
     {
         if (Lx<30000)
@@ -329,7 +329,7 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
         {
             if (Na<4500)
             {
-                for (size_t v=0; v<V; ++v, A-=2*Na, B-=2*Ly)
+                for (size_t v=0u; v<V; ++v, A-=2*Na, B-=2*Ly)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++B, ++Y)
                     {
@@ -349,7 +349,7 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
             else
             {
                 const double o[2] = {1.0,0.0};
-                for (size_t v=0; v<V; ++v, X+=2*Lx, B-=2*Ly, Y+=2*Ly)
+                for (size_t v=0u; v<V; ++v, X+=2*Lx, B-=2*Ly, Y+=2*Ly)
                 {
                     for (size_t ly=0; ly<2*Ly; ++ly, ++B, ++Y) { *Y = *B; }
                     Y -= 2*Ly;
@@ -359,9 +359,9 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*BS*(Lx-1), Y+=2*BS*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=2*BS*(Lx-1), Y+=2*BS*(Ly-1))
             {
-                for (size_t b=0; b<BS; ++b, X+=2, A-=2*Na, B-=2*Ly, Y-=2*K*Ly-2)
+                for (size_t b=0u; b<BS; ++b, X+=2, A-=2*Na, B-=2*Ly, Y-=2*K*Ly-2)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, X-=2*K*Lx, ++B, Y+=2*K-1)
                     {

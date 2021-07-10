@@ -24,14 +24,14 @@ int gscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
     const float den = 1.0f/L, den2 = den;
     float mn = 0.0f, sd = 0.0f;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
+        for (size_t l=0u; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
         mn *= den;
-        for (size_t l=0; l<L; ++l) { *--X -= mn; sd += *X**X; }
+        for (size_t l=0u; l<L; ++l) { *--X -= mn; sd += *X**X; }
         sd = sqrtf(sd*den2);
-        for (size_t l=0; l<L; ++l, ++X) { *X = expf(*X/sd); }
+        for (size_t l=0u; l<L; ++l, ++X) { *X = expf(*X/sd); }
     }
     else
     {
@@ -41,28 +41,28 @@ int gscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mn = sd = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
                 mn *= den;
-                for (size_t l=0; l<L; ++l) { *--X -= mn; sd += *X**X; }
+                for (size_t l=0u; l<L; ++l) { *--X -= mn; sd += *X**X; }
                 sd = sqrtf(sd*den2);
-                for (size_t l=0; l<L; ++l, ++X) { *X = expf(*X/sd); }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = expf(*X/sd); }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1)
                 {
                     mn = sd = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { *X = logf(*X); mn += *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *X = logf(*X); mn += *X; }
                     mn *= den;
-                    for (size_t l=0; l<L; ++l) { X-=K; *X -= mn; sd += *X**X; }
+                    for (size_t l=0u; l<L; ++l) { X-=K; *X -= mn; sd += *X**X; }
                     sd = sqrtf(sd*den2);
-                    for (size_t l=0; l<L; ++l, X+=K) { *X = expf(*X/sd); }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *X = expf(*X/sd); }
                 }
             }
         }
@@ -82,14 +82,14 @@ int gscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
     const double den = 1.0/L, den2 = den;
     double mn = 0.0, sd = 0.0;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
+        for (size_t l=0u; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
         mn *= den;
-        for (size_t l=0; l<L; ++l) { *--X -= mn; sd += *X**X; }
+        for (size_t l=0u; l<L; ++l) { *--X -= mn; sd += *X**X; }
         sd = sqrt(sd*den2);
-        for (size_t l=0; l<L; ++l, ++X) { *X = exp(*X/sd); }
+        for (size_t l=0u; l<L; ++l, ++X) { *X = exp(*X/sd); }
     }
     else
     {
@@ -99,28 +99,28 @@ int gscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mn = sd = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
                 mn *= den;
-                for (size_t l=0; l<L; ++l) { *--X -= mn; sd += *X**X; }
+                for (size_t l=0u; l<L; ++l) { *--X -= mn; sd += *X**X; }
                 sd = sqrt(sd*den2);
-                for (size_t l=0; l<L; ++l, ++X) { *X = exp(*X/sd); }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = exp(*X/sd); }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1)
                 {
                     mn = sd = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { *X = log(*X); mn += *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *X = log(*X); mn += *X; }
                     mn *= den;
-                    for (size_t l=0; l<L; ++l) { X-=K; *X -= mn; sd += *X**X; }
+                    for (size_t l=0u; l<L; ++l) { X-=K; *X -= mn; sd += *X**X; }
                     sd = sqrt(sd*den2);
-                    for (size_t l=0; l<L; ++l, X+=K) { *X = exp(*X/sd); }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *X = exp(*X/sd); }
                 }
             }
         }

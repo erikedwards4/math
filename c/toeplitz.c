@@ -73,7 +73,7 @@ int toeplitz2_s (float *Y, const float *X1, const float *X2, const size_t R, con
 {
     if (iscolmajor)
     {
-        for (size_t c=0; c<C; ++c, X1-=R-c+1, X2+=c)
+        for (size_t c=0u; c<C; ++c, X1-=R-c+1, X2+=c)
         {
             for (size_t l2=0; l2<c; ++l2, --X2, ++Y) { *Y = *X2; }
             for (size_t l1=c; l1<R; ++l1, ++X1, ++Y) { *Y = *X1; }
@@ -82,7 +82,7 @@ int toeplitz2_s (float *Y, const float *X1, const float *X2, const size_t R, con
     else
     {
         ++X2;
-        for (size_t r=0; r<R; ++r, X1+=r+1, X2-=C-r)
+        for (size_t r=0u; r<R; ++r, X1+=r+1, X2-=C-r)
         {
             for (size_t l1=0; l1<=r; ++l1, --X1, ++Y) { *Y = *X1; }
             for (size_t l2=r+1; l2<C; ++l2, ++X2, ++Y) { *Y = *X2; }
@@ -97,7 +97,7 @@ int toeplitz2_d (double *Y, const double *X1, const double *X2, const size_t R, 
 {
     if (iscolmajor)
     {
-        for (size_t c=0; c<C; ++c, X1-=R-c+1, X2+=c)
+        for (size_t c=0u; c<C; ++c, X1-=R-c+1, X2+=c)
         {
             for (size_t l2=0; l2<c; ++l2, --X2, ++Y) { *Y = *X2; }
             for (size_t l1=c; l1<R; ++l1, ++X1, ++Y) { *Y = *X1; }
@@ -106,7 +106,7 @@ int toeplitz2_d (double *Y, const double *X1, const double *X2, const size_t R, 
     else
     {
         ++X2;
-        for (size_t r=0; r<R; ++r, X1+=r+1, X2-=C-r)
+        for (size_t r=0u; r<R; ++r, X1+=r+1, X2-=C-r)
         {
             for (size_t l1=0; l1<=r; ++l1, --X1, ++Y) { *Y = *X1; }
             for (size_t l2=r+1; l2<C; ++l2, ++X2, ++Y) { *Y = *X2; }
@@ -121,7 +121,7 @@ int toeplitz2_c (float *Y, const float *X1, const float *X2, const size_t R, con
 {
     if (iscolmajor)
     {
-        for (size_t c=0; c<C; ++c, X1-=2*(R-c+1), X2+=2*c)
+        for (size_t c=0u; c<C; ++c, X1-=2*(R-c+1), X2+=2*c)
         {
             for (size_t l2=0; l2<c; ++l2, X2-=2, ++Y) { *Y = *X2; *++Y = *(X2+1); }
             for (size_t l1=c; l1<R; ++l1, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
@@ -130,7 +130,7 @@ int toeplitz2_c (float *Y, const float *X1, const float *X2, const size_t R, con
     else
     {
         X2+=2;
-        for (size_t r=0; r<R; ++r, X1+=2*r+2, X2-=2*(C-r))
+        for (size_t r=0u; r<R; ++r, X1+=2*r+2, X2-=2*(C-r))
         {
             for (size_t l1=0; l1<=r; ++l1, X1-=2, ++Y) { *Y = *X1; *++Y = *(X1+1); }
             for (size_t l2=r+1; l2<C; ++l2, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }
@@ -145,7 +145,7 @@ int toeplitz2_z (double *Y, const double *X1, const double *X2, const size_t R, 
 {
     if (iscolmajor)
     {
-        for (size_t c=0; c<C; ++c, X1-=2*(R-c+1), X2+=2*c)
+        for (size_t c=0u; c<C; ++c, X1-=2*(R-c+1), X2+=2*c)
         {
             for (size_t l2=0; l2<c; ++l2, X2-=2, ++Y) { *Y = *X2; *++Y = *(X2+1); }
             for (size_t l1=c; l1<R; ++l1, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
@@ -154,7 +154,7 @@ int toeplitz2_z (double *Y, const double *X1, const double *X2, const size_t R, 
     else
     {
         X2+=2;
-        for (size_t r=0; r<R; ++r, X1+=2*r+2, X2-=2*(C-r))
+        for (size_t r=0u; r<R; ++r, X1+=2*r+2, X2-=2*(C-r))
         {
             for (size_t l1=0; l1<=r; ++l1, X1-=2, ++Y) { *Y = *X1; *++Y = *(X1+1); }
             for (size_t l2=r+1; l2<C; ++l2, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }

@@ -17,7 +17,7 @@ int sign_inplace_d (double *X, const size_t N);
 
 int sign_s (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = (*X>0.0f) - (*X<0.0f); }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = (*X>0.0f) - (*X<0.0f); }
 
     return 0;
 }
@@ -25,7 +25,7 @@ int sign_s (float *Y, const float *X, const size_t N)
 
 int sign_d (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = (*X>0.0) - (*X<0.0); }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = (*X>0.0) - (*X<0.0); }
     
     return 0;
 }
@@ -35,8 +35,8 @@ int sign_inplace_s (float *X, const size_t N)
 {
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
-    for (size_t n=0; n<N; ++n, ++X) { *X = (*X>0.0f) - (*X<0.0f); }
-    // for (size_t n=0; n<N; ++n, ++X)
+    for (size_t n=0u; n<N; ++n, ++X) { *X = (*X>0.0f) - (*X<0.0f); }
+    // for (size_t n=0u; n<N; ++n, ++X)
     // {
     //     if (*X<0.0f) { *X = -1.0f; }
     //     else if (*X>0.0f) { *X = 1.0f; }
@@ -51,7 +51,7 @@ int sign_inplace_s (float *X, const size_t N)
 
 int sign_inplace_d (double *X, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++X) { *X = (*X>0.0) - (*X<0.0); }
+    for (size_t n=0u; n<N; ++n, ++X) { *X = (*X>0.0) - (*X<0.0); }
     
     return 0;
 }

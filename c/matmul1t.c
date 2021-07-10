@@ -25,7 +25,7 @@ int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const 
     const size_t N = R*C;
     float sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<2500)
     {
         if (tr)
@@ -38,7 +38,7 @@ int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const 
                     for (size_t c1=c2; c1<C; ++c1, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t r=0; r<R; ++r, ++X) { sm2 = fmaf(*X,*(X+(c1-c2)*R),sm2); }
+                        for (size_t r=0u; r<R; ++r, ++X) { sm2 = fmaf(*X,*(X+(c1-c2)*R),sm2); }
                         *Y = *(Y+(int)((c1-c2)*C+c2)-(int)c1) = sm2;
                         if (c1<C-1) { X -= R; }
                     }
@@ -52,7 +52,7 @@ int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const 
                     for (size_t c2=c1; c2<C; ++c2, X-=N, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t r=0; r<R; ++r, X+=C) { sm2 = fmaf(*X,*(X+c2-c1),sm2); }
+                        for (size_t r=0u; r<R; ++r, X+=C) { sm2 = fmaf(*X,*(X+c2-c1),sm2); }
                         *Y = *(Y+(int)((c2-c1)*C+c1)-(int)c2) = sm2;
                     }
                 }
@@ -68,7 +68,7 @@ int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const 
                     for (size_t r1=r2; r1<R; ++r1, X-=N, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t c=0; c<C; ++c, X+=R) { sm2 = fmaf(*X,*(X+r1-r2),sm2); }
+                        for (size_t c=0u; c<C; ++c, X+=R) { sm2 = fmaf(*X,*(X+r1-r2),sm2); }
                         *Y = *(Y+(int)((r1-r2)*R+r2)-(int)r1) = sm2;
                     }
                 }
@@ -81,7 +81,7 @@ int matmul1t_s (float *Y, const float *X, const size_t R, const size_t C, const 
                     for (size_t r2=r1; r2<R; ++r2, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t c=0; c<C; ++c, ++X) { sm2 = fmaf(*X,*(X+(r2-r1)*C),sm2); }
+                        for (size_t c=0u; c<C; ++c, ++X) { sm2 = fmaf(*X,*(X+(r2-r1)*C),sm2); }
                         *Y = *(Y+(int)((r2-r1)*R+r1)-(int)r2) = sm2;
                         if (r2<R-1) { X -= C; }
                     }
@@ -144,7 +144,7 @@ int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, cons
     const size_t N = R*C;
     double sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<2500)
     {
         if (tr)
@@ -157,7 +157,7 @@ int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, cons
                     for (size_t c1=c2; c1<C; ++c1, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t r=0; r<R; ++r, ++X) { sm2 = fma(*X,*(X+(c1-c2)*R),sm2); }
+                        for (size_t r=0u; r<R; ++r, ++X) { sm2 = fma(*X,*(X+(c1-c2)*R),sm2); }
                         *Y = *(Y+(int)((c1-c2)*C+c2)-(int)c1) = sm2;
                         if (c1<C-1) { X -= R; }
                     }
@@ -171,7 +171,7 @@ int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, cons
                     for (size_t c2=c1; c2<C; ++c2, X-=N, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t r=0; r<R; ++r, X+=C) { sm2 = fma(*X,*(X+c2-c1),sm2); }
+                        for (size_t r=0u; r<R; ++r, X+=C) { sm2 = fma(*X,*(X+c2-c1),sm2); }
                         *Y = *(Y+(int)((c2-c1)*C+c1)-(int)c2) = sm2;
                     }
                 }
@@ -187,7 +187,7 @@ int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, cons
                     for (size_t r1=r2; r1<R; ++r1, X-=N, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t c=0; c<C; ++c, X+=R) { sm2 = fma(*X,*(X+r1-r2),sm2); }
+                        for (size_t c=0u; c<C; ++c, X+=R) { sm2 = fma(*X,*(X+r1-r2),sm2); }
                         *Y = *(Y+(int)((r1-r2)*R+r2)-(int)r1) = sm2;
                     }
                 }
@@ -200,7 +200,7 @@ int matmul1t_d (double *Y, const double *X, const size_t R, const size_t C, cons
                     for (size_t r2=r1; r2<R; ++r2, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t c=0; c<C; ++c, ++X) { sm2 = fma(*X,*(X+(r2-r1)*C),sm2); }
+                        for (size_t c=0u; c<C; ++c, ++X) { sm2 = fma(*X,*(X+(r2-r1)*C),sm2); }
                         *Y = *(Y+(int)((r2-r1)*R+r1)-(int)r2) = sm2;
                         if (r2<R-1) { X -= C; }
                     }
@@ -263,7 +263,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
     const size_t N = R*C;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else
     {
         if (tr)
@@ -274,7 +274,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
                 {
                     Y += 2*c2;
                     sm2r = 0.0f;
-                    for (size_t r=0; r<R; ++r, ++X)
+                    for (size_t r=0u; r<R; ++r, ++X)
                     {
                         x1r = x2r = *X; ++X;
                         x1i = -*X; x2i = *X;
@@ -285,7 +285,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
                     for (size_t c1=c2+1; c1<C; ++c1, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t r=0; r<R; ++r, ++X)
+                        for (size_t r=0u; r<R; ++r, ++X)
                         {
                             x1r = *X; x2r = *(X+2*R*(c1-c2));
                             ++X;
@@ -306,7 +306,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
                 {
                     Y += 2*c1;
                     sm2r = 0.0f;
-                    for (size_t r=0; r<R; ++r, X+=2*C-1)
+                    for (size_t r=0u; r<R; ++r, X+=2*C-1)
                     {
                         x1r = x2r = *X; ++X;
                         x1i = -*X; x2i = *X;
@@ -316,7 +316,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
                     for (size_t c2=c1+1; c2<C; ++c2, X-=2*N, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t r=0; r<R; ++r, X+=2*C-1)
+                        for (size_t r=0u; r<R; ++r, X+=2*C-1)
                         {
                             x1r = *X; x2r = *(X+2*(c2-c1));
                             ++X;
@@ -339,7 +339,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
                 {
                     Y += 2*r2;
                     sm2r = 0.0f;
-                    for (size_t c=0; c<C; ++c, X+=2*R-1)
+                    for (size_t c=0u; c<C; ++c, X+=2*R-1)
                     {
                         x1r = x2r = *X; ++X;
                         x1i = *X; x2i = -*X;
@@ -349,7 +349,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
                     for (size_t r1=r2+1; r1<R; ++r1, X-=2*N, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t c=0; c<C; ++c, X+=2*R-1)
+                        for (size_t c=0u; c<C; ++c, X+=2*R-1)
                         {
                             x1r = *X; x2r = *(X+2*(r1-r2));
                             ++X;
@@ -369,7 +369,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
                 {
                     Y += 2*r1;
                     sm2r = 0.0f;
-                    for (size_t c=0; c<C; ++c, ++X)
+                    for (size_t c=0u; c<C; ++c, ++X)
                     {
                         x1r = x2r = *X; ++X;
                         x1i = *X; x2i = -*X;
@@ -380,7 +380,7 @@ int matmul1t_c (float *Y, const float *X, const size_t R, const size_t C, const 
                     for (size_t r2=r1+1; r2<R; ++r2, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t c=0; c<C; ++c, ++X)
+                        for (size_t c=0u; c<C; ++c, ++X)
                         {
                             x1r = *X; x2r = *(X+2*C*(r2-r1));
                             ++X;
@@ -407,7 +407,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
     const size_t N = R*C;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else
     {
         if (tr)
@@ -418,7 +418,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
                 {
                     Y += 2*c2;
                     sm2r = 0.0;
-                    for (size_t r=0; r<R; ++r, ++X)
+                    for (size_t r=0u; r<R; ++r, ++X)
                     {
                         x1r = x2r = *X; ++X;
                         x1i = -*X; x2i = *X;
@@ -429,7 +429,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
                     for (size_t c1=c2+1; c1<C; ++c1, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t r=0; r<R; ++r, ++X)
+                        for (size_t r=0u; r<R; ++r, ++X)
                         {
                             x1r = *X; x2r = *(X+2*R*(c1-c2));
                             ++X;
@@ -450,7 +450,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
                 {
                     Y += 2*c1;
                     sm2r = 0.0;
-                    for (size_t r=0; r<R; ++r, X+=2*C-1)
+                    for (size_t r=0u; r<R; ++r, X+=2*C-1)
                     {
                         x1r = x2r = *X; ++X;
                         x1i = -*X; x2i = *X;
@@ -460,7 +460,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
                     for (size_t c2=c1+1; c2<C; ++c2, X-=2*N, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t r=0; r<R; ++r, X+=2*C-1)
+                        for (size_t r=0u; r<R; ++r, X+=2*C-1)
                         {
                             x1r = *X; x2r = *(X+2*(c2-c1));
                             ++X;
@@ -483,7 +483,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
                 {
                     Y += 2*r2;
                     sm2r = 0.0;
-                    for (size_t c=0; c<C; ++c, X+=2*R-1)
+                    for (size_t c=0u; c<C; ++c, X+=2*R-1)
                     {
                         x1r = x2r = *X; ++X;
                         x1i = *X; x2i = -*X;
@@ -493,7 +493,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
                     for (size_t r1=r2+1; r1<R; ++r1, X-=2*N, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t c=0; c<C; ++c, X+=2*R-1)
+                        for (size_t c=0u; c<C; ++c, X+=2*R-1)
                         {
                             x1r = *X; x2r = *(X+2*(r1-r2));
                             ++X;
@@ -513,7 +513,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
                 {
                     Y += 2*r1;
                     sm2r = 0.0;
-                    for (size_t c=0; c<C; ++c, ++X)
+                    for (size_t c=0u; c<C; ++c, ++X)
                     {
                         x1r = x2r = *X; ++X;
                         x1i = *X; x2i = -*X;
@@ -524,7 +524,7 @@ int matmul1t_z (double *Y, const double *X, const size_t R, const size_t C, cons
                     for (size_t r2=r1+1; r2<R; ++r2, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t c=0; c<C; ++c, ++X)
+                        for (size_t c=0u; c<C; ++c, ++X)
                         {
                             x1r = *X; x2r = *(X+2*C*(r2-r1));
                             ++X;

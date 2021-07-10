@@ -23,8 +23,8 @@ int acosh_inplace_z (double *X, const size_t N);
 
 int acosh_s (float *Y, const float *X, const size_t N)
 {
-    //for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = acoshf(*X); }
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = logf(*X + sqrtf(fmaf(*X,*X,-1.0f))); }
+    //for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = acoshf(*X); }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = logf(*X + sqrtf(fmaf(*X,*X,-1.0f))); }
 
     return 0;
 }
@@ -32,8 +32,8 @@ int acosh_s (float *Y, const float *X, const size_t N)
 
 int acosh_d (double *Y, const double *X, const size_t N)
 {
-    //for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = acosh(*X); }
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = log(*X + sqrt(fma(*X,*X,-1.0))); }
+    //for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = acosh(*X); }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = log(*X + sqrt(fma(*X,*X,-1.0))); }
     
     return 0;
 }
@@ -43,7 +43,7 @@ int acosh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float x, y;
 
-    for (size_t n=0; n<N; ++n, X+=2, ++Y)
+    for (size_t n=0u; n<N; ++n, X+=2, ++Y)
     {
         //y = cacoshf(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0if**(X+1);
@@ -59,7 +59,7 @@ int acosh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double x, y;
 
-    for (size_t n=0; n<N; ++n, X+=2, ++Y)
+    for (size_t n=0u; n<N; ++n, X+=2, ++Y)
     {
         //y = cacosh(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0i**(X+1);
@@ -73,8 +73,8 @@ int acosh_z (double *Y, const double *X, const size_t N)
 
 int acosh_inplace_s (float *X, const size_t N)
 {
-    //for (size_t n=0; n<N; ++n, ++X) { *X = acoshf(*X); }
-    for (size_t n=0; n<N; ++n, ++X) { *X = logf(*X + sqrtf(fmaf(*X,*X,-1.0f))); }
+    //for (size_t n=0u; n<N; ++n, ++X) { *X = acoshf(*X); }
+    for (size_t n=0u; n<N; ++n, ++X) { *X = logf(*X + sqrtf(fmaf(*X,*X,-1.0f))); }
 
     return 0;
 }
@@ -82,8 +82,8 @@ int acosh_inplace_s (float *X, const size_t N)
 
 int acosh_inplace_d (double *X, const size_t N)
 {
-    //for (size_t n=0; n<N; ++n, ++X) { *X = acosh(*X); }
-    for (size_t n=0; n<N; ++n, ++X) { *X = log(*X + sqrt(fma(*X,*X,-1.0))); }
+    //for (size_t n=0u; n<N; ++n, ++X) { *X = acosh(*X); }
+    for (size_t n=0u; n<N; ++n, ++X) { *X = log(*X + sqrt(fma(*X,*X,-1.0))); }
     
     return 0;
 }
@@ -93,7 +93,7 @@ int acosh_inplace_c (float *X, const size_t N)
 {
     _Complex float x, y;
 
-    for (size_t n=0; n<N; ++n, ++X)
+    for (size_t n=0u; n<N; ++n, ++X)
     {
         //y = cacoshf(X[n2]+1.0if*X[n2+1]);
         x = *X + 1.0if**(X+1);
@@ -109,7 +109,7 @@ int acosh_inplace_z (double *X, const size_t N)
 {
     _Complex double x, y;
 
-    for (size_t n=0; n<N; ++n, ++X)
+    for (size_t n=0u; n<N; ++n, ++X)
     {
         //y = cacosh(X[n2]+1.0i*X[n2+1]);
         x = *X + 1.0i**(X+1);

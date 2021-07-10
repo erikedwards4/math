@@ -23,12 +23,12 @@ int matmul1_s (float *Y, const float *X, const size_t R, const size_t C, const c
     const size_t N = R*C;
     float sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<1100)
     {
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; ++c)
+            for (size_t c=0u; c<C; ++c)
             {
                 for (size_t r1=0; r1<R; ++r1, ++Y)
                 {
@@ -44,7 +44,7 @@ int matmul1_s (float *Y, const float *X, const size_t R, const size_t C, const c
         }
         else
         {
-            for (size_t r=0; r<R; ++r)
+            for (size_t r=0u; r<R; ++r)
             {
                 for (size_t c2=0; c2<C; ++c2, ++Y)
                 {
@@ -82,12 +82,12 @@ int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t N = R*C;
     double sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<1100)
     {
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; ++c)
+            for (size_t c=0u; c<C; ++c)
             {
                 for (size_t r1=0; r1<R; ++r1, ++Y)
                 {
@@ -102,7 +102,7 @@ int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const
         }
         else
         {
-            for (size_t r=0; r<R; ++r)
+            for (size_t r=0u; r<R; ++r)
             {
                 for (size_t c2=0; c2<C; ++c2, ++Y)
                 {
@@ -139,12 +139,12 @@ int matmul1_c (float *Y, const float *X, const size_t R, const size_t C, const c
     const size_t N = R*C;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<1100)
     {
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; ++c)
+            for (size_t c=0u; c<C; ++c)
             {
                 for (size_t r1=0; r1<R; ++r1, ++Y)
                 {
@@ -162,7 +162,7 @@ int matmul1_c (float *Y, const float *X, const size_t R, const size_t C, const c
         }
         else
         {
-            for (size_t r=0; r<R; ++r)
+            for (size_t r=0u; r<R; ++r)
             {
                 for (size_t c2=0; c2<C; ++c2, ++Y)
                 {
@@ -203,12 +203,12 @@ int matmul1_z (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t N = R*C;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<1100)
     {
         if (iscolmajor)
         {
-            for (size_t c=0; c<C; ++c)
+            for (size_t c=0u; c<C; ++c)
             {
                 for (size_t r1=0; r1<R; ++r1, ++Y)
                 {
@@ -226,7 +226,7 @@ int matmul1_z (double *Y, const double *X, const size_t R, const size_t C, const
         }
         else
         {
-            for (size_t r=0; r<R; ++r)
+            for (size_t r=0u; r<R; ++r)
             {
                 for (size_t c2=0; c2<C; ++c2, ++Y)
                 {

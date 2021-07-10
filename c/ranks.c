@@ -139,16 +139,16 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     FLT *XI;
     if (!(XI=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in ranks_s: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
+        for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
         qsort(XI,L,sizeof(FLT),comp);
-        for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (float)l; }
+        for (size_t l=0u; l<L; ++l) { Y[XI[l].ind] = (float)l; }
     }
     else
     {
@@ -158,22 +158,22 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, Y+=L)
+            for (size_t v=0u; v<V; ++v, Y+=L)
             {
-                for (size_t l=0; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
+                for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
                 qsort(XI,L,sizeof(FLT),comp);
-                for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (float)l; }
+                for (size_t l=0u; l<L; ++l) { Y[XI[l].ind] = (float)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
+                    for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(FLT),comp);
-                    for (size_t l=0; l<L; ++l) { Y[K*XI[l].ind] = (float)l; }
+                    for (size_t l=0u; l<L; ++l) { Y[K*XI[l].ind] = (float)l; }
                 }
             }
         }
@@ -195,16 +195,16 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
     DBL *XI;
     if (!(XI=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in ranks_d: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
+        for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
         qsort(XI,L,sizeof(DBL),comp);
-        for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (double)l; }
+        for (size_t l=0u; l<L; ++l) { Y[XI[l].ind] = (double)l; }
     }
     else
     {
@@ -214,22 +214,22 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, Y+=L)
+            for (size_t v=0u; v<V; ++v, Y+=L)
             {
-                for (size_t l=0; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
+                for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
                 qsort(XI,L,sizeof(DBL),comp);
-                for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (double)l; }
+                for (size_t l=0u; l<L; ++l) { Y[XI[l].ind] = (double)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
+                    for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(DBL),comp);
-                    for (size_t l=0; l<L; ++l) { Y[K*XI[l].ind] = (double)l; }
+                    for (size_t l=0u; l<L; ++l) { Y[K*XI[l].ind] = (double)l; }
                 }
             }
         }
@@ -251,16 +251,16 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     CFLT *XI;
     if (!(XI=(CFLT *)malloc(L*sizeof(CFLT)))) { fprintf(stderr,"error in ranks_c: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
+        for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
         qsort(XI,L,sizeof(CFLT),comp);
-        for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (float)l; }
+        for (size_t l=0u; l<L; ++l) { Y[XI[l].ind] = (float)l; }
     }
     else
     {
@@ -270,22 +270,22 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
-                for (size_t l=0; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
+                for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
                 qsort(XI,L,sizeof(CFLT),comp);
-                for (size_t l=0; l<L; ++l, ++Y) { Y[XI[l].ind] = (float)l; }
+                for (size_t l=0u; l<L; ++l, ++Y) { Y[XI[l].ind] = (float)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
+                    for (size_t l=0u; l<L; ++l) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(CFLT),comp);
-                    for (size_t l=0; l<L; ++l) { Y[K*XI[l].ind] = (float)l; }
+                    for (size_t l=0u; l<L; ++l) { Y[K*XI[l].ind] = (float)l; }
                 }
             }
         }
@@ -307,16 +307,16 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
     ZDBL *XI;
     if (!(XI=(ZDBL *)malloc(L*sizeof(ZDBL)))) { fprintf(stderr,"error in ranks_z: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
+        for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
         qsort(XI,L,sizeof(ZDBL),comp);
-        for (size_t l=0; l<L; ++l) { Y[XI[l].ind] = (double)l; }
+        for (size_t l=0u; l<L; ++l) { Y[XI[l].ind] = (double)l; }
     }
     else
     {
@@ -326,22 +326,22 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
-                for (size_t l=0; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
+                for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
                 qsort(XI,L,sizeof(ZDBL),comp);
-                for (size_t l=0; l<L; ++l, ++Y) { Y[XI[l].ind] = (double)l; }
+                for (size_t l=0u; l<L; ++l, ++Y) { Y[XI[l].ind] = (double)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, ++Y)
+                for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
+                    for (size_t l=0u; l<L; ++l) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(ZDBL),comp);
-                    for (size_t l=0; l<L; ++l) { Y[K*XI[l].ind] = (double)l; }
+                    for (size_t l=0u; l<L; ++l) { Y[K*XI[l].ind] = (double)l; }
                 }
             }
         }
@@ -363,16 +363,16 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
     FLT *XI;
     if (!(XI=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in ranks_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 0.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
+        for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
         qsort(XI,L,sizeof(FLT),comp);
-        for (size_t l=0; l<L; ++l) { X[XI[l].ind] = (float)l; }
+        for (size_t l=0u; l<L; ++l) { X[XI[l].ind] = (float)l; }
     }
     else
     {
@@ -382,22 +382,22 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L)
+            for (size_t v=0u; v<V; ++v, X+=L)
             {
-                for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
+                for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
                 qsort(XI,L,sizeof(FLT),comp);
-                for (size_t l=0; l<L; ++l) { X[XI[l].ind] = (float)l; }
+                for (size_t l=0u; l<L; ++l) { X[XI[l].ind] = (float)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0u; b<B; ++b, ++X)
                 {
-                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
+                    for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(FLT),comp);
-                    for (size_t l=0; l<L; ++l) { X[K*XI[l].ind] = (float)l; }
+                    for (size_t l=0u; l<L; ++l) { X[K*XI[l].ind] = (float)l; }
                 }
             }
         }
@@ -419,16 +419,16 @@ int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
     DBL *XI;
     if (!(XI=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in ranks_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 0.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
+        for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
         qsort(XI,L,sizeof(DBL),comp);
-        for (size_t l=0; l<L; ++l) { X[XI[l].ind] = (double)l; }
+        for (size_t l=0u; l<L; ++l) { X[XI[l].ind] = (double)l; }
     }
     else
     {
@@ -438,22 +438,22 @@ int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L)
+            for (size_t v=0u; v<V; ++v, X+=L)
             {
-                for (size_t l=0; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
+                for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
                 qsort(XI,L,sizeof(DBL),comp);
-                for (size_t l=0; l<L; ++l) { X[XI[l].ind] = (double)l; }
+                for (size_t l=0u; l<L; ++l) { X[XI[l].ind] = (double)l; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0u; b<B; ++b, ++X)
                 {
-                    for (size_t l=0; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
+                    for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(DBL),comp);
-                    for (size_t l=0; l<L; ++l) { X[K*XI[l].ind] = (double)l; }
+                    for (size_t l=0u; l<L; ++l) { X[K*XI[l].ind] = (double)l; }
                 }
             }
         }

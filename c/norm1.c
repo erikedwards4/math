@@ -29,15 +29,15 @@ int norm1_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = fabsf(*X); }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = fabsf(*X); }
     }
     else if (L==N)
     {
         float sm = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X) { sm += fabsf(*X); }
+        for (size_t l=0u; l<L; ++l, ++X) { sm += fabsf(*X); }
         *Y = sm;
     }
     else
@@ -49,31 +49,31 @@ int norm1_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         if (K==1 && (G==1 || B==1))
         {
             float sm;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 sm = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { sm += fabsf(*X); }
+                for (size_t l=0u; l<L; ++l, ++X) { sm += fabsf(*X); }
                 *Y = sm;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += fabsf(*X); }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += fabsf(*X); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += fabsf(*X); }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += fabsf(*X); }
             }
         }
         else
         {
             float sm;
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { sm += fabsf(*X); }
+                    for (size_t l=0u; l<L; ++l, X+=K) { sm += fabsf(*X); }
                     *Y = sm;
                 }
             }
@@ -91,15 +91,15 @@ int norm1_d (double *Y, const double *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = fabs(*X); }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = fabs(*X); }
     }
     else if (L==N)
     {
         double sm = 0.0;
-        for (size_t l=0; l<L; ++l, ++X) { sm += fabs(*X); }
+        for (size_t l=0u; l<L; ++l, ++X) { sm += fabs(*X); }
         *Y = sm;
     }
     else
@@ -111,31 +111,31 @@ int norm1_d (double *Y, const double *X, const size_t R, const size_t C, const s
         if (K==1 && (G==1 || B==1))
         {
             double sm;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 sm = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { sm += fabs(*X); }
+                for (size_t l=0u; l<L; ++l, ++X) { sm += fabs(*X); }
                 *Y = sm;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += fabs(*X); }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += fabs(*X); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += fabs(*X); }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += fabs(*X); }
             }
         }
         else
         {
             double sm;
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { sm += fabs(*X); }
+                    for (size_t l=0u; l<L; ++l, X+=K) { sm += fabs(*X); }
                     *Y = sm;
                 }
             }
@@ -153,15 +153,15 @@ int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
+        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
         float sm = 0.0f;
-        for (size_t l=0; l<L; ++l, X+=2) { sm += sqrtf(*X**X + *(X+1)**(X+1)); }
+        for (size_t l=0u; l<L; ++l, X+=2) { sm += sqrtf(*X**X + *(X+1)**(X+1)); }
         *Y = sm;
     }
     else
@@ -173,31 +173,31 @@ int norm1_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         if (K==1 && (G==1 || B==1))
         {
             float sm;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 sm = 0.0f;
-                for (size_t l=0; l<L; ++l, X+=2) { sm += sqrtf(*X**X + *(X+1)**(X+1)); }
+                for (size_t l=0u; l<L; ++l, X+=2) { sm += sqrtf(*X**X + *(X+1)**(X+1)); }
                 *Y = sm;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
+            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += sqrtf(*X**X + *(X+1)**(X+1)); }
+                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += sqrtf(*X**X + *(X+1)**(X+1)); }
             }
         }
         else
         {
             float sm;
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { sm += sqrtf(*X**X + *(X+1)**(X+1)); }
+                    for (size_t l=0u; l<L; ++l, X+=2*K) { sm += sqrtf(*X**X + *(X+1)**(X+1)); }
                     *Y = sm;
                 }
             }
@@ -215,15 +215,15 @@ int norm1_z (double *Y, const double *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
+        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
         double sm = 0.0;
-        for (size_t l=0; l<L; ++l, X+=2) { sm += sqrt(*X**X + *(X+1)**(X+1)); }
+        for (size_t l=0u; l<L; ++l, X+=2) { sm += sqrt(*X**X + *(X+1)**(X+1)); }
         *Y = sm;
     }
     else
@@ -235,31 +235,31 @@ int norm1_z (double *Y, const double *X, const size_t R, const size_t C, const s
         if (K==1 && (G==1 || B==1))
         {
             double sm;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 sm = 0.0;
-                for (size_t l=0; l<L; ++l, X+=2) { sm += sqrt(*X**X + *(X+1)**(X+1)); }
+                for (size_t l=0u; l<L; ++l, X+=2) { sm += sqrt(*X**X + *(X+1)**(X+1)); }
                 *Y = sm;
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
+            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += sqrt(*X**X + *(X+1)**(X+1)); }
+                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += sqrt(*X**X + *(X+1)**(X+1)); }
             }
         }
         else
         {
             double sm;
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { sm += sqrt(*X**X + *(X+1)**(X+1)); }
+                    for (size_t l=0u; l<L; ++l, X+=2*K) { sm += sqrt(*X**X + *(X+1)**(X+1)); }
                     *Y = sm;
                 }
             }

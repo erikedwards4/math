@@ -38,7 +38,7 @@ int randperm_s (float *Y, const size_t M, const size_t N)
     //Generate ints 1:N
     size_t *X;
     if (!(X=(size_t *)malloc(N*sizeof(size_t)))) { fprintf(stderr,"error in randperm_s: problem with malloc. "); perror("malloc"); return 1; }
-    for (size_t n=1; n<=N; ++n, ++X) { *X = n; }
+    for (size_t n=1u; n<=N; ++n, ++X) { *X = n; }
     X -= N;
 
     //Init random num generator
@@ -46,7 +46,7 @@ int randperm_s (float *Y, const size_t M, const size_t N)
     state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
     //M Knuth shuffles
-    for (size_t m=0; m<M; ++m, ++X, ++Y)
+    for (size_t m=0u; m<M; ++m, ++X, ++Y)
 	{
         //Get random index k from m to N-1 (m<=k<N)
 		//k = (size_t)((N-m)*drand48());
@@ -92,7 +92,7 @@ int randperm_d (double *Y, const size_t M, const size_t N)
     //Generate ints 1:N
     size_t *X;
     if (!(X=(size_t *)malloc(N*sizeof(size_t)))) { fprintf(stderr,"error in randperm_d: problem with malloc. "); perror("malloc"); return 1; }
-    for (size_t n=1; n<=N; ++n, ++X) { *X = n; }
+    for (size_t n=1u; n<=N; ++n, ++X) { *X = n; }
     X -= N;
 
     //Init random num generator
@@ -101,7 +101,7 @@ int randperm_d (double *Y, const size_t M, const size_t N)
     //srand48(ts.tv_nsec^ts.tv_sec);
 
     //M Knuth shuffles
-    for (size_t m=0; m<M; ++m, ++X, ++Y)
+    for (size_t m=0u; m<M; ++m, ++X, ++Y)
 	{
 		//Get random index k from m to N-1 (m<=k<N)
 		//k = (size_t)((N-m)*drand48());

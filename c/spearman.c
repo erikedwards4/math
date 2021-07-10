@@ -70,22 +70,22 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
     if (!(XI1=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in spearman_s: problem with malloc. "); perror("malloc"); return 1; }
     if (!(XI2=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in spearman_s: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0f; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X1, ++X2)
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
         {
             XI1[l].val = *X1; XI1[l].ind = l;
             XI2[l].val = *X2; XI2[l].ind = l;
         }
         qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
-        for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
+        for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
-        for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+        for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
         *Y = (den-dsm*6) / (float)den;
         r1 -= L; r2 -= L;
     }
@@ -98,17 +98,17 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, r1-=L, r2-=L, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, r1-=L, r2-=L, ++Y)
             {
-                for (size_t l=0; l<L; ++l, ++X1, ++X2)
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
                 {
                     XI1[l].val = *X1; XI1[l].ind = l;
                     XI2[l].val = *X2; XI2[l].ind = l;
                 }
                 qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
-                for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
+                for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
-                for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+                for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
                 *Y = (den-dsm*6) / (float)den;
             }
         }
@@ -117,19 +117,19 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, r1-=L, r2-=L, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, r1-=L, r2-=L, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         XI1[l].val = *X1; XI1[l].ind = l;
                         XI2[l].val = *X2; XI2[l].ind = l;
                     }
                     qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
-                    for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
+                    for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
-                    for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+                    for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
                     *Y = (den-dsm*6) / (float)den;
                 }
             }
@@ -165,22 +165,22 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
     if (!(XI1=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in spearman_d: problem with malloc. "); perror("malloc"); return 1; }
     if (!(XI2=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in spearman_d: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 1.0; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X1, ++X2)
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
         {
             XI1[l].val = *X1; XI1[l].ind = l;
             XI2[l].val = *X2; XI2[l].ind = l;
         }
         qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
-        for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
+        for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
-        for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+        for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
         *Y = (den-dsm*6) / (double)den;
         r1 -= L; r2 -= L;
     }
@@ -193,17 +193,17 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, r1-=L, r2-=L, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, r1-=L, r2-=L, ++Y)
             {
-                for (size_t l=0; l<L; ++l, ++X1, ++X2)
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
                 {
                     XI1[l].val = *X1; XI1[l].ind = l;
                     XI2[l].val = *X2; XI2[l].ind = l;
                 }
                 qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
-                for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
+                for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
-                for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+                for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
                 *Y = (den-dsm*6) / (double)den;
             }
         }
@@ -212,19 +212,19 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, r1-=L, r2-=L, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, r1-=L, r2-=L, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         XI1[l].val = *X1; XI1[l].ind = l;
                         XI2[l].val = *X2; XI2[l].ind = l;
                     }
                     qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
-                    for (size_t l=0; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
+                    for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
-                    for (size_t l=0; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+                    for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
                     *Y = (den-dsm*6) / (double)den;
                 }
             }

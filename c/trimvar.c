@@ -41,14 +41,14 @@ int trimvar_s (float *Y, const float *X, const size_t R, const size_t C, const s
     float *X1;
     if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in trimvar_s: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimvar_s: problem with LAPACKE function\n"); }
         mn = sm2 = 0.0f;
@@ -67,9 +67,9 @@ int trimvar_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X1-=i1, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=i1, ++Y)
             {
-                for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimvar_s: problem with LAPACKE function\n"); }
                 mn = sm2 = 0.0f;
@@ -82,11 +82,11 @@ int trimvar_s (float *Y, const float *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=i1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, X1-=i1, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimvar_s: problem with LAPACKE function\n"); }
                     mn = sm2 = 0.0f;
@@ -122,14 +122,14 @@ int trimvar_d (double *Y, const double *X, const size_t R, const size_t C, const
     double *X1;
     if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in trimvar_d: problem with malloc. "); perror("malloc"); return 1; }
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimvar_d: problem with LAPACKE function\n"); }
         mn = sm2 = 0.0;
@@ -148,9 +148,9 @@ int trimvar_d (double *Y, const double *X, const size_t R, const size_t C, const
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X1-=i1, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=i1, ++Y)
             {
-                for (size_t l=0; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimvar_d: problem with LAPACKE function\n"); }
                 mn = sm2 = 0.0;
@@ -163,11 +163,11 @@ int trimvar_d (double *Y, const double *X, const size_t R, const size_t C, const
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=i1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, X1-=i1, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimvar_d: problem with LAPACKE function\n"); }
                     mn = sm2 = 0.0;
@@ -200,10 +200,10 @@ int trimvar_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
     const float den = 1.0f/Lt, den2 = (biased) ? den : 1.0f/(Lt-1);
     float x, mn, sm2;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
@@ -223,7 +223,7 @@ int trimvar_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L-i1, ++Y)
+            for (size_t v=0u; v<V; ++v, X+=L-i1, ++Y)
             {
                 if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimvar_inplace_s: problem with LAPACKE function\n"); }
                 mn = sm2 = 0.0f;
@@ -238,11 +238,11 @@ int trimvar_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in trimvar_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=i1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, X1-=i1, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimvar_inplace_s: problem with LAPACKE function\n"); }
                     mn = sm2 = 0.0f;
@@ -275,10 +275,10 @@ int trimvar_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
     const double den = 1.0/Lt, den2 = (biased) ? den : 1.0/(Lt-1);
     double x, mn, sm2;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
@@ -298,7 +298,7 @@ int trimvar_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v, X+=L-i1, ++Y)
+            for (size_t v=0u; v<V; ++v, X+=L-i1, ++Y)
             {
                 if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimvar_inplace_d: problem with LAPACKE function\n"); }
                 mn = sm2 = 0.0;
@@ -313,11 +313,11 @@ int trimvar_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in trimvar_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, X1-=i1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, X1-=i1, ++Y)
                 {
-                    for (size_t l=0; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimvar_inplace_d: problem with LAPACKE function\n"); }
                     mn = sm2 = 0.0;

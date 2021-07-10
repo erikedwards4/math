@@ -17,7 +17,7 @@ int nan_z (double *Y, const size_t N);
 
 int nan_s (float *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = NAN; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = NAN; }
 
     return 0;
 }
@@ -25,7 +25,7 @@ int nan_s (float *Y, const size_t N)
 
 int nan_d (double *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = (double)NAN; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = (double)NAN; }
 
     return 0;
 }
@@ -33,7 +33,7 @@ int nan_d (double *Y, const size_t N)
 
 int nan_c (float *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = NAN; *++Y = 0.0f; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = NAN; *++Y = 0.0f; }
 
     return 0;
 }
@@ -41,7 +41,7 @@ int nan_c (float *Y, const size_t N)
 
 int nan_z (double *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = (double)NAN; *++Y = 0.0; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = (double)NAN; *++Y = 0.0; }
 
     return 0;
 }

@@ -27,16 +27,16 @@ int geomean1_s (float *X, const size_t R, const size_t C, const size_t S, const 
     const float den = 1.0f / L;
     float mn = 0.0f;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 1.0f; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 1.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
+        for (size_t l=0u; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
         mn *= den;
-        for (size_t l=0; l<L; ++l) { --X; *X = expf(*X-mn); }
+        for (size_t l=0u; l<L; ++l) { --X; *X = expf(*X-mn); }
     }
     else
     {
@@ -46,24 +46,24 @@ int geomean1_s (float *X, const size_t R, const size_t C, const size_t S, const 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mn = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
                 mn *= den; X -= L;
-                for (size_t l=0; l<L; ++l, ++X) { *X = expf(*X-mn); }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = expf(*X-mn); }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0u; b<B; ++b, ++X)
                 {
                     mn = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { *X = logf(*X); mn += *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *X = logf(*X); mn += *X; }
                     mn *= den;
-                    for (size_t l=0; l<L; ++l) { X-=K; *X = expf(*X-mn); }
+                    for (size_t l=0u; l<L; ++l) { X-=K; *X = expf(*X-mn); }
                 }
             }
         }
@@ -82,16 +82,16 @@ int geomean1_d (double *X, const size_t R, const size_t C, const size_t S, const
     const double den = 1.0 / L;
     double mn = 0.0;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 1.0; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 1.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
+        for (size_t l=0u; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
         mn *= den;
-        for (size_t l=0; l<L; ++l) { --X; *X = exp(*X-mn); }
+        for (size_t l=0u; l<L; ++l) { --X; *X = exp(*X-mn); }
     }
     else
     {
@@ -101,24 +101,24 @@ int geomean1_d (double *X, const size_t R, const size_t C, const size_t S, const
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mn = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
                 mn *= den; X -= L;
-                for (size_t l=0; l<L; ++l, ++X) { *X = exp(*X-mn); }
+                for (size_t l=0u; l<L; ++l, ++X) { *X = exp(*X-mn); }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0u; b<B; ++b, ++X)
                 {
                     mn = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { *X = log(*X); mn += *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { *X = log(*X); mn += *X; }
                     mn *= den;
-                    for (size_t l=0; l<L; ++l) { X-=K; *X = exp(*X-mn); }
+                    for (size_t l=0u; l<L; ++l) { X-=K; *X = exp(*X-mn); }
                 }
             }
         }
@@ -137,22 +137,22 @@ int geomean1_c (float *X, const size_t R, const size_t C, const size_t S, const 
     const float den = 1.0f / L;
     _Complex float x, mn;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 1.0f; *++X = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 1.0f; *++X = 0.0f; }
     }
     else if (L==N)
     {
         mn = 0.0f + 0.0if;
-        for (size_t l=0; l<L; ++l, ++X)
+        for (size_t l=0u; l<L; ++l, ++X)
         {
             x = clogf(*X + 1.0if**(X+1));
             mn += x;
             *X = *(float *)&x; *++X = *((float *)&x+1);
         }
         mn *= den; X -= 2*L;
-        for (size_t l=0; l<L; ++l, ++X)
+        for (size_t l=0u; l<L; ++l, ++X)
         {
             x = *X + 1.0if**(X+1);
             x = cexpf(x-mn);
@@ -167,17 +167,17 @@ int geomean1_c (float *X, const size_t R, const size_t C, const size_t S, const 
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mn = 0.0f + 0.0if;
-                for (size_t l=0; l<L; ++l, ++X)
+                for (size_t l=0u; l<L; ++l, ++X)
                 {
                     x = clogf(*X + 1.0if**(X+1));
                     mn += x;
                     *X = *(float *)&x; *++X = *((float *)&x+1);
                 }
                 mn *= den; X -= 2*L;
-                for (size_t l=0; l<L; ++l, ++X)
+                for (size_t l=0u; l<L; ++l, ++X)
                 {
                     x = *X + 1.0if**(X+1);
                     x = cexpf(x-mn);
@@ -187,19 +187,19 @@ int geomean1_c (float *X, const size_t R, const size_t C, const size_t S, const 
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2)
                 {
                     mn = 0.0f + 0.0if;
-                    for (size_t l=0; l<L; ++l, X+=2*K-1)
+                    for (size_t l=0u; l<L; ++l, X+=2*K-1)
                     {
                         x = clogf(*X + 1.0if**(X+1));
                         mn += x;
                         *X = *(float *)&x; *++X = *((float *)&x+1);
                     }
                     mn *= den; X -= 2*K*L;
-                    for (size_t l=0; l<L; ++l, X+=2*K-1)
+                    for (size_t l=0u; l<L; ++l, X+=2*K-1)
                     {
                         x = *X + 1.0if**(X+1);
                         x = cexpf(x-mn);
@@ -223,22 +223,22 @@ int geomean1_z (double *X, const size_t R, const size_t C, const size_t S, const
     const double den = 1.0 / L;
     _Complex double x, mn;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 1.0; *++X = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 1.0; *++X = 0.0; }
     }
     else if (L==N)
     {
         mn = 0.0 + 0.0i;
-        for (size_t l=0; l<L; ++l, ++X)
+        for (size_t l=0u; l<L; ++l, ++X)
         {
             x = clog(*X + 1.0i**(X+1));
             mn += x;
             *X = *(double *)&x; *++X = *((double *)&x+1);
         }
         mn *= den; X -= 2*L;
-        for (size_t l=0; l<L; ++l, ++X)
+        for (size_t l=0u; l<L; ++l, ++X)
         {
             x = *X + 1.0i**(X+1);
             x = cexp(x-mn);
@@ -253,17 +253,17 @@ int geomean1_z (double *X, const size_t R, const size_t C, const size_t S, const
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mn = 0.0 + 0.0i;
-                for (size_t l=0; l<L; ++l, ++X)
+                for (size_t l=0u; l<L; ++l, ++X)
                 {
                     x = clog(*X + 1.0i**(X+1));
                     mn += x;
                     *X = *(double *)&x; *++X = *((double *)&x+1);
                 }
                 mn *= den; X -= 2*L;
-                for (size_t l=0; l<L; ++l, ++X)
+                for (size_t l=0u; l<L; ++l, ++X)
                 {
                     x = *X + 1.0i**(X+1);
                     x = cexp(x-mn);
@@ -273,19 +273,19 @@ int geomean1_z (double *X, const size_t R, const size_t C, const size_t S, const
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2)
                 {
                     mn = 0.0 + 0.0i;
-                    for (size_t l=0; l<L; ++l, X+=2*K-1)
+                    for (size_t l=0u; l<L; ++l, X+=2*K-1)
                     {
                         x = clog(*X + 1.0i**(X+1));
                         mn += x;
                         *X = *(double *)&x; *++X = *((double *)&x+1);
                     }
                     mn *= den; X -= 2*K*L;
-                    for (size_t l=0; l<L; ++l, X+=2*K-1)
+                    for (size_t l=0u; l<L; ++l, X+=2*K-1)
                     {
                         x = *X + 1.0i**(X+1);
                         x = cexp(x-mn);

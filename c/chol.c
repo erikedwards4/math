@@ -28,14 +28,14 @@ int chol_s (float *Y, const float *X, const size_t R, const char iscolmajor, con
 {
     const size_t N = R*R;
 
-    if (N==0) {}
-    else if (N==1) { *Y = *X; }
+    if (N==0u) {}
+    else if (N==1u) { *Y = *X; }
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
         const char Uplo = (upper) ? 'U' : 'L';
         
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
         Y -= N;
         
         if (LAPACKE_spotrf(Ord,Uplo,(int)R,Y,(int)R))
@@ -66,14 +66,14 @@ int chol_d (double *Y, const double *X, const size_t R, const char iscolmajor, c
 {
     const size_t N = R*R;
 
-    if (N==0) {}
-    else if (N==1) { *Y = *X; }
+    if (N==0u) {}
+    else if (N==1u) { *Y = *X; }
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
         const char Uplo = (upper) ? 'U' : 'L';
         
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
         Y -= N;
         
         if (LAPACKE_dpotrf(Ord,Uplo,(int)R,Y,(int)R))
@@ -104,14 +104,14 @@ int chol_c (float *Y, const float *X, const size_t R, const char iscolmajor, con
 {
     const size_t N = R*R;
 
-    if (N==0) {}
-    else if (N==1) { *Y = *X; *++Y = *++X; }
+    if (N==0u) {}
+    else if (N==1u) { *Y = *X; *++Y = *++X; }
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
         const char Uplo = (upper) ? 'U' : 'L';
         
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
         Y -= 2*N;
         
         if (LAPACKE_cpotrf(Ord,Uplo,(int)R,(_Complex float *)Y,(int)R))
@@ -142,14 +142,14 @@ int chol_z (double *Y, const double *X, const size_t R, const char iscolmajor, c
 {
     const size_t N = R*R;
 
-    if (N==0) {}
-    else if (N==1) { *Y = *X; *++Y = *++X; }
+    if (N==0u) {}
+    else if (N==1u) { *Y = *X; *++Y = *++X; }
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
         const char Uplo = (upper) ? 'U' : 'L';
         
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
         Y -= 2*N;
         
         if (LAPACKE_zpotrf(Ord,Uplo,(int)R,(_Complex double *)Y,(int)R))

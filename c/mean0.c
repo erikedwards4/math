@@ -24,16 +24,16 @@ int mean0_s (float *X, const size_t R, const size_t C, const size_t S, const siz
     const float den = 1.0f / L;
     float mn = 0.0f;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 0.0f; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 0.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0; l<L; ++l) { *--X -= mn; }
+        for (size_t l=0u; l<L; ++l) { *--X -= mn; }
     }
     else
     {
@@ -43,24 +43,24 @@ int mean0_s (float *X, const size_t R, const size_t C, const size_t S, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mn = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
                 mn *= den; X -= L;
-                for (size_t l=0; l<L; ++l, ++X) { *X -= mn; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X -= mn; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0u; b<B; ++b, ++X)
                 {
                     mn = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { mn += *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { mn += *X; }
                     mn *= den;
-                    for (size_t l=0; l<L; ++l) { X-=K; *X -= mn; }
+                    for (size_t l=0u; l<L; ++l) { X-=K; *X -= mn; }
                 }
             }
         }
@@ -79,16 +79,16 @@ int mean0_d (double *X, const size_t R, const size_t C, const size_t S, const si
     const double den = 1.0 / L;
     double mn = 0.0;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X) { *X = 0.0; }
+        for (size_t n=0u; n<N; ++n, ++X) { *X = 0.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0; l<L; ++l) { *--X -= mn; }
+        for (size_t l=0u; l<L; ++l) { *--X -= mn; }
     }
     else
     {
@@ -98,24 +98,24 @@ int mean0_d (double *X, const size_t R, const size_t C, const size_t S, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mn = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
                 mn *= den; X -= L;
-                for (size_t l=0; l<L; ++l, ++X) { *X -= mn; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X -= mn; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, ++X)
+                for (size_t b=0u; b<B; ++b, ++X)
                 {
                     mn = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { mn += *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { mn += *X; }
                     mn *= den;
-                    for (size_t l=0; l<L; ++l) { X-=K; *X -= mn; }
+                    for (size_t l=0u; l<L; ++l) { X-=K; *X -= mn; }
                 }
             }
         }
@@ -134,16 +134,16 @@ int mean0_c (float *X, const size_t R, const size_t C, const size_t S, const siz
     const float den = 1.0f / L;
     float mnr = 0.0f, mni = 0.0f;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<2*N; ++n, ++X) { *X = 0.0f; }
+        for (size_t n=0u; n<2*N; ++n, ++X) { *X = 0.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
-        for (size_t l=0; l<L; ++l) { *--X -= mnr; *--X -= mni; }
+        for (size_t l=0u; l<L; ++l) { *--X -= mnr; *--X -= mni; }
     }
     else
     {
@@ -153,24 +153,24 @@ int mean0_c (float *X, const size_t R, const size_t C, const size_t S, const siz
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mnr = mni = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den; X -= 2*L;
-                for (size_t l=0; l<L; ++l, ++X) { *X -= mnr; *++X -= mni; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X -= mnr; *++X -= mni; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X+=2)
+                for (size_t b=0u; b<B; ++b, X+=2)
                 {
                     mnr = mni = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=2*K-1) { mnr += *X; mni += *++X; }
+                    for (size_t l=0u; l<L; ++l, X+=2*K-1) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
-                    for (size_t l=0; l<L; ++l) { X-=2*K-1; *X -= mni; *--X -= mnr; }
+                    for (size_t l=0u; l<L; ++l) { X-=2*K-1; *X -= mni; *--X -= mnr; }
                 }
             }
         }
@@ -189,16 +189,16 @@ int mean0_z (double *X, const size_t R, const size_t C, const size_t S, const si
     const double den = 1.0 / L;
     double mnr = 0.0, mni = 0.0;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<2*N; ++n, ++X) { *X = 0.0; }
+        for (size_t n=0u; n<2*N; ++n, ++X) { *X = 0.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
-        for (size_t l=0; l<L; ++l) { *--X -= mnr; *--X -= mni; }
+        for (size_t l=0u; l<L; ++l) { *--X -= mnr; *--X -= mni; }
     }
     else
     {
@@ -208,24 +208,24 @@ int mean0_z (double *X, const size_t R, const size_t C, const size_t S, const si
 
         if (K==1 && (G==1 || B==1))
         {
-            for (size_t v=0; v<V; ++v)
+            for (size_t v=0u; v<V; ++v)
             {
                 mnr = mni = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den; X -= 2*L;
-                for (size_t l=0; l<L; ++l, ++X) { *X -= mnr; *++X -= mni; }
+                for (size_t l=0u; l<L; ++l, ++X) { *X -= mnr; *++X -= mni; }
             }
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X+=2)
+                for (size_t b=0u; b<B; ++b, X+=2)
                 {
                     mnr = mni = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=2*K-1) { mnr += *X; mni += *++X; }
+                    for (size_t l=0u; l<L; ++l, X+=2*K-1) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
-                    for (size_t l=0; l<L; ++l) { X-=2*K-1; *X -= mni; *--X -= mnr; }
+                    for (size_t l=0u; l<L; ++l) { X-=2*K-1; *X -= mni; *--X -= mnr; }
                 }
             }
         }

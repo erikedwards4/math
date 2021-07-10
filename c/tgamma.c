@@ -26,7 +26,7 @@ int tgamma_inplace_z (double *X, const size_t N);
 
 int tgamma_s (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = tgammaf(*X); }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = tgammaf(*X); }
 
     return 0;
 }
@@ -34,7 +34,7 @@ int tgamma_s (float *Y, const float *X, const size_t N)
 
 int tgamma_d (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = tgamma(*X); }
+    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = tgamma(*X); }
     
     return 0;
 }
@@ -44,7 +44,7 @@ int tgamma_d (double *Y, const double *X, const size_t N)
 // {
 //     _Complex float y;
 
-//     for (size_t n=0; n<N; ++n, X+=2, ++Y)
+//     for (size_t n=0u; n<N; ++n, X+=2, ++Y)
 //     {
 //         y = ctgammaf(*X + 1.0if**(X+1));
 //         *Y = *(float *)&y; *++Y = *((float *)&y+1);
@@ -58,7 +58,7 @@ int tgamma_d (double *Y, const double *X, const size_t N)
 // {
 //     _Complex double y;
 
-//     for (size_t n=0; n<N; ++n, X+=2, ++Y)
+//     for (size_t n=0u; n<N; ++n, X+=2, ++Y)
 //     {
 //         y = ctgamma(*X + 1.0i**(X+1));
 //         *Y = *(double *)&y; *++Y = *((double *)&y+1);
@@ -70,7 +70,7 @@ int tgamma_d (double *Y, const double *X, const size_t N)
 
 int tgamma_inplace_s (float *X, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++X) { *X = tgammaf(*X); }
+    for (size_t n=0u; n<N; ++n, ++X) { *X = tgammaf(*X); }
 
     return 0;
 }
@@ -78,7 +78,7 @@ int tgamma_inplace_s (float *X, const size_t N)
 
 int tgamma_inplace_d (double *X, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++X) { *X = tgamma(*X); }
+    for (size_t n=0u; n<N; ++n, ++X) { *X = tgamma(*X); }
     
     return 0;
 }
@@ -88,7 +88,7 @@ int tgamma_inplace_d (double *X, const size_t N)
 // {
 //     _Complex float y;
 
-//     for (size_t n=0; n<N; ++n, ++X)
+//     for (size_t n=0u; n<N; ++n, ++X)
 //     {
 //         y = ctgamma(*X + 1.0if**(X+1));
 //         *X = *(float *)&y; *++X = *((float *)&y+1);
@@ -102,7 +102,7 @@ int tgamma_inplace_d (double *X, const size_t N)
 // {
 //     _Complex double y;
 
-//     for (size_t n=0; n<N; ++n, ++X)
+//     for (size_t n=0u; n<N; ++n, ++X)
 //     {
 //         y = ctgamma(*X + 1.0i**(X+1));
 //         *X = *(double *)&y; *++X = *((double *)&y+1);

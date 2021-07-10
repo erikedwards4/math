@@ -23,7 +23,7 @@ int matmul2_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
     const size_t N = R1*C2;
     float sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<1100)
     {
         if (iscolmajor)
@@ -88,7 +88,7 @@ int matmul2_d (double *Y, const double *X1, const double *X2, const size_t R1, c
     const size_t N = R1*C2;
     double sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<1100)
     {
         if (iscolmajor)
@@ -151,7 +151,7 @@ int matmul2_c (float *Y, const float *X1, const float *X2, const size_t R1, cons
     const size_t N = R1*C2;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<1100)
     {
         if (iscolmajor)
@@ -221,7 +221,7 @@ int matmul2_z (double *Y, const double *X1, const double *X2, const size_t R1, c
     const size_t N = R1*C2;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (N<1100)
     {
         if (iscolmajor)

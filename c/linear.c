@@ -36,7 +36,7 @@ int linear_s (float *Y, const float *X, const float *A, const size_t R, const si
     const size_t Na = Lx*Ly;
     float sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (Lx==N)
     {
         if (Na<30000)
@@ -63,7 +63,7 @@ int linear_s (float *Y, const float *X, const float *A, const size_t R, const si
         {
             if (Na<4500)
             {
-                for (size_t v=0; v<V; ++v, A-=Na)
+                for (size_t v=0u; v<V; ++v, A-=Na)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++Y)
                     {
@@ -81,9 +81,9 @@ int linear_s (float *Y, const float *X, const float *A, const size_t R, const si
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, A-=Na, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, ++X, A-=Na, Y-=K*Ly-1)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, X-=K*Lx, Y+=K)
                     {
@@ -107,7 +107,7 @@ int linear_d (double *Y, const double *X, const double *A, const size_t R, const
     const size_t Na = Lx*Ly;
     double sm2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (Lx==N)
     {
         if (Na<30000)
@@ -134,7 +134,7 @@ int linear_d (double *Y, const double *X, const double *A, const size_t R, const
         {
             if (Na<4500)
             {
-                for (size_t v=0; v<V; ++v, A-=Na)
+                for (size_t v=0u; v<V; ++v, A-=Na)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++Y)
                     {
@@ -152,9 +152,9 @@ int linear_d (double *Y, const double *X, const double *A, const size_t R, const
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, A-=Na, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, ++X, A-=Na, Y-=K*Ly-1)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, X-=K*Lx, Y+=K)
                     {
@@ -178,7 +178,7 @@ int linear_c (float *Y, const float *X, const float *A, const size_t R, const si
     const size_t Na = Lx*Ly;
     float sm2r, sm2i, xr, xi, ar, ai;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (Lx==N)
     {
         if (Na<30000)
@@ -212,7 +212,7 @@ int linear_c (float *Y, const float *X, const float *A, const size_t R, const si
         {
             if (Na<4500)
             {
-                for (size_t v=0; v<V; ++v, A-=2*Na)
+                for (size_t v=0u; v<V; ++v, A-=2*Na)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++Y)
                     {
@@ -237,9 +237,9 @@ int linear_c (float *Y, const float *X, const float *A, const size_t R, const si
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(Lx-1), Y+=2*B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(Lx-1), Y+=2*B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, A-=2*Na, Y-=2*K*Ly-2)
+                for (size_t b=0u; b<B; ++b, ++X, A-=2*Na, Y-=2*K*Ly-2)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, X-=2*K*Lx, Y+=2*K-1)
                     {
@@ -269,7 +269,7 @@ int linear_z (double *Y, const double *X, const double *A, const size_t R, const
     const size_t Na = Lx*Ly;
     double sm2r, sm2i, xr, xi, ar, ai;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (Lx==N)
     {
         if (Na<150)
@@ -303,7 +303,7 @@ int linear_z (double *Y, const double *X, const double *A, const size_t R, const
         {
             if (Na<4500)
             {
-                for (size_t v=0; v<V; ++v, A-=2*Na)
+                for (size_t v=0u; v<V; ++v, A-=2*Na)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, ++Y)
                     {
@@ -328,9 +328,9 @@ int linear_z (double *Y, const double *X, const double *A, const size_t R, const
         }
         else
         {
-            for (size_t g=0; g<G; ++g, X+=2*B*(Lx-1), Y+=2*B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(Lx-1), Y+=2*B*(Ly-1))
             {
-                for (size_t b=0; b<B; ++b, ++X, A-=2*Na, Y-=2*K*Ly-2)
+                for (size_t b=0u; b<B; ++b, ++X, A-=2*Na, Y-=2*K*Ly-2)
                 {
                     for (size_t ly=0; ly<Ly; ++ly, X-=2*K*Lx, Y+=2*K-1)
                     {

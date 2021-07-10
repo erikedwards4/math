@@ -21,26 +21,26 @@ int repmat_s (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0 || NN==0) {}
     else if (NN==1)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
         const size_t RC = R*C, RCS = RC*S;
         for (size_t nh=0; nh<Nh; ++nh)
         {
-            for (size_t h=0; h<H; ++h)
+            for (size_t h=0u; h<H; ++h)
             {
                 for (size_t ns=0; ns<Ns; ++ns)
                 {
-                    for (size_t s=0; s<S; ++s)
+                    for (size_t s=0u; s<S; ++s)
                     {
                         for (size_t nc=0; nc<Nc; ++nc)
                         {
-                            for (size_t c=0; c<C; ++c)
+                            for (size_t c=0u; c<C; ++c)
                             {
                                 for (size_t nr=0; nr<Nr; ++nr)
                                 {
-                                    for (size_t r=0; r<R; ++r, ++X, ++Y)
+                                    for (size_t r=0u; r<R; ++r, ++X, ++Y)
                                     {
                                         *Y = *X;
                                     }
@@ -61,19 +61,19 @@ int repmat_s (float *Y, const float *X, const size_t R, const size_t C, const si
         const size_t SH = S*H, CSH = C*SH;
         for (size_t nr=0; nr<Nr; ++nr)
         {
-            for (size_t r=0; r<R; ++r)
+            for (size_t r=0u; r<R; ++r)
             {
                 for (size_t nc=0; nc<Nc; ++nc)
                 {
-                    for (size_t c=0; c<C; ++c)
+                    for (size_t c=0u; c<C; ++c)
                     {
                         for (size_t ns=0; ns<Ns; ++ns)
                         {
-                            for (size_t s=0; s<S; ++s)
+                            for (size_t s=0u; s<S; ++s)
                             {
                                 for (size_t nh=0; nh<Nh; ++nh)
                                 {
-                                    for (size_t h=0; h<H; ++h, ++X, ++Y)
+                                    for (size_t h=0u; h<H; ++h, ++X, ++Y)
                                     {
                                         *Y = *X;
                                     }
@@ -101,26 +101,26 @@ int repmat_d (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0 || NN==0) {}
     else if (NN==1)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
         const size_t RC = R*C, RCS = RC*S;
         for (size_t nh=0; nh<Nh; ++nh)
         {
-            for (size_t h=0; h<H; ++h)
+            for (size_t h=0u; h<H; ++h)
             {
                 for (size_t ns=0; ns<Ns; ++ns)
                 {
-                    for (size_t s=0; s<S; ++s)
+                    for (size_t s=0u; s<S; ++s)
                     {
                         for (size_t nc=0; nc<Nc; ++nc)
                         {
-                            for (size_t c=0; c<C; ++c)
+                            for (size_t c=0u; c<C; ++c)
                             {
                                 for (size_t nr=0; nr<Nr; ++nr)
                                 {
-                                    for (size_t r=0; r<R; ++r, ++X, ++Y)
+                                    for (size_t r=0u; r<R; ++r, ++X, ++Y)
                                     {
                                         *Y = *X;
                                     }
@@ -141,19 +141,19 @@ int repmat_d (double *Y, const double *X, const size_t R, const size_t C, const 
         const size_t SH = S*H, CSH = C*SH;
         for (size_t nr=0; nr<Nr; ++nr)
         {
-            for (size_t r=0; r<R; ++r)
+            for (size_t r=0u; r<R; ++r)
             {
                 for (size_t nc=0; nc<Nc; ++nc)
                 {
-                    for (size_t c=0; c<C; ++c)
+                    for (size_t c=0u; c<C; ++c)
                     {
                         for (size_t ns=0; ns<Ns; ++ns)
                         {
-                            for (size_t s=0; s<S; ++s)
+                            for (size_t s=0u; s<S; ++s)
                             {
                                 for (size_t nh=0; nh<Nh; ++nh)
                                 {
-                                    for (size_t h=0; h<H; ++h, ++X, ++Y)
+                                    for (size_t h=0u; h<H; ++h, ++X, ++Y)
                                     {
                                         *Y = *X;
                                     }
@@ -181,26 +181,26 @@ int repmat_c (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0 || NN==0) {}
     else if (NN==1)
     {
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
         const size_t RC = R*C, RCS = RC*S;
         for (size_t nh=0; nh<Nh; ++nh)
         {
-            for (size_t h=0; h<H; ++h)
+            for (size_t h=0u; h<H; ++h)
             {
                 for (size_t ns=0; ns<Ns; ++ns)
                 {
-                    for (size_t s=0; s<S; ++s)
+                    for (size_t s=0u; s<S; ++s)
                     {
                         for (size_t nc=0; nc<Nc; ++nc)
                         {
-                            for (size_t c=0; c<C; ++c)
+                            for (size_t c=0u; c<C; ++c)
                             {
                                 for (size_t nr=0; nr<Nr; ++nr)
                                 {
-                                    for (size_t r=0; r<R; ++r, ++X, ++Y)
+                                    for (size_t r=0u; r<R; ++r, ++X, ++Y)
                                     {
                                         *Y = *X; *++Y = *++X;
                                     }
@@ -221,19 +221,19 @@ int repmat_c (float *Y, const float *X, const size_t R, const size_t C, const si
         const size_t SH = S*H, CSH = C*SH;
         for (size_t nr=0; nr<Nr; ++nr)
         {
-            for (size_t r=0; r<R; ++r)
+            for (size_t r=0u; r<R; ++r)
             {
                 for (size_t nc=0; nc<Nc; ++nc)
                 {
-                    for (size_t c=0; c<C; ++c)
+                    for (size_t c=0u; c<C; ++c)
                     {
                         for (size_t ns=0; ns<Ns; ++ns)
                         {
-                            for (size_t s=0; s<S; ++s)
+                            for (size_t s=0u; s<S; ++s)
                             {
                                 for (size_t nh=0; nh<Nh; ++nh)
                                 {
-                                    for (size_t h=0; h<H; ++h, ++X, ++Y)
+                                    for (size_t h=0u; h<H; ++h, ++X, ++Y)
                                     {
                                         *Y = *X; *++Y = *++X;
                                     }
@@ -261,26 +261,26 @@ int repmat_z (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0 || NN==0) {}
     else if (NN==1)
     {
-        for (size_t n=0; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
         const size_t RC = R*C, RCS = RC*S;
         for (size_t nh=0; nh<Nh; ++nh)
         {
-            for (size_t h=0; h<H; ++h)
+            for (size_t h=0u; h<H; ++h)
             {
                 for (size_t ns=0; ns<Ns; ++ns)
                 {
-                    for (size_t s=0; s<S; ++s)
+                    for (size_t s=0u; s<S; ++s)
                     {
                         for (size_t nc=0; nc<Nc; ++nc)
                         {
-                            for (size_t c=0; c<C; ++c)
+                            for (size_t c=0u; c<C; ++c)
                             {
                                 for (size_t nr=0; nr<Nr; ++nr)
                                 {
-                                    for (size_t r=0; r<R; ++r, ++X, ++Y)
+                                    for (size_t r=0u; r<R; ++r, ++X, ++Y)
                                     {
                                         *Y = *X; *++Y = *++X;
                                     }
@@ -301,19 +301,19 @@ int repmat_z (double *Y, const double *X, const size_t R, const size_t C, const 
         const size_t SH = S*H, CSH = C*SH;
         for (size_t nr=0; nr<Nr; ++nr)
         {
-            for (size_t r=0; r<R; ++r)
+            for (size_t r=0u; r<R; ++r)
             {
                 for (size_t nc=0; nc<Nc; ++nc)
                 {
-                    for (size_t c=0; c<C; ++c)
+                    for (size_t c=0u; c<C; ++c)
                     {
                         for (size_t ns=0; ns<Ns; ++ns)
                         {
-                            for (size_t s=0; s<S; ++s)
+                            for (size_t s=0u; s<S; ++s)
                             {
                                 for (size_t nh=0; nh<Nh; ++nh)
                                 {
-                                    for (size_t h=0; h<H; ++h, ++X, ++Y)
+                                    for (size_t h=0u; h<H; ++h, ++X, ++Y)
                                     {
                                         *Y = *X; *++Y = *++X;
                                     }

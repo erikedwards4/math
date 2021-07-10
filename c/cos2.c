@@ -33,11 +33,11 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
     if (L1!=L2) { fprintf(stderr,"error in cos2_s: vectors in X1 and X2 must have the same length\n"); return 1; }
     float sm2, sd1, sd2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (L==N)
     {
         sm2 = sd1 = sd2 = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X1, ++X2)
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
         {
             sd1 += *X1**X1; sd2 += *X2**X2;
             sm2 += *X1**X2;
@@ -53,10 +53,10 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 sm2 = sd1 = sd2 = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X1, ++X2)
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
                 {
                     sd1 += *X1**X1; sd2 += *X2**X2;
                     sm2 += *X1**X2;
@@ -69,12 +69,12 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm2 = sd1 = sd2 = 0.0f;
-                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         sd1 += *X1**X1; sd2 += *X2**X2;
                         sm2 += *X1**X2;
@@ -104,11 +104,11 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
     if (L1!=L2) { fprintf(stderr,"error in cos2_d: vectors in X1 and X2 must have the same length\n"); return 1; }
     double sm2, sd1, sd2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (L==N)
     {
         sm2 = sd1 = sd2 = 0.0;
-        for (size_t l=0; l<L; ++l, ++X1, ++X2)
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
         {
             sd1 += *X1**X1; sd2 += *X2**X2;
             sm2 += *X1**X2;
@@ -124,10 +124,10 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? L : 0, J2 = (L==N2) ? L : 0;
-            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 sm2 = sd1 = sd2 = 0.0;
-                for (size_t l=0; l<L; ++l, ++X1, ++X2)
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
                 {
                     sd1 += *X1**X1; sd2 += *X2**X2;
                     sm2 += *X1**X2;
@@ -140,12 +140,12 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
             const size_t J1 = (L==N1) ? 0 : 1, J2 = (L==N2) ? 0 : 1;
             const size_t K1 = (L==N1) ? 1 : K, K2 = (L==N2) ? 1 : K;
             const size_t I1 = (L==N1) ? 0 : B*(L-1), I2 = (L==N2) ? 0 : B*(L-1);
-            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm2 = sd1 = sd2 = 0.0;
-                    for (size_t l=0; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
                     {
                         sd1 += *X1**X1; sd2 += *X2**X2;
                         sm2 += *X1**X2;
@@ -175,11 +175,11 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
     if (L1!=L2) { fprintf(stderr,"error in cos2_c: vectors in X1 and X2 must have the same length\n"); return 1; }
     float x1r, x2r, sd1, sd2, yr, yi, den2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (L==N)
     {
         sd1 = sd2 = yr = yi = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X1, ++X2)
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
         {
             x1r = *X1++; x2r = *X2++;
             sd1 += x1r*x1r + *X1**X1;
@@ -199,10 +199,10 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? 2*L : 0, J2 = (L==N2) ? 2*L : 0;
-            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 sd1 = sd2 = yr = yi = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X1, ++X2, ++Y)
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2, ++Y)
                 {
                     x1r = *X1++; x2r = *X2++;
                     sd1 += x1r*x1r + *X1**X1;
@@ -219,12 +219,12 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
             const size_t J1 = (L==N1) ? 0 : 2, J2 = (L==N2) ? 0 : 2;
             const size_t K1 = (L==N1) ? 2 : 2*K, K2 = (L==N2) ? 2 : 2*K;
             const size_t I1 = (L==N1) ? 0 : 2*B*(L-1), I2 = (L==N2) ? 0 : 2*B*(L-1);
-            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
                     sd1 = sd2 = yr = yi = 0.0f;
-                    for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1, ++Y)
+                    for (size_t l=0u; l<L; ++l, X1+=K1-1, X2+=K2-1, ++Y)
                     {
                         x1r = *X1++; x2r = *X2++;
                         sd1 += x1r*x1r + *X1**X1;
@@ -258,11 +258,11 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
     if (L1!=L2) { fprintf(stderr,"error in cos2_z: vectors in X1 and X2 must have the same length\n"); return 1; }
     double x1r, x2r, sd1, sd2, yr, yi, den2;
 
-    if (N==0) {}
+    if (N==0u) {}
     else if (L==N)
     {
         sd1 = sd2 = yr = yi = 0.0;
-        for (size_t l=0; l<L; ++l, ++X1, ++X2)
+        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
         {
             x1r = *X1++; x2r = *X2++;
             sd1 += x1r*x1r + *X1**X1;
@@ -282,10 +282,10 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
         if (K==1 && (G==1 || B==1))
         {
             const size_t J1 = (L==N1) ? 2*L : 0, J2 = (L==N2) ? 2*L : 0;
-            for (size_t v=0; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
             {
                 sd1 = sd2 = yr = yi = 0.0;
-                for (size_t l=0; l<L; ++l, ++X1, ++X2, ++Y)
+                for (size_t l=0u; l<L; ++l, ++X1, ++X2, ++Y)
                 {
                     x1r = *X1++; x2r = *X2++;
                     sd1 += x1r*x1r + *X1**X1;
@@ -302,12 +302,12 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
             const size_t J1 = (L==N1) ? 0 : 2, J2 = (L==N2) ? 0 : 2;
             const size_t K1 = (L==N1) ? 2 : 2*K, K2 = (L==N2) ? 2 : 2*K;
             const size_t I1 = (L==N1) ? 0 : 2*B*(L-1), I2 = (L==N2) ? 0 : 2*B*(L-1);
-            for (size_t g=0; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
                     sd1 = sd2 = yr = yi = 0.0;
-                    for (size_t l=0; l<L; ++l, X1+=K1-1, X2+=K2-1, ++Y)
+                    for (size_t l=0u; l<L; ++l, X1+=K1-1, X2+=K2-1, ++Y)
                     {
                         x1r = *X1++; x2r = *X2++;
                         sd1 += x1r*x1r + *X1**X1;

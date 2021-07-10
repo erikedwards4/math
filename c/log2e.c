@@ -21,7 +21,7 @@ int log2e_z (double *Y, const size_t N);
 
 int log2e_s (float *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_LOG2E; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = (float)M_LOG2E; }
 
     return 0;
 }
@@ -29,7 +29,7 @@ int log2e_s (float *Y, const size_t N)
 
 int log2e_d (double *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_LOG2E; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = M_LOG2E; }
 
     return 0;
 }
@@ -37,7 +37,7 @@ int log2e_d (double *Y, const size_t N)
 
 int log2e_c (float *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_LOG2E; *++Y = 0.0f; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = (float)M_LOG2E; *++Y = 0.0f; }
 
     return 0;
 }
@@ -45,7 +45,7 @@ int log2e_c (float *Y, const size_t N)
 
 int log2e_z (double *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_LOG2E; *++Y = 0.0; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = M_LOG2E; *++Y = 0.0; }
 
     return 0;
 }

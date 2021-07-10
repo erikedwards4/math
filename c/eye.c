@@ -33,16 +33,16 @@ int eye_s (float *Y, const size_t R, const size_t C, const char iscolmajor)
 
     // if (iscolmajor)
     // {
-    //     for (size_t c=0; c<C; ++c)
+    //     for (size_t c=0u; c<C; ++c)
     //     {
-    //         for (size_t r=0; r<R; ++r, ++Y) { *Y = (r==c); }
+    //         for (size_t r=0u; r<R; ++r, ++Y) { *Y = (r==c); }
     //     }
     // }
     // else
     // {
-    //     for (size_t r=0; r<R; ++r)
+    //     for (size_t r=0u; r<R; ++r)
     //     {
-    //         for (size_t c=0; c<C; ++c, ++Y) { *Y = (r==c); }
+    //         for (size_t c=0u; c<C; ++c, ++Y) { *Y = (r==c); }
     //     }
     // }
 

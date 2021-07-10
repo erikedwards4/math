@@ -21,7 +21,7 @@ int e_z (double *Y, const size_t N);
 
 int e_s (float *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_E; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = (float)M_E; }
 
     return 0;
 }
@@ -29,7 +29,7 @@ int e_s (float *Y, const size_t N)
 
 int e_d (double *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_E; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = M_E; }
 
     return 0;
 }
@@ -37,7 +37,7 @@ int e_d (double *Y, const size_t N)
 
 int e_c (float *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = (float)M_E; *++Y = 0.0f; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = (float)M_E; *++Y = 0.0f; }
 
     return 0;
 }
@@ -45,7 +45,7 @@ int e_c (float *Y, const size_t N)
 
 int e_z (double *Y, const size_t N)
 {
-    for (size_t n=0; n<N; ++n, ++Y) { *Y = M_E; *++Y = 0.0; }
+    for (size_t n=0u; n<N; ++n, ++Y) { *Y = M_E; *++Y = 0.0; }
 
     return 0;
 }

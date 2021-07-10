@@ -25,15 +25,15 @@ int rms_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float den = 1.0f/L;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         float sm2 = 0.0f;
-        for (size_t l=0; l<L; ++l, ++X) { sm2 += *X * *X; }
+        for (size_t l=0u; l<L; ++l, ++X) { sm2 += *X * *X; }
         *Y = sqrtf(sm2*den);
         //*Y = cblas_snrm2((int)L,X,1) * den2;  //this is more numerically accurate for large L
     }
@@ -46,32 +46,32 @@ int rms_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (K==1 && (G==1 || B==1))
         {
             float sm2;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 sm2 = 0.0f;
-                for (size_t l=0; l<L; ++l, ++X) { sm2 += *X * *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { sm2 += *X * *X; }
                 *Y = sqrtf(sm2*den);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X**X; }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X**X; }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrtf(*Y*den); }
+            for (size_t v=0u; v<V; ++v, ++Y) { *Y = sqrtf(*Y*den); }
         }
         else
         {
             float sm2;
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm2 = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=K) { sm2 += *X * *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { sm2 += *X * *X; }
                     *Y = sqrtf(sm2*den);
                 }
             }
@@ -90,15 +90,15 @@ int rms_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double den = 1.0/L;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         double sm2 = 0.0;
-        for (size_t l=0; l<L; ++l, ++X) { sm2 += *X * *X; }
+        for (size_t l=0u; l<L; ++l, ++X) { sm2 += *X * *X; }
         *Y = sqrt(sm2*den);
     }
     else
@@ -110,32 +110,32 @@ int rms_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (K==1 && (G==1 || B==1))
         {
             double sm2;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 sm2 = 0.0;
-                for (size_t l=0; l<L; ++l, ++X) { sm2 += *X * *X; }
+                for (size_t l=0u; l<L; ++l, ++X) { sm2 += *X * *X; }
                 *Y = sqrt(sm2*den);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y = *X**X; }
+            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X**X; }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
+                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrt(*Y*den); }
+            for (size_t v=0u; v<V; ++v, ++Y) { *Y = sqrt(*Y*den); }
         }
         else
         {
             double sm2;
-            for (size_t g=0; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
                 {
                     sm2 = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=K) { sm2 += *X * *X; }
+                    for (size_t l=0u; l<L; ++l, X+=K) { sm2 += *X * *X; }
                     *Y = sqrt(sm2*den);
                 }
             }
@@ -154,15 +154,15 @@ int rms_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const float den = 1.0f/L;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
+        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
         float sm2 = 0.0f;
-        for (size_t l=0; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
+        for (size_t l=0u; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
         *Y = sqrtf(sm2*den);
         //*Y = cblas_scnrm2((int)L,X,1) * den2;
     }
@@ -175,32 +175,32 @@ int rms_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (K==1 && (G==1 || B==1))
         {
             float sm2;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 sm2 = 0.0f;
-                for (size_t l=0; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
+                for (size_t l=0u; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
                 *Y = sqrtf(sm2*den);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); }
+            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
+                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrtf(*Y); }
+            for (size_t v=0u; v<V; ++v, ++Y) { *Y = sqrtf(*Y); }
         }
         else
         {
             float sm2;
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     sm2 = 0.0f;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { sm2 += *X**X + *(X+1)**(X+1); }
+                    for (size_t l=0u; l<L; ++l, X+=2*K) { sm2 += *X**X + *(X+1)**(X+1); }
                     *Y = sqrtf(sm2*den);
                 }
             }
@@ -219,15 +219,15 @@ int rms_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
     const double den = 1.0/L;
 
-    if (N==0) {}
-    else if (L==1)
+    if (N==0u) {}
+    else if (L==1u)
     {
-        for (size_t n=0; n<N; ++n, X+=2, ++Y) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
+        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
         double sm2 = 0.0;
-        for (size_t l=0; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
+        for (size_t l=0u; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
         *Y = sqrt(sm2*den);
         //*Y = cblas_dznrm2((int)L,X,1) * den2;
     }
@@ -240,32 +240,32 @@ int rms_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (K==1 && (G==1 || B==1))
         {
             double sm2;
-            for (size_t v=0; v<V; ++v, ++Y)
+            for (size_t v=0u; v<V; ++v, ++Y)
             {
                 sm2 = 0.0;
-                for (size_t l=0; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
+                for (size_t l=0u; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
                 *Y = sqrt(sm2*den);
             }
         }
         else if (G==1)
         {
-            for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); }
+            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); }
             Y -= V;
-            for (size_t l=1; l<L; ++l, Y-=V)
+            for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0; v<V; ++v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
+                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
             }
-            for (size_t v=0; v<V; ++v, ++Y) { *Y = sqrt(*Y); }
+            for (size_t v=0u; v<V; ++v, ++Y) { *Y = sqrt(*Y); }
         }
         else
         {
             double sm2;
-            for (size_t g=0; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
             {
-                for (size_t b=0; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
                 {
                     sm2 = 0.0;
-                    for (size_t l=0; l<L; ++l, X+=2*K) { sm2 += *X**X + *(X+1)**(X+1); }
+                    for (size_t l=0u; l<L; ++l, X+=2*K) { sm2 += *X**X + *(X+1)**(X+1); }
                     *Y = sqrt(sm2*den);
                 }
             }
