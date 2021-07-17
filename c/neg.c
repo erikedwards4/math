@@ -40,7 +40,7 @@ int neg_d (double *Y, const double *X, const size_t N)
 
 int neg_c (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = -*X; }
+    for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = -*X; }
     
     return 0;
 }
@@ -48,7 +48,7 @@ int neg_c (float *Y, const float *X, const size_t N)
 
 int neg_z (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = -*X; }
+    for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = -*X; }
     
     return 0;
 }
@@ -75,7 +75,7 @@ int neg_inplace_d (double *X, const size_t N)
 
 int neg_inplace_c (float *X, const size_t N)
 {
-    for (size_t n=0u; n<2*N; ++n, ++X) { *X = -*X; }
+    for (size_t n=0u; n<2u*N; ++n, ++X) { *X = -*X; }
     
     return 0;
 }
@@ -83,7 +83,7 @@ int neg_inplace_c (float *X, const size_t N)
 
 int neg_inplace_z (double *X, const size_t N)
 {
-    for (size_t n=0u; n<2*N; ++n, ++X) { *X = -*X; }
+    for (size_t n=0u; n<2u*N; ++n, ++X) { *X = -*X; }
     
     return 0;
 }

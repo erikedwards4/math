@@ -25,10 +25,10 @@ int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
 
 int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in flip_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in flip_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
@@ -42,33 +42,33 @@ int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             Y += L - 1;
-            for (size_t v=0u; v<V; ++v, Y+=2*L)
+            for (size_t v=0u; v<V; ++v, Y+=2u*L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, --Y) { *Y = *X; }
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
-            Y += V*(L-1);
-            for (size_t l=0u; l<L; ++l, Y-=2*V)
+            Y += V*(L-1u);
+            for (size_t l=0u; l<L; ++l, Y-=2u*V)
             {
                 for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1, Y+=K+1)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1u, Y+=K+1u)
                 {
-                    Y += K*(L-1);
+                    Y += K*(L-1u);
                     for (size_t l=0u; l<L; ++l, Y-=K, X+=K) { *Y = *X; }
                 }
             }
@@ -81,10 +81,10 @@ int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
 int flip_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in flip_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in flip_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
@@ -98,33 +98,33 @@ int flip_d (double *Y, const double *X, const size_t R, const size_t C, const si
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             Y += L - 1;
-            for (size_t v=0u; v<V; ++v, Y+=2*L)
+            for (size_t v=0u; v<V; ++v, Y+=2u*L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, --Y) { *Y = *X; }
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
-            Y += V*(L-1);
-            for (size_t l=0u; l<L; ++l, Y-=2*V)
+            Y += V*(L-1u);
+            for (size_t l=0u; l<L; ++l, Y-=2u*V)
             {
                 for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1, Y+=K+1)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1u, Y+=K+1u)
                 {
-                    Y += K*(L-1);
+                    Y += K*(L-1u);
                     for (size_t l=0u; l<L; ++l, Y-=K, X+=K) { *Y = *X; }
                 }
             }
@@ -137,51 +137,51 @@ int flip_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
 int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in flip_c: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in flip_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
-        Y += 2*(L-1);
+        Y += 2u*(L-1u);
         for (size_t l=0u; l<L; ++l, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            Y += 2*(L-1);
+            Y += 2u*(L-1u);
             for (size_t v=0u; v<V; ++v, Y+=4*L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
-            Y += 2*V*(L-1);
-            for (size_t l=0u; l<L; ++l, Y-=4*V)
+            Y += 2u*V*(L-1u);
+            for (size_t l=0u; l<L; ++l, Y-=4u*V)
             {
-                for (size_t v=0u; v<2*V; ++v, ++X, ++Y) { *Y = *X; }
+                for (size_t v=0u; v<2u*V; ++v, ++X, ++Y) { *Y = *X; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1), Y+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, Y+=2*K+2)
+                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, Y+=2u*K+2u)
                 {
-                    Y += 2*K*(L-1);
-                    for (size_t l=0u; l<L; ++l, Y-=2*K, X+=2*K) { *Y = *X; *(Y+1) = *(X+1); }
+                    Y += 2u*K*(L-1u);
+                    for (size_t l=0u; l<L; ++l, Y-=2u*K, X+=2u*K) { *Y = *X; *(Y+1) = *(X+1); }
                 }
             }
         }
@@ -193,51 +193,51 @@ int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
 int flip_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in flip_z: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in flip_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
-        Y += 2*(L-1);
+        Y += 2u*(L-1u);
         for (size_t l=0u; l<L; ++l, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            Y += 2*(L-1);
+            Y += 2u*(L-1u);
             for (size_t v=0u; v<V; ++v, Y+=4*L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
-            Y += 2*V*(L-1);
-            for (size_t l=0u; l<L; ++l, Y-=4*V)
+            Y += 2u*V*(L-1u);
+            for (size_t l=0u; l<L; ++l, Y-=4u*V)
             {
-                for (size_t v=0u; v<2*V; ++v, ++X, ++Y) { *Y = *X; }
+                for (size_t v=0u; v<2u*V; ++v, ++X, ++Y) { *Y = *X; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1), Y+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, Y+=2*K+2)
+                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, Y+=2u*K+2u)
                 {
-                    Y += 2*K*(L-1);
-                    for (size_t l=0u; l<L; ++l, Y-=2*K, X+=2*K) { *Y = *X; *(Y+1) = *(X+1); }
+                    Y += 2u*K*(L-1u);
+                    for (size_t l=0u; l<L; ++l, Y-=2u*K, X+=2u*K) { *Y = *X; *(Y+1) = *(X+1); }
                 }
             }
         }
@@ -249,40 +249,40 @@ int flip_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
 int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in flip_inplace_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in flip_inplace_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     float x1;
 
-    if (N==0 || L==1) {}
+    if (N==0u || L==1u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L/2; ++l) { x1 = *X; *X = *(X+L-2*l-1); ++X; *(X+L-2*l-2) = x1; }
+        for (size_t l=0u; l<L/2u; ++l) { x1 = *X; *X = *(X+L-2u*l-1u); ++X; *(X+L-2u*l-2u) = x1; }
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L-L/2)
+            for (size_t v=0u; v<V; ++v, X+=L-L/2u)
             {
-                for (size_t l=0u; l<L/2; ++l) { x1 = *X; *X = *(X+L-2*l-1); ++X; *(X+L-2*l-2) = x1; }
+                for (size_t l=0u; l<L/2u; ++l) { x1 = *X; *X = *(X+L-2u*l-1u); ++X; *(X+L-2u*l-2u) = x1; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*(L/2)-1)
+                for (size_t b=0u; b<B; ++b, X-=K*(L/2u)-1u)
                 {
-                    for (size_t l=0u; l<L/2; ++l)
+                    for (size_t l=0u; l<L/2u; ++l)
                     {
-                        x1 = *X; *X = *(X+K*(L-2*l-1));
-                        X += K; *(X+K*(L-2*l-2)) = x1;
+                        x1 = *X; *X = *(X+K*(L-2u*l-1u));
+                        X += K; *(X+K*(L-2u*l-2u)) = x1;
                     }
                 }
             }
@@ -295,40 +295,40 @@ int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 
 int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in flip_inplace_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in flip_inplace_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     double x1;
 
-    if (N==0 || L==1) {}
+    if (N==0u || L==1u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L/2; ++l) { x1 = *X; *X = *(X+L-2*l-1); ++X; *(X+L-2*l-2) = x1; }
+        for (size_t l=0u; l<L/2u; ++l) { x1 = *X; *X = *(X+L-2u*l-1u); ++X; *(X+L-2u*l-2u) = x1; }
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L-L/2)
+            for (size_t v=0u; v<V; ++v, X+=L-L/2u)
             {
-                for (size_t l=0u; l<L/2; ++l) { x1 = *X; *X = *(X+L-2*l-1); ++X; *(X+L-2*l-2) = x1; }
+                for (size_t l=0u; l<L/2u; ++l) { x1 = *X; *X = *(X+L-2u*l-1u); ++X; *(X+L-2u*l-2u) = x1; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*(L/2)-1)
+                for (size_t b=0u; b<B; ++b, X-=K*(L/2u)-1u)
                 {
-                    for (size_t l=0u; l<L/2; ++l)
+                    for (size_t l=0u; l<L/2u; ++l)
                     {
-                        x1 = *X; *X = *(X+K*(L-2*l-1));
-                        X += K; *(X+K*(L-2*l-2)) = x1;
+                        x1 = *X; *X = *(X+K*(L-2u*l-1u));
+                        X += K; *(X+K*(L-2u*l-2u)) = x1;
                     }
                 }
             }
@@ -341,57 +341,57 @@ int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
 
 int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in flip_inplace_c: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in flip_inplace_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     float x1r, x1i;
 
-    if (N==0 || L==1) {}
+    if (N==0u || L==1u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L/2; ++l)
+        for (size_t l=0u; l<L/2u; ++l)
         {
             x1r = *X; x1i = *(X+1);
-            *X = *(X+2*(L-2*l)-2); ++X;
-            *X = *(X+2*(L-2*l)-2); ++X;
-            *(X+2*(L-2*l)-4) = x1r;
-            *(X+2*(L-2*l)-3) = x1i;
+            *X = *(X+2u*(L-2u*l)-2u); ++X;
+            *X = *(X+2u*(L-2u*l)-2u); ++X;
+            *(X+2u*(L-2u*l)-4u) = x1r;
+            *(X+2u*(L-2u*l)-3u) = x1i;
         }
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=2*(L-L/2))
+            for (size_t v=0u; v<V; ++v, X+=2u*(L-L/2u))
             {
-                for (size_t l=0u; l<L/2; ++l)
+                for (size_t l=0u; l<L/2u; ++l)
                 {
                     x1r = *X; x1i = *(X+1);
-                    *X = *(X+2*(L-2*l)-2); ++X;
-                    *X = *(X+2*(L-2*l)-2); ++X;
-                    *(X+2*(L-2*l)-4) = x1r;
-                    *(X+2*(L-2*l)-3) = x1i;
+                    *X = *(X+2u*(L-2u*l)-2u); ++X;
+                    *X = *(X+2u*(L-2u*l)-2u); ++X;
+                    *(X+2u*(L-2u*l)-4u) = x1r;
+                    *(X+2u*(L-2u*l)-3u) = x1i;
                 }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2*K*(L/2)-2)
+                for (size_t b=0u; b<B; ++b, X-=2u*K*(L/2u)-2u)
                 {
-                    for (size_t l=0u; l<L/2; ++l)
+                    for (size_t l=0u; l<L/2u; ++l)
                     {
                         x1r = *X; x1i = *(X+1);
-                        *X = *(X+2*K*(L-2*l-1)); ++X;
-                        *X = *(X+2*K*(L-2*l-1)); X += K-1;
-                        *(X+2*K*(L-2*l-2)) = x1r;
-                        *(X+2*K*(L-2*l-2)+1) = x1i;
+                        *X = *(X+2u*K*(L-2u*l-1u)); ++X;
+                        *X = *(X+2u*K*(L-2u*l-1u)); X += K-1u;
+                        *(X+2u*K*(L-2u*l-2u)) = x1r;
+                        *(X+2u*K*(L-2u*l-2u)+1u) = x1i;
                     }
                 }
             }
@@ -404,57 +404,57 @@ int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
 
 int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in flip_inplace_z: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in flip_inplace_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     double x1r, x1i;
 
-    if (N==0 || L==1) {}
+    if (N==0u || L==1u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L/2; ++l)
+        for (size_t l=0u; l<L/2u; ++l)
         {
             x1r = *X; x1i = *(X+1);
-            *X = *(X+2*(L-2*l)-2); ++X;
-            *X = *(X+2*(L-2*l)-2); ++X;
-            *(X+2*(L-2*l)-4) = x1r;
-            *(X+2*(L-2*l)-3) = x1i;
+            *X = *(X+2u*(L-2u*l)-2u); ++X;
+            *X = *(X+2u*(L-2u*l)-2u); ++X;
+            *(X+2u*(L-2u*l)-4u) = x1r;
+            *(X+2u*(L-2u*l)-3u) = x1i;
         }
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=2*(L-L/2))
+            for (size_t v=0u; v<V; ++v, X+=2u*(L-L/2u))
             {
-                for (size_t l=0u; l<L/2; ++l)
+                for (size_t l=0u; l<L/2u; ++l)
                 {
                     x1r = *X; x1i = *(X+1);
-                    *X = *(X+2*(L-2*l)-2); ++X;
-                    *X = *(X+2*(L-2*l)-2); ++X;
-                    *(X+2*(L-2*l)-4) = x1r;
-                    *(X+2*(L-2*l)-3) = x1i;
+                    *X = *(X+2u*(L-2u*l)-2u); ++X;
+                    *X = *(X+2u*(L-2u*l)-2u); ++X;
+                    *(X+2u*(L-2u*l)-4u) = x1r;
+                    *(X+2u*(L-2u*l)-3u) = x1i;
                 }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2*K*(L/2)-2)
+                for (size_t b=0u; b<B; ++b, X-=2u*K*(L/2u)-2u)
                 {
-                    for (size_t l=0u; l<L/2; ++l)
+                    for (size_t l=0u; l<L/2u; ++l)
                     {
                         x1r = *X; x1i = *(X+1);
-                        *X = *(X+2*K*(L-2*l-1)); ++X;
-                        *X = *(X+2*K*(L-2*l-1)); X += K-1;
-                        *(X+2*K*(L-2*l-2)) = x1r;
-                        *(X+2*K*(L-2*l-2)+1) = x1i;
+                        *X = *(X+2u*K*(L-2u*l-1u)); ++X;
+                        *X = *(X+2u*K*(L-2u*l-1u)); X += K-1u;
+                        *(X+2u*K*(L-2u*l-2u)) = x1r;
+                        *(X+2u*K*(L-2u*l-2u)+1u) = x1i;
                     }
                 }
             }

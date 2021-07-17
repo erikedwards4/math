@@ -1,5 +1,5 @@
 //Vec2vec operation.
-//Gets the rank (from 0 to L-1) of the elements of each vector in X.
+//Gets the rank (from 0 to L-1u) of the elements of each vector in X.
 //Sorts each vector in X along dim, and returns the sorted rank of each element in X.
 //This is the inverse of sorti, which returns the indices of sorted X to recover X,
 //whereas this returns the indices of X to give sorted X.
@@ -130,10 +130,10 @@ int cmp_descend_z (const void *a, const void *b)
 
 int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
 {
-    if (dim>3) { fprintf(stderr,"error in ranks_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in ranks_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
 
     FLT *XI;
@@ -152,11 +152,11 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             for (size_t v=0u; v<V; ++v, Y+=L)
             {
@@ -167,7 +167,7 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
             {
                 for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
@@ -186,10 +186,10 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
 int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
 {
-    if (dim>3) { fprintf(stderr,"error in ranks_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in ranks_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_d : cmp_descend_d;
 
     DBL *XI;
@@ -208,11 +208,11 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             for (size_t v=0u; v<V; ++v, Y+=L)
             {
@@ -223,7 +223,7 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
             {
                 for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
@@ -242,10 +242,10 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
 int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
 {
-    if (dim>3) { fprintf(stderr,"error in ranks_c: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in ranks_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_c : cmp_descend_c;
 
     CFLT *XI;
@@ -264,11 +264,11 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             for (size_t v=0u; v<V; ++v)
             {
@@ -279,11 +279,11 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
             {
                 for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0u; l<L; ++l) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
+                    for (size_t l=0u; l<L; ++l) { XI[l].r = X[2u*l*K]; XI[l].i = X[2u*l*K+1u]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(CFLT),comp);
                     for (size_t l=0u; l<L; ++l) { Y[K*XI[l].ind] = (float)l; }
                 }
@@ -298,10 +298,10 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
 int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
 {
-    if (dim>3) { fprintf(stderr,"error in ranks_z: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in ranks_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_z : cmp_descend_z;
 
     ZDBL *XI;
@@ -320,11 +320,11 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             for (size_t v=0u; v<V; ++v)
             {
@@ -335,11 +335,11 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1), Y+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
             {
                 for (size_t b=0u; b<B; ++b, ++X, ++Y)
                 {
-                    for (size_t l=0u; l<L; ++l) { XI[l].r = X[2*l*K]; XI[l].i = X[2*l*K+1]; XI[l].ind = l; }
+                    for (size_t l=0u; l<L; ++l) { XI[l].r = X[2u*l*K]; XI[l].i = X[2u*l*K+1u]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(ZDBL),comp);
                     for (size_t l=0u; l<L; ++l) { Y[K*XI[l].ind] = (double)l; }
                 }
@@ -354,10 +354,10 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
 int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
 {
-    if (dim>3) { fprintf(stderr,"error in ranks_inplace_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in ranks_inplace_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
 
     FLT *XI;
@@ -376,11 +376,11 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             for (size_t v=0u; v<V; ++v, X+=L)
             {
@@ -391,7 +391,7 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
             {
                 for (size_t b=0u; b<B; ++b, ++X)
                 {
@@ -410,10 +410,10 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 
 int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
 {
-    if (dim>3) { fprintf(stderr,"error in ranks_inplace_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in ranks_inplace_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_d : cmp_descend_d;
 
     DBL *XI;
@@ -432,11 +432,11 @@ int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             for (size_t v=0u; v<V; ++v, X+=L)
             {
@@ -447,7 +447,7 @@ int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
             {
                 for (size_t b=0u; b<B; ++b, ++X)
                 {

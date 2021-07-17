@@ -26,9 +26,9 @@ int eye_s (float *Y, const size_t R, const size_t C, const char iscolmajor)
     //const size_t N = R*C, M = (R<C) ? R : C;
 
     const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
-    for (size_t d0=0; d0<D0; ++d0)
+    for (size_t d0=0u; d0<D0; ++d0)
     {
-        for (size_t d1=0; d1<D1; ++d1, ++Y) { *Y = (d0==d1); }
+        for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (d0==d1); }
     }
 
     // if (iscolmajor)
@@ -66,9 +66,9 @@ int eye_d (double *Y, const size_t R, const size_t C, const char iscolmajor)
 {
     const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
 
-    for (size_t d0=0; d0<D0; ++d0)
+    for (size_t d0=0u; d0<D0; ++d0)
     {
-        for (size_t d1=0; d1<D1; ++d1, ++Y) { *Y = (d0==d1); }
+        for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (d0==d1); }
     }
 
     return 0;
@@ -79,9 +79,9 @@ int eye_c (float *Y, const size_t R, const size_t C, const char iscolmajor)
 {
     const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
     
-    for (size_t d0=0; d0<D0; ++d0)
+    for (size_t d0=0u; d0<D0; ++d0)
     {
-        for (size_t d1=0; d1<D1; ++d1, ++Y) { *Y = (d0==d1); *++Y = 0.0f; }
+        for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (d0==d1); *++Y = 0.0f; }
     }
 
     return 0;
@@ -92,9 +92,9 @@ int eye_z (double *Y, const size_t R, const size_t C, const char iscolmajor)
 {
     const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
     
-    for (size_t d0=0; d0<D0; ++d0)
+    for (size_t d0=0u; d0<D0; ++d0)
     {
-        for (size_t d1=0; d1<D1; ++d1, ++Y) { *Y = (d0==d1); *++Y = 0.0; }
+        for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (d0==d1); *++Y = 0.0; }
     }
 
     return 0;

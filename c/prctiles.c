@@ -23,10 +23,10 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
 
 int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in prctiles_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in prctiles_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     float *X1;
     if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -40,13 +40,13 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
     for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0f || P[l]>100.0f) { fprintf(stderr,"error in prctiles_s: prctiles must be in [0 100]\n"); return 1; }
-        float p1 = (P[l]/100.0f)*(Lx-1);
+        float p1 = (P[l]/100.0f)*(Lx-1u);
         i1[l] = (P[l]<100.0f) ? (size_t)floorf(p1) : Lx-2;
         w2[l] = (P[l]<100.0f) ? p1-floorf(p1) : 1.0f;
         w1[l] = 1.0f - w2[l];
     }
     
-    if (N==0 || Ly==0) {}
+    if (N==0u || Ly==0) {}
     else if (Lx==1 && Ly==1)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
@@ -60,20 +60,20 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
         *Y++ = *w1++**X1 + *w2++**(X1+1);
         for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
         {
-            X1 += *i1 - *(i1-1);
+            X1 += *i1 - *(i1-1u);
             *Y = *w1**X + *w2**(X1+1);
         }
-        X1 -= *(i1-1); i1 -= Ly; w1 -= Ly; w2 -= Ly;
+        X1 -= *(i1-1u); i1 -= Ly; w1 -= Ly; w2 -= Ly;
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/Lx, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=0u; v<V; ++v, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
@@ -82,16 +82,16 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
                 *Y++ = *w1++**X1 + *w2++**(X1+1);
                 for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
                 {
-                    X1 += *i1 - *(i1-1);
+                    X1 += *i1 - *(i1-1u);
                     *Y = *w1**X1 + *w2**(X1+1);
                 }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -101,7 +101,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
                     Y += K;
                     for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
                     {
-                        X1 += *i1 - *(i1-1);
+                        X1 += *i1 - *(i1-1u);
                         *Y = *w1**X1 + *w2**(X1+1);
                     }
                 }
@@ -116,10 +116,10 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
 
 int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in prctiles_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in prctiles_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     double *X1;
     if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
@@ -133,13 +133,13 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
     for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0 || P[l]>100.0) { fprintf(stderr,"error in prctiles_d: prctiles must be in [0 100]\n"); return 1; }
-        double p1 = (P[l]/100.0)*(Lx-1);
+        double p1 = (P[l]/100.0)*(Lx-1u);
         i1[l] = (P[l]<100.0) ? (size_t)floor(p1) : Lx-2;
         w2[l] = (P[l]<100.0) ? p1-floor(p1) : 1.0;
         w1[l] = 1.0 - w2[l];
     }
     
-    if (N==0 || Ly==0) {}
+    if (N==0u || Ly==0) {}
     else if (Lx==1 && Ly==1)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
@@ -153,20 +153,20 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
         *Y++ = *w1++**X1 + *w2++**(X1+1);
         for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
         {
-            X1 += *i1 - *(i1-1);
+            X1 += *i1 - *(i1-1u);
             *Y = *w1**X + *w2**(X1+1);
         }
-        X1 -= *(i1-1); i1 -= Ly; w1 -= Ly; w2 -= Ly;
+        X1 -= *(i1-1u); i1 -= Ly; w1 -= Ly; w2 -= Ly;
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/Lx, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=0u; v<V; ++v, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
@@ -175,16 +175,16 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
                 *Y++ = *w1++**X1 + *w2++**(X1+1);
                 for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
                 {
-                    X1 += *i1 - *(i1-1);
+                    X1 += *i1 - *(i1-1u);
                     *Y = *w1**X1 + *w2**(X1+1);
                 }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -194,7 +194,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
                     Y += K;
                     for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
                     {
-                        X1 += *i1 - *(i1-1);
+                        X1 += *i1 - *(i1-1u);
                         *Y = *w1**X1 + *w2**(X1+1);
                     }
                 }
@@ -209,10 +209,10 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
 
 int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in prctiles_inplace_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in prctiles_inplace_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
     size_t *i1;
@@ -223,13 +223,13 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
     for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0f || P[l]>100.0f) { fprintf(stderr,"error in prctiles_inplace_s: prctiles must be in [0 100]\n"); return 1; }
-        float p1 = (P[l]/100.0f)*(Lx-1);
+        float p1 = (P[l]/100.0f)*(Lx-1u);
         i1[l] = (P[l]<100.0f) ? (size_t)floorf(p1) : Lx-2;
         w2[l] = (P[l]<100.0f) ? p1-floorf(p1) : 1.0f;
         w1[l] = 1.0f - w2[l];
     }
     
-    if (N==0 || Ly==0) {}
+    if (N==0u || Ly==0) {}
     else if (Lx==1 && Ly==1)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
@@ -241,27 +241,27 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
         *Y++ = *w1++**X + *w2++**(X+1);
         for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
         {
-            X += *i1 - *(i1-1);
+            X += *i1 - *(i1-1u);
             *Y = *w1**X + *w2**(X+1);
         }
         i1 -= Ly; w1 -= Ly; w2 -= Ly;
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/Lx, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=Lx-*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=0u; v<V; ++v, X+=Lx-*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
                 X += *i1++;
                 *Y++ = *w1++**X + *w2++**(X+1);
                 for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
                 {
-                    X += *i1 - *(i1-1);
+                    X += *i1 - *(i1-1u);
                     *Y = *w1**X + *w2**(X+1);
                 }
             }
@@ -270,9 +270,9 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
         {
             float *X1;
             if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -282,7 +282,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
                     Y += K;
                     for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
                     {
-                        X1 += *i1 - *(i1-1);
+                        X1 += *i1 - *(i1-1u);
                         *Y = *w1**X1 + *w2**(X1+1);
                     }
                 }
@@ -298,10 +298,10 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
 
 int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in prctiles_inplace_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in prctiles_inplace_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t Lx = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
     size_t *i1;
@@ -312,13 +312,13 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
     for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0 || P[l]>100.0) { fprintf(stderr,"error in prctiles_inplace_d: prctiles must be in [0 100]\n"); return 1; }
-        double p1 = (P[l]/100.0)*(Lx-1);
+        double p1 = (P[l]/100.0)*(Lx-1u);
         i1[l] = (P[l]<100.0) ? (size_t)floor(p1) : Lx-2;
         w2[l] = (P[l]<100.0) ? p1-floor(p1) : 1.0;
         w1[l] = 1.0 - w2[l];
     }
     
-    if (N==0 || Ly==0) {}
+    if (N==0u || Ly==0) {}
     else if (Lx==1 && Ly==1)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
@@ -330,27 +330,27 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
         *Y++ = *w1++**X + *w2++**(X+1);
         for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
         {
-            X += *i1 - *(i1-1);
+            X += *i1 - *(i1-1u);
             *Y = *w1**X + *w2**(X+1);
         }
         i1 -= Ly; w1 -= Ly; w2 -= Ly;
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/Lx, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=Lx-*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=0u; v<V; ++v, X+=Lx-*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
                 X += *i1++;
                 *Y++ = *w1++**X + *w2++**(X+1);
                 for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, ++Y)
                 {
-                    X += *i1 - *(i1-1);
+                    X += *i1 - *(i1-1u);
                     *Y = *w1**X + *w2**(X+1);
                 }
             }
@@ -359,9 +359,9 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
         {
             double *X1;
             if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1), Y+=B*(Ly-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1, X1-=*(i1-1), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1)
+                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -371,7 +371,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
                     Y += K;
                     for (size_t l=1u; l<Ly; ++l, ++i1, ++w1, ++w2, Y+=K)
                     {
-                        X1 += *i1 - *(i1-1);
+                        X1 += *i1 - *(i1-1u);
                         *Y = *w1**X1 + *w2**(X1+1);
                     }
                 }

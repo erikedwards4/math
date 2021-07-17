@@ -18,75 +18,75 @@ int repmat_s (float *Y, const float *X, const size_t R, const size_t C, const si
 {
     const size_t N = R*C*S*H, NN = Nr*Nc*Ns*Nh;
 
-    if (N==0 || NN==0) {}
-    else if (NN==1)
+    if (N==0u || NN==0u) {}
+    else if (NN==1u)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
         const size_t RC = R*C, RCS = RC*S;
-        for (size_t nh=0; nh<Nh; ++nh)
+        for (size_t nh=0u; nh<Nh; ++nh)
         {
             for (size_t h=0u; h<H; ++h)
             {
-                for (size_t ns=0; ns<Ns; ++ns)
+                for (size_t ns=0u; ns<Ns; ++ns)
                 {
                     for (size_t s=0u; s<S; ++s)
                     {
-                        for (size_t nc=0; nc<Nc; ++nc)
+                        for (size_t nc=0u; nc<Nc; ++nc)
                         {
                             for (size_t c=0u; c<C; ++c)
                             {
-                                for (size_t nr=0; nr<Nr; ++nr)
+                                for (size_t nr=0u; nr<Nr; ++nr)
                                 {
                                     for (size_t r=0u; r<R; ++r, ++X, ++Y)
                                     {
                                         *Y = *X;
                                     }
-                                    if (nr<Nr-1) { X -= R; }
+                                    if (nr<Nr-1u) { X -= R; }
                                 }
                             }
-                            if (nc<Nc-1) { X -= RC; }
+                            if (nc<Nc-1u) { X -= RC; }
                         }
                     }
-                    if (ns<Ns-1) { X -= RCS; }
+                    if (ns<Ns-1u) { X -= RCS; }
                 }
             }
-            if (nh<Nh-1) { X -= N; }
+            if (nh<Nh-1u) { X -= N; }
         }
     }
     else
     {
         const size_t SH = S*H, CSH = C*SH;
-        for (size_t nr=0; nr<Nr; ++nr)
+        for (size_t nr=0u; nr<Nr; ++nr)
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t nc=0; nc<Nc; ++nc)
+                for (size_t nc=0u; nc<Nc; ++nc)
                 {
                     for (size_t c=0u; c<C; ++c)
                     {
-                        for (size_t ns=0; ns<Ns; ++ns)
+                        for (size_t ns=0u; ns<Ns; ++ns)
                         {
                             for (size_t s=0u; s<S; ++s)
                             {
-                                for (size_t nh=0; nh<Nh; ++nh)
+                                for (size_t nh=0u; nh<Nh; ++nh)
                                 {
                                     for (size_t h=0u; h<H; ++h, ++X, ++Y)
                                     {
                                         *Y = *X;
                                     }
-                                    if (nh<Nh-1) { X -= H; }
+                                    if (nh<Nh-1u) { X -= H; }
                                 }
                             }
-                            if (ns<Ns-1) { X -= SH; }
+                            if (ns<Ns-1u) { X -= SH; }
                         }
                     }
-                    if (nc<Nc-1) { X -= CSH; }
+                    if (nc<Nc-1u) { X -= CSH; }
                 }
             }
-            if (nr<Nr-1) { X -= N; }
+            if (nr<Nr-1u) { X -= N; }
         }
     }
 
@@ -98,75 +98,75 @@ int repmat_d (double *Y, const double *X, const size_t R, const size_t C, const 
 {
     const size_t N = R*C*S*H, NN = Nr*Nc*Ns*Nh;
 
-    if (N==0 || NN==0) {}
-    else if (NN==1)
+    if (N==0u || NN==0u) {}
+    else if (NN==1u)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
         const size_t RC = R*C, RCS = RC*S;
-        for (size_t nh=0; nh<Nh; ++nh)
+        for (size_t nh=0u; nh<Nh; ++nh)
         {
             for (size_t h=0u; h<H; ++h)
             {
-                for (size_t ns=0; ns<Ns; ++ns)
+                for (size_t ns=0u; ns<Ns; ++ns)
                 {
                     for (size_t s=0u; s<S; ++s)
                     {
-                        for (size_t nc=0; nc<Nc; ++nc)
+                        for (size_t nc=0u; nc<Nc; ++nc)
                         {
                             for (size_t c=0u; c<C; ++c)
                             {
-                                for (size_t nr=0; nr<Nr; ++nr)
+                                for (size_t nr=0u; nr<Nr; ++nr)
                                 {
                                     for (size_t r=0u; r<R; ++r, ++X, ++Y)
                                     {
                                         *Y = *X;
                                     }
-                                    if (nr<Nr-1) { X -= R; }
+                                    if (nr<Nr-1u) { X -= R; }
                                 }
                             }
-                            if (nc<Nc-1) { X -= RC; }
+                            if (nc<Nc-1u) { X -= RC; }
                         }
                     }
-                    if (ns<Ns-1) { X -= RCS; }
+                    if (ns<Ns-1u) { X -= RCS; }
                 }
             }
-            if (nh<Nh-1) { X -= N; }
+            if (nh<Nh-1u) { X -= N; }
         }
     }
     else
     {
         const size_t SH = S*H, CSH = C*SH;
-        for (size_t nr=0; nr<Nr; ++nr)
+        for (size_t nr=0u; nr<Nr; ++nr)
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t nc=0; nc<Nc; ++nc)
+                for (size_t nc=0u; nc<Nc; ++nc)
                 {
                     for (size_t c=0u; c<C; ++c)
                     {
-                        for (size_t ns=0; ns<Ns; ++ns)
+                        for (size_t ns=0u; ns<Ns; ++ns)
                         {
                             for (size_t s=0u; s<S; ++s)
                             {
-                                for (size_t nh=0; nh<Nh; ++nh)
+                                for (size_t nh=0u; nh<Nh; ++nh)
                                 {
                                     for (size_t h=0u; h<H; ++h, ++X, ++Y)
                                     {
                                         *Y = *X;
                                     }
-                                    if (nh<Nh-1) { X -= H; }
+                                    if (nh<Nh-1u) { X -= H; }
                                 }
                             }
-                            if (ns<Ns-1) { X -= SH; }
+                            if (ns<Ns-1u) { X -= SH; }
                         }
                     }
-                    if (nc<Nc-1) { X -= CSH; }
+                    if (nc<Nc-1u) { X -= CSH; }
                 }
             }
-            if (nr<Nr-1) { X -= N; }
+            if (nr<Nr-1u) { X -= N; }
         }
     }
 
@@ -178,75 +178,75 @@ int repmat_c (float *Y, const float *X, const size_t R, const size_t C, const si
 {
     const size_t N = R*C*S*H, NN = Nr*Nc*Ns*Nh;
 
-    if (N==0 || NN==0) {}
-    else if (NN==1)
+    if (N==0u || NN==0u) {}
+    else if (NN==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
         const size_t RC = R*C, RCS = RC*S;
-        for (size_t nh=0; nh<Nh; ++nh)
+        for (size_t nh=0u; nh<Nh; ++nh)
         {
             for (size_t h=0u; h<H; ++h)
             {
-                for (size_t ns=0; ns<Ns; ++ns)
+                for (size_t ns=0u; ns<Ns; ++ns)
                 {
                     for (size_t s=0u; s<S; ++s)
                     {
-                        for (size_t nc=0; nc<Nc; ++nc)
+                        for (size_t nc=0u; nc<Nc; ++nc)
                         {
                             for (size_t c=0u; c<C; ++c)
                             {
-                                for (size_t nr=0; nr<Nr; ++nr)
+                                for (size_t nr=0u; nr<Nr; ++nr)
                                 {
                                     for (size_t r=0u; r<R; ++r, ++X, ++Y)
                                     {
                                         *Y = *X; *++Y = *++X;
                                     }
-                                    if (nr<Nr-1) { X -= 2*R; }
+                                    if (nr<Nr-1u) { X -= 2u*R; }
                                 }
                             }
-                            if (nc<Nc-1) { X -= 2*RC; }
+                            if (nc<Nc-1u) { X -= 2u*RC; }
                         }
                     }
-                    if (ns<Ns-1) { X -= 2*RCS; }
+                    if (ns<Ns-1u) { X -= 2u*RCS; }
                 }
             }
-            if (nh<Nh-1) { X -= 2*N; }
+            if (nh<Nh-1u) { X -= 2u*N; }
         }
     }
     else
     {
         const size_t SH = S*H, CSH = C*SH;
-        for (size_t nr=0; nr<Nr; ++nr)
+        for (size_t nr=0u; nr<Nr; ++nr)
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t nc=0; nc<Nc; ++nc)
+                for (size_t nc=0u; nc<Nc; ++nc)
                 {
                     for (size_t c=0u; c<C; ++c)
                     {
-                        for (size_t ns=0; ns<Ns; ++ns)
+                        for (size_t ns=0u; ns<Ns; ++ns)
                         {
                             for (size_t s=0u; s<S; ++s)
                             {
-                                for (size_t nh=0; nh<Nh; ++nh)
+                                for (size_t nh=0u; nh<Nh; ++nh)
                                 {
                                     for (size_t h=0u; h<H; ++h, ++X, ++Y)
                                     {
                                         *Y = *X; *++Y = *++X;
                                     }
-                                    if (nh<Nh-1) { X -= 2*H; }
+                                    if (nh<Nh-1u) { X -= 2u*H; }
                                 }
                             }
-                            if (ns<Ns-1) { X -= 2*SH; }
+                            if (ns<Ns-1u) { X -= 2u*SH; }
                         }
                     }
-                    if (nc<Nc-1) { X -= 2*CSH; }
+                    if (nc<Nc-1u) { X -= 2u*CSH; }
                 }
             }
-            if (nr<Nr-1) { X -= 2*N; }
+            if (nr<Nr-1u) { X -= 2u*N; }
         }
     }
 
@@ -258,75 +258,75 @@ int repmat_z (double *Y, const double *X, const size_t R, const size_t C, const 
 {
     const size_t N = R*C*S*H, NN = Nr*Nc*Ns*Nh;
 
-    if (N==0 || NN==0) {}
-    else if (NN==1)
+    if (N==0u || NN==0u) {}
+    else if (NN==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (iscolmajor)
     {
         const size_t RC = R*C, RCS = RC*S;
-        for (size_t nh=0; nh<Nh; ++nh)
+        for (size_t nh=0u; nh<Nh; ++nh)
         {
             for (size_t h=0u; h<H; ++h)
             {
-                for (size_t ns=0; ns<Ns; ++ns)
+                for (size_t ns=0u; ns<Ns; ++ns)
                 {
                     for (size_t s=0u; s<S; ++s)
                     {
-                        for (size_t nc=0; nc<Nc; ++nc)
+                        for (size_t nc=0u; nc<Nc; ++nc)
                         {
                             for (size_t c=0u; c<C; ++c)
                             {
-                                for (size_t nr=0; nr<Nr; ++nr)
+                                for (size_t nr=0u; nr<Nr; ++nr)
                                 {
                                     for (size_t r=0u; r<R; ++r, ++X, ++Y)
                                     {
                                         *Y = *X; *++Y = *++X;
                                     }
-                                    if (nr<Nr-1) { X -= 2*R; }
+                                    if (nr<Nr-1u) { X -= 2u*R; }
                                 }
                             }
-                            if (nc<Nc-1) { X -= 2*RC; }
+                            if (nc<Nc-1u) { X -= 2u*RC; }
                         }
                     }
-                    if (ns<Ns-1) { X -= 2*RCS; }
+                    if (ns<Ns-1u) { X -= 2u*RCS; }
                 }
             }
-            if (nh<Nh-1) { X -= 2*N; }
+            if (nh<Nh-1u) { X -= 2u*N; }
         }
     }
     else
     {
         const size_t SH = S*H, CSH = C*SH;
-        for (size_t nr=0; nr<Nr; ++nr)
+        for (size_t nr=0u; nr<Nr; ++nr)
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t nc=0; nc<Nc; ++nc)
+                for (size_t nc=0u; nc<Nc; ++nc)
                 {
                     for (size_t c=0u; c<C; ++c)
                     {
-                        for (size_t ns=0; ns<Ns; ++ns)
+                        for (size_t ns=0u; ns<Ns; ++ns)
                         {
                             for (size_t s=0u; s<S; ++s)
                             {
-                                for (size_t nh=0; nh<Nh; ++nh)
+                                for (size_t nh=0u; nh<Nh; ++nh)
                                 {
                                     for (size_t h=0u; h<H; ++h, ++X, ++Y)
                                     {
                                         *Y = *X; *++Y = *++X;
                                     }
-                                    if (nh<Nh-1) { X -= 2*H; }
+                                    if (nh<Nh-1u) { X -= 2u*H; }
                                 }
                             }
-                            if (ns<Ns-1) { X -= 2*SH; }
+                            if (ns<Ns-1u) { X -= 2u*SH; }
                         }
                     }
-                    if (nc<Nc-1) { X -= 2*CSH; }
+                    if (nc<Nc-1u) { X -= 2u*CSH; }
                 }
             }
-            if (nr<Nr-1) { X -= 2*N; }
+            if (nr<Nr-1u) { X -= 2u*N; }
         }
     }
 

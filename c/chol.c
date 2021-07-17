@@ -43,17 +43,17 @@ int chol_s (float *Y, const float *X, const size_t R, const char iscolmajor, con
 
         if ((iscolmajor && upper) || (!iscolmajor && !upper))
         {
-            for (size_t r1=0; r1<R; ++r1)
+            for (size_t r1=0u; r1<R; ++r1)
             {
-                Y += r1 + 1;
-                for (size_t r2=r1+1; r2<R; ++r2, ++Y) { *Y = 0.0f; }
+                Y += r1 + 1u;
+                for (size_t r2=r1+1u; r2<R; ++r2, ++Y) { *Y = 0.0f; }
             }
         }
         else
         {
-            for (size_t r1=0; r1<R; ++r1, Y+=R-r1+1)
+            for (size_t r1=0u; r1<R; ++r1, Y+=R-r1+1u)
             {
-                for (size_t r2=0; r2<r1; ++r2, ++Y) { *Y = 0.0f; }
+                for (size_t r2=0u; r2<r1; ++r2, ++Y) { *Y = 0.0f; }
             }
         }
     }
@@ -81,17 +81,17 @@ int chol_d (double *Y, const double *X, const size_t R, const char iscolmajor, c
 
         if ((iscolmajor && upper) || (!iscolmajor && !upper))
         {
-            for (size_t r1=0; r1<R; ++r1)
+            for (size_t r1=0u; r1<R; ++r1)
             {
-                Y += r1 + 1;
-                for (size_t r2=r1+1; r2<R; ++r2, ++Y) { *Y = 0.0; }
+                Y += r1 + 1u;
+                for (size_t r2=r1+1u; r2<R; ++r2, ++Y) { *Y = 0.0; }
             }
         }
         else
         {
-            for (size_t r1=0; r1<R; ++r1, Y+=R-r1+1)
+            for (size_t r1=0u; r1<R; ++r1, Y+=R-r1+1u)
             {
-                for (size_t r2=0; r2<r1; ++r2, ++Y) { *Y = 0.0; }
+                for (size_t r2=0u; r2<r1; ++r2, ++Y) { *Y = 0.0; }
             }
         }
     }
@@ -111,25 +111,25 @@ int chol_c (float *Y, const float *X, const size_t R, const char iscolmajor, con
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
         const char Uplo = (upper) ? 'U' : 'L';
         
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
-        Y -= 2*N;
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        Y -= 2u*N;
         
         if (LAPACKE_cpotrf(Ord,Uplo,(int)R,(_Complex float *)Y,(int)R))
         { fprintf(stderr,"error in chol_c: problem with LAPACKE_cpotrf function\n"); }
 
         if ((iscolmajor && upper) || (!iscolmajor && !upper))
         {
-            for (size_t r1=0; r1<R; ++r1)
+            for (size_t r1=0u; r1<R; ++r1)
             {
-                Y += 2*r1 + 2;
-                for (size_t r2=r1+1; r2<R; ++r2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
+                Y += 2u*r1 + 2u;
+                for (size_t r2=r1+1u; r2<R; ++r2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
             }
         }
         else
         {
-            for (size_t r1=0; r1<R; ++r1, Y+=2*(R-r1+1))
+            for (size_t r1=0u; r1<R; ++r1, Y+=2u*(R-r1+1u))
             {
-                for (size_t r2=0; r2<r1; ++r2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
+                for (size_t r2=0u; r2<r1; ++r2, ++Y) { *Y = 0.0f; *++Y = 0.0f; }
             }
         }
     }
@@ -149,25 +149,25 @@ int chol_z (double *Y, const double *X, const size_t R, const char iscolmajor, c
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
         const char Uplo = (upper) ? 'U' : 'L';
         
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
-        Y -= 2*N;
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        Y -= 2u*N;
         
         if (LAPACKE_zpotrf(Ord,Uplo,(int)R,(_Complex double *)Y,(int)R))
         { fprintf(stderr,"error in chol_z: problem with LAPACKE_zpotrf function\n"); }
 
         if ((iscolmajor && upper) || (!iscolmajor && !upper))
         {
-            for (size_t r1=0; r1<R; ++r1)
+            for (size_t r1=0u; r1<R; ++r1)
             {
-                Y += 2*r1 + 2;
-                for (size_t r2=r1+1; r2<R; ++r2, ++Y) { *Y = 0.0; *++Y = 0.0; }
+                Y += 2u*r1 + 2u;
+                for (size_t r2=r1+1u; r2<R; ++r2, ++Y) { *Y = 0.0; *++Y = 0.0; }
             }
         }
         else
         {
-            for (size_t r1=0; r1<R; ++r1, Y+=2*(R-r1+1))
+            for (size_t r1=0u; r1<R; ++r1, Y+=2u*(R-r1+1u))
             {
-                for (size_t r2=0; r2<r1; ++r2, ++Y) { *Y = 0.0; *++Y = 0.0; }
+                for (size_t r2=0u; r2<r1; ++r2, ++Y) { *Y = 0.0; *++Y = 0.0; }
             }
         }
     }
@@ -189,17 +189,17 @@ int chol_inplace_s (float *X, const size_t R, const char iscolmajor, const char 
 
         if ((iscolmajor && upper) || (!iscolmajor && !upper))
         {
-            for (size_t r1=0; r1<R; ++r1)
+            for (size_t r1=0u; r1<R; ++r1)
             {
-                X += r1 + 1;
-                for (size_t r2=r1+1; r2<R; ++r2, ++X) { *X = 0.0f; }
+                X += r1 + 1u;
+                for (size_t r2=r1+1u; r2<R; ++r2, ++X) { *X = 0.0f; }
             }
         }
         else
         {
-            for (size_t r1=0; r1<R; ++r1, X+=R-r1+1)
+            for (size_t r1=0u; r1<R; ++r1, X+=R-r1+1u)
             {
-                for (size_t r2=0; r2<r1; ++r2, ++X) { *X = 0.0f; }
+                for (size_t r2=0u; r2<r1; ++r2, ++X) { *X = 0.0f; }
             }
         }
     }
@@ -221,17 +221,17 @@ int chol_inplace_d (double *X, const size_t R, const char iscolmajor, const char
 
         if ((iscolmajor && upper) || (!iscolmajor && !upper))
         {
-            for (size_t r1=0; r1<R; ++r1)
+            for (size_t r1=0u; r1<R; ++r1)
             {
-                X += r1 + 1;
-                for (size_t r2=r1+1; r2<R; ++r2, ++X) { *X = 0.0; }
+                X += r1 + 1u;
+                for (size_t r2=r1+1u; r2<R; ++r2, ++X) { *X = 0.0; }
             }
         }
         else
         {
-            for (size_t r1=0; r1<R; ++r1, X+=R-r1+1)
+            for (size_t r1=0u; r1<R; ++r1, X+=R-r1+1u)
             {
-                for (size_t r2=0; r2<r1; ++r2, ++X) { *X = 0.0; }
+                for (size_t r2=0u; r2<r1; ++r2, ++X) { *X = 0.0; }
             }
         }
     }
@@ -253,17 +253,17 @@ int chol_inplace_c (float *X, const size_t R, const char iscolmajor, const char 
 
         if ((iscolmajor && upper) || (!iscolmajor && !upper))
         {
-            for (size_t r1=0; r1<R; ++r1)
+            for (size_t r1=0u; r1<R; ++r1)
             {
-                X += 2*r1 + 2;
-                for (size_t r2=r1+1; r2<R; ++r2, ++X) { *X = 0.0f; *++X = 0.0f; }
+                X += 2u*r1 + 2u;
+                for (size_t r2=r1+1u; r2<R; ++r2, ++X) { *X = 0.0f; *++X = 0.0f; }
             }
         }
         else
         {
-            for (size_t r1=0; r1<R; ++r1, X+=2*(R-r1+1))
+            for (size_t r1=0u; r1<R; ++r1, X+=2u*(R-r1+1u))
             {
-                for (size_t r2=0; r2<r1; ++r2, ++X) { *X = 0.0f; *++X = 0.0f; }
+                for (size_t r2=0u; r2<r1; ++r2, ++X) { *X = 0.0f; *++X = 0.0f; }
             }
         }
     }
@@ -285,17 +285,17 @@ int chol_inplace_z (double *X, const size_t R, const char iscolmajor, const char
 
         if ((iscolmajor && upper) || (!iscolmajor && !upper))
         {
-            for (size_t r1=0; r1<R; ++r1)
+            for (size_t r1=0u; r1<R; ++r1)
             {
-                X += 2*r1 + 2;
-                for (size_t r2=r1+1; r2<R; ++r2, ++X) { *X = 0.0; *++X = 0.0; }
+                X += 2u*r1 + 2u;
+                for (size_t r2=r1+1u; r2<R; ++r2, ++X) { *X = 0.0; *++X = 0.0; }
             }
         }
         else
         {
-            for (size_t r1=0; r1<R; ++r1, X+=2*(R-r1+1))
+            for (size_t r1=0u; r1<R; ++r1, X+=2u*(R-r1+1u))
             {
-                for (size_t r2=0; r2<r1; ++r2, ++X) { *X = 0.0; *++X = 0.0; }
+                for (size_t r2=0u; r2<r1; ++r2, ++X) { *X = 0.0; *++X = 0.0; }
             }
         }
     }

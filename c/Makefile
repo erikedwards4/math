@@ -320,7 +320,7 @@ distp: distp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 dist_cos: dist_cos.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 #Weighted statistics
-WStats: WSums WNorms WPrctiles WRanges WMoments WOther
+WStats: #WSums WNorms WPrctiles WRanges WMoments WOther
 
 WSums: wsum wasum wcnt
 wsum: wsum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -384,13 +384,13 @@ linear: linear.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 affine: affine.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 projective: projective.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sim_Mat: dotmat cosmat covmat corrmat
+Sim_Mat: dotmat cosmat #covmat corrmat
 dotmat: dotmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cosmat: cosmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 covmat: covmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 corrmat: corrmat.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Dist_Mat: distmat0 distmat1 distmat2 distmatp distmat_cos
+Dist_Mat: #distmat0 distmat1 distmat2 distmatp distmat_cos
 distmat0: distmat0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 distmat1: distmat1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 distmat2: distmat2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

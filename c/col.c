@@ -17,7 +17,7 @@ int col_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 {
     if (c>C) { fprintf(stderr,"error in col_s: C (ncols X) must be greater than c (col num to select)\n"); return 1; }
 
-    if (H*S==1)
+    if (H*S==1u)
     {
         if (iscolmajor)
         {
@@ -35,7 +35,7 @@ int col_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         X += c*R;
         for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0u; s<S; ++s, X+=R*(C-1))
+            for (size_t s=0u; s<S; ++s, X+=R*(C-1u))
             {
                 for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; }
             }
@@ -44,7 +44,7 @@ int col_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     else
     {
         X += c*H*S;
-        for (size_t r=0u; r<R; ++r, X+=(C-1)*H*S)
+        for (size_t r=0u; r<R; ++r, X+=(C-1u)*H*S)
         {
             for (size_t s=0u; s<H*S; ++s, ++X, ++Y) { *Y = *X; }
         }
@@ -58,7 +58,7 @@ int col_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 {
     if (c>C) { fprintf(stderr,"error in col_d: C (ncols X) must be greater than c (col num to select)\n"); return 1; }
 
-    if (H*S==1)
+    if (H*S==1u)
     {
         if (iscolmajor)
         {
@@ -76,7 +76,7 @@ int col_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         X += c*R;
         for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0u; s<S; ++s, X+=R*(C-1))
+            for (size_t s=0u; s<S; ++s, X+=R*(C-1u))
             {
                 for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; }
             }
@@ -85,7 +85,7 @@ int col_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     else
     {
         X += c*H*S;
-        for (size_t r=0u; r<R; ++r, X+=(C-1)*H*S)
+        for (size_t r=0u; r<R; ++r, X+=(C-1u)*H*S)
         {
             for (size_t s=0u; s<H*S; ++s, ++X, ++Y) { *Y = *X; }
         }
@@ -99,25 +99,25 @@ int col_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 {
     if (c>C) { fprintf(stderr,"error in col_c: C (ncols X) must be greater than c (col num to select)\n"); return 1; }
 
-    if (H*S==1)
+    if (H*S==1u)
     {
         if (iscolmajor)
         {
-            X += 2*c*R;
+            X += 2u*c*R;
             for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
         }
         else
         {
-            X += 2*c;
-            for (size_t r=0u; r<R; ++r, X+=2*C-1, ++Y) { *Y = *X; *++Y = *++X; }
+            X += 2u*c;
+            for (size_t r=0u; r<R; ++r, X+=2u*C-1u, ++Y) { *Y = *X; *++Y = *++X; }
         }
     }
     else if (iscolmajor)
     {
-        X += 2*c*R;
+        X += 2u*c*R;
         for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0u; s<S; ++s, X+=2*R*(C-1))
+            for (size_t s=0u; s<S; ++s, X+=2u*R*(C-1u))
             {
                 for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             }
@@ -125,8 +125,8 @@ int col_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     }
     else
     {
-        X += 2*c*H*S;
-        for (size_t r=0u; r<R; ++r, X+=2*(C-1)*H*S)
+        X += 2u*c*H*S;
+        for (size_t r=0u; r<R; ++r, X+=2u*(C-1u)*H*S)
         {
             for (size_t s=0u; s<H*S; ++s, ++X, ++Y) { *Y = *X; *++Y = *++X; }
         }
@@ -140,25 +140,25 @@ int col_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 {
     if (c>C) { fprintf(stderr,"error in col_z: C (ncols X) must be greater than c (col num to select)\n"); return 1; }
 
-    if (H*S==1)
+    if (H*S==1u)
     {
         if (iscolmajor)
         {
-            X += 2*c*R;
+            X += 2u*c*R;
             for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
         }
         else
         {
-            X += 2*c;
-            for (size_t r=0u; r<R; ++r, X+=2*C-1, ++Y) { *Y = *X; *++Y = *++X; }
+            X += 2u*c;
+            for (size_t r=0u; r<R; ++r, X+=2u*C-1u, ++Y) { *Y = *X; *++Y = *++X; }
         }
     }
     else if (iscolmajor)
     {
-        X += 2*c*R;
+        X += 2u*c*R;
         for (size_t h=0u; h<H; ++h)
         {
-            for (size_t s=0u; s<S; ++s, X+=2*R*(C-1))
+            for (size_t s=0u; s<S; ++s, X+=2u*R*(C-1u))
             {
                 for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             }
@@ -166,8 +166,8 @@ int col_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     }
     else
     {
-        X += 2*c*H*S;
-        for (size_t r=0u; r<R; ++r, X+=2*(C-1)*H*S)
+        X += 2u*c*H*S;
+        for (size_t r=0u; r<R; ++r, X+=2u*(C-1u)*H*S)
         {
             for (size_t s=0u; s<H*S; ++s, ++X, ++Y) { *Y = *X; *++Y = *++X; }
         }

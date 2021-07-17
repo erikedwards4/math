@@ -20,10 +20,10 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
 
 int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in harmean_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in harmean_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
@@ -38,11 +38,11 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             float sm;
             for (size_t v=0u; v<V; ++v, ++Y)
@@ -52,7 +52,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 *Y = L / sm;
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
             for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = 1.0f / *X; }
             Y -= V;
@@ -65,9 +65,9 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
         else
         {
             float sm;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { sm += 1.0f / *X; }
@@ -83,10 +83,10 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
 int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in harmean_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in harmean_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
@@ -101,11 +101,11 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             double sm;
             for (size_t v=0u; v<V; ++v, ++Y)
@@ -115,7 +115,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
                 *Y = L / sm;
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
             for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = 1.0 / *X; }
             Y -= V;
@@ -128,9 +128,9 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
         else
         {
             double sm;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { sm += 1.0 / *X; }
@@ -146,16 +146,16 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
 
 int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in harmean_c: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in harmean_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     float xr, xi, sq, yr, yi;
 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -171,11 +171,11 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             for (size_t v=0u; v<V; ++v, ++Y)
             {
@@ -192,12 +192,12 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
                 {
                     yr = yi = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2*K-1)
+                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u)
                     {
                         xr = *X; xi = *++X;
                         sq = xr*xr + xi*xi;
@@ -216,16 +216,16 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
 
 int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in harmean_z: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in harmean_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     double xr, xi, sq, yr, yi;
 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -241,11 +241,11 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             for (size_t v=0u; v<V; ++v, ++Y)
             {
@@ -262,12 +262,12 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
                 {
                     yr = yi = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2*K-1)
+                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u)
                     {
                         xr = *X; xi = *++X;
                         sq = xr*xr + xi*xi;

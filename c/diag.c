@@ -15,7 +15,7 @@ int diag_z (double *Y, const double *X, const size_t R, const size_t C, const ch
 
 int diag_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
-    const size_t K = (iscolmajor) ? R+1 : C+1;
+    const size_t K = (iscolmajor) ? R+1u : C+1u;
 
     if (k>=0 && (int)C>k)
     {
@@ -55,7 +55,7 @@ int diag_s (float *Y, const float *X, const size_t R, const size_t C, const char
 
 int diag_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
-    const size_t K = (iscolmajor) ? R+1 : C+1;
+    const size_t K = (iscolmajor) ? R+1u : C+1u;
 
     if (k>=0 && (int)C>k)
     {
@@ -84,14 +84,14 @@ int diag_d (double *Y, const double *X, const size_t R, const size_t C, const ch
 
 int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
-    const size_t K = (iscolmajor) ? 2*R+1 : 2*C+1;
+    const size_t K = (iscolmajor) ? 2u*R+1u : 2u*C+1u;
 
     if (k>=0 && (int)C>k)
     {
         const size_t L = (C-(size_t)k<R) ? C-(size_t)k : R;
         const int S = (iscolmajor) ? k*(int)R : k;
         
-        X += 2*S;
+        X += 2u*S;
         for (size_t l=0u; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else if (k<=0 && (int)R>-k)
@@ -99,7 +99,7 @@ int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char
         const size_t L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C;
         const int S = (iscolmajor) ? -k : -k*(int)C;
         
-        X += 2*S;
+        X += 2u*S;
         for (size_t l=0u; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else
@@ -113,14 +113,14 @@ int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char
 
 int diag_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
 {
-    const size_t K = (iscolmajor) ? 2*R+1 : 2*C+1;
+    const size_t K = (iscolmajor) ? 2u*R+1u : 2u*C+1u;
 
     if (k>=0 && (int)C>k)
     {
         const size_t L = (C-(size_t)k<R) ? C-(size_t)k : R;
         const int S = (iscolmajor) ? k*(int)R : k;
         
-        X += 2*S;
+        X += 2u*S;
         for (size_t l=0u; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else if (k<=0 && (int)R>-k)
@@ -128,7 +128,7 @@ int diag_z (double *Y, const double *X, const size_t R, const size_t C, const ch
         const size_t L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C;
         const int S = (iscolmajor) ? -k : -k*(int)C;
         
-        X += 2*S;
+        X += 2u*S;
         for (size_t l=0u; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else

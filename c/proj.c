@@ -52,7 +52,7 @@ int proj_inplace_c (float *X, const size_t N)
 
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
-    //for (size_t n=0u; n<2*N; n+=2)
+    //for (size_t n=0u; n<2u*N; n+=2)
     for (size_t n=0u; n<N; ++n, ++X)
     {
         y = cprojf(*X + 1.0if**(X+1));

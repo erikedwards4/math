@@ -33,8 +33,8 @@ int conj_z (double *Y, const double *X, const size_t N)
 
     //cblas_dcopy(2*(int)N,X,1,Y,1);
     //cblas_dscal((int)N,-1.0,&Y[1],2);
-    //for (n=0; n<2*N; n+=2) { Y[n] = X[n]; }
-    //for (n=1; n<2*N; n+=2) { Y[n] = -X[n]; }
+    //for (n=0; n<2u*N; n+=2) { Y[n] = X[n]; }
+    //for (n=1; n<2u*N; n+=2) { Y[n] = -X[n]; }
 
     return 0;
 }

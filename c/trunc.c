@@ -40,7 +40,7 @@ int trunc_d (double *Y, const double *X, const size_t N)
 
 int trunc_c (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = truncf(*X); }
+    for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = truncf(*X); }
     
     return 0;
 }
@@ -48,7 +48,7 @@ int trunc_c (float *Y, const float *X, const size_t N)
 
 int trunc_z (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = trunc(*X); }
+    for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = trunc(*X); }
     
     return 0;
 }
@@ -72,7 +72,7 @@ int trunc_inplace_d (double *X, const size_t N)
 
 int trunc_inplace_c (float *X, const size_t N)
 {
-    for (size_t n=0u; n<2*N; ++n, ++X) { *X = truncf(*X); }
+    for (size_t n=0u; n<2u*N; ++n, ++X) { *X = truncf(*X); }
     
     return 0;
 }
@@ -80,7 +80,7 @@ int trunc_inplace_c (float *X, const size_t N)
 
 int trunc_inplace_z (double *X, const size_t N)
 {
-    for (size_t n=0u; n<2*N; ++n, ++X) { *X = trunc(*X); }
+    for (size_t n=0u; n<2u*N; ++n, ++X) { *X = trunc(*X); }
     
     return 0;
 }

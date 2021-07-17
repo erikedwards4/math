@@ -25,10 +25,10 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
 int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in sum_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in sum_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
@@ -37,7 +37,7 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     }
     else if (L==N)
     {
-        if (L<100)
+        if (L<100u)
         {
             *Y = 0.0f;
             for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
@@ -51,13 +51,13 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            if (L<10)
+            if (L<10u)
             {
                 for (size_t v=0u; v<V; ++v, ++Y)
                 {
@@ -76,7 +76,7 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
                 }
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
             //float sm[V]; //this is only C99 allowed, and not faster!
             for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
@@ -89,9 +89,9 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         else
         {
             float sm;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { *Y += *X; }
@@ -107,10 +107,10 @@ int sum_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
 int sum_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in sum_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in sum_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
@@ -119,7 +119,7 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
-        if (L<100)
+        if (L<100u)
         {
             *Y = 0.0;
             for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
@@ -133,13 +133,13 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
-            if (L<10)
+            if (L<10u)
             {
                 for (size_t v=0u; v<V; ++v, ++Y)
                 {
@@ -158,7 +158,7 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
                 }
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
             for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
             Y -= V;
@@ -170,9 +170,9 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         else
         {
             double sm;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { *Y += *X; }
@@ -188,15 +188,15 @@ int sum_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
 int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in sum_c: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in sum_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -206,11 +206,11 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             float yr, yi;
             for (size_t v=0u; v<V; ++v, ++Y)
@@ -220,11 +220,11 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
                 *Y = yr; *++Y = yi;
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
             for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
-            Y -= 2*V;
-            for (size_t l=1u; l<L; ++l, Y-=2*V)
+            Y -= 2u*V;
+            for (size_t l=1u; l<L; ++l, Y-=2u*V)
             {
                 for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
             }
@@ -232,12 +232,12 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         else
         {
             float yr, yi;
-            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
                 {
                     yr = yi = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2*K-1) { yr += *X; yi += *++X; }
+                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { yr += *X; yi += *++X; }
                     *Y = yr; *++Y = yi;
                 }
             }
@@ -250,15 +250,15 @@ int sum_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
 int sum_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
 {
-    if (dim>3) { fprintf(stderr,"error in sum_z: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in sum_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t N = R*C*S*H;
-    const size_t L = (dim==0) ? R : (dim==1) ? C : (dim==2) ? S : H;
+    const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -268,11 +268,11 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     }
     else
     {
-        const size_t K = (iscolmajor) ? ((dim==0) ? 1 : (dim==1) ? R : (dim==2) ? R*C : R*C*S) : ((dim==0) ? C*S*H : (dim==1) ? S*H : (dim==2) ? H : 1);
-        const size_t B = (iscolmajor && dim==0) ? C*S*H : K;
+        const size_t K = (iscolmajor) ? ((dim==0u) ? 1u : (dim==1u) ? R : (dim==2u) ? R*C : R*C*S) : ((dim==0u) ? C*S*H : (dim==1u) ? S*H : (dim==2u) ? H : 1u);
+        const size_t B = (iscolmajor && dim==0u) ? C*S*H : K;
         const size_t V = N/L, G = V/B;
 
-        if (K==1 && (G==1 || B==1))
+        if (K==1u && (G==1u || B==1u))
         {
             double yr, yi;
             for (size_t v=0u; v<V; ++v, ++Y)
@@ -282,11 +282,11 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
                 *Y = yr; *++Y = yi;
             }
         }
-        else if (G==1)
+        else if (G==1u)
         {
             for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
-            Y -= 2*V;
-            for (size_t l=1u; l<L; ++l, Y-=2*V)
+            Y -= 2u*V;
+            for (size_t l=1u; l<L; ++l, Y-=2u*V)
             {
                 for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
             }
@@ -294,12 +294,12 @@ int sum_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         else
         {
             double yr, yi;
-            for (size_t g=0u; g<G; ++g, X+=2*B*(L-1))
+            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2*K*L-2, ++Y)
+                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
                 {
                     yr = yi = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2*K-1) { yr += *X; yi += *++X; }
+                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { yr += *X; yi += *++X; }
                     *Y = yr; *++Y = yi;
                 }
             }

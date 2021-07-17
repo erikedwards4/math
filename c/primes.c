@@ -21,21 +21,21 @@ int primes_i (size_t *Y, size_t *cnt, const size_t N)
 {
     //Sieve of Eratosthenes
     int8_t *sieve;
-	if (!(sieve=(int8_t*)calloc((size_t)N,1))) { fprintf(stderr,"error in primes: problem with calloc. "); perror("caloc"); return 1; }
+	if (!(sieve=(int8_t*)calloc((size_t)N,1u))) { fprintf(stderr,"error in primes: problem with calloc. "); perror("caloc"); return 1; }
 
-    for (size_t n=0u; n<N/3; ++n, ++sieve)
+    for (size_t n=0u; n<N/3u; ++n, ++sieve)
 	{
 		if (*sieve==0)
         {
-            for (size_t m=2*n+3; m<N-n; m+=2*n+3) { *(sieve+m) = 1; }
+            for (size_t m=2u*n+3u; m<N-n; m+=2u*n+3u) { *(sieve+m) = 1; }
         }
 	}
-    sieve -= N/3;
+    sieve -= N/3u;
 
-    Y[0] = 2; *cnt = 1;
+    Y[0] = 2u; *cnt = 1u;
     for (size_t n=0u; n<N; ++n, ++sieve)
 	{
-        Y[*cnt] = 2*n + 3;
+        Y[*cnt] = 2u*n + 3u;
         *cnt = *cnt + (size_t)(*sieve==0);
 	}
 

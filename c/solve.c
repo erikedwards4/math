@@ -30,9 +30,9 @@ int solve_s (float *X, const float *A, const float *B, const size_t R1, const si
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
-    const size_t N1 = R1*C1, N2 = R2*C2;
+    const size_t N1 = R1*C1, N2 = R2* C2;
 
-    if (R*C==0) {}
+    if (R*C==0u) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -59,7 +59,7 @@ int solve_s (float *X, const float *A, const float *B, const size_t R1, const si
             {
                 for (size_t r=0u; r<R; ++r, ++Btmp, ++X) { *X = *Btmp; }
             }
-            Btmp -= R2*C;
+            Btmp -= R2* C;
         }
         else
         {
@@ -82,9 +82,9 @@ int solve_d (double *X, const double *A, const double *B, const size_t R1, const
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
-    const size_t N1 = R1*C1, N2 = R2*C2;
+    const size_t N1 = R1*C1, N2 = R2* C2;
 
-    if (R*C==0) {}
+    if (R*C==0u) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -111,7 +111,7 @@ int solve_d (double *X, const double *A, const double *B, const size_t R1, const
             {
                 for (size_t r=0u; r<R; ++r, ++Btmp, ++X) { *X = *Btmp; }
             }
-            Btmp -= R2*C;
+            Btmp -= R2* C;
         }
         else
         {
@@ -134,9 +134,9 @@ int solve_c (float *X, const float *A, const float *B, const size_t R1, const si
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
-    const size_t N1 = R1*C1, N2 = R2*C2;
+    const size_t N1 = R1*C1, N2 = R2* C2;
 
-    if (R*C==0) {}
+    if (R*C==0u) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -146,11 +146,11 @@ int solve_c (float *X, const float *A, const float *B, const size_t R1, const si
 
         //tmp copies
         float *Atmp, *Btmp;
-        if (!(Atmp=(float *)malloc(2*N1*sizeof(float)))) { fprintf(stderr,"error in solve_c: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(Btmp=(float *)malloc(2*N2*sizeof(float)))) { fprintf(stderr,"error in solve_c: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t n=0u; n<2*N1; ++n, ++A, ++Atmp) { *Atmp = *A; }
-        for (size_t n=0u; n<2*N2; ++n, ++B, ++Btmp) { *Btmp = *B; }
-        Atmp -= 2*N1; Btmp -= 2*N2;
+        if (!(Atmp=(float *)malloc(2u*N1*sizeof(float)))) { fprintf(stderr,"error in solve_c: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(Btmp=(float *)malloc(2u*N2*sizeof(float)))) { fprintf(stderr,"error in solve_c: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t n=0u; n<2u*N1; ++n, ++A, ++Atmp) { *Atmp = *A; }
+        for (size_t n=0u; n<2u*N2; ++n, ++B, ++Btmp) { *Btmp = *B; }
+        Atmp -= 2u*N1; Btmp -= 2u*N2;
         
         //Solve
         if (LAPACKE_cgels(Ord,Trans,(int)R1,(int)C1,(int)C2,(_Complex float *)Atmp,lda,(_Complex float *)Btmp,ldb))
@@ -159,19 +159,19 @@ int solve_c (float *X, const float *A, const float *B, const size_t R1, const si
         //Copy B to output X
         if (iscolmajor)
         {
-            for (size_t c=0u; c<C; ++c, Btmp+=2*(R2-R))
+            for (size_t c=0u; c<C; ++c, Btmp+=2u*(R2-R))
             {
-                for (size_t r=0u; r<2*R; ++r, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t r=0u; r<2u*R; ++r, ++Btmp, ++X) { *X = *Btmp; }
             }
-            Btmp -= 2*R2*C;
+            Btmp -= 2u*R2* C;
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, Btmp+=2*(C2-C))
+            for (size_t r=0u; r<R; ++r, Btmp+=2u*(C2-C))
             {
-                for (size_t c=0u; c<2*C; ++c, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t c=0u; c<2u*C; ++c, ++Btmp, ++X) { *X = *Btmp; }
             }
-            Btmp -= 2*R*C2;
+            Btmp -= 2u*R*C2;
         }
 
         //Free
@@ -186,9 +186,9 @@ int solve_z (double *X, const double *A, const double *B, const size_t R1, const
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
-    const size_t N1 = R1*C1, N2 = R2*C2;
+    const size_t N1 = R1*C1, N2 = R2* C2;
 
-    if (R*C==0) {}
+    if (R*C==0u) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -198,11 +198,11 @@ int solve_z (double *X, const double *A, const double *B, const size_t R1, const
 
         //tmp copies
         double *Atmp, *Btmp;
-        if (!(Atmp=(double *)malloc(2*N1*sizeof(double)))) { fprintf(stderr,"error in solve_d: problem with malloc. "); perror("malloc"); return 1; }
-        if (!(Btmp=(double *)malloc(2*N2*sizeof(double)))) { fprintf(stderr,"error in solve_d: problem with malloc. "); perror("malloc"); return 1; }
-        for (size_t n=0u; n<2*N1; ++n, ++A, ++Atmp) { *Atmp = *A; }
-        for (size_t n=0u; n<2*N2; ++n, ++B, ++Btmp) { *Btmp = *B; }
-        Atmp -= 2*N1; Btmp -= 2*N2;
+        if (!(Atmp=(double *)malloc(2u*N1*sizeof(double)))) { fprintf(stderr,"error in solve_d: problem with malloc. "); perror("malloc"); return 1; }
+        if (!(Btmp=(double *)malloc(2u*N2*sizeof(double)))) { fprintf(stderr,"error in solve_d: problem with malloc. "); perror("malloc"); return 1; }
+        for (size_t n=0u; n<2u*N1; ++n, ++A, ++Atmp) { *Atmp = *A; }
+        for (size_t n=0u; n<2u*N2; ++n, ++B, ++Btmp) { *Btmp = *B; }
+        Atmp -= 2u*N1; Btmp -= 2u*N2;
         
         //Solve
         if (LAPACKE_zgels(Ord,Trans,(int)R1,(int)C1,(int)C2,(_Complex double *)Atmp,lda,(_Complex double *)Btmp,ldb))
@@ -211,19 +211,19 @@ int solve_z (double *X, const double *A, const double *B, const size_t R1, const
         //Copy B to output X
         if (iscolmajor)
         {
-            for (size_t c=0u; c<C; ++c, Btmp+=2*(R2-R))
+            for (size_t c=0u; c<C; ++c, Btmp+=2u*(R2-R))
             {
-                for (size_t r=0u; r<2*R; ++r, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t r=0u; r<2u*R; ++r, ++Btmp, ++X) { *X = *Btmp; }
             }
-            Btmp -= 2*R2*C;
+            Btmp -= 2u*R2* C;
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, Btmp+=2*(C2-C))
+            for (size_t r=0u; r<R; ++r, Btmp+=2u*(C2-C))
             {
-                for (size_t c=0u; c<2*C; ++c, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t c=0u; c<2u*C; ++c, ++Btmp, ++X) { *X = *Btmp; }
             }
-            Btmp -= 2*R*C2;
+            Btmp -= 2u*R*C2;
         }
 
         //Free
@@ -239,7 +239,7 @@ int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
 
-    if (R*C==0) {}
+    if (R*C==0u) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -290,7 +290,7 @@ int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, con
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
 
-    if (R*C==0) {}
+    if (R*C==0u) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -326,7 +326,7 @@ int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
 
-    if (R*C==0) {}
+    if (R*C==0u) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -341,14 +341,14 @@ int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const
         {
             for (size_t c=0u; c<C; ++c)
             {
-                for (size_t r=0u; r<2*R; ++r, ++B) { *B = *(B+2*c*(R2-R)); }
+                for (size_t r=0u; r<2u*R; ++r, ++B) { *B = *(B+2u*c*(R2-R)); }
             }
         }
         else
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t c=0u; c<2*C; ++c, ++B) { *B = *(B+2*r*(C2-C)); }
+                for (size_t c=0u; c<2u*C; ++c, ++B) { *B = *(B+2u*r*(C2-C)); }
             }
         }
     }
@@ -362,7 +362,7 @@ int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, con
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
 
-    if (R*C==0) {}
+    if (R*C==0u) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -377,14 +377,14 @@ int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, con
         {
             for (size_t c=0u; c<C; ++c)
             {
-                for (size_t r=0u; r<2*R; ++r, ++B) { *B = *(B+2*c*(R2-R)); }
+                for (size_t r=0u; r<2u*R; ++r, ++B) { *B = *(B+2u*c*(R2-R)); }
             }
         }
         else
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t c=0u; c<2*C; ++c, ++B) { *B = *(B+2*r*(C2-C)); }
+                for (size_t c=0u; c<2u*C; ++c, ++B) { *B = *(B+2u*r*(C2-C)); }
             }
         }
     }

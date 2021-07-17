@@ -69,18 +69,18 @@ int row_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
     if (iscolmajor)
     {
-        X += 2*r;
+        X += 2u*r;
         for (size_t h=0u; h<H; ++h)
         {
             for (size_t s=0u; s<S; ++s)
             {
-                for (size_t c=0u; c<C; ++c, X+=2*R-1, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t c=0u; c<C; ++c, X+=2u*R-1u, ++Y) { *Y = *X; *++Y = *++X; }
             }
         }
     }
     else
     {
-        X += 2*r*H*S*C;
+        X += 2u*r*H*S*C;
         for (size_t c=0u; c<H*S*C; ++c, ++X, ++Y) { *Y = *X; *++Y = *++X; }
     }
 
@@ -94,18 +94,18 @@ int row_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
     if (iscolmajor)
     {
-        X += 2*r;
+        X += 2u*r;
         for (size_t h=0u; h<H; ++h)
         {
             for (size_t s=0u; s<S; ++s)
             {
-                for (size_t c=0u; c<C; ++c, X+=2*R-1, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t c=0u; c<C; ++c, X+=2u*R-1u, ++Y) { *Y = *X; *++Y = *++X; }
             }
         }
     }
     else
     {
-        X += 2*r*H*S*C;
+        X += 2u*r*H*S*C;
         for (size_t c=0u; c<H*S*C; ++c, ++X, ++Y) { *Y = *X; *++Y = *++X; }
     }
 

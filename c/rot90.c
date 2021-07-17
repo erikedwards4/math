@@ -19,7 +19,7 @@ int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const cha
     const int k = (K<0) ? 4+K%4 : K%4;
 
     if (N==0u) {}
-    else if (k==0 || N==1)
+    else if (k==0 || N==1u)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
@@ -28,15 +28,15 @@ int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const cha
         if (iscolmajor)
         {
             Y += N - C;
-            for (size_t r=0u; r<R; ++r, X-=N-1, Y-=2*C)
+            for (size_t r=0u; r<R; ++r, X-=N-1u, Y-=2u*C)
             {
                 for (size_t c=0u; c<C; ++c, X+=R, ++Y) { *Y = *X; }
             }
         }
         else
         {
-            Y += R - 1;
-            for (size_t r=0u; r<R; ++r, Y-=N+1)
+            Y += R - 1u;
+            for (size_t r=0u; r<R; ++r, Y-=N+1u)
             {
                 for (size_t c=0u; c<C; ++c, ++X, Y+=R) { *Y = *X; }
             }
@@ -44,15 +44,15 @@ int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const cha
     }
     else if (k==2)
     {
-        Y += N - 1;
+        Y += N - 1u;
         for (size_t n=0u; n<N; ++n, ++X, --Y) { *Y = *X; }
     }
     else // (k==3)
     {
         if (iscolmajor)
         {
-            Y += C - 1;
-            for (size_t c=0u; c<C; ++c, Y-=N+1)
+            Y += C - 1u;
+            for (size_t c=0u; c<C; ++c, Y-=N+1u)
             {
                 for (size_t r=0u; r<R; ++r, ++X, Y+=C) { *Y = *X; }
             }
@@ -60,7 +60,7 @@ int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const cha
         else
         {
             Y += N - R;
-            for (size_t c=0u; c<C; ++c, X-=N-1, Y-=2*R)
+            for (size_t c=0u; c<C; ++c, X-=N-1u, Y-=2u*R)
             {
                 for (size_t r=0u; r<R; ++r, X+=C, ++Y) { *Y = *X; }
             }
@@ -77,7 +77,7 @@ int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const c
     const int k = (K<0) ? 4+K%4 : K%4;
 
     if (N==0u) {}
-    else if (k==0 || N==1)
+    else if (k==0 || N==1u)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
@@ -86,15 +86,15 @@ int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const c
         if (iscolmajor)
         {
             Y += N - C;
-            for (size_t r=0u; r<R; ++r, X-=N-1, Y-=2*C)
+            for (size_t r=0u; r<R; ++r, X-=N-1u, Y-=2u*C)
             {
                 for (size_t c=0u; c<C; ++c, X+=R, ++Y) { *Y = *X; }
             }
         }
         else
         {
-            Y += R - 1;
-            for (size_t r=0u; r<R; ++r, Y-=N+1)
+            Y += R - 1u;
+            for (size_t r=0u; r<R; ++r, Y-=N+1u)
             {
                 for (size_t c=0u; c<C; ++c, ++X, Y+=R) { *Y = *X; }
             }
@@ -102,15 +102,15 @@ int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const c
     }
     else if (k==2)
     {
-        Y += N - 1;
+        Y += N - 1u;
         for (size_t n=0u; n<N; ++n, ++X, --Y) { *Y = *X; }
     }
     else // (k==3)
     {
         if (iscolmajor)
         {
-            Y += C - 1;
-            for (size_t c=0u; c<C; ++c, Y-=N+1)
+            Y += C - 1u;
+            for (size_t c=0u; c<C; ++c, Y-=N+1u)
             {
                 for (size_t r=0u; r<R; ++r, ++X, Y+=C) { *Y = *X; }
             }
@@ -118,7 +118,7 @@ int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const c
         else
         {
             Y += N - R;
-            for (size_t c=0u; c<C; ++c, X-=N-1, Y-=2*R)
+            for (size_t c=0u; c<C; ++c, X-=N-1u, Y-=2u*R)
             {
                 for (size_t r=0u; r<R; ++r, X+=C, ++Y) { *Y = *X; }
             }
@@ -135,50 +135,50 @@ int rot90_c (float *Y, const float *X, const size_t R, const size_t C, const cha
     const int k = (K<0) ? 4+K%4 : K%4;
 
     if (N==0u) {}
-    else if (k==0 || N==1)
+    else if (k==0 || N==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (k==1)
     {
         if (iscolmajor)
         {
-            Y += 2*(N-C);
-            for (size_t r=0u; r<R; ++r, X-=2*N-2, Y-=4*C)
+            Y += 2u*(N-C);
+            for (size_t r=0u; r<R; ++r, X-=2u*N-2u, Y-=4u*C)
             {
-                for (size_t c=0u; c<C; ++c, X+=2*R-1, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t c=0u; c<C; ++c, X+=2u*R-1u, ++Y) { *Y = *X; *++Y = *++X; }
             }
         }
         else
         {
-            Y += 2*(R-1);
-            for (size_t r=0u; r<R; ++r, Y-=2*N+2)
+            Y += 2u*(R-1u);
+            for (size_t r=0u; r<R; ++r, Y-=2u*N+2)
             {
-                for (size_t c=0u; c<C; ++c, ++X, Y+=2*R-1) { *Y = *X; *++Y = *++X; }
+                for (size_t c=0u; c<C; ++c, ++X, Y+=2u*R-1u) { *Y = *X; *++Y = *++X; }
             }
         }
     }
     else if (k==2)
     {
-        Y += 2*(N-1);
+        Y += 2u*(N-1u);
         for (size_t n=0u; n<N; ++n, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
     }
     else // (k==3)
     {
         if (iscolmajor)
         {
-            Y += 2*(C-1);
-            for (size_t c=0u; c<C; ++c, Y-=2*N+2)
+            Y += 2u*(C-1u);
+            for (size_t c=0u; c<C; ++c, Y-=2u*N+2)
             {
-                for (size_t r=0u; r<R; ++r, ++X, Y+=2*C-1) { *Y = *X; *++Y = *++X; }
+                for (size_t r=0u; r<R; ++r, ++X, Y+=2u*C-1u) { *Y = *X; *++Y = *++X; }
             }
         }
         else
         {
-            Y += 2*(N-R);
-            for (size_t c=0u; c<C; ++c, X-=2*N-2, Y-=4*R)
+            Y += 2u*(N-R);
+            for (size_t c=0u; c<C; ++c, X-=2u*N-2u, Y-=4u*R)
             {
-                for (size_t r=0u; r<R; ++r, X+=2*C-1, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t r=0u; r<R; ++r, X+=2u*C-1u, ++Y) { *Y = *X; *++Y = *++X; }
             }
         }
     }
@@ -193,50 +193,50 @@ int rot90_z (double *Y, const double *X, const size_t R, const size_t C, const c
     const int k = (K<0) ? 4+K%4 : K%4;
 
     if (N==0u) {}
-    else if (k==0 || N==1)
+    else if (k==0 || N==1u)
     {
-        for (size_t n=0u; n<2*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
     }
     else if (k==1)
     {
         if (iscolmajor)
         {
-            Y += 2*(N-C);
-            for (size_t r=0u; r<R; ++r, X-=2*N-2, Y-=4*C)
+            Y += 2u*(N-C);
+            for (size_t r=0u; r<R; ++r, X-=2u*N-2u, Y-=4u*C)
             {
-                for (size_t c=0u; c<C; ++c, X+=2*R-1, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t c=0u; c<C; ++c, X+=2u*R-1u, ++Y) { *Y = *X; *++Y = *++X; }
             }
         }
         else
         {
-            Y += 2*(R-1);
-            for (size_t r=0u; r<R; ++r, Y-=2*N+2)
+            Y += 2u*(R-1u);
+            for (size_t r=0u; r<R; ++r, Y-=2u*N+2)
             {
-                for (size_t c=0u; c<C; ++c, ++X, Y+=2*R-1) { *Y = *X; *++Y = *++X; }
+                for (size_t c=0u; c<C; ++c, ++X, Y+=2u*R-1u) { *Y = *X; *++Y = *++X; }
             }
         }
     }
     else if (k==2)
     {
-        Y += 2*(N-1);
+        Y += 2u*(N-1u);
         for (size_t n=0u; n<N; ++n, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
     }
     else // (k==3)
     {
         if (iscolmajor)
         {
-            Y += 2*(C-1);
-            for (size_t c=0u; c<C; ++c, Y-=2*N+2)
+            Y += 2u*(C-1u);
+            for (size_t c=0u; c<C; ++c, Y-=2u*N+2)
             {
-                for (size_t r=0u; r<R; ++r, ++X, Y+=2*C-1) { *Y = *X; *++Y = *++X; }
+                for (size_t r=0u; r<R; ++r, ++X, Y+=2u*C-1u) { *Y = *X; *++Y = *++X; }
             }
         }
         else
         {
-            Y += 2*(N-R);
-            for (size_t c=0u; c<C; ++c, X-=2*N-2, Y-=4*R)
+            Y += 2u*(N-R);
+            for (size_t c=0u; c<C; ++c, X-=2u*N-2u, Y-=4u*R)
             {
-                for (size_t r=0u; r<R; ++r, X+=2*C-1, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t r=0u; r<R; ++r, X+=2u*C-1u, ++Y) { *Y = *X; *++Y = *++X; }
             }
         }
     }

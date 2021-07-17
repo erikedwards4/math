@@ -88,7 +88,7 @@ int sin_inplace_c (float *X, const size_t N)
 
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     
-    // for (size_t n2=0; n2<2*N; n2+=2)
+    // for (size_t n2=0; n2<2u*N; n2+=2)
     // {
     //     y = csinf(X[n2]+1.0if*X[n2+1]);
     //     memcpy(&X[n2],(float *)&y,2*sizeof(float));

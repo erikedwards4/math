@@ -43,21 +43,21 @@ int eig_s (float *U, float *V, const float *X, const size_t R, const char iscolm
 
         //Flip to descending order
         float v1;
-        for (size_t r=0u; r<R/2; ++r, ++V) { v1 = *V; *V = *(V+R-2*r-1); *(V+R-2*r-1) = v1; }
+        for (size_t r=0u; r<R/2u; ++r, ++V) { v1 = *V; *V = *(V+R-2u*r-1u); *(V+R-2u*r-1u) = v1; }
         if (iscolmajor)
         {
-            for (size_t c=0u; c<R/2; ++c)
+            for (size_t c=0u; c<R/2u; ++c)
             {
-                for (size_t r=0u; r<R; ++r, ++U) { v1 = *U; *U = *(U+(R-2*c-1)*R); *(U+(R-2*c-1)*R) = v1; }
+                for (size_t r=0u; r<R; ++r, ++U) { v1 = *U; *U = *(U+(R-2u*c-1u)*R); *(U+(R-2u*c-1u)*R) = v1; }
             }
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, U+=R-R/2)
+            for (size_t r=0u; r<R; ++r, U+=R-R/2u)
             {
-                for (size_t c=0u; c<R/2; ++c, ++U) { v1 = *U; *U = *(U+R-2*c-1); *(U+R-2*c-1) = v1; }
+                for (size_t c=0u; c<R/2u; ++c, ++U) { v1 = *U; *U = *(U+R-2u*c-1u); *(U+R-2u*c-1u) = v1; }
             }
-            if (K>0 && K<R)
+            if (K>0u && K<R)
             {
                 U -= R*R;
                 for (size_t r=0u; r<R; ++r)
@@ -87,21 +87,21 @@ int eig_d (double *U, double *V, const double *X, const size_t R, const char isc
 
         //Flip to descending order
         double v1;
-        for (size_t r=0u; r<R/2; ++r, ++V) { v1 = *V; *V = *(V+R-2*r-1); *(V+R-2*r-1) = v1; }
+        for (size_t r=0u; r<R/2u; ++r, ++V) { v1 = *V; *V = *(V+R-2u*r-1u); *(V+R-2u*r-1u) = v1; }
         if (iscolmajor)
         {
-            for (size_t c=0u; c<R/2; ++c)
+            for (size_t c=0u; c<R/2u; ++c)
             {
-                for (size_t r=0u; r<R; ++r, ++U) { v1 = *U; *U = *(U+(R-2*c-1)*R); *(U+(R-2*c-1)*R) = v1; }
+                for (size_t r=0u; r<R; ++r, ++U) { v1 = *U; *U = *(U+(R-2u*c-1u)*R); *(U+(R-2u*c-1u)*R) = v1; }
             }
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, U+=R-R/2)
+            for (size_t r=0u; r<R; ++r, U+=R-R/2u)
             {
-                for (size_t c=0u; c<R/2; ++c, ++U) { v1 = *U; *U = *(U+R-2*c-1); *(U+R-2*c-1) = v1; }
+                for (size_t c=0u; c<R/2u; ++c, ++U) { v1 = *U; *U = *(U+R-2u*c-1u); *(U+R-2u*c-1u) = v1; }
             }
-            if (K>0 && K<R)
+            if (K>0u && K<R)
             {
                 U -= R*R;
                 for (size_t r=0u; r<R; ++r)
@@ -123,42 +123,42 @@ int eig_c (float *U, float *V, const float *X, const size_t R, const char iscolm
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
         
-        for (size_t n=0u; n<2*R*R; ++n, ++X, ++U) { *U = *X; }
-        U -= 2*R*R;
+        for (size_t n=0u; n<2u*R*R; ++n, ++X, ++U) { *U = *X; }
+        U -= 2u*R*R;
         
         if (LAPACKE_cheev(Ord,'V','L',(int)R,(_Complex float *)U,(int)R,V))
         { fprintf(stderr,"error in eig_c: problem with LAPACKE_csyev function\n"); }
 
         //Flip to descending order
         float v1;
-        for (size_t r=0u; r<R/2; ++r, ++V) { v1 = *V; *V = *(V+R-2*r-1); *(V+R-2*r-1) = v1; }
+        for (size_t r=0u; r<R/2u; ++r, ++V) { v1 = *V; *V = *(V+R-2u*r-1u); *(V+R-2u*r-1u) = v1; }
         if (iscolmajor)
         {
-            for (size_t c=0u; c<R/2; ++c)
+            for (size_t c=0u; c<R/2u; ++c)
             {
-                for (size_t r=0u; r<2*R; ++r, ++U) { v1 = *U; *U = *(U+2*(R-2*c-1)*R); *(U+2*(R-2*c-1)*R) = v1; }
+                for (size_t r=0u; r<2u*R; ++r, ++U) { v1 = *U; *U = *(U+2u*(R-2u*c-1u)*R); *(U+2u*(R-2u*c-1u)*R) = v1; }
             }
         }
         else
         {
             float v1r, v1i;
-            for (size_t r=0u; r<R; ++r, U+=2*(R-R/2))
+            for (size_t r=0u; r<R; ++r, U+=2u*(R-R/2u))
             {
-                for (size_t c=0u; c<R/2; ++c)
+                for (size_t c=0u; c<R/2u; ++c)
                 {
                     v1r = *U; v1i = *(U+1);
-                    *U = *(U+2*(R-2*c)-2); ++U;
-                    *U = *(U+2*(R-2*c)-2); ++U;
-                    *(U+2*(R-2*c)-4) = v1r;
-                    *(U+2*(R-2*c)-3) = v1i;
+                    *U = *(U+2u*(R-2u*c)-2u); ++U;
+                    *U = *(U+2u*(R-2u*c)-2u); ++U;
+                    *(U+2u*(R-2u*c)-4u) = v1r;
+                    *(U+2u*(R-2u*c)-3u) = v1i;
                 }
             }
-            if (K>0 && K<R)
+            if (K>0u && K<R)
             {
-                U -= 2*R*R;
+                U -= 2u*R*R;
                 for (size_t r=0u; r<R; ++r)
                 {
-                    for (size_t k=0u; k<2*K; ++k, ++U) { *U = *(U+2*r*(R-K)); }
+                    for (size_t k=0u; k<2u*K; ++k, ++U) { *U = *(U+2u*r*(R-K)); }
                 }
             }
         }
@@ -175,42 +175,42 @@ int eig_z (double *U, double *V, const double *X, const size_t R, const char isc
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
         
-        for (size_t n=0u; n<2*R*R; ++n, ++X, ++U) { *U = *X; }
-        U -= 2*R*R;
+        for (size_t n=0u; n<2u*R*R; ++n, ++X, ++U) { *U = *X; }
+        U -= 2u*R*R;
         
         if (LAPACKE_zheev(Ord,'V','L',(int)R,(_Complex double *)U,(int)R,V))
         { fprintf(stderr,"error in eig_z: problem with LAPACKE_zsyev function\n"); }
 
         //Flip to descending order
         double v1;
-        for (size_t r=0u; r<R/2; ++r, ++V) { v1 = *V; *V = *(V+R-2*r-1); *(V+R-2*r-1) = v1; }
+        for (size_t r=0u; r<R/2u; ++r, ++V) { v1 = *V; *V = *(V+R-2u*r-1u); *(V+R-2u*r-1u) = v1; }
         if (iscolmajor)
         {
-            for (size_t c=0u; c<R/2; ++c)
+            for (size_t c=0u; c<R/2u; ++c)
             {
-                for (size_t r=0u; r<2*R; ++r, ++U) { v1 = *U; *U = *(U+2*(R-2*c-1)*R); *(U+2*(R-2*c-1)*R) = v1; }
+                for (size_t r=0u; r<2u*R; ++r, ++U) { v1 = *U; *U = *(U+2u*(R-2u*c-1u)*R); *(U+2u*(R-2u*c-1u)*R) = v1; }
             }
         }
         else
         {
             double v1r, v1i;
-            for (size_t r=0u; r<R; ++r, U+=2*(R-R/2))
+            for (size_t r=0u; r<R; ++r, U+=2u*(R-R/2u))
             {
-                for (size_t c=0u; c<R/2; ++c)
+                for (size_t c=0u; c<R/2u; ++c)
                 {
                     v1r = *U; v1i = *(U+1);
-                    *U = *(U+2*(R-2*c)-2); ++U;
-                    *U = *(U+2*(R-2*c)-2); ++U;
-                    *(U+2*(R-2*c)-4) = v1r;
-                    *(U+2*(R-2*c)-3) = v1i;
+                    *U = *(U+2u*(R-2u*c)-2u); ++U;
+                    *U = *(U+2u*(R-2u*c)-2u); ++U;
+                    *(U+2u*(R-2u*c)-4u) = v1r;
+                    *(U+2u*(R-2u*c)-3u) = v1i;
                 }
             }
-            if (K>0 && K<R)
+            if (K>0u && K<R)
             {
-                U -= 2*R*R;
+                U -= 2u*R*R;
                 for (size_t r=0u; r<R; ++r)
                 {
-                    for (size_t k=0u; k<2*K; ++k, ++U) { *U = *(U+2*r*(R-K)); }
+                    for (size_t k=0u; k<2u*K; ++k, ++U) { *U = *(U+2u*r*(R-K)); }
                 }
             }
         }
@@ -232,21 +232,21 @@ int eig_inplace_s (float *X, float *V, const size_t R, const char iscolmajor, co
 
         //Flip to descending order
         float v1;
-        for (size_t r=0u; r<R/2; ++r, ++V) { v1 = *V; *V = *(V+R-2*r-1); *(V+R-2*r-1) = v1; }
+        for (size_t r=0u; r<R/2u; ++r, ++V) { v1 = *V; *V = *(V+R-2u*r-1u); *(V+R-2u*r-1u) = v1; }
         if (iscolmajor)
         {
-            for (size_t c=0u; c<R/2; ++c)
+            for (size_t c=0u; c<R/2u; ++c)
             {
-                for (size_t r=0u; r<R; ++r, ++X) { v1 = *X; *X = *(X+(R-2*c-1)*R); *(X+(R-2*c-1)*R) = v1; }
+                for (size_t r=0u; r<R; ++r, ++X) { v1 = *X; *X = *(X+(R-2u*c-1u)*R); *(X+(R-2u*c-1u)*R) = v1; }
             }
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, X+=R-R/2)
+            for (size_t r=0u; r<R; ++r, X+=R-R/2u)
             {
-                for (size_t c=0u; c<R/2; ++c, ++X) { v1 = *X; *X = *(X+R-2*c-1); *(X+R-2*c-1) = v1; }
+                for (size_t c=0u; c<R/2u; ++c, ++X) { v1 = *X; *X = *(X+R-2u*c-1u); *(X+R-2u*c-1u) = v1; }
             }
-            if (K>0 && K<R)
+            if (K>0u && K<R)
             {
                 X -= R*R;
                 for (size_t r=0u; r<R; ++r)
@@ -273,21 +273,21 @@ int eig_inplace_d (double *X, double *V, const size_t R, const char iscolmajor, 
 
         //Flip to descending order
         double v1;
-        for (size_t r=0u; r<R/2; ++r, ++V) { v1 = *V; *V = *(V+R-2*r-1); *(V+R-2*r-1) = v1; }
+        for (size_t r=0u; r<R/2u; ++r, ++V) { v1 = *V; *V = *(V+R-2u*r-1u); *(V+R-2u*r-1u) = v1; }
         if (iscolmajor)
         {
-            for (size_t c=0u; c<R/2; ++c)
+            for (size_t c=0u; c<R/2u; ++c)
             {
-                for (size_t r=0u; r<R; ++r, ++X) { v1 = *X; *X = *(X+(R-2*c-1)*R); *(X+(R-2*c-1)*R) = v1; }
+                for (size_t r=0u; r<R; ++r, ++X) { v1 = *X; *X = *(X+(R-2u*c-1u)*R); *(X+(R-2u*c-1u)*R) = v1; }
             }
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, X+=R-R/2)
+            for (size_t r=0u; r<R; ++r, X+=R-R/2u)
             {
-                for (size_t c=0u; c<R/2; ++c, ++X) { v1 = *X; *X = *(X+R-2*c-1); *(X+R-2*c-1) = v1; }
+                for (size_t c=0u; c<R/2u; ++c, ++X) { v1 = *X; *X = *(X+R-2u*c-1u); *(X+R-2u*c-1u) = v1; }
             }
-            if (K>0 && K<R)
+            if (K>0u && K<R)
             {
                 X -= R*R;
                 for (size_t r=0u; r<R; ++r)
@@ -314,34 +314,34 @@ int eig_inplace_c (float *X, float *V, const size_t R, const char iscolmajor, co
 
         //Flip to descending order
         float v1;
-        for (size_t r=0u; r<R/2; ++r, ++V) { v1 = *V; *V = *(V+R-2*r-1); *(V+R-2*r-1) = v1; }
+        for (size_t r=0u; r<R/2u; ++r, ++V) { v1 = *V; *V = *(V+R-2u*r-1u); *(V+R-2u*r-1u) = v1; }
         if (iscolmajor)
         {
-            for (size_t c=0u; c<R/2; ++c)
+            for (size_t c=0u; c<R/2u; ++c)
             {
-                for (size_t r=0u; r<2*R; ++r, ++X) { v1 = *X; *X = *(X+2*(R-2*c-1)*R); *(X+2*(R-2*c-1)*R) = v1; }
+                for (size_t r=0u; r<2u*R; ++r, ++X) { v1 = *X; *X = *(X+2u*(R-2u*c-1u)*R); *(X+2u*(R-2u*c-1u)*R) = v1; }
             }
         }
         else
         {
             float v1r, v1i;
-            for (size_t r=0u; r<R; ++r, X+=2*(R-R/2))
+            for (size_t r=0u; r<R; ++r, X+=2u*(R-R/2u))
             {
-                for (size_t c=0u; c<R/2; ++c)
+                for (size_t c=0u; c<R/2u; ++c)
                 {
                     v1r = *X; v1i = *(X+1);
-                    *X = *(X+2*(R-2*c)-2); ++X;
-                    *X = *(X+2*(R-2*c)-2); ++X;
-                    *(X+2*(R-2*c)-4) = v1r;
-                    *(X+2*(R-2*c)-3) = v1i;
+                    *X = *(X+2u*(R-2u*c)-2u); ++X;
+                    *X = *(X+2u*(R-2u*c)-2u); ++X;
+                    *(X+2u*(R-2u*c)-4u) = v1r;
+                    *(X+2u*(R-2u*c)-3u) = v1i;
                 }
             }
-            if (K>0 && K<R)
+            if (K>0u && K<R)
             {
-                X -= 2*R*R;
+                X -= 2u*R*R;
                 for (size_t r=0u; r<R; ++r)
                 {
-                    for (size_t k=0u; k<2*K; ++k, ++X) { *X = *(X+2*r*(R-K)); }
+                    for (size_t k=0u; k<2u*K; ++k, ++X) { *X = *(X+2u*r*(R-K)); }
                 }
             }
         }
@@ -363,34 +363,34 @@ int eig_inplace_z (double *X, double *V, const size_t R, const char iscolmajor, 
 
         //Flip to descending order
         double v1;
-        for (size_t r=0u; r<R/2; ++r, ++V) { v1 = *V; *V = *(V+R-2*r-1); *(V+R-2*r-1) = v1; }
+        for (size_t r=0u; r<R/2u; ++r, ++V) { v1 = *V; *V = *(V+R-2u*r-1u); *(V+R-2u*r-1u) = v1; }
         if (iscolmajor)
         {
-            for (size_t c=0u; c<R/2; ++c)
+            for (size_t c=0u; c<R/2u; ++c)
             {
-                for (size_t r=0u; r<2*R; ++r, ++X) { v1 = *X; *X = *(X+2*(R-2*c-1)*R); *(X+2*(R-2*c-1)*R) = v1; }
+                for (size_t r=0u; r<2u*R; ++r, ++X) { v1 = *X; *X = *(X+2u*(R-2u*c-1u)*R); *(X+2u*(R-2u*c-1u)*R) = v1; }
             }
         }
         else
         {
             double v1r, v1i;
-            for (size_t r=0u; r<R; ++r, X+=2*(R-R/2))
+            for (size_t r=0u; r<R; ++r, X+=2u*(R-R/2u))
             {
-                for (size_t c=0u; c<R/2; ++c)
+                for (size_t c=0u; c<R/2u; ++c)
                 {
                     v1r = *X; v1i = *(X+1);
-                    *X = *(X+2*(R-2*c)-2); ++X;
-                    *X = *(X+2*(R-2*c)-2); ++X;
-                    *(X+2*(R-2*c)-4) = v1r;
-                    *(X+2*(R-2*c)-3) = v1i;
+                    *X = *(X+2u*(R-2u*c)-2u); ++X;
+                    *X = *(X+2u*(R-2u*c)-2u); ++X;
+                    *(X+2u*(R-2u*c)-4u) = v1r;
+                    *(X+2u*(R-2u*c)-3u) = v1i;
                 }
             }
-            if (K>0 && K<R)
+            if (K>0u && K<R)
             {
-                X -= 2*R*R;
+                X -= 2u*R*R;
                 for (size_t r=0u; r<R; ++r)
                 {
-                    for (size_t k=0u; k<2*K; ++k, ++X) { *X = *(X+2*r*(R-K)); }
+                    for (size_t k=0u; k<2u*K; ++k, ++X) { *X = *(X+2u*r*(R-K)); }
                 }
             }
         }
