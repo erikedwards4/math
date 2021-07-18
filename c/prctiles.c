@@ -40,7 +40,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
     for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0f || P[l]>100.0f) { fprintf(stderr,"error in prctiles_s: prctiles must be in [0 100]\n"); return 1; }
-        float p1 = (P[l]/100.0f)*(Lx-1u);
+        float p1 = (P[l]/100.0f)*(float)(Lx-1u);
         i1[l] = (P[l]<100.0f) ? (size_t)floorf(p1) : Lx-2;
         w2[l] = (P[l]<100.0f) ? p1-floorf(p1) : 1.0f;
         w1[l] = 1.0f - w2[l];
@@ -133,7 +133,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
     for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0 || P[l]>100.0) { fprintf(stderr,"error in prctiles_d: prctiles must be in [0 100]\n"); return 1; }
-        double p1 = (P[l]/100.0)*(Lx-1u);
+        double p1 = (P[l]/100.0)*(double)(Lx-1u);
         i1[l] = (P[l]<100.0) ? (size_t)floor(p1) : Lx-2;
         w2[l] = (P[l]<100.0) ? p1-floor(p1) : 1.0;
         w1[l] = 1.0 - w2[l];
@@ -223,7 +223,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
     for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0f || P[l]>100.0f) { fprintf(stderr,"error in prctiles_inplace_s: prctiles must be in [0 100]\n"); return 1; }
-        float p1 = (P[l]/100.0f)*(Lx-1u);
+        float p1 = (P[l]/100.0f)*(float)(Lx-1u);
         i1[l] = (P[l]<100.0f) ? (size_t)floorf(p1) : Lx-2;
         w2[l] = (P[l]<100.0f) ? p1-floorf(p1) : 1.0f;
         w1[l] = 1.0f - w2[l];
@@ -312,7 +312,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
     for (size_t l=0u; l<Ly; ++l)
     {
         if (P[l]<0.0 || P[l]>100.0) { fprintf(stderr,"error in prctiles_inplace_d: prctiles must be in [0 100]\n"); return 1; }
-        double p1 = (P[l]/100.0)*(Lx-1u);
+        double p1 = (P[l]/100.0)*(double)(Lx-1u);
         i1[l] = (P[l]<100.0) ? (size_t)floor(p1) : Lx-2;
         w2[l] = (P[l]<100.0) ? p1-floor(p1) : 1.0;
         w1[l] = 1.0 - w2[l];

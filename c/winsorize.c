@@ -33,7 +33,7 @@ int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     
-    const float p1 = (p/100.0f)*(L-1u), p2 = (1.0f-q/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     const size_t i1 = (size_t)ceilf(p1), i2 = (size_t)floorf(p2);
     float mn, mx;
 
@@ -99,7 +99,7 @@ int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, con
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const double p1 = (p/100.0)*(L-1u), p2 = (1.0-q/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     const size_t i1 = (size_t)ceil(p1), i2 = (size_t)floor(p2);
     double mn, mx;
 
@@ -165,7 +165,7 @@ int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const float p1 = (p/100.0f)*(L-1u), p2 = (1.0f-q/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     const size_t i1 = (size_t)ceilf(p1), i2 = (size_t)floorf(p2);
     float mn, mx;
 
@@ -239,7 +239,7 @@ int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const double p1 = (p/100.0)*(L-1u), p2 = (1.0-q/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     const size_t i1 = (size_t)ceil(p1), i2 = (size_t)floor(p2);
     double mn, mx;
 

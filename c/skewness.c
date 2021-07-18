@@ -26,8 +26,8 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / L;
-    const float w = (biased) ? sqrtf(L) : L*sqrtf(L-1u)/(L-2u);
+    const float den = 1.0f / (float)L;
+    const float w = (biased) ? sqrtf((float)L) : (float)L*sqrtf((float)(L-1u))/(float)(L-2u);
 
     if (N==0u) {}
     else if (L<3u) { fprintf(stderr,"error in skewness_s: L must be > 2\n"); return 1; }
@@ -108,8 +108,8 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / L;
-    const double w = (biased) ? sqrt(L) : L*sqrt(L-1u)/(L-2u);
+    const double den = 1.0 / (double)L;
+    const double w = (biased) ? sqrt((double)L) : (double)L*sqrt((double)(L-1u))/(double)(L-2u);
     
     if (N==0u) {}
     else if (L<3u) { fprintf(stderr,"error in skewness_d: L must be > 2\n"); return 1; }
@@ -190,8 +190,8 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / L;
-    const float w = (biased) ? sqrtf(L) : L*sqrtf(L-1u)/(L-2u);
+    const float den = 1.0f / (float)L;
+    const float w = (biased) ? sqrtf((float)L) : (float)L*sqrtf((float)(L-1u))/(float)(L-2u);
     float xr, xi, x2r, x2i, xrr, xii, xri, den3;
 
     if (N==0u) {}
@@ -276,8 +276,8 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / L;
-    const double w = (biased) ? sqrt(L) : L*sqrt(L-1u)/(L-2u);
+    const double den = 1.0 / (double)L;
+    const double w = (biased) ? sqrt((double)L) : (double)L*sqrt((double)(L-1u))/(double)(L-2u);
     double xr, xi, x2r, x2i, xrr, xii, xri, den3;
 
     if (N==0u) {}

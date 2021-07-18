@@ -44,7 +44,7 @@ int dist0_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
         {
             cnt += (fabsf(*X1-*X2)>thresh);
         }
-        *Y = cnt;
+        *Y = (float)cnt;
     }
     else
     {
@@ -63,7 +63,7 @@ int dist0_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
                     //cnt += (*X1!=*X2);
                     cnt += (fabsf(*X1-*X2)>thresh);
                 }
-                *Y = cnt;
+                *Y = (float)cnt;
             }
         }
         else if (G==1u)
@@ -99,7 +99,7 @@ int dist0_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
                         //cnt += (*X1!=*X2);
                         cnt += (fabsf(*X1-*X2)>thresh);
                     }
-                    *Y = cnt;
+                    *Y = (float)cnt;
                 }
             }
         }
@@ -132,7 +132,7 @@ int dist0_d (double *Y, const double *X1, const double *X2, const size_t R1, con
         {
             cnt += (fabs(*X1-*X2)>thresh);
         }
-        *Y = cnt;
+        *Y = (double)cnt;
     }
     else
     {
@@ -150,7 +150,7 @@ int dist0_d (double *Y, const double *X1, const double *X2, const size_t R1, con
                 {
                     cnt += (fabs(*X1-*X2)>thresh);
                 }
-                *Y = cnt;
+                *Y = (double)cnt;
             }
         }
         else if (G==1u)
@@ -183,7 +183,7 @@ int dist0_d (double *Y, const double *X1, const double *X2, const size_t R1, con
                     {
                         cnt += (fabs(*X1-*X2)>thresh);
                     }
-                    *Y = cnt;
+                    *Y = (double)cnt;
                 }
             }
         }
@@ -216,7 +216,7 @@ int dist0_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
         {
             cnt += (fabsf(*X1++-*X2++)>thresh || fabsf(*X1-*X2)>thresh);
         }
-        *Y = cnt;
+        *Y = (float)cnt;
     }
     else
     {
@@ -234,7 +234,7 @@ int dist0_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
                 {
                     cnt += (fabsf(*X1++-*X2++)>thresh || fabsf(*X1-*X2)>thresh);
                 }
-                *Y = cnt;
+                *Y = (float)cnt;
             }
         }
         else
@@ -251,7 +251,7 @@ int dist0_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
                     {
                         cnt += (fabsf(*X1++-*X2++)>thresh || fabsf(*X1-*X2)>thresh);
                     }
-                    *Y = cnt;
+                    *Y = (float)cnt;
                 }
             }
         }
@@ -284,7 +284,7 @@ int dist0_z (double *Y, const double *X1, const double *X2, const size_t R1, con
         {
             cnt += (fabs(*X1++-*X2++)>thresh || fabs(*X1-*X2)>thresh);
         }
-        *Y = cnt;
+        *Y = (double)cnt;
     }
     else
     {
@@ -302,7 +302,7 @@ int dist0_z (double *Y, const double *X1, const double *X2, const size_t R1, con
                 {
                     cnt += (fabs(*X1++-*X2++)>thresh || fabs(*X1-*X2)>thresh);
                 }
-                *Y = cnt;
+                *Y = (double)cnt;
             }
         }
         else
@@ -319,7 +319,7 @@ int dist0_z (double *Y, const double *X1, const double *X2, const size_t R1, con
                     {
                         cnt += (fabs(*X1++-*X2++)>thresh || fabs(*X1-*X2)>thresh);
                     }
-                    *Y = cnt;
+                    *Y = (double)cnt;
                 }
             }
         }

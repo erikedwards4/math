@@ -34,7 +34,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
     {
         float sm = 0.0f;
         for (size_t l=0u; l<L; ++l, ++X) { sm += 1.0f / *X; }
-        *Y = L / sm;
+        *Y = (float)L / sm;
     }
     else
     {
@@ -49,7 +49,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 sm = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { sm += 1.0f / *X; }
-                *Y = L / sm;
+                *Y = (float)L / sm;
             }
         }
         else if (G==1u)
@@ -60,7 +60,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += 1.0f / *X; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y = L / *Y; }
+            for (size_t v=0u; v<V; ++v, ++Y) { *Y = (float)L / *Y; }
         }
         else
         {
@@ -71,7 +71,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { sm += 1.0f / *X; }
-                    *Y = L / sm;
+                    *Y = (float)L / sm;
                 }
             }
         }
@@ -97,7 +97,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
     {
         double sm = 0.0;
         for (size_t l=0u; l<L; ++l, ++X) { sm += 1.0 / *X; }
-        *Y = L / sm;
+        *Y = (double)L / sm;
     }
     else
     {
@@ -112,7 +112,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 sm = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { sm += 1.0 / *X; }
-                *Y = L / sm;
+                *Y = (double)L / sm;
             }
         }
         else if (G==1u)
@@ -123,7 +123,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += 1.0 / *X; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y = L / *Y; }
+            for (size_t v=0u; v<V; ++v, ++Y) { *Y = (double)L / *Y; }
         }
         else
         {
@@ -134,7 +134,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { sm += 1.0 / *X; }
-                    *Y = L / sm;
+                    *Y = (double)L / sm;
                 }
             }
         }
@@ -167,7 +167,7 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
             yr += xr/sq; yi += xi/sq;
         }
         sq = yr*yr + yi*yi;
-        *Y = yr*L/sq; *++Y = yi*L/sq;
+        *Y = (float)L*yr/sq; *++Y = (float)L*yi/sq;
     }
     else
     {
@@ -187,7 +187,7 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
                     yr += xr/sq; yi += xi/sq;
                 }
                 sq = yr*yr + yi*yi;
-                *Y = yr*L/sq; *++Y = yi*L/sq;
+                *Y = (float)L*yr/sq; *++Y = (float)L*yi/sq;
             }
         }
         else
@@ -204,7 +204,7 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
                         yr += xr/sq; yi += xi/sq;
                     }
                     sq = yr*yr + yi*yi;
-                    *Y = yr*L/sq; *++Y = yi*L/sq;
+                    *Y = (float)L*yr/sq; *++Y = (float)L*yi/sq;
                 }
             }
         }
@@ -237,7 +237,7 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
             yr += xr/sq; yi += xi/sq;
         }
         sq = yr*yr + yi*yi;
-        *Y = yr*L/sq; *++Y = yi*L/sq;
+        *Y = (double)L*yr/sq; *++Y = (double)L*yi/sq;
     }
     else
     {
@@ -257,7 +257,7 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
                     yr += xr/sq; yi += xi/sq;
                 }
                 sq = yr*yr + yi*yi;
-                *Y = yr*L/sq; *++Y = yi*L/sq;
+                *Y = (double)L*yr/sq; *++Y = (double)L*yi/sq;
             }
         }
         else
@@ -274,7 +274,7 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
                         yr += xr/sq; yi += xi/sq;
                     }
                     sq = yr*yr + yi*yi;
-                    *Y = yr*L/sq; *++Y = yi*L/sq;
+                    *Y = (double)L*yr/sq; *++Y = (double)L*yi/sq;
                 }
             }
         }

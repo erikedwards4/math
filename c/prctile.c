@@ -30,7 +30,7 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const s
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    const float p1 = (p/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u);
     const size_t i1 = (p<100.0f) ? (size_t)floorf(p1) : L-2u;
     const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
     const float w1 = 1.0f - w2;
@@ -101,7 +101,7 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    const double p1 = (p/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u);
     const size_t i1 = (p<100.0) ? (size_t)floor(p1) : L-2u;
     const double w2 = (p<100.0) ? p1-floor(p1) : 1.0;
     const double w1 = 1.0 - w2;
@@ -172,7 +172,7 @@ int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    const float p1 = (p/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u);
     const size_t i1 = (p<100.0f) ? (size_t)floorf(p1) : L-2u;
     const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
     const float w1 = 1.0f - w2;
@@ -236,7 +236,7 @@ int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    const double p1 = (p/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u);
     const size_t i1 = (p<100.0) ? (size_t)floor(p1) : L-2u;
     const double w2 = (p<100.0) ? p1-floor(p1) : 1.0;
     const double w1 = 1.0 - w2;

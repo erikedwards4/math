@@ -32,9 +32,9 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const float p1 = (p/100.0f)*(L-1u), p2 = (1.0f-q/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
-    const float den = 1.0f / (i2-i1+1u);
+    const float den = 1.0f / (float)(i2-i1+1u);
     float sm;
 
     float *X1;
@@ -103,9 +103,9 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const double p1 = (p/100.0)*(L-1u), p2 = (1.0-q/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
-    const double den = 1.0 / (i2-i1+1u);
+    const double den = 1.0 / (double)(i2-i1+1u);
     double sm;
 
     double *X1;
@@ -174,9 +174,9 @@ int trimmean_inplace_s (float *Y, float *X, const size_t R, const size_t C, cons
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const float p1 = (p/100.0f)*(L-1u), p2 = (1.0f-q/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
-    const float den = 1.0f / (i2-i1+1u);
+    const float den = 1.0f / (float)(i2-i1+1u);
     float sm;
 
     if (N==0u) {}
@@ -239,9 +239,9 @@ int trimmean_inplace_d (double *Y, double *X, const size_t R, const size_t C, co
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const double p1 = (p/100.0)*(L-1u), p2 = (1.0-q/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
-    const double den = 1.0 / (i2-i1+1u);
+    const double den = 1.0 / (double)(i2-i1+1u);
     double sm;
 
     if (N==0u) {}

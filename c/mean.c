@@ -20,7 +20,7 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / L;
+    const float den = 1.0f / (float)L;
 
     if (N==0u) {}
     else if (L==1u)
@@ -105,7 +105,7 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / L;
+    const double den = 1.0 / (double)L;
 
     if (N==0u) {}
     else if (L==1u)
@@ -190,7 +190,7 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / L;
+    const float den = 1.0f / (float)L;
     float yr, yi;
 
     if (N==0u) {}
@@ -253,7 +253,7 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / L;
+    const double den = 1.0 / (double)L;
     double yr, yi;
 
     if (N==0u) {}

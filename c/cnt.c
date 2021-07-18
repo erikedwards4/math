@@ -33,7 +33,7 @@ int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     {
         size_t cnt = 0u;
         for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X!=0.0f); }
-        *Y = cnt;
+        *Y = (float)cnt;
     }
     else
     {
@@ -48,7 +48,7 @@ int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X!=0.0f); }
-                *Y = cnt;
+                *Y = (float)cnt;
             }
         }
         else if (G==1u)
@@ -69,7 +69,7 @@ int cnt_s (float *Y, const float *X, const size_t R, const size_t C, const size_
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=K) { cnt += (*X!=0.0f); }
-                    *Y = cnt;
+                    *Y = (float)cnt;
                 }
             }
         }
@@ -95,7 +95,7 @@ int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     {
         size_t cnt = 0u;
         for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X!=0.0); }
-        *Y = cnt;
+        *Y = (double)cnt;
     }
     else
     {
@@ -110,7 +110,7 @@ int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const siz
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X!=0.0); }
-                *Y = cnt;
+                *Y = (double)cnt;
             }
         }
         else if (G==1u)
@@ -131,7 +131,7 @@ int cnt_d (double *Y, const double *X, const size_t R, const size_t C, const siz
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=K) { cnt += (*X!=0.0); }
-                    *Y = cnt;
+                    *Y = (double)cnt;
                 }
             }
         }
@@ -157,7 +157,7 @@ int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     {
         size_t cnt = 0u;
         for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
-        *Y = cnt;
+        *Y = (float)cnt;
     }
     else
     {
@@ -172,7 +172,7 @@ int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
-                *Y = cnt;
+                *Y = (float)cnt;
             }
         }
         else if (G==1u)
@@ -193,7 +193,7 @@ int cnt_c (float *Y, const float *X, const size_t R, const size_t C, const size_
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=2u*K) { cnt += (*X!=0.0f || *(X+1)!=0.0f); }
-                    *Y = cnt;
+                    *Y = (float)cnt;
                 }
             }
         }
@@ -219,7 +219,7 @@ int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     {
         size_t cnt = 0u;
         for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
-        *Y = cnt;
+        *Y = (double)cnt;
     }
     else
     {
@@ -234,7 +234,7 @@ int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const siz
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
-                *Y = cnt;
+                *Y = (double)cnt;
             }
         }
         else if (G==1u)
@@ -255,7 +255,7 @@ int cnt_z (double *Y, const double *X, const size_t R, const size_t C, const siz
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=2u*K) { cnt += (*X!=0.0 || *(X+1)!=0.0); }
-                    *Y = cnt;
+                    *Y = (double)cnt;
                 }
             }
         }

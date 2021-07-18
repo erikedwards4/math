@@ -37,7 +37,7 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     {
         size_t cnt = 0u;
         for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
-        *Y = cnt;
+        *Y = (float)cnt;
     }
     else
     {
@@ -52,7 +52,7 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
-                *Y = cnt;
+                *Y = (float)cnt;
             }
         }
         else if (G==1u)
@@ -73,7 +73,7 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=K) { cnt += (*X>pthresh || *X<nthresh); }
-                    *Y = cnt;
+                    *Y = (float)cnt;
                 }
             }
         }
@@ -100,7 +100,7 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
     {
         size_t cnt = 0u;
         for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
-        *Y = cnt;
+        *Y = (double)cnt;
     }
     else
     {
@@ -115,7 +115,7 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
-                *Y = cnt;
+                *Y = (double)cnt;
             }
         }
         else if (G==1u)
@@ -136,7 +136,7 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=K) { cnt += (*X>pthresh || *X<nthresh); }
-                    *Y = cnt;
+                    *Y = (double)cnt;
                 }
             }
         }
@@ -163,7 +163,7 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     {
         size_t cnt = 0u;
         for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-        *Y = cnt;
+        *Y = (float)cnt;
     }
     else
     {
@@ -178,7 +178,7 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-                *Y = cnt;
+                *Y = (float)cnt;
             }
         }
         else if (G==1u)
@@ -199,7 +199,7 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=2u*K) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-                    *Y = cnt;
+                    *Y = (float)cnt;
                 }
             }
         }
@@ -226,7 +226,7 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
     {
         size_t cnt = 0u;
         for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-        *Y = cnt;
+        *Y = (double)cnt;
     }
     else
     {
@@ -241,7 +241,7 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-                *Y = cnt;
+                *Y = (double)cnt;
             }
         }
         else if (G==1u)
@@ -262,7 +262,7 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=2u*K) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
-                    *Y = cnt;
+                    *Y = (double)cnt;
                 }
             }
         }

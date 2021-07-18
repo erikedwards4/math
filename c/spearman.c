@@ -86,7 +86,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
         for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
         for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-        *Y = (den-dsm*6) / (float)den;
+        *Y = (float)(den-dsm*6) / (float)den;
         r1 -= L; r2 -= L;
     }
     else
@@ -109,7 +109,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                 for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
                 for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-                *Y = (den-dsm*6) / (float)den;
+                *Y = (float)(den-dsm*6) / (float)den;
             }
         }
         else
@@ -130,7 +130,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                     for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
                     for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-                    *Y = (den-dsm*6) / (float)den;
+                    *Y = (float)(den-dsm*6) / (float)den;
                 }
             }
         }
@@ -181,7 +181,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
         for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
         for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-        *Y = (den-dsm*6) / (double)den;
+        *Y = (double)(den-dsm*6) / (double)den;
         r1 -= L; r2 -= L;
     }
     else
@@ -204,7 +204,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                 for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
                 for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-                *Y = (den-dsm*6) / (double)den;
+                *Y = (double)(den-dsm*6) / (double)den;
             }
         }
         else
@@ -225,7 +225,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                     for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
                     for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
-                    *Y = (den-dsm*6) / (double)den;
+                    *Y = (double)(den-dsm*6) / (double)den;
                 }
             }
         }

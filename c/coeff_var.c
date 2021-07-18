@@ -20,7 +20,7 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f/L, den2 = (biased) ? den : 1.0f/(L-1u);
+    const float den = 1.0f/(float)L, den2 = (biased) ? den : 1.0f/(float)(L-1u);
 
     if (N==0u) {}
     else if (L<2u) { fprintf(stderr,"error in coeff_var_s: L must be > 1\n"); return 1; }
@@ -97,7 +97,7 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0/L, den2 = (biased) ? den : 1.0/(L-1u);
+    const double den = 1.0/(double)L, den2 = (biased) ? den : 1.0/(double)(L-1u);
 
     if (N==0u) {}
     else if (L<2u) { fprintf(stderr,"error in coeff_var_d: L must be > 1\n"); return 1; }

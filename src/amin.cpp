@@ -1,5 +1,6 @@
 //@author Erik Edwards
-//@date 2019-2020
+//@date 2018-present
+//@license BSD 3-clause
 
 
 #include <iostream>
@@ -10,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "/home/erik/codee/util/cmli.hpp"
+#include "cmli.hpp"
 #include "amin.c"
 
 #ifdef I
@@ -28,8 +29,8 @@ int main(int argc, char *argv[])
     const string errstr = ": \033[1;31merror:\033[0m ";
     const string warstr = ": \033[1;35mwarning:\033[0m ";
     const string progstr(__FILE__,string(__FILE__).find_last_of("/")+1,strlen(__FILE__)-string(__FILE__).find_last_of("/")-5);
-    const valarray<uint8_t> oktypes = {1,2,101,102};
-    const size_t I = 1, O = 1;
+    const valarray<size_t> oktypes = {1u,2u,101u,102u};
+    const size_t I = 1u, O = 1u;
     ifstream ifs1; ofstream ofs1;
     int8_t stdi1, stdo1, wo1;
     ioinfo i1, o1;
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
 
     //Description
     string descr;
-    descr += "Vec2scalar operation.\n";
+    descr += "Vec2scalar (reduction) operation.\n";
     descr += "Gets minimum of absolute values for each vector in X along dim.\n";
     descr += "This is also the -Inf-norm or min-norm of each vector in X.\n";
     descr += "\n";
@@ -98,7 +99,7 @@ int main(int argc, char *argv[])
     if ((i1.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -106,10 +107,10 @@ int main(int argc, char *argv[])
     //Get options
 
     //Get dim
-    if (a_d->count==0) { dim = 0; }
+    if (a_d->count==0) { dim = i1.isvec() ? i1.nonsingleton1() : 0u; }
     else if (a_d->ival[0]<0) { cerr << progstr+": " << __LINE__ << errstr << "dim must be nonnegative" << endl; return 1; }
     else { dim = size_t(a_d->ival[0]); }
-    if (dim>3) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
+    if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1,2,3}" << endl; return 1; }
 
 
     //Checks
@@ -118,10 +119,10 @@ int main(int argc, char *argv[])
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    o1.R = (dim==0) ? 1u : i1.R;
-    o1.C = (dim==1) ? 1u : i1.C;
-    o1.S = (dim==2) ? 1u : i1.S;
-    o1.H = (dim==3) ? 1u : i1.H;
+    o1.R = (dim==0u) ? 1u : i1.R;
+    o1.C = (dim==1u) ? 1u : i1.C;
+    o1.S = (dim==2u) ? 1u : i1.S;
+    o1.H = (dim==3u) ? 1u : i1.H;
 
 
     //Open output
@@ -140,7 +141,7 @@ int main(int argc, char *argv[])
 
 
     //Process
-    if (i1.T==1)
+    if (i1.T==1u)
     {
         float *X, *Y;
         try { X = new float[i1.N()]; }
@@ -176,7 +177,7 @@ int main(int argc, char *argv[])
         }
         delete[] X; delete[] Y;
     }
-    else if (i1.T==101)
+    else if (i1.T==101u)
     {
         float *X, *Y;
         try { X = new float[2u*i1.N()]; }
@@ -194,7 +195,7 @@ int main(int argc, char *argv[])
         }
         delete[] X; delete[] Y;
     }
-    else if (i1.T==102)
+    else if (i1.T==102u)
     {
         double *X, *Y;
         try { X = new double[2u*i1.N()]; }

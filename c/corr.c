@@ -33,7 +33,7 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in corr_s: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float den = 1.0f/L;
+    const float den = 1.0f/(float)L;
     float x1, x2, mn1 = 0.0f, mn2 = 0.0f, sd1 = 0.0f, sd2 = 0.0f, sm2 = 0.0f;
 
     if (N==0u) {}
@@ -117,7 +117,7 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in corr_d: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double den = 1.0/L;
+    const double den = 1.0/(double)L;
     double x1, x2, mn1 = 0.0, mn2 = 0.0, sd1 = 0.0, sd2 = 0.0, sm2 = 0.0;
 
     if (N==0u) {}
@@ -201,7 +201,7 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in corr_c: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float den = 1.0f/L;
+    const float den = 1.0f/(float)L;
     float x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, yr, yi, den2;
 
     if (N==0u) {}
@@ -316,7 +316,7 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in corr_z: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double den = 1.0/L;
+    const double den = 1.0/(double)L;
     double x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, yr, yi, den2;
 
     if (N==0u) {}

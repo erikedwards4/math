@@ -2,7 +2,6 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-//#include <string.h>
 #include <math.h>
 #include <complex.h>
 

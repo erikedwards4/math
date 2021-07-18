@@ -30,7 +30,7 @@ int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    const float p1 = 0.1f*(L-1u), p2 = 0.9f*(L-1u);
+    const float p1 = 0.1f*(float)(L-1u), p2 = 0.9f*(float)(L-1u);
     const size_t i1 = (size_t)floorf(p1), i2 = (size_t)floorf(p2);
     const float w2 = floorf(p1) - p1, w1 = -1.0f - w2;
     const float w4 = p2 - floorf(p2), w3 = 1.0f - w4;
@@ -106,7 +106,7 @@ int idr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    const double p1 = 0.1*(L-1u), p2 = 0.9*(L-1u);
+    const double p1 = 0.1*(double)(L-1u), p2 = 0.9*(double)(L-1u);
     const size_t i1 = (size_t)floor(p1), i2 = (size_t)floor(p2);
     const double w2 = floor(p1) - p1, w1 = -1.0 - w2;
     const double w4 = p2 - floor(p2), w3 = 1.0 - w4;
@@ -182,7 +182,7 @@ int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    const float p1 = 0.1f*(L-1u), p2 = 0.9f*(L-1u);
+    const float p1 = 0.1f*(float)(L-1u), p2 = 0.9f*(float)(L-1u);
     const size_t i1 = (size_t)floorf(p1), i2 = (size_t)floorf(p2);
     const float w2 = floorf(p1) - p1, w1 = -1.0f - w2;
     const float w4 = p2 - floorf(p2), w3 = 1.0f - w4;
@@ -251,7 +251,7 @@ int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    const double p1 = 0.1*(L-1u), p2 = 0.9*(L-1u);
+    const double p1 = 0.1*(double)(L-1u), p2 = 0.9*(double)(L-1u);
     const size_t i1 = (size_t)floor(p1), i2 = (size_t)floor(p2);
     const double w2 = floor(p1) - p1, w1 = -1.0 - w2;
     const double w4 = p2 - floor(p2), w3 = 1.0 - w4;

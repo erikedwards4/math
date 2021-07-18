@@ -11,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "../util/cmli.hpp"
+#include "cmli.hpp"
 #include "trim.c"
 
 #ifdef I
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 
     //Set output header info
     Lx = (dim==0u) ? i1.R : (dim==1u) ? i1.C : (dim==2u) ? i1.S : i1.H;
-    Ly = (size_t)ceil((1.0-q/100.0)*(Lx-1u)) - (size_t)floor((p/100.0)*(Lx-1u));
+    Ly = (size_t)ceil((1.0-q/100.0)*double(Lx-1u)) - (size_t)floor((p/100.0)*double(Lx-1u));
     o1.F = i1.F; o1.T = i1.T;
     o1.R = (dim==0u) ? Ly : i1.R;
     o1.C = (dim==1u) ? Ly : i1.C;

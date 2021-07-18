@@ -32,10 +32,10 @@ int trimvar_s (float *Y, const float *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const float p1 = (p/100.0f)*(L-1u), p2 = (1.0f-q/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
     const size_t Lt = i2 - i1 + 1u;
-    const float den = 1.0f/Lt, den2 = (biased) ? den : 1.0f/(Lt-1);
+    const float den = 1.0f/(float)Lt, den2 = (biased) ? den : 1.0f/(float)(Lt-1u);
     float x, mn, sm2;
 
     float *X1;
@@ -113,10 +113,10 @@ int trimvar_d (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const double p1 = (p/100.0)*(L-1u), p2 = (1.0-q/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
     const size_t Lt = i2 - i1 + 1u;
-    const double den = 1.0/Lt, den2 = (biased) ? den : 1.0/(Lt-1);
+    const double den = 1.0/(double)Lt, den2 = (biased) ? den : 1.0/(double)(Lt-1u);
     double x, mn, sm2;
 
     double *X1;
@@ -194,10 +194,10 @@ int trimvar_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const float p1 = (p/100.0f)*(L-1u), p2 = (1.0f-q/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
     const size_t Lt = i2 - i1 + 1u;
-    const float den = 1.0f/Lt, den2 = (biased) ? den : 1.0f/(Lt-1);
+    const float den = 1.0f/(float)Lt, den2 = (biased) ? den : 1.0f/(float)(Lt-1u);
     float x, mn, sm2;
 
     if (N==0u) {}
@@ -269,10 +269,10 @@ int trimvar_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    const double p1 = (p/100.0)*(L-1u), p2 = (1.0-q/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
     const size_t Lt = i2 - i1 + 1u;
-    const double den = 1.0/Lt, den2 = (biased) ? den : 1.0/(Lt-1);
+    const double den = 1.0/(double)Lt, den2 = (biased) ? den : 1.0/(double)(Lt-1u);
     double x, mn, sm2;
 
     if (N==0u) {}

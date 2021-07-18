@@ -24,7 +24,7 @@ int var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f/L, den2 = (biased) ? den : 1.0f/(L-1u);
+    const float den = 1.0f/(float)L, den2 = (biased) ? den : 1.0f/(float)(L-1u);
 
     if (N==0u) {}
     else if (L==1u)
@@ -106,7 +106,7 @@ int var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0/L, den2 = (biased) ? den : 1.0/(L-1u);
+    const double den = 1.0/(double)L, den2 = (biased) ? den : 1.0/(double)(L-1u);
     
     if (N==0u) {}
     else if (L==1u)
@@ -188,7 +188,7 @@ int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f/L, den2 = (biased) ? den : 1.0f/(L-1u);
+    const float den = 1.0f/(float)L, den2 = (biased) ? den : 1.0f/(float)(L-1u);
     float xr, xi;
 
     if (N==0u) {}
@@ -205,7 +205,7 @@ int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
         for (size_t l=0u; l<L; ++l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
         *Y = sm2 * den2;
         //this may be faster for L>12000, but not in-place and not usable for skewness, etc.
-        //     const float den[2] = {-1.0f/L,0.0f};
+        //     const float den[2] = {-1.0f/(float)L,0.0f};
         //     cblas_caxpy((int)L,mn,den,0,X,1);
         //     cblas_cdotc_sub((int)L,X,1,X,1,(_Complex float *)mn);
         //     *Y = mn[0] * den2;
@@ -257,7 +257,7 @@ int var_z (double *Y, double *X, const size_t R, const size_t C, const size_t S,
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0/L, den2 = (biased) ? den : 1.0/(L-1u);
+    const double den = 1.0/(double)L, den2 = (biased) ? den : 1.0/(double)(L-1u);
     double xr, xi;
 
     if (N==0u) {}

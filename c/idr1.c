@@ -27,7 +27,7 @@ int idr1_s (float *X, const size_t R, const size_t C, const size_t S, const size
     float mn, mx, rng;
 
     //Prep interpolation
-    const float p1 = 0.1f*(L-1u), p2 = 0.9f*(L-1u);
+    const float p1 = 0.1f*(float)(L-1u), p2 = 0.9f*(float)(L-1u);
     const size_t i1 = (size_t)floorf(p1), i2 = (size_t)floorf(p2);
     const float w2 = p1 - floorf(p1), w1 = 1.0f - w2;
     const float w4 = p2 - floorf(p2), w3 = 1.0f - w4;
@@ -128,7 +128,7 @@ int idr1_d (double *X, const size_t R, const size_t C, const size_t S, const siz
     double mn, mx, rng;
 
     //Prep interpolation
-    const double p1 = 0.1*(L-1u), p2 = 0.9*(L-1u);
+    const double p1 = 0.1*(double)(L-1u), p2 = 0.9*(double)(L-1u);
     const size_t i1 = (size_t)floor(p1), i2 = (size_t)floor(p2);
     const double w2 = p1 - floor(p1), w1 = 1.0 - w2;
     const double w4 = p2 - floor(p2), w3 = 1.0 - w4;

@@ -21,7 +21,7 @@ int geostd_s (float *Y, const float *X, const size_t R, const size_t C, const si
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f/L, den2 = den;
+    const float den = 1.0f/(float)L, den2 = den;
     float x, mn, sm2;
 
     if (N==0u) {}
@@ -98,7 +98,7 @@ int geostd_d (double *Y, const double *X, const size_t R, const size_t C, const 
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0/L, den2 = den;
+    const double den = 1.0/(double)L, den2 = den;
     double x, mn, sm2;
 
     if (N==0u) {}

@@ -24,7 +24,7 @@ int geomean_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / L;
+    const float den = 1.0f / (float)L;
 
     if (N==0u) {}
     else if (L==1u)
@@ -88,7 +88,7 @@ int geomean_d (double *Y, const double *X, const size_t R, const size_t C, const
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / L;
+    const double den = 1.0 / (double)L;
 
     if (N==0u) {}
     else if (L==1u)
@@ -152,7 +152,7 @@ int geomean_c (float *Y, const float *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / L;
+    const float den = 1.0f / (float)L;
     _Complex float y;
 
     if (N==0u) {}
@@ -217,7 +217,7 @@ int geomean_z (double *Y, const double *X, const size_t R, const size_t C, const
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / L;
+    const double den = 1.0 / (double)L;
     _Complex double y;
 
     if (N==0u) {}

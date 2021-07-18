@@ -27,8 +27,8 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t Ly = 4u;
-    const float den = 1.0f / Lx, den2 = (biased) ? den : 1.0f/(Lx-1u);
-    const float w = (biased) ? sqrtf(Lx) : Lx*sqrtf(Lx-1u)/(Lx-2u);
+    const float den = 1.0f/(float)Lx, den2 = (biased) ? den : 1.0f/(float)(Lx-1u);
+    const float w = (biased) ? sqrtf((float)Lx) : (float)Lx*sqrtf((float)(Lx-1u))/(float)(Lx-2u);
 
     if (N==0u) {}
     else if (Lx<4u) { fprintf(stderr,"error in moments_s: L must be > 3\n"); return 1; }
@@ -42,8 +42,8 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
         *Y = mn;
         *++Y = sm2 * den2;
         *++Y = w * sm3 / (sm2*sqrtf(sm2));
-        *++Y = Lx * sm4 / (sm2*sm2);
-        if (!biased) { *Y =  3.0f + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u)); }
+        *++Y = (float)Lx * sm4 / (sm2*sm2);
+        if (!biased) { *Y =  3.0f + (*Y*(float)(Lx+1u)-(float)(3u*(Lx-1u))) * (float)(Lx-1u)/(float)((Lx-2u)*(Lx-3u)); }
     }
     else
     {
@@ -64,8 +64,8 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 *Y = mn;
                 *++Y = sm2 * den2;
                 *++Y = w * sm3 / (sm2*sqrtf(sm2));
-                *++Y = Lx * sm4 / (sm2*sm2);
-                if (!biased) { *Y =  3.0f + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u)); }
+                *++Y = (float)Lx * sm4 / (sm2*sm2);
+                if (!biased) { *Y =  3.0f + (*Y*(float)(Lx+1u)-(float)(3u*(Lx-1u))) * (float)(Lx-1u)/(float)((Lx-2u)*(Lx-3u)); }
             }
         }
         else if (G==1u)
@@ -94,8 +94,8 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
             sm2 -= V; sm3 -= V; sm4 -= V;
             for (size_t v=0u; v<V; ++v, ++sm2, ++sm3, ++sm4, ++Y)
             {
-                *Y = Lx * *sm4 / (*sm2**sm2);
-                if (!biased) { *Y =  3.0f + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u)); }
+                *Y = (float)Lx * *sm4 / (*sm2**sm2);
+                if (!biased) { *Y =  3.0f + (*Y*(float)(Lx+1u)-(float)(3u*(Lx-1u))) * (float)(Lx-1u)/(float)((Lx-2u)*(Lx-3u)); }
             }
             sm2 -= V; sm3 -= V; sm4 -= V;
             free(sm2); free(sm3); free(sm4);
@@ -115,8 +115,8 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
                     *Y = mn; Y += K;
                     *Y = sm2 * den2; Y += K;
                     *Y = w * sm3 / (sm2*sqrtf(sm2)); Y += K;
-                    *Y = Lx * sm4 / (sm2*sm2);
-                    if (!biased) { *Y =  3.0f + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u)); }
+                    *Y = (float)Lx * sm4 / (sm2*sm2);
+                    if (!biased) { *Y =  3.0f + (*Y*(float)(Lx+1u)-(float)(3u*(Lx-1u))) * (float)(Lx-1u)/(float)((Lx-2u)*(Lx-3u)); }
                 }
             }
         }
@@ -133,8 +133,8 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t Ly = 4u;
-    const double den = 1.0 / Lx, den2 = (biased) ? den : 1.0/(Lx-1u);
-    const double w = (biased) ? sqrt(Lx) : Lx*sqrt(Lx-1u)/(Lx-2u);
+    const double den = 1.0/(double)Lx, den2 = (biased) ? den : 1.0/(double)(Lx-1u);
+    const double w = (biased) ? sqrt((double)Lx) : (double)Lx*sqrt((double)(Lx-1u))/(double)(Lx-2u);
 
     if (N==0u) {}
     else if (Lx<4u) { fprintf(stderr,"error in moments_d: L must be > 3\n"); return 1; }
@@ -148,8 +148,8 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
         *Y = mn;
         *++Y = sm2 * den2;
         *++Y = w * sm3 / (sm2*sqrt(sm2));
-        *++Y = Lx * sm4 / (sm2*sm2);
-        if (!biased) { *Y =  3.0 + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u)); }
+        *++Y = (double)Lx * sm4 / (sm2*sm2);
+        if (!biased) { *Y =  3.0 + (*Y*(double)(Lx+1u)-(double)(3u*(Lx-1u))) * (double)(Lx-1u)/(double)((Lx-2u)*(Lx-3u)); }
     }
     else
     {
@@ -170,8 +170,8 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
                 *Y = mn;
                 *++Y = sm2 * den2;
                 *++Y = w * sm3 / (sm2*sqrt(sm2));
-                *++Y = Lx * sm4 / (sm2*sm2);
-                if (!biased) { *Y =  3.0 + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u)); }
+                *++Y = (double)Lx * sm4 / (sm2*sm2);
+                if (!biased) { *Y =  3.0 + (*Y*(double)(Lx+1u)-(double)(3u*(Lx-1u))) * (double)(Lx-1u)/(double)((Lx-2u)*(Lx-3u)); }
             }
         }
         else if (G==1u)
@@ -200,8 +200,8 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
             sm2 -= V; sm3 -= V; sm4 -= V;
             for (size_t v=0u; v<V; ++v, ++sm2, ++sm3, ++sm4, ++Y)
             {
-                *Y = Lx * *sm4 / (*sm2**sm2);
-                if (!biased) { *Y =  3.0 + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u)); }
+                *Y = (double)Lx * *sm4 / (*sm2**sm2);
+                if (!biased) { *Y =  3.0 + (*Y*(double)(Lx+1u)-(double)(3u*(Lx-1u))) * (double)(Lx-1u)/(double)((Lx-2u)*(Lx-3u)); }
             }
             sm2 -= V; sm3 -= V; sm4 -= V;
             free(sm2); free(sm3); free(sm4);
@@ -221,8 +221,8 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
                     *Y = mn; Y += K;
                     *Y = sm2 * den2; Y += K;
                     *Y = w * sm3 / (sm2*sqrt(sm2)); Y += K;
-                    *Y = Lx * sm4 / (sm2*sm2);
-                    if (!biased) { *Y =  3.0 + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u)); }
+                    *Y = (double)Lx * sm4 / (sm2*sm2);
+                    if (!biased) { *Y =  3.0 + (*Y*(double)(Lx+1u)-(double)(3u*(Lx-1u))) * (double)(Lx-1u)/(double)((Lx-2u)*(Lx-3u)); }
                 }
             }
         }
@@ -239,8 +239,8 @@ int moments_c (float *Y, const float *X, const size_t R, const size_t C, const s
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t Ly = 4u;
-    const float den = 1.0f/Lx, den2 = (biased) ? den : 1.0f/(Lx-1u);
-    const float w = (biased) ? sqrtf(Lx) : Lx*sqrtf(Lx-1u)/(Lx-2u);
+    const float den = 1.0f/(float)Lx, den2 = (biased) ? den : 1.0f/(float)(Lx-1u);
+    const float w = (biased) ? sqrtf((float)Lx) : (float)Lx*sqrtf((float)(Lx-1u))/(float)(Lx-2u);
     float xr, xi, x2r, x2i, x3r, x3i, xrr, xii, xri, den3, den4;
     float mnr = 0.0f, mni = 0.0f, sm2 = 0.0f, sm3r = 0.0f, sm3i = 0.0f, sm4r = 0.0f, sm4i = 0.0f;
 
@@ -265,12 +265,12 @@ int moments_c (float *Y, const float *X, const size_t R, const size_t C, const s
         *++Y = sm2 * den2; *++Y = 0.0f;
         den3 = w / (sm2*sqrtf(sm2));
         *++Y = sm3r * den3; *++Y = sm3i * den3;
-        den4 = Lx / (sm2*sm2);
+        den4 = (float)Lx / (sm2*sm2);
         *++Y = sm4r * den4; *++Y = sm4i * den4;
         if (!biased)
         {
-            *Y-- *= (Lx+1u)*(Lx-1u) / (float)((Lx-2u)*(Lx-3u));
-            *Y = 3.0f + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u));
+            *Y-- *= (float)((Lx+1u)*(Lx-1u)) / (float)((Lx-2u)*(Lx-3u));
+            *Y = 3.0f + (*Y*(float)(Lx+1u)-(float)(3u*(Lx-1u))) * (float)(Lx-1u)/(float)((Lx-2u)*(Lx-3u));
         }
     }
     else
@@ -301,13 +301,13 @@ int moments_c (float *Y, const float *X, const size_t R, const size_t C, const s
                 *++Y = sm2 * den2; *++Y = 0.0f;
                 den3 = w / (sm2*sqrtf(sm2));
                 *++Y = sm3r * den3; *++Y = sm3i * den3;
-                den4 = Lx / (sm2*sm2);
+                den4 = (float)Lx / (sm2*sm2);
                 *++Y = sm4r * den4; *++Y = sm4i * den4;
                 if (!biased)
                 {
                     --Y;
-                    *Y = 3.0f + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u));
-                    *++Y *= (Lx+1u)*(Lx-1u) / (float)((Lx-2u)*(Lx-3u));
+                    *Y = 3.0f + (*Y*(float)(Lx+1u)-(float)(3u*(Lx-1u))) * (float)(Lx-1u)/(float)((Lx-2u)*(Lx-3u));
+                    *++Y *= (float)((Lx+1u)*(Lx-1u)) / (float)((Lx-2u)*(Lx-3u));
                 }
             }
         }
@@ -335,13 +335,13 @@ int moments_c (float *Y, const float *X, const size_t R, const size_t C, const s
                     *Y = sm2 * den2; *++Y = 0.0f; Y += 2u*K-1u;
                     den3 = w / (sm2*sqrtf(sm2));
                     *Y = sm3r * den3; *++Y = sm3i * den3; Y += 2u*K-1u;
-                    den4 = Lx / (sm2*sm2);
+                    den4 = (float)Lx / (sm2*sm2);
                     *Y = sm4r * den4; *++Y = sm4i * den4;
                     if (!biased)
                     {
                         --Y;
-                        *Y = 3.0f + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u));
-                        *++Y *= (Lx+1u)*(Lx-1u) / (float)((Lx-2u)*(Lx-3u));
+                        *Y = 3.0f + (*Y*(float)(Lx+1u)-(float)(3u*(Lx-1u))) * (float)(Lx-1u)/(float)((Lx-2u)*(Lx-3u));
+                        *++Y *= (float)((Lx+1u)*(Lx-1u)) / (float)((Lx-2u)*(Lx-3u));
                     }
                 }
             }
@@ -359,8 +359,8 @@ int moments_z (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t Ly = 4u;
-    const double den = 1.0/Lx, den2 = (biased) ? den : 1.0/(Lx-1u);
-    const double w = (biased) ? sqrt(Lx) : Lx*sqrt(Lx-1u)/(Lx-2u);
+    const double den = 1.0/(double)Lx, den2 = (biased) ? den : 1.0/(double)(Lx-1u);
+    const double w = (biased) ? sqrt((double)Lx) : (double)Lx*sqrt((double)(Lx-1u))/(double)(Lx-2u);
     double xr, xi, x2r, x2i, x3r, x3i, xrr, xii, xri, den3, den4;
     double mnr = 0.0, mni = 0.0, sm2 = 0.0, sm3r = 0.0, sm3i = 0.0, sm4r = 0.0, sm4i = 0.0;
 
@@ -385,12 +385,12 @@ int moments_z (double *Y, const double *X, const size_t R, const size_t C, const
         *++Y = sm2 * den2; *++Y = 0.0;
         den3 = w / (sm2*sqrt(sm2));
         *++Y = sm3r * den3; *++Y = sm3i * den3;
-        den4 = Lx / (sm2*sm2);
+        den4 = (double)Lx / (sm2*sm2);
         *++Y = sm4r * den4; *++Y = sm4i * den4;
         if (!biased)
         {
-            *Y-- *= (Lx+1u)*(Lx-1u) / (double)((Lx-2u)*(Lx-3u));
-            *Y = 3.0 + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u));
+            *Y-- *= (double)((Lx+1u)*(Lx-1u)) / (double)((Lx-2u)*(Lx-3u));
+            *Y = 3.0 + (*Y*(double)(Lx+1u)-(double)(3u*(Lx-1u))) * (double)(Lx-1u)/(double)((Lx-2u)*(Lx-3u));
         }
     }
     else
@@ -421,13 +421,13 @@ int moments_z (double *Y, const double *X, const size_t R, const size_t C, const
                 *++Y = sm2 * den2; *++Y = 0.0;
                 den3 = w / (sm2*sqrt(sm2));
                 *++Y = sm3r * den3; *++Y = sm3i * den3;
-                den4 = Lx / (sm2*sm2);
+                den4 = (double)Lx / (sm2*sm2);
                 *++Y = sm4r * den4; *++Y = sm4i * den4;
                 if (!biased)
                 {
                     --Y;
-                    *Y = 3.0 + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u));
-                    *++Y *= (Lx+1u)*(Lx-1u) / (double)((Lx-2u)*(Lx-3u));
+                    *Y = 3.0 + (*Y*(double)(Lx+1u)-(double)(3u*(Lx-1u))) * (double)(Lx-1u)/(double)((Lx-2u)*(Lx-3u));
+                    *++Y *= (double)((Lx+1u)*(Lx-1u)) / (double)((Lx-2u)*(Lx-3u));
                 }
             }
         }
@@ -455,13 +455,13 @@ int moments_z (double *Y, const double *X, const size_t R, const size_t C, const
                     *Y = sm2 * den2; *++Y = 0.0; Y += 2u*K-1u;
                     den3 = w / (sm2*sqrt(sm2));
                     *Y = sm3r * den3; *++Y = sm3i * den3; Y += 2u*K-1u;
-                    den4 = Lx / (sm2*sm2);
+                    den4 = (double)Lx / (sm2*sm2);
                     *Y = sm4r * den4; *++Y = sm4i * den4;
                     if (!biased)
                     {
                         --Y;
-                        *Y = 3.0 + (*Y*(Lx+1u)-3u*(Lx-1u)) * (Lx-1u)/((Lx-2u)*(Lx-3u));
-                        *++Y *= (Lx+1u)*(Lx-1u) / (double)((Lx-2u)*(Lx-3u));
+                        *Y = 3.0 + (*Y*(double)(Lx+1u)-(double)(3u*(Lx-1u))) * (double)(Lx-1u)/(double)((Lx-2u)*(Lx-3u));
+                        *++Y *= (double)((Lx+1u)*(Lx-1u)) / (double)((Lx-2u)*(Lx-3u));
                     }
                 }
             }

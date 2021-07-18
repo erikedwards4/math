@@ -44,7 +44,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                 ssm += s1 * s2;
             }
         }
-        *Y = 2 * ssm / den;
+        *Y = (float)(2*ssm) / den;
     }
     else
     {
@@ -67,7 +67,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                         ssm += s1 * s2;
                     }
                 }
-                *Y = 2 * ssm / den;
+                *Y = (float)(2*ssm) / den;
             }
         }
         else
@@ -89,7 +89,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                             ssm += s1 * s2;
                         }
                     }
-                    *Y = 2 * ssm / den;
+                    *Y = (float)(2*ssm) / den;
                 }
             }
         }
@@ -131,7 +131,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                 ssm += s1 * s2;
             }
         }
-        *Y = 2 * ssm / den;
+        *Y = (double)(2*ssm) / den;
     }
     else
     {
@@ -154,7 +154,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                         ssm += s1 * s2;
                     }
                 }
-                *Y = 2 * ssm / den;
+                *Y = (double)(2*ssm) / den;
             }
         }
         else
@@ -176,7 +176,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                             ssm += s1 * s2;
                         }
                     }
-                    *Y = 2 * ssm / den;
+                    *Y = (double)(2*ssm) / den;
                 }
             }
         }

@@ -33,7 +33,7 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cokurtosis_s: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const float den = 1.0f / L;
+    const float den = 1.0f / (float)L;
     float xx1, xx2, mn1, mn2, ss1, ss2, ss12;
 
     if (N==0u) {}
@@ -49,7 +49,7 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
             xx2 = *X2 - mn2; xx2 *= xx2;
             ss1 += xx1; ss2 += xx2; ss12 += xx1*xx2;
         }
-        *Y = L * ss12 / (ss1*ss2);
+        *Y = (float)L * ss12 / (ss1*ss2);
     }
     else
     {
@@ -72,7 +72,7 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
                     xx2 = *X2 - mn2; xx2 *= xx2;
                     ss1 += xx1; ss2 += xx2; ss12 += xx1*xx2;
                 }
-                *Y = L * ss12 / (ss1*ss2);
+                *Y = (float)L * ss12 / (ss1*ss2);
             }
         }
         else
@@ -94,7 +94,7 @@ int cokurtosis_s (float *Y, const float *X1, const float *X2, const size_t R1, c
                         xx2 = *X2 - mn2; xx2 *= xx2;
                         ss1 += xx1; ss2 += xx2; ss12 += xx1*xx2;
                     }
-                    *Y = L * ss12 / (ss1*ss2);
+                    *Y = (float)L * ss12 / (ss1*ss2);
                 }
             }
         }
@@ -117,7 +117,7 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
     if (L1!=L2) { fprintf(stderr,"error in cokurtosis_d: vectors in X1 and X2 must have the same length\n"); return 1; }
-    const double den = 1.0 / L;
+    const double den = 1.0 / (double)L;
     double xx1, xx2, mn1, mn2, ss1, ss2, ss12;
 
     if (N==0u) {}
@@ -132,7 +132,7 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
             xx2 = *X2 - mn2; xx2 *= xx2;
             ss1 += xx1; ss2 += xx2; ss12 += xx1*xx2;
         }
-        *Y = L * ss12 / (ss1*ss2);
+        *Y = (double)L * ss12 / (ss1*ss2);
     }
     else
     {
@@ -155,7 +155,7 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
                     xx2 = *X2 - mn2; xx2 *= xx2;
                     ss1 += xx1; ss2 += xx2; ss12 += xx1*xx2;
                 }
-                *Y = L * ss12 / (ss1*ss2);
+                *Y = (double)L * ss12 / (ss1*ss2);
             }
         }
         else
@@ -177,7 +177,7 @@ int cokurtosis_d (double *Y, const double *X1, const double *X2, const size_t R1
                         xx2 = *X2 - mn2; xx2 *= xx2;
                         ss1 += xx1; ss2 += xx2; ss12 += xx1*xx2;
                     }
-                    *Y = L * ss12 / (ss1*ss2);
+                    *Y = (double)L * ss12 / (ss1*ss2);
                 }
             }
         }

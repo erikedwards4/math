@@ -22,7 +22,7 @@ int zscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     if (L<2u) { fprintf(stderr,"error in zscore_s: L (vec length) must be > 1\n"); return 1; }
-    const float den = 1.0f/L, den2 = (biased) ? den : 1.0f/(L-1u);
+    const float den = 1.0f/(float)L, den2 = (biased) ? den : 1.0f/(float)(L-1u);
     float mn = 0.0f, sd = 0.0f;
 
     if (N==0u) {}
@@ -80,7 +80,7 @@ int zscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     if (L<2u) { fprintf(stderr,"error in zscore_d: L (vec length) must be > 1\n"); return 1; }
-    const double den = 1.0/L, den2 = (biased) ? den : 1.0/(L-1u);
+    const double den = 1.0/(double)L, den2 = (biased) ? den : 1.0/(double)(L-1u);
     double mn = 0.0, sd = 0.0;
 
     if (N==0u) {}
@@ -138,7 +138,7 @@ int zscore_c (float *X, const size_t R, const size_t C, const size_t S, const si
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     if (L<2u) { fprintf(stderr,"error in zscore_c: L (vec length) must be > 1\n"); return 1; }
-    const float den = 1.0f/L, den2 = (biased) ? den : 1.0f/(L-1u);
+    const float den = 1.0f/(float)L, den2 = (biased) ? den : 1.0f/(float)(L-1u);
     float mnr = 0.0f, mni = 0.0f, sd = 0.0f;
 
     if (N==0u) {}
@@ -196,7 +196,7 @@ int zscore_z (double *X, const size_t R, const size_t C, const size_t S, const s
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     if (L<2u) { fprintf(stderr,"error in zscore_c: L (vec length) must be > 1\n"); return 1; }
-    const double den = 1.0/L, den2 = (biased) ? den : 1.0/(L-1u);
+    const double den = 1.0/(double)L, den2 = (biased) ? den : 1.0/(double)(L-1u);
     double mnr = 0.0, mni = 0.0, sd = 0.0;
 
     if (N==0u) {}

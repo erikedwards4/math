@@ -55,7 +55,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
     if (!(XI=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in iprctile_s: problem with malloc. "); perror("malloc"); return 1; }
 
     //Get index closest to pth prctile after sorting
-    const float p1 = (p/100.0f)*(L-1u);
+    const float p1 = (p/100.0f)*(float)(L-1u);
     const size_t i1 = (p<100.0f) ? (size_t)floorf(p1) : L-2u;
     const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
     const size_t ip = (w2<0.5f) ? i1 : i1+1u;
@@ -117,7 +117,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
     if (!(XI=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in iprctile_d: problem with malloc. "); perror("malloc"); return 1; }
 
     //Get index closest to pth prctile after sorting
-    const double p1 = (p/100.0)*(L-1u);
+    const double p1 = (p/100.0)*(double)(L-1u);
     const size_t i1 = (p<100.0) ? (size_t)floor(p1) : L-2u;
     const double w2 = (p<100.0) ? p1-floor(p1) : 1.0;
     const size_t ip = (w2<0.5) ? i1 : i1+1u;

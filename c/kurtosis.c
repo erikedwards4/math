@@ -24,7 +24,7 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / L;
+    const float den = 1.0f / (float)L;
 
     if (N==0u) {}
     else if (L<4u) { fprintf(stderr,"error in kurtosis_s: L must be > 3\n"); return 1; }
@@ -35,8 +35,8 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
         for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
         mn *= den;
         for (size_t l=0u; l<L; ++l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
-        *Y = L * sm4 / (sm2*sm2);
-        if (!biased) { *Y =  3.0f + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u)); }
+        *Y = (float)L * sm4 / (sm2*sm2);
+        if (!biased) { *Y =  3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u)); }
     }
     else
     {
@@ -53,8 +53,8 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
                 for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
                 mn *= den; X -= L;
                 for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
-                *Y = L * sm4 / (sm2*sm2);
-                if (!biased) { *Y =  3.0f + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u)); }
+                *Y = (float)L * sm4 / (sm2*sm2);
+                if (!biased) { *Y =  3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u)); }
             }
         }
         else if (G==1u)
@@ -77,8 +77,8 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
             }
             for (size_t v=0u; v<V; ++v, ++sm2, ++sm4, ++Y)
             {
-                *Y = L * *sm4 / (*sm2**sm2);
-                if (!biased) { *Y =  3.0f + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u)); }
+                *Y = (float)L * *sm4 / (*sm2**sm2);
+                if (!biased) { *Y =  3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u)); }
             }
             sm2 -= V; sm4 -= V;
             free(sm2); free(sm4);
@@ -95,8 +95,8 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
                     mn += *X; mn *= den;
                     for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2;
-                    *Y = L * sm4 / (sm2*sm2);
-                    if (!biased) { *Y =  3.0f + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u)); }
+                    *Y = (float)L * sm4 / (sm2*sm2);
+                    if (!biased) { *Y =  3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u)); }
                 }
             }
         }
@@ -112,7 +112,7 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / L;
+    const double den = 1.0 / (double)L;
 
     if (N==0u) {}
     else if (L<4u) { fprintf(stderr,"error in kurtosis_d: L must be > 3\n"); return 1; }
@@ -123,8 +123,9 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
         for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
         mn *= den;
         for (size_t l=0u; l<L; ++l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
-        *Y = L * sm4 / (sm2*sm2);
-        if (!biased) { *Y =  3.0 + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u)); }
+        *Y = (double)L * sm4 / (sm2*sm2);
+        if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
+        if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
     }
     else
     {
@@ -141,8 +142,8 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
                 for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
                 mn *= den; X -= L;
                 for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
-                *Y = L * sm4 / (sm2*sm2);
-                if (!biased) { *Y =  3.0 + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u)); }
+                *Y = (double)L * sm4 / (sm2*sm2);
+                if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
             }
         }
         else if (G==1u)
@@ -165,8 +166,8 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
             }
             for (size_t v=0u; v<V; ++v, ++sm2, ++sm4, ++Y)
             {
-                *Y = L * *sm4 / (*sm2**sm2);
-                if (!biased) { *Y =  3.0 + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u)); }
+                *Y = (double)L * *sm4 / (*sm2**sm2);
+                if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
             }
             sm2 -= V; sm4 -= V;
             free(sm2); free(sm4);
@@ -183,8 +184,8 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
                     mn += *X; mn *= den;
                     for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2;
-                    *Y = L * sm4 / (sm2*sm2);
-                    if (!biased) { *Y =  3.0 + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u)); }
+                    *Y = (double)L * sm4 / (sm2*sm2);
+                    if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
                 }
             }
         }
@@ -200,7 +201,7 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / L;
+    const float den = 1.0f / (float)L;
     float xr, xi, x2r, x2i, x3r, x3i, xrr, xii, xri, den4;
     float mnr = 0.0f, mni = 0.0f, sm2 = 0.0f, sm4r = 0.0f, sm4i = 0.0f;
 
@@ -220,12 +221,12 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t
             x3r = xr*x2r - xi*x2i; x3i = xr*x2i + xi*x2r;
             sm4r += xr*x3r - xi*x3i; sm4i += xr*x3i + xi*x3r;
         }
-        den4 = L / (sm2*sm2);
+        den4 = (float)L / (sm2*sm2);
         *Y = sm4r * den4; *++Y = sm4i * den4;
         if (!biased)
         {
-            *Y-- *= (L+1u)*(L-1u) / (float)((L-2u)*(L-3u));
-            *Y = 3.0f + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u));
+            *Y-- *= (float)((L+1u)*(L-1u)) / (float)((L-2u)*(L-3u));
+            *Y = 3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u));
         }
     }
     else
@@ -251,13 +252,13 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t
                     x3r = xr*x2r - xi*x2i; x3i = xr*x2i + xi*x2r;
                     sm4r += xr*x3r - xi*x3i; sm4i += xr*x3i + xi*x3r;
                 }
-                den4 = L / (sm2*sm2);
+                den4 = (float)L / (sm2*sm2);
                 *Y = sm4r * den4; *++Y = sm4i * den4;
                 if (!biased)
                 {
                     --Y;
-                    *Y = 3.0f + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u));
-                    *++Y *= (L+1u)*(L-1u) / (float)((L-2u)*(L-3u));
+                    *Y = 3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u));
+                    *++Y *= (float)((L+1u)*(L-1u)) / (float)((L-2u)*(L-3u));
                 }
             }
         }
@@ -280,13 +281,13 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t
                         x3r = xr*x2r - xi*x2i; x3i = xr*x2i + xi*x2r;
                         sm4r += xr*x3r - xi*x3i; sm4i += xr*x3i + xi*x3r;
                     }
-                    den4 = L / (sm2*sm2);
+                    den4 = (float)L / (sm2*sm2);
                     *Y = sm4r * den4; *++Y = sm4i * den4;
                     if (!biased)
                     {
                         --Y;
-                        *Y = 3.0f + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u));
-                        *++Y *= (L+1u)*(L-1u) / (float)((L-2u)*(L-3u));
+                        *Y = 3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u));
+                        *++Y *= (float)((L+1u)*(L-1u)) / (float)((L-2u)*(L-3u));
                     }
                 }
             }
@@ -303,7 +304,7 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / L;
+    const double den = 1.0 / (double)L;
     double xr, xi, x2r, x2i, x3r, x3i, xrr, xii, xri, den4;
     double mnr = 0.0, mni = 0.0, sm2 = 0.0, sm4r = 0.0, sm4i = 0.0;
 
@@ -323,12 +324,12 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size
             x3r = xr*x2r - xi*x2i; x3i = xr*x2i + xi*x2r;
             sm4r += xr*x3r - xi*x3i; sm4i += xr*x3i + xi*x3r;
         }
-        den4 = L / (sm2*sm2);
+        den4 = (double)L / (sm2*sm2);
         *Y = sm4r * den4; *++Y = sm4i * den4;
         if (!biased)
         {
-            *Y-- *= (L+1u)*(L-1u) / (double)((L-2u)*(L-3u));
-            *Y = 3.0 + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u));
+            *Y-- *= (double)((L+1u)*(L-1u)) / (double)((L-2u)*(L-3u));
+            *Y = 3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u));
         }
     }
     else
@@ -354,13 +355,13 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size
                     x3r = xr*x2r - xi*x2i; x3i = xr*x2i + xi*x2r;
                     sm4r += xr*x3r - xi*x3i; sm4i += xr*x3i + xi*x3r;
                 }
-                den4 = L / (sm2*sm2);
+                den4 = (double)L / (sm2*sm2);
                 *Y = sm4r * den4; *++Y = sm4i * den4;
                 if (!biased)
                 {
                     --Y;
-                    *Y = 3.0 + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u));
-                    *++Y *= (L+1u)*(L-1u) / (double)((L-2u)*(L-3u));
+                    *Y = 3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u));
+                    *++Y *= (double)((L+1u)*(L-1u)) / (double)((L-2u)*(L-3u));
                 }
             }
         }
@@ -383,13 +384,13 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size
                         x3r = xr*x2r - xi*x2i; x3i = xr*x2i + xi*x2r;
                         sm4r += xr*x3r - xi*x3i; sm4i += xr*x3i + xi*x3r;
                     }
-                    den4 = L / (sm2*sm2);
+                    den4 = (double)L / (sm2*sm2);
                     *Y = sm4r * den4; *++Y = sm4i * den4;
                     if (!biased)
                     {
                         --Y;
-                        *Y = 3.0 + (*Y*(L+1u)-3u*(L-1u)) * (L-1u)/((L-2u)*(L-3u));
-                        *++Y *= (L+1u)*(L-1u) / (double)((L-2u)*(L-3u));
+                        *Y = 3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u));
+                        *++Y *= (double)((L+1u)*(L-1u)) / (double)((L-2u)*(L-3u));
                     }
                 }
             }
