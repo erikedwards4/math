@@ -5,6 +5,7 @@
 //This originally worked in place for some conditions, but those are deleted now.
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 namespace codee {

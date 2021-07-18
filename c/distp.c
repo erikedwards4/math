@@ -26,7 +26,7 @@ int distp_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
-    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2u*C2u*S2u*H2;
+    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
@@ -86,7 +86,7 @@ int distp_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
             float sm;
             for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1-=L*K1u-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
@@ -111,7 +111,7 @@ int distp_d (double *Y, const double *X1, const double *X2, const size_t R1, con
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
-    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2u*C2u*S2u*H2;
+    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
@@ -171,7 +171,7 @@ int distp_d (double *Y, const double *X1, const double *X2, const size_t R1, con
             double sm;
             for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1-=L*K1u-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
@@ -196,7 +196,7 @@ int distp_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
-    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2u*C2u*S2u*H2;
+    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
@@ -253,7 +253,7 @@ int distp_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
             const size_t I1 = (L==N1) ? 0u : 2u*B*(L-1u), I2 = (L==N2) ? 0u : 2u*B*(L-1u);
             for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1-=L*K1u-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     float sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u)
@@ -280,7 +280,7 @@ int distp_z (double *Y, const double *X1, const double *X2, const size_t R1, con
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
-    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2u*C2u*S2u*H2;
+    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
@@ -337,7 +337,7 @@ int distp_z (double *Y, const double *X1, const double *X2, const size_t R1, con
             const size_t I1 = (L==N1) ? 0u : 2u*B*(L-1u), I2 = (L==N2) ? 0u : 2u*B*(L-1u);
             for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1-=L*K1u-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     double sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u)

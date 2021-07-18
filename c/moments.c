@@ -6,6 +6,7 @@
 //I follow the Octave convention for complex moments (but see literature for other ideas later).
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #ifdef __cplusplus
@@ -25,12 +26,12 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const size_t Ly = 4;
+    const size_t Ly = 4u;
     const float den = 1.0f / Lx, den2 = (biased) ? den : 1.0f/(Lx-1u);
     const float w = (biased) ? sqrtf(Lx) : Lx*sqrtf(Lx-1u)/(Lx-2u);
 
     if (N==0u) {}
-    else if (Lx<4) { fprintf(stderr,"error in moments_s: L must be > 3\n"); return 1; }
+    else if (Lx<4u) { fprintf(stderr,"error in moments_s: L must be > 3\n"); return 1; }
     else if (Lx==N)
     {
         float x, x2, mn = 0.0f, sm2 = 0.0f, sm3 = 0.0f, sm4 = 0.0f;
@@ -107,9 +108,9 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 for (size_t b=0u; b<B; ++b, ++X, Y-=(Ly-1u)*K-1u)
                 {
                     mn = sm2 = sm3 = sm4 = 0.0f;
-                    for (size_t l=0u; l<Lx-1; ++l, X+=K) { mn += *X; }
+                    for (size_t l=0u; l<Lx-1u; ++l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<Lx-1; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
+                    for (size_t l=0u; l<Lx-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2;
                     *Y = mn; Y += K;
                     *Y = sm2 * den2; Y += K;
@@ -131,12 +132,12 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const size_t Ly = 4;
+    const size_t Ly = 4u;
     const double den = 1.0 / Lx, den2 = (biased) ? den : 1.0/(Lx-1u);
     const double w = (biased) ? sqrt(Lx) : Lx*sqrt(Lx-1u)/(Lx-2u);
 
     if (N==0u) {}
-    else if (Lx<4) { fprintf(stderr,"error in moments_d: L must be > 3\n"); return 1; }
+    else if (Lx<4u) { fprintf(stderr,"error in moments_d: L must be > 3\n"); return 1; }
     else if (Lx==N)
     {
         double x, x2, mn = 0.0, sm2 = 0.0, sm3 = 0.0, sm4 = 0.0;
@@ -213,9 +214,9 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
                 for (size_t b=0u; b<B; ++b, ++X, Y-=(Ly-1u)*K-1u)
                 {
                     mn = sm2 = sm3 = sm4 = 0.0;
-                    for (size_t l=0u; l<Lx-1; ++l, X+=K) { mn += *X; }
+                    for (size_t l=0u; l<Lx-1u; ++l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<Lx-1; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
+                    for (size_t l=0u; l<Lx-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2;
                     *Y = mn; Y += K;
                     *Y = sm2 * den2; Y += K;
@@ -237,14 +238,14 @@ int moments_c (float *Y, const float *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const size_t Ly = 4;
+    const size_t Ly = 4u;
     const float den = 1.0f/Lx, den2 = (biased) ? den : 1.0f/(Lx-1u);
     const float w = (biased) ? sqrtf(Lx) : Lx*sqrtf(Lx-1u)/(Lx-2u);
     float xr, xi, x2r, x2i, x3r, x3i, xrr, xii, xri, den3, den4;
     float mnr = 0.0f, mni = 0.0f, sm2 = 0.0f, sm3r = 0.0f, sm3i = 0.0f, sm4r = 0.0f, sm4i = 0.0f;
 
     if (N==0u) {}
-    else if (Lx<4) { fprintf(stderr,"error in moments_c: Lx must be > 3\n"); return 1; }
+    else if (Lx<4u) { fprintf(stderr,"error in moments_c: Lx must be > 3\n"); return 1; }
     else if (Lx==N)
     {
         for (size_t l=0u; l<Lx; ++l, ++X) { mnr += *X; mni += *++X; }
@@ -357,14 +358,14 @@ int moments_z (double *Y, const double *X, const size_t R, const size_t C, const
 
     const size_t N = R*C*S*H;
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const size_t Ly = 4;
+    const size_t Ly = 4u;
     const double den = 1.0/Lx, den2 = (biased) ? den : 1.0/(Lx-1u);
     const double w = (biased) ? sqrt(Lx) : Lx*sqrt(Lx-1u)/(Lx-2u);
     double xr, xi, x2r, x2i, x3r, x3i, xrr, xii, xri, den3, den4;
     double mnr = 0.0, mni = 0.0, sm2 = 0.0, sm3r = 0.0, sm3i = 0.0, sm4r = 0.0, sm4i = 0.0;
 
     if (N==0u) {}
-    else if (Lx<4) { fprintf(stderr,"error in moments_z: Lx must be > 3\n"); return 1; }
+    else if (Lx<4u) { fprintf(stderr,"error in moments_z: Lx must be > 3\n"); return 1; }
     else if (Lx==N)
     {
         for (size_t l=0u; l<Lx; ++l, ++X) { mnr += *X; mni += *++X; }

@@ -22,8 +22,8 @@ int join3_s (float *Y, const float *X1, const float *X2, const float *X3,  const
     if (dim!=3u && (H1!=H2 || H1!=H3)) { fprintf(stderr,"error in join3_s: inputs must have same num hyperslices for dim!=3\n"); return 1; }
 
     const size_t B1 = (iscolmajor) ? ((dim==0u) ? R1 : (dim==1u) ? R1*C1 : (dim==2u) ? R1*C1*S1 : R1*C1*S1*H1) : ((dim==0u) ? H1*S1*C1*R1 : (dim==1u) ? H1*S1*C1 : (dim==2u) ? H1*S1 : H1);
-    const size_t B2 = (iscolmajor) ? ((dim==0u) ? R2 : (dim==1u) ? R2u*C2 : (dim==2u) ? R2u*C2u*S2 : R2u*C2u*S2u*H2) : ((dim==0u) ? H2u*S2u*C2u*R2 : (dim==1u) ? H2u*S2u*C2 : (dim==2u) ? H2u*S2 : H2);
-    const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3u*C3 : (dim==2u) ? R3u*C3u*S3 : R3u*C3u*S3u*H3) : ((dim==0u) ? H3u*S3u*C3u*R3 : (dim==1u) ? H3u*S3u*C3 : (dim==2u) ? H3u*S3 : H3);
+    const size_t B2 = (iscolmajor) ? ((dim==0u) ? R2 : (dim==1u) ? R2*C2 : (dim==2u) ? R2*C2*S2 : R2*C2*S2*H2) : ((dim==0u) ? H2*S2*C2*R2 : (dim==1u) ? H2*S2*C2 : (dim==2u) ? H2*S2 : H2);
+    const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3*C3 : (dim==2u) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0u) ? H3*S3*C3*R3 : (dim==1u) ? H3*S3*C3 : (dim==2u) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
     for (size_t g=0u; g<G; ++g)
@@ -46,8 +46,8 @@ int join3_d (double *Y, const double *X1, const double *X2, const double *X3,  c
     if (dim!=3u && (H1!=H2 || H1!=H3)) { fprintf(stderr,"error in join3_d: inputs must have same num hyperslices for dim!=3\n"); return 1; }
 
     const size_t B1 = (iscolmajor) ? ((dim==0u) ? R1 : (dim==1u) ? R1*C1 : (dim==2u) ? R1*C1*S1 : R1*C1*S1*H1) : ((dim==0u) ? H1*S1*C1*R1 : (dim==1u) ? H1*S1*C1 : (dim==2u) ? H1*S1 : H1);
-    const size_t B2 = (iscolmajor) ? ((dim==0u) ? R2 : (dim==1u) ? R2u*C2 : (dim==2u) ? R2u*C2u*S2 : R2u*C2u*S2u*H2) : ((dim==0u) ? H2u*S2u*C2u*R2 : (dim==1u) ? H2u*S2u*C2 : (dim==2u) ? H2u*S2 : H2);
-    const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3u*C3 : (dim==2u) ? R3u*C3u*S3 : R3u*C3u*S3u*H3) : ((dim==0u) ? H3u*S3u*C3u*R3 : (dim==1u) ? H3u*S3u*C3 : (dim==2u) ? H3u*S3 : H3);
+    const size_t B2 = (iscolmajor) ? ((dim==0u) ? R2 : (dim==1u) ? R2*C2 : (dim==2u) ? R2*C2*S2 : R2*C2*S2*H2) : ((dim==0u) ? H2*S2*C2*R2 : (dim==1u) ? H2*S2*C2 : (dim==2u) ? H2*S2 : H2);
+    const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3*C3 : (dim==2u) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0u) ? H3*S3*C3*R3 : (dim==1u) ? H3*S3*C3 : (dim==2u) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
     for (size_t g=0u; g<G; ++g)
@@ -70,8 +70,8 @@ int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const
     if (dim!=3u && (H1!=H2 || H1!=H3)) { fprintf(stderr,"error in join3_c: inputs must have same num hyperslices for dim!=3\n"); return 1; }
 
     const size_t B1 = (iscolmajor) ? ((dim==0u) ? R1 : (dim==1u) ? R1*C1 : (dim==2u) ? R1*C1*S1 : R1*C1*S1*H1) : ((dim==0u) ? H1*S1*C1*R1 : (dim==1u) ? H1*S1*C1 : (dim==2u) ? H1*S1 : H1);
-    const size_t B2 = (iscolmajor) ? ((dim==0u) ? R2 : (dim==1u) ? R2u*C2 : (dim==2u) ? R2u*C2u*S2 : R2u*C2u*S2u*H2) : ((dim==0u) ? H2u*S2u*C2u*R2 : (dim==1u) ? H2u*S2u*C2 : (dim==2u) ? H2u*S2 : H2);
-    const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3u*C3 : (dim==2u) ? R3u*C3u*S3 : R3u*C3u*S3u*H3) : ((dim==0u) ? H3u*S3u*C3u*R3 : (dim==1u) ? H3u*S3u*C3 : (dim==2u) ? H3u*S3 : H3);
+    const size_t B2 = (iscolmajor) ? ((dim==0u) ? R2 : (dim==1u) ? R2*C2 : (dim==2u) ? R2*C2*S2 : R2*C2*S2*H2) : ((dim==0u) ? H2*S2*C2*R2 : (dim==1u) ? H2*S2*C2 : (dim==2u) ? H2*S2 : H2);
+    const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3*C3 : (dim==2u) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0u) ? H3*S3*C3*R3 : (dim==1u) ? H3*S3*C3 : (dim==2u) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
     for (size_t g=0u; g<G; ++g)
@@ -94,8 +94,8 @@ int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  c
     if (dim!=3u && (H1!=H2 || H1!=H3)) { fprintf(stderr,"error in join3_z: inputs must have same num hyperslices for dim!=3\n"); return 1; }
 
     const size_t B1 = (iscolmajor) ? ((dim==0u) ? R1 : (dim==1u) ? R1*C1 : (dim==2u) ? R1*C1*S1 : R1*C1*S1*H1) : ((dim==0u) ? H1*S1*C1*R1 : (dim==1u) ? H1*S1*C1 : (dim==2u) ? H1*S1 : H1);
-    const size_t B2 = (iscolmajor) ? ((dim==0u) ? R2 : (dim==1u) ? R2u*C2 : (dim==2u) ? R2u*C2u*S2 : R2u*C2u*S2u*H2) : ((dim==0u) ? H2u*S2u*C2u*R2 : (dim==1u) ? H2u*S2u*C2 : (dim==2u) ? H2u*S2 : H2);
-    const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3u*C3 : (dim==2u) ? R3u*C3u*S3 : R3u*C3u*S3u*H3) : ((dim==0u) ? H3u*S3u*C3u*R3 : (dim==1u) ? H3u*S3u*C3 : (dim==2u) ? H3u*S3 : H3);
+    const size_t B2 = (iscolmajor) ? ((dim==0u) ? R2 : (dim==1u) ? R2*C2 : (dim==2u) ? R2*C2*S2 : R2*C2*S2*H2) : ((dim==0u) ? H2*S2*C2*R2 : (dim==1u) ? H2*S2*C2 : (dim==2u) ? H2*S2 : H2);
+    const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3*C3 : (dim==2u) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0u) ? H3*S3*C3*R3 : (dim==1u) ? H3*S3*C3 : (dim==2u) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
     for (size_t g=0u; g<G; ++g)

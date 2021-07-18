@@ -8,6 +8,9 @@
 #Since these are not stand-alone programs (no main functions), the only outputs are object files to obj.
 #It is not necessary to run this when making the C++ command-line tools.
 
+#Needed external libraries: cblas, lapacke, libcerf-dev (complex error function)
+#To Do: weighted statistics
+
 
 SHELL=/bin/bash
 CC=clang
@@ -29,7 +32,7 @@ CFLAGS=$(WFLAG) $(STD) -O3 -march=native -fPIC
 
 
 All: all
-all: Dirs Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vec2vec Vec2vec2 Complex Linalg Clean
+all: Dirs Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vec2vec Vecs2scalar Complex Linalg Clean
 
 Dirs:
 	mkdir -pm 777 obj

@@ -419,7 +419,7 @@ cos2: srci/cos2.cpp c/cos2.c
 cokurtosis: srci/cokurtosis.cpp c/cokurtosis.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 spearman: srci/spearman.cpp c/spearman.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2
 kendall: srci/kendall.cpp c/kendall.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
@@ -484,7 +484,7 @@ Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod softma
 sorti: srci/sorti.cpp c/sorti.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 ranks: srci/ranks.cpp c/ranks.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 prctiles: srci/prctiles.cpp c/prctiles.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 moments: srci/moments.cpp c/moments.c

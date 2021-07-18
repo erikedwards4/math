@@ -20,7 +20,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
-    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2u*C2u*S2u*H2;
+    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
@@ -84,8 +84,8 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
                     {
                         for (size_t l1=0u; l1<l2; ++l1)
                         {
-                            s1 = (X1[l1*K1]>X1[l2u*K1]) ? 1 : (X1[l1*K1]<X1[l2u*K1]) ? -1 : 0;
-                            s2 = (X2[l1*K2]>X2[l2u*K2]) ? 1 : (X2[l1*K2]<X2[l2u*K2]) ? -1 : 0;
+                            s1 = (X1[l1*K1]>X1[l2*K1]) ? 1 : (X1[l1*K1]<X1[l2*K1]) ? -1 : 0;
+                            s2 = (X2[l1*K2]>X2[l2*K2]) ? 1 : (X2[l1*K2]<X2[l2*K2]) ? -1 : 0;
                             ssm += s1 * s2;
                         }
                     }
@@ -107,7 +107,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
     const size_t C = (C1>C2) ? C1 : C2;
     const size_t S = (S1>S2) ? S1 : S2;
     const size_t H = (H1>H2) ? H1 : H2;
-    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2u*C2u*S2u*H2;
+    const size_t N = R*C*S*H, N1 = R1*C1*S1*H1, N2 = R2*C2*S2*H2;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
@@ -171,8 +171,8 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
                     {
                         for (size_t l1=0u; l1<l2; ++l1)
                         {
-                            s1 = (X1[l1*K1]>X1[l2u*K1]) ? 1 : (X1[l1*K1]<X1[l2u*K1]) ? -1 : 0;
-                            s2 = (X2[l1*K2]>X2[l2u*K2]) ? 1 : (X2[l1*K2]<X2[l2u*K2]) ? -1 : 0;
+                            s1 = (X1[l1*K1]>X1[l2*K1]) ? 1 : (X1[l1*K1]<X1[l2*K1]) ? -1 : 0;
+                            s2 = (X2[l1*K2]>X2[l2*K2]) ? 1 : (X2[l1*K2]<X2[l2*K2]) ? -1 : 0;
                             ssm += s1 * s2;
                         }
                     }

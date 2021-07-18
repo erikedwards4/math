@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     if ((o1.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "output data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
     //Other prep
     //The top 2 lines would be for C++ random (no PCG)
     //random_device rd;  //random device to seed Mersenne twister engine
-    //mt19937 pcg_eng(rd());
+    //mt19937 mt_eng(rd());
     pcg_extras::seed_seq_from<std::random_device> seed_source;
     //these are a list of worthwhile generator engines (c is for cryptographic security, i.e. lowest predictability, but k is for equidistribution)
     //pcg32 pcg_eng(seed_source);            //if need fast default generator
@@ -163,12 +163,11 @@ int main(int argc, char *argv[])
     //Process
     if (o1.T==1u)
     {
-        valarray<int> Yi(o1.N());
-        valarray<float> Y(o1.N());
+        valarray<int> Yi(o1.N()); valarray<float> Y(o1.N());
         uniform_int_distribution<int> distr(a,b);
         try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-        for (size_t n=0; n<o1.N(); ++n) { Y[n] = float(Yi[n]); }
+        for (size_t n=0u; n<o1.N(); ++n) { Y[n] = float(Yi[n]); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -178,12 +177,11 @@ int main(int argc, char *argv[])
     }
     else if (o1.T==2)
     {
-        valarray<int> Yi(o1.N());
-        valarray<double> Y(o1.N());
+        valarray<int> Yi(o1.N()); valarray<double> Y(o1.N());
         uniform_int_distribution<int> distr(a,b);
         try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-        for (size_t n=0; n<o1.N(); ++n) { Y[n] = double(Yi[n]); }
+        for (size_t n=0u; n<o1.N(); ++n) { Y[n] = double(Yi[n]); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -193,12 +191,11 @@ int main(int argc, char *argv[])
     }
     else if (o1.T==101u)
     {
-        valarray<complex<int>> Yi(o1.N());
-        valarray<complex<float>> Y(o1.N());
+        valarray<complex<int>> Yi(o1.N()); valarray<complex<float>> Y(o1.N());
         uniform_int_distribution<int> distr(a,b);
         try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){complex<int> y(distr(pcg_eng),distr(pcg_eng)); return y;}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-        for (size_t n=0; n<o1.N(); ++n) { Y[n] = complex<float>(float(real(Yi[n])),float(imag(Yi[n]))); }
+        for (size_t n=0u; n<o1.N(); ++n) { Y[n] = complex<float>(float(real(Yi[n])),float(imag(Yi[n]))); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -208,12 +205,11 @@ int main(int argc, char *argv[])
     }
     else if (o1.T==102u)
     {
-        valarray<complex<int>> Yi(o1.N());
-        valarray<complex<double>> Y(o1.N());
+        valarray<complex<int>> Yi(o1.N()); valarray<complex<double>> Y(o1.N());
         uniform_int_distribution<int> distr(a,b);
         try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){complex<int> y(distr(pcg_eng),distr(pcg_eng)); return y;}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-        for (size_t n=0; n<o1.N(); ++n) { Y[n] = complex<double>(double(real(Yi[n])),double(imag(Yi[n]))); }
+        for (size_t n=0u; n<o1.N(); ++n) { Y[n] = complex<double>(double(real(Yi[n])),double(imag(Yi[n]))); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {

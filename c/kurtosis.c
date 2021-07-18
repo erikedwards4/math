@@ -5,6 +5,7 @@
 //I follow the Octave convention for complex kurtosis (but see literature for other ideas later).
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 namespace codee {

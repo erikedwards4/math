@@ -91,7 +91,7 @@ int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char
         const size_t L = (C-(size_t)k<R) ? C-(size_t)k : R;
         const int S = (iscolmajor) ? k*(int)R : k;
         
-        X += 2u*S;
+        X += 2*S;
         for (size_t l=0u; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else if (k<=0 && (int)R>-k)
@@ -99,7 +99,7 @@ int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char
         const size_t L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C;
         const int S = (iscolmajor) ? -k : -k*(int)C;
         
-        X += 2u*S;
+        X += 2*S;
         for (size_t l=0u; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else
@@ -120,7 +120,7 @@ int diag_z (double *Y, const double *X, const size_t R, const size_t C, const ch
         const size_t L = (C-(size_t)k<R) ? C-(size_t)k : R;
         const int S = (iscolmajor) ? k*(int)R : k;
         
-        X += 2u*S;
+        X += 2*S;
         for (size_t l=0u; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else if (k<=0 && (int)R>-k)
@@ -128,7 +128,7 @@ int diag_z (double *Y, const double *X, const size_t R, const size_t C, const ch
         const size_t L = ((int)R+k<(int)C) ? (size_t)((int)R+k) : C;
         const int S = (iscolmajor) ? -k : -k*(int)C;
         
-        X += 2u*S;
+        X += 2*S;
         for (size_t l=0u; l<L; ++l, X+=K, ++Y) { *Y = *X; *++Y = *++X; }
     }
     else

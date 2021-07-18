@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
     if ((o1.T==oktypes).sum()==0)
     {
         cerr << progstr+": " << __LINE__ << errstr << "input data type must be in " << "{";
-        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1]) ? "}" : ","); }
+        for (auto o : oktypes) { cerr << int(o) << ((o==oktypes[oktypes.size()-1u]) ? "}" : ","); }
         cerr << endl; return 1;
     }
 
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
         negative_binomial_distribution<uint> distr(k,p);
         try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-        for (size_t n=0; n<o1.N(); ++n) { Y[n] = float(Yi[n]); }
+        for (size_t n=0u; n<o1.N(); ++n) { Y[n] = float(Yi[n]); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
         negative_binomial_distribution<uint> distr(k,p);
         try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){return distr(pcg_eng);}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-        for (size_t n=0; n<o1.N(); ++n) { Y[n] = double(Yi[n]); }
+        for (size_t n=0u; n<o1.N(); ++n) { Y[n] = double(Yi[n]); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
         negative_binomial_distribution<uint> distr(k,p);
         try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){complex<uint> y(distr(pcg_eng),distr(pcg_eng)); return y;}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-        for (size_t n=0; n<o1.N(); ++n) { Y[n] = complex<float>(float(real(Yi[n])),float(imag(Yi[n]))); }
+        for (size_t n=0u; n<o1.N(); ++n) { Y[n] = complex<float>(float(real(Yi[n])),float(imag(Yi[n]))); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
         negative_binomial_distribution<uint> distr(k,p);
         try { generate_n(begin(Yi),o1.N(),[&distr,&pcg_eng](){complex<uint> y(distr(pcg_eng),distr(pcg_eng)); return y;}); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem during generate" << endl; return 1; }
-        for (size_t n=0; n<o1.N(); ++n) { Y[n] = complex<double>(double(real(Yi[n])),double(imag(Yi[n]))); }
+        for (size_t n=0u; n<o1.N(); ++n) { Y[n] = complex<double>(double(real(Yi[n])),double(imag(Yi[n]))); }
         if (Y.size()!=o1.N()) { cerr << progstr+": " << __LINE__ << errstr << "unexpected output size" << endl; return 1; }
         if (wo1)
         {
