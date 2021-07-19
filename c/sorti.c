@@ -18,15 +18,15 @@ typedef struct { double val; double ind; } DBL;
 typedef struct { float r; float i; float ind; } CFLT;
 typedef struct { double r; double i; double ind; } ZDBL;
 
-int cmp_ascend_s (const void *a, const void *b);
-int cmp_ascend_d (const void *a, const void *b);
-int cmp_ascend_c (const void *a, const void *b);
-int cmp_ascend_z (const void *a, const void *b);
+static int cmp_ascend_s (const void *a, const void *b);
+static int cmp_ascend_d (const void *a, const void *b);
+static int cmp_ascend_c (const void *a, const void *b);
+static int cmp_ascend_z (const void *a, const void *b);
 
-int cmp_descend_s (const void *a, const void *b);
-int cmp_descend_d (const void *a, const void *b);
-int cmp_descend_c (const void *a, const void *b);
-int cmp_descend_z (const void *a, const void *b);
+static int cmp_descend_s (const void *a, const void *b);
+static int cmp_descend_d (const void *a, const void *b);
+static int cmp_descend_c (const void *a, const void *b);
+static int cmp_descend_z (const void *a, const void *b);
 
 int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
 int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
@@ -37,7 +37,7 @@ int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
 
 
-int cmp_ascend_s (const void *a, const void *b)
+static int cmp_ascend_s (const void *a, const void *b)
 {
     const FLT x1 = *(const FLT *)a;
     const FLT x2 = *(const FLT *)b;
@@ -46,7 +46,7 @@ int cmp_ascend_s (const void *a, const void *b)
     else { return 0; }
 }
 
-int cmp_ascend_d (const void *a, const void *b)
+static int cmp_ascend_d (const void *a, const void *b)
 {
 	const DBL x1 = *(const DBL *)a;
     const DBL x2 = *(const DBL *)b;
@@ -55,7 +55,7 @@ int cmp_ascend_d (const void *a, const void *b)
     else { return 0; }
 }
 
-int cmp_ascend_c (const void *a, const void *b)
+static int cmp_ascend_c (const void *a, const void *b)
 {
     const CFLT x1 = *(const CFLT *)a;
     const CFLT x2 = *(const CFLT *)b;
@@ -68,7 +68,7 @@ int cmp_ascend_c (const void *a, const void *b)
     else { return 0; }
 }
 
-int cmp_ascend_z (const void *a, const void *b)
+static int cmp_ascend_z (const void *a, const void *b)
 {
 	const ZDBL x1 = *(const ZDBL *)a;
     const ZDBL x2 = *(const ZDBL *)b;
@@ -82,7 +82,7 @@ int cmp_ascend_z (const void *a, const void *b)
 }
 
 
-int cmp_descend_s (const void *a, const void *b)
+static int cmp_descend_s (const void *a, const void *b)
 {
     const FLT x1 = *(const FLT *)a;
     const FLT x2 = *(const FLT *)b;
@@ -91,7 +91,7 @@ int cmp_descend_s (const void *a, const void *b)
     else { return 0; }
 }
 
-int cmp_descend_d (const void *a, const void *b)
+static int cmp_descend_d (const void *a, const void *b)
 {
 	const DBL x1 = *(const DBL *)a;
     const DBL x2 = *(const DBL *)b;
@@ -100,7 +100,7 @@ int cmp_descend_d (const void *a, const void *b)
     else { return 0; }
 }
 
-int cmp_descend_c (const void *a, const void *b)
+static int cmp_descend_c (const void *a, const void *b)
 {
     const CFLT x1 = *(const CFLT *)a;
     const CFLT x2 = *(const CFLT *)b;
@@ -113,7 +113,7 @@ int cmp_descend_c (const void *a, const void *b)
     else { return 0; }
 }
 
-int cmp_descend_z (const void *a, const void *b)
+static int cmp_descend_z (const void *a, const void *b)
 {
 	const ZDBL x1 = *(const ZDBL *)a;
     const ZDBL x2 = *(const ZDBL *)b;

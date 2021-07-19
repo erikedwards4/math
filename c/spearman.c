@@ -19,14 +19,14 @@ extern "C" {
 typedef struct { float val; size_t ind; } FLT;
 typedef struct { double val; size_t ind; } DBL;
 
-int cmp_ascend_s (const void *a, const void *b);
-int cmp_ascend_d (const void *a, const void *b);
+static int cmp_ascend_s (const void *a, const void *b);
+static int cmp_ascend_d (const void *a, const void *b);
 
 int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
 int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
 
 
-int cmp_ascend_s (const void *a, const void *b)
+static int cmp_ascend_s (const void *a, const void *b)
 {
     const FLT x1 = *(const FLT *)a;
     const FLT x2 = *(const FLT *)b;
@@ -36,7 +36,7 @@ int cmp_ascend_s (const void *a, const void *b)
 }
 
 
-int cmp_ascend_d (const void *a, const void *b)
+static int cmp_ascend_d (const void *a, const void *b)
 {
 	const DBL x1 = *(const DBL *)a;
     const DBL x2 = *(const DBL *)b;

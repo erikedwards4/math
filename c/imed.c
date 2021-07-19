@@ -16,14 +16,14 @@ extern "C" {
 typedef struct { float val; float ind; } FLT;
 typedef struct { double val; double ind; } DBL;
 
-int cmp_ascend_s (const void *a, const void *b);
-int cmp_ascend_d (const void *a, const void *b);
+static int cmp_ascend_s (const void *a, const void *b);
+static int cmp_ascend_d (const void *a, const void *b);
 
 int imed_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 int imed_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
 
 
-int cmp_ascend_s (const void *a, const void *b)
+static int cmp_ascend_s (const void *a, const void *b)
 {
     const FLT x1 = *(const FLT *)a;
     const FLT x2 = *(const FLT *)b;
@@ -32,7 +32,7 @@ int cmp_ascend_s (const void *a, const void *b)
     else { return 0; }
 }
 
-int cmp_ascend_d (const void *a, const void *b)
+static int cmp_ascend_d (const void *a, const void *b)
 {
 	const DBL x1 = *(const DBL *)a;
     const DBL x2 = *(const DBL *)b;

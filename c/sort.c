@@ -13,15 +13,15 @@ namespace codee {
 extern "C" {
 #endif
 
-int cmp_ascend_s (const void *a, const void *b);
-int cmp_ascend_d (const void *a, const void *b);
-int cmp_ascend_c (const void *a, const void *b);
-int cmp_ascend_z (const void *a, const void *b);
+// static int cmp_ascend_s (const void *a, const void *b);
+// static int cmp_ascend_d (const void *a, const void *b);
+static int cmp_ascend_c (const void *a, const void *b);
+static int cmp_ascend_z (const void *a, const void *b);
 
-int cmp_descend_s (const void *a, const void *b);
-int cmp_descend_d (const void *a, const void *b);
-int cmp_descend_c (const void *a, const void *b);
-int cmp_descend_z (const void *a, const void *b);
+// static int cmp_descend_s (const void *a, const void *b);
+// static int cmp_descend_d (const void *a, const void *b);
+static int cmp_descend_c (const void *a, const void *b);
+static int cmp_descend_z (const void *a, const void *b);
 
 int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
 int sort_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
@@ -34,29 +34,29 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
 int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
 
 
-int cmp_ascend_s (const void *a, const void *b)
-{
-	const float x1 = *(const float*)a, x2 = *(const float*)b;
-	if (x1!=x1) { return 1; }
-    else if (x2!=x2) { return -1; }
-    else if (x1>x2) { return 1; }
-    else if (x2>x1) { return -1; }
-    else { return 0; }
-}
+// static int cmp_ascend_s (const void *a, const void *b)
+// {
+// 	const float x1 = *(const float*)a, x2 = *(const float*)b;
+// 	if (x1!=x1) { return 1; }
+//     else if (x2!=x2) { return -1; }
+//     else if (x1>x2) { return 1; }
+//     else if (x2>x1) { return -1; }
+//     else { return 0; }
+// }
 
 
-int cmp_ascend_d (const void *a, const void *b)
-{
-	const double x1 = *(const double*)a, x2 = *(const double*)b;
-	if (x1!=x1) { return 1; }
-    else if (x2!=x2) { return -1; }
-    else if (x1>x2) { return 1; }
-    else if (x2>x1) { return -1; }
-    else { return 0; }
-}
+// static int cmp_ascend_d (const void *a, const void *b)
+// {
+// 	const double x1 = *(const double*)a, x2 = *(const double*)b;
+// 	if (x1!=x1) { return 1; }
+//     else if (x2!=x2) { return -1; }
+//     else if (x1>x2) { return 1; }
+//     else if (x2>x1) { return -1; }
+//     else { return 0; }
+// }
 
 
-int cmp_ascend_c (const void *a, const void *b)
+static int cmp_ascend_c (const void *a, const void *b)
 {
 	const float sq1 = *(const float *)a**(const float *)a + *((const float *)(a)+1)**((const float *)(a)+1);
     const float sq2 = *(const float *)b**(const float *)b + *((const float *)(b)+1)**((const float *)(b)+1);
@@ -70,7 +70,7 @@ int cmp_ascend_c (const void *a, const void *b)
 }
 
 
-int cmp_ascend_z (const void *a, const void *b)
+static int cmp_ascend_z (const void *a, const void *b)
 {
 	const double sq1 = *(const double *)a**(const double *)a + *((const double *)(a)+1)**((const double *)(a)+1);
     const double sq2 = *(const double *)b**(const double *)b + *((const double *)(b)+1)**((const double *)(b)+1);
@@ -84,29 +84,29 @@ int cmp_ascend_z (const void *a, const void *b)
 }
 
 
-int cmp_descend_s (const void *a, const void *b)
-{
-	const float x1 = *(const float*)a, x2 = *(const float*)b;
-	if (x1!=x1) { return -1; }
-    else if (x2!=x2) { return 1; }
-    else if (x1<x2) { return 1; }
-    else if (x2<x1) { return -1; }
-    else { return 0; }
-}
+// static int cmp_descend_s (const void *a, const void *b)
+// {
+// 	const float x1 = *(const float*)a, x2 = *(const float*)b;
+// 	if (x1!=x1) { return -1; }
+//     else if (x2!=x2) { return 1; }
+//     else if (x1<x2) { return 1; }
+//     else if (x2<x1) { return -1; }
+//     else { return 0; }
+// }
 
 
-int cmp_descend_d (const void *a, const void *b)
-{
-	const double x1 = *(const double*)a, x2 = *(const double*)b;
-	if (x1!=x1) { return -1; }
-    else if (x2!=x2) { return 1; }
-    else if (x1<x2) { return 1; }
-    else if (x2<x1) { return -1; }
-    else { return 0; }
-}
+// static int cmp_descend_d (const void *a, const void *b)
+// {
+// 	const double x1 = *(const double*)a, x2 = *(const double*)b;
+// 	if (x1!=x1) { return -1; }
+//     else if (x2!=x2) { return 1; }
+//     else if (x1<x2) { return 1; }
+//     else if (x2<x1) { return -1; }
+//     else { return 0; }
+// }
 
 
-int cmp_descend_c (const void *a, const void *b)
+static int cmp_descend_c (const void *a, const void *b)
 {
 	const float sq1 = *(const float *)a**(const float *)a + *((const float *)(a)+1)**((const float *)(a)+1);
     const float sq2 = *(const float *)b**(const float *)b + *((const float *)(b)+1)**((const float *)(b)+1);
@@ -120,7 +120,7 @@ int cmp_descend_c (const void *a, const void *b)
 }
 
 
-int cmp_descend_z (const void *a, const void *b)
+static int cmp_descend_z (const void *a, const void *b)
 {
 	const double sq1 = *(const double *)a**(const double *)a + *((const double *)(a)+1)**((const double *)(a)+1);
     const double sq2 = *(const double *)b**(const double *)b + *((const double *)(b)+1)**((const double *)(b)+1);
