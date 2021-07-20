@@ -13,7 +13,7 @@
 
 
 SHELL=/bin/bash
-CC=clang
+CC=clang++
 
 ifeq ($(CC),$(filter $(CC),clang gcc))
 	STD=-std=c11
