@@ -1,6 +1,9 @@
 //Linear algebra function.
 //Matrix multiplication of 2 input matrices X1 and X2.
 
+//Note that the N<1100u applies to using fmaf and fma,
+//but it is usually faster to do sm += x1 * x2.
+
 #include <stdio.h>
 #include <math.h>
 #include <cblas.h>

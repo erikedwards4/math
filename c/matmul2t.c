@@ -4,6 +4,9 @@
 
 //For complex case, this uses the Hermitian (conjugate) transpose.
 
+//Note that the N<1100u applies to using fmaf and fma,
+//but it is usually faster to do sm += x1 * x2.
+
 #include <stdio.h>
 #include <math.h>
 #include <cblas.h>
