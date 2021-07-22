@@ -1,34 +1,36 @@
 //Includes
-#include "cokurtosis.c"
+#include "corr_opus.c"
 
 //Declarations
-const valarray<size_t> oktypes = {1u,2u};
+const valarray<size_t> oktypes = {1u,2u,101u,102u};
 const size_t I = 2u, O = 1u;
 size_t dim;
 
 //Description
 string descr;
 descr += "Vecs2scalar function for 2 inputs with broadcasting.\n";
-descr += "Gets cokurtosis for each pair of vectors in X1, X2 along dim.\n";
-descr += "Thus, output Y has length 1 along dim.\n";
+descr += "Gets correlation for each pair of vectors in X1, X2 along dim,\n";
+descr += "using C_opus as defined in Eq. (2) of Vos et al. [2016].\n";
+descr += "\n";
+descr += "This divides by the mean of sum(X1.^2) and sum(X2.^2).\n";
+descr += "\"This correlation measures similarity not just in shape, but also in scale.\"\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-descr += "Use -d0 to get cokurtosis along cols.\n";
-descr += "Use -d1 to get cokurtosis along rows.\n";
-descr += "Use -d2 to get cokurtosis along slices.\n";
-descr += "Use -d3 to get cokurtosis along hyperslices.\n";
+descr += "Use -d0 to get corr_opus along cols.\n";
+descr += "Use -d1 to get corr_opus along rows.\n";
+descr += "Use -d2 to get corr_opus along slices.\n";
+descr += "Use -d3 to get corr_opus along hyperslices.\n";
+descr += "\n";
+descr += "The output Y has length 1 along dim.\n";
 descr += "\n";
 descr += "X1 and X2 must have the same size and data type, or\n";
 descr += "either X1 or X2 can be a single vector of appropriate length.\n";
 descr += "In that case, the single vector will be broadcast to the other input.\n";
 descr += "\n";
-descr += "Cokurtosis is essentially the corr of squared values, so is a measure\n";
-descr += "of the co-occurrence of extreme values. If X1=X2, it equals kurtosis.\n";
-descr += "\n";
 descr += "Examples:\n";
-descr += "$ cokurtosis X1 X2 -o Y \n";
-descr += "$ cokurtosis -d1 X1 X2 > Y \n";
-descr += "$ cat X1 | cokurtosis -d2 - X2 > Y \n";
+descr += "$ corr_opus X1 X2 -o Y \n";
+descr += "$ corr_opus -d1 X1 X2 > Y \n";
+descr += "$ cat X1 | corr_opus -d2 - X2 > Y \n";
 
 //Argtable
 struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input files (X1,X2)");
@@ -76,7 +78,29 @@ if (i1.T==1u)
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
     try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-    if (codee::cokurtosis_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
+    if (codee::corr_opus_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
+    { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
+    if (wo1)
+    {
+        try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
+    }
+    delete[] X1; delete[] X2; delete[] Y;
+}
+else if (i1.T==101u)
+{
+    float *X1, *X2, *Y;
+    try { X1 = new float[2u*i1.N()]; }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file 1 (X1)" << endl; return 1; }
+    try { X2 = new float[2u*i2.N()]; }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file 2 (X2)" << endl; return 1; }
+    try { Y = new float[2u*o1.N()]; }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+    try { ifs1.read(reinterpret_cast<char*>(X1),i1.nbytes()); }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
+    try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
+    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
+    if (codee::corr_opus_c(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

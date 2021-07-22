@@ -414,13 +414,15 @@ prod: srci/prod.cpp c/prod.c
 #Each pair of vectors in X1 and X2 is reduced to a scalar.
 Vecs2scalar: Similarity Dist #WStats
 
-Similarity: dot cov corr cos2 cokurtosis spearman kendall
+Similarity: dot cov corr corr_opus cos2 cokurtosis spearman kendall
 dot: srci/dot.cpp c/dot.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lopenblas
 cov: srci/cov.cpp c/cov.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 corr: srci/corr.cpp c/corr.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+corr_opus: srci/corr_opus.cpp c/corr_opus.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 cos2: srci/cos2.cpp c/cos2.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 cokurtosis: srci/cokurtosis.cpp c/cokurtosis.c

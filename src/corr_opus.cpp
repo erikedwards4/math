@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "cmli.hpp"
-#include "corr.c"
+#include "corr_opus.c"
 
 #ifdef I
 #undef I
@@ -40,25 +40,28 @@ int main(int argc, char *argv[])
     //Description
     string descr;
     descr += "Vecs2scalar function for 2 inputs with broadcasting.\n";
-    descr += "Gets correlation for each pair of vectors in X1, X2 along dim.\n";
-    descr += "Thus, output Y has length 1 along dim.\n";
+    descr += "Gets correlation for each pair of vectors in X1, X2 along dim,\n";
+    descr += "using C_opus as defined in Eq. (2) of Vos et al. [2016].\n";
+    descr += "\n";
+    descr += "This divides by the mean of sum(X1.^2) and sum(X2.^2).\n";
+    descr += "\"This correlation measures similarity not just in shape, but also in scale.\"\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
-    descr += "Use -d0 to get corr along cols.\n";
-    descr += "Use -d1 to get corr along rows.\n";
-    descr += "Use -d2 to get corr along slices.\n";
-    descr += "Use -d3 to get corr along hyperslices.\n";
+    descr += "Use -d0 to get corr_opus along cols.\n";
+    descr += "Use -d1 to get corr_opus along rows.\n";
+    descr += "Use -d2 to get corr_opus along slices.\n";
+    descr += "Use -d3 to get corr_opus along hyperslices.\n";
+    descr += "\n";
+    descr += "The output Y has length 1 along dim.\n";
     descr += "\n";
     descr += "X1 and X2 must have the same size and data type, or\n";
     descr += "either X1 or X2 can be a single vector of appropriate length.\n";
     descr += "In that case, the single vector will be broadcast to the other input.\n";
     descr += "\n";
-    descr += "This is the Pearson product-moment correlation coefficient, or Pearson's r.\n";
-    descr += "\n";
     descr += "Examples:\n";
-    descr += "$ corr X1 X2 -o Y \n";
-    descr += "$ corr -d1 X1 X2 > Y \n";
-    descr += "$ cat X1 | corr -d2 - X2 > Y \n";
+    descr += "$ corr_opus X1 X2 -o Y \n";
+    descr += "$ corr_opus -d1 X1 X2 > Y \n";
+    descr += "$ cat X1 | corr_opus -d2 - X2 > Y \n";
 
 
     //Argtable
@@ -168,7 +171,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
         try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-        if (codee::corr_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
+        if (codee::corr_opus_s(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -190,7 +193,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
         try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-        if (codee::corr_d(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
+        if (codee::corr_opus_d(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -212,7 +215,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
         try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-        if (codee::corr_c(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
+        if (codee::corr_opus_c(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -234,7 +237,7 @@ int main(int argc, char *argv[])
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 1 (X1)" << endl; return 1; }
         try { ifs2.read(reinterpret_cast<char*>(X2),i2.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file 2 (X2)" << endl; return 1; }
-        if (codee::corr_z(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
+        if (codee::corr_opus_z(Y,X1,X2,i1.R,i1.C,i1.S,i1.H,i2.R,i2.C,i2.S,i2.H,o1.iscolmajor(),dim))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

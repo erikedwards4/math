@@ -1,28 +1,36 @@
 //Vecs2scalar operation for 2 inputs X1 and X2.
-//Correlation for each pair of vectors.
-//This is the same as cov, except divides by std deviations of X1, X2.
+//Correlation for each pair of vectors,
+//but using C_opus as defined by Eq. (2) of Vos et al. [2013].
+//This is the same as cov, except divides by
+//the mean of sum(X1.^2) and sum(X2.^2), i.e.:
 
-//This is the Pearson product-moment correlation coefficient,
-//a.k.a., the Pearson correlation coefficient, or Pearson's r,
-//or the bivariate correlation, and is in [-1 1].
+// C_opus = 2.0 * x1'*x2 / (x1'*x1 + x2'*x2)
+
+//"This correlation measures similarity not just in shape, but also in scale.
+// Two vectors with very different energies will have a lower correlation,
+// similar to frequency-domain pitch estimators."
+
+//Vos K, Sørensen KV, Jensen SS, Valin JM. 2013. Voice coding with Opus. Proc AES Convention. Audio Engineering Society: paper 8941.
+
+//Unfortunately, they do not specify if they subtract the means from X1 and X2 first.
+//Since it is a correlation, and they show the usual corr also, I assume that they do.
 
 #include <stdio.h>
-#include <math.h>
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
 
-int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
-int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
-int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
-int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
+int corr_opus_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
+int corr_opus_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
+int corr_opus_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
+int corr_opus_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim);
 
 
-int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim)
+int corr_opus_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim)
 {
-    if (dim>3u) { fprintf(stderr,"error in corr_s: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in corr_opus_s: dim must be in [0 3]\n"); return 1; }
 
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
@@ -32,7 +40,7 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
-    if (L1!=L2) { fprintf(stderr,"error in corr_s: vectors in X1 and X2 must have the same length\n"); return 1; }
+    if (L1!=L2) { fprintf(stderr,"error in corr_opus_s: vectors in X1 and X2 must have the same length\n"); return 1; }
     const float den = 1.0f/(float)L;
     float x1, x2, mn1 = 0.0f, mn2 = 0.0f, sd1 = 0.0f, sd2 = 0.0f, sm2 = 0.0f;
 
@@ -51,7 +59,7 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
             x1 = *X1 - mn1; x2 = *X2 - mn2;
             sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
         }
-        *Y = sm2 / sqrtf(sd1*sd2);
+        *Y = 2.0f * sm2 / (sd1+sd2);
     }
     else
     {
@@ -73,7 +81,7 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
                     x1 = *X1 - mn1; x2 = *X2 - mn2;
                     sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
                 }
-                *Y = sm2 / sqrtf(sd1*sd2);
+                *Y = 2.0f * sm2 / (sd1+sd2);
             }
         }
         else
@@ -94,7 +102,7 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
                         x1 = *X1 - mn1; x2 = *X2 - mn2;
                         sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
                     }
-                    *Y = sm2 / sqrtf(sd1*sd2);
+                    *Y = 2.0f * sm2 / (sd1+sd2);
                 }
             }
         }
@@ -104,9 +112,9 @@ int corr_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
 }
 
 
-int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim)
+int corr_opus_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim)
 {
-    if (dim>3u) { fprintf(stderr,"error in corr_d: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in corr_opus_d: dim must be in [0 3]\n"); return 1; }
 
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
@@ -116,7 +124,7 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
-    if (L1!=L2) { fprintf(stderr,"error in corr_d: vectors in X1 and X2 must have the same length\n"); return 1; }
+    if (L1!=L2) { fprintf(stderr,"error in corr_opus_d: vectors in X1 and X2 must have the same length\n"); return 1; }
     const double den = 1.0/(double)L;
     double x1, x2, mn1 = 0.0, mn2 = 0.0, sd1 = 0.0, sd2 = 0.0, sm2 = 0.0;
 
@@ -135,7 +143,7 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
             x1 = *X1 - mn1; x2 = *X2 - mn2;
             sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
         }
-        *Y = sm2 / sqrt(sd1*sd2);
+        *Y = 2.0 * sm2 / (sd1+sd2);
     }
     else
     {
@@ -157,7 +165,7 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
                     x1 = *X1 - mn1; x2 = *X2 - mn2;
                     sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
                 }
-                *Y = sm2 / sqrt(sd1*sd2);
+                *Y = 2.0 * sm2 / (sd1+sd2);
             }
         }
         else
@@ -178,7 +186,7 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
                         x1 = *X1 - mn1; x2 = *X2 - mn2;
                         sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
                     }
-                    *Y = sm2 / sqrt(sd1*sd2);
+                    *Y = 2.0 * sm2 / (sd1+sd2);
                 }
             }
         }
@@ -188,9 +196,9 @@ int corr_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
 }
 
 
-int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim)
+int corr_opus_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim)
 {
-    if (dim>3u) { fprintf(stderr,"error in corr_c: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in corr_opus_c: dim must be in [0 3]\n"); return 1; }
 
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
@@ -200,7 +208,7 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
-    if (L1!=L2) { fprintf(stderr,"error in corr_c: vectors in X1 and X2 must have the same length\n"); return 1; }
+    if (L1!=L2) { fprintf(stderr,"error in corr_opus_c: vectors in X1 and X2 must have the same length\n"); return 1; }
     const float den = 1.0f/(float)L;
     float x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, yr, yi, den2;
 
@@ -229,7 +237,7 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
             yr += x1r*x2r + x1i*x2i;
             yi -= x1r*x2i - x1i*x2r;
         }
-        den2 = sqrtf(sd1*sd2);
+        den2 = 0.5f * (sd1+sd2);
         *Y = yr / den2; *++Y = yi / den2;
     }
     else
@@ -261,7 +269,7 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
                     yr += x1r*x2r + x1i*x2i;
                     yi -= x1r*x2i - x1i*x2r;
                 }
-                den2 = sqrtf(sd1*sd2);
+                den2 = 0.5f * (sd1+sd2);
                 *Y = yr / den2; *++Y = yi / den2;
             }
         }
@@ -292,7 +300,7 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
                         yr += x1r*x2r + x1i*x2i;
                         yi -= x1r*x2i - x1i*x2r;
                     }
-                    den2 = sqrtf(sd1*sd2);
+                    den2 = 0.5f * (sd1+sd2);
                     *Y = yr / den2; *++Y = yi / den2;
                 }
             }
@@ -303,9 +311,9 @@ int corr_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
 }
 
 
-int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim)
+int corr_opus_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor, const size_t dim)
 {
-    if (dim>3u) { fprintf(stderr,"error in corr_z: dim must be in [0 3]\n"); return 1; }
+    if (dim>3u) { fprintf(stderr,"error in corr_opus_z: dim must be in [0 3]\n"); return 1; }
 
     const size_t R = (R1>R2) ? R1 : R2;
     const size_t C = (C1>C2) ? C1 : C2;
@@ -315,7 +323,7 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     const size_t L1 = (dim==0u) ? R1 : (dim==1u) ? C1 : (dim==2u) ? S1 : H1;
     const size_t L2 = (dim==0u) ? R2 : (dim==1u) ? C2 : (dim==2u) ? S2 : H2;
-    if (L1!=L2) { fprintf(stderr,"error in corr_z: vectors in X1 and X2 must have the same length\n"); return 1; }
+    if (L1!=L2) { fprintf(stderr,"error in corr_opus_z: vectors in X1 and X2 must have the same length\n"); return 1; }
     const double den = 1.0/(double)L;
     double x1r, x1i, x2r, x2i, mn1r, mn1i, mn2r, mn2i, sd1, sd2, yr, yi, den2;
 
@@ -344,7 +352,7 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
             yr += x1r*x2r + x1i*x2i;
             yi -= x1r*x2i - x1i*x2r;
         }
-        den2 = sqrt(sd1*sd2);
+        den2 = 0.5 * (sd1+sd2);
         *Y = yr / den2; *++Y = yi / den2;
     }
     else
@@ -376,7 +384,7 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
                     yr += x1r*x2r + x1i*x2i;
                     yi -= x1r*x2i - x1i*x2r;
                 }
-                den2 = sqrt(sd1*sd2);
+                den2 = 0.5 * (sd1+sd2);
                 *Y = yr / den2; *++Y = yi / den2;
             }
         }
@@ -407,7 +415,7 @@ int corr_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
                         yr += x1r*x2r + x1i*x2i;
                         yi -= x1r*x2i - x1i*x2r;
                     }
-                    den2 = sqrt(sd1*sd2);
+                    den2 = 0.5 * (sd1+sd2);
                     *Y = yr / den2; *++Y = yi / den2;
                 }
             }

@@ -53,10 +53,10 @@ if (L1!=L2) { cerr << progstr+": " << __LINE__ << errstr << "inputs must have sa
 
 //Set output header info
 o1.F = i1.F; o1.T = i1.T;
-o1.R = (dim==0u) ? 1 : (i1.R>i2.R) ? i1.R : i2.R;
-o1.C = (dim==1u) ? 1 : (i1.C>i2.C) ? i1.C : i2.C;
-o1.S = (dim==2u) ? 1 : (i1.S>i2.S) ? i1.S : i2.S;
-o1.H = (dim==3u) ? 1 : (i1.H>i2.H) ? i1.H : i2.H;
+o1.R = (dim==0u) ? 1u : (i1.R>i2.R) ? i1.R : i2.R;
+o1.C = (dim==1u) ? 1u : (i1.C>i2.C) ? i1.C : i2.C;
+o1.S = (dim==2u) ? 1u : (i1.S>i2.S) ? i1.S : i2.S;
+o1.H = (dim==3u) ? 1u : (i1.H>i2.H) ? i1.H : i2.H;
 
 //Other prep
 

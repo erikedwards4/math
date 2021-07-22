@@ -305,10 +305,11 @@ betamax: betamax.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 Vecs2scalar: Similarity Dist WStats
 
 #Similarity or related measures for 2 vectors
-Similarity: dot cov corr cos2 cokurtosis spearman
+Similarity: dot cov corr corr_opus cos2 cokurtosis spearman
 dot: dot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cov: cov.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 corr: corr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+corr_opus: corr_opus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cos2: cos2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cokurtosis: cokurtosis.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 spearman: spearman.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
