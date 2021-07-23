@@ -65,7 +65,7 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
                 for (size_t v=0u; v<V; ++v, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
+                    for (size_t l=0u; l<L; ++l, ++X) { sm += *X; }
                     *Y = sm * den;
                 }
             }
@@ -150,7 +150,7 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
                 for (size_t v=0u; v<V; ++v, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
+                    for (size_t l=0u; l<L; ++l, ++X) { sm += *X; }
                     *Y = sm * den;
                 }
             }
