@@ -41,7 +41,7 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
     if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in trim_s: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
-    else if (Lx==1)
+    else if (Lx==1u)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
@@ -108,7 +108,7 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
     if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in trim_d: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
-    else if (Lx==1)
+    else if (Lx==1u)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
@@ -172,7 +172,7 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
     const size_t Ly = i2-i1+1u;
 
     if (N==0u) {}
-    else if (Lx==1)
+    else if (Lx==1u)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }
@@ -233,7 +233,7 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
     const size_t Ly = i2-i1+1u;
 
     if (N==0u) {}
-    else if (Lx==1)
+    else if (Lx==1u)
     {
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
     }

@@ -1,5 +1,5 @@
 //Vec2vec operation.
-//Prepads each vector in X with P elements equal to val.
+//Postpads each vector in X with P elements equal to val.
 //Thus, Y has the same size as X along all other dims, but has a greater length than X along dim.
 
 //For complex case, val is used for both real and imag parts.
