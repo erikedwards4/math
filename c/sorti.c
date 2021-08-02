@@ -28,13 +28,13 @@ static int cmp_descend_d (const void *a, const void *b);
 static int cmp_descend_c (const void *a, const void *b);
 static int cmp_descend_z (const void *a, const void *b);
 
-int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
-int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
-int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
-int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
+int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
+int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
+int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
+int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
 
-int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
-int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
+int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
+int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
 
 
 static int cmp_ascend_s (const void *a, const void *b)
@@ -127,7 +127,7 @@ static int cmp_descend_z (const void *a, const void *b)
 }
 
 
-int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in sorti_s: dim must be in [0 3]\n"); return 1; }
 
@@ -183,7 +183,7 @@ int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in sorti_d: dim must be in [0 3]\n"); return 1; }
 
@@ -239,7 +239,7 @@ int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const s
 }
 
 
-int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in sorti_c: dim must be in [0 3]\n"); return 1; }
 
@@ -295,7 +295,7 @@ int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in sorti_z: dim must be in [0 3]\n"); return 1; }
 
@@ -351,7 +351,7 @@ int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const s
 }
 
 
-int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in sorti_inplace_s: dim must be in [0 3]\n"); return 1; }
 
@@ -407,7 +407,7 @@ int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in sorti_inplace_d: dim must be in [0 3]\n"); return 1; }
 

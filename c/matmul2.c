@@ -13,13 +13,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int matmul2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor);
-int matmul2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor);
-int matmul2_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor);
-int matmul2_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor);
+int matmul2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor);
+int matmul2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor);
+int matmul2_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor);
+int matmul2_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor);
 
 
-int matmul2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor)
+int matmul2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor)
 {
     if (C1!=R2) { fprintf(stderr,"error in matmul2_s: C1 (ncols X1) must equal R2 (nrows X2) \n"); return 1; }
     
@@ -84,7 +84,7 @@ int matmul2_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
 }
 
 
-int matmul2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor)
+int matmul2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor)
 {
     if (C1!=R2) { fprintf(stderr,"error in matmul2_d: C1 (ncols X1) must equal R2 (nrows X2) \n"); return 1; }
     
@@ -147,7 +147,7 @@ int matmul2_d (double *Y, const double *X1, const double *X2, const size_t R1, c
 }
 
 
-int matmul2_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor)
+int matmul2_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor)
 {
     if (C1!=R2) { fprintf(stderr,"error in matmul2_c: C1 (ncols X1) must equal R2 (nrows X2) \n"); return 1; }
     
@@ -217,7 +217,7 @@ int matmul2_c (float *Y, const float *X1, const float *X2, const size_t R1, cons
 }
 
 
-int matmul2_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor)
+int matmul2_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor)
 {
     if (C1!=R2) { fprintf(stderr,"error in matmul2_z: C1 (ncols X1) must equal R2 (nrows X2) \n"); return 1; }
     

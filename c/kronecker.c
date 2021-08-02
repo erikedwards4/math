@@ -9,13 +9,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int kronecker_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int kronecker_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int kronecker_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
-int kronecker_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor);
+int kronecker_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor);
+int kronecker_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor);
+int kronecker_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor);
+int kronecker_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor);
 
 
-int kronecker_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int kronecker_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor)
 {
     const size_t R = R1*R2, C = C1*C2, S = S1*S2, H = H1*H2;
     const size_t N = R*C*S*H, N2 = R2*C2*S2*H2;
@@ -123,7 +123,7 @@ int kronecker_s (float *Y, const float *X1, const float *X2, const size_t R1, co
 }
 
 
-int kronecker_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int kronecker_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor)
 {
     const size_t R = R1*R2, C = C1*C2, S = S1*S2, H = H1*H2;
     const size_t N = R*C*S*H, N2 = R2*C2*S2*H2;
@@ -231,7 +231,7 @@ int kronecker_d (double *Y, const double *X1, const double *X2, const size_t R1,
 }
 
 
-int kronecker_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int kronecker_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor)
 {
     const size_t R = R1*R2, C = C1*C2, S = S1*S2, H = H1*H2;
     const size_t N = R*C*S*H, N2 = R2*C2*S2*H2;
@@ -352,7 +352,7 @@ int kronecker_c (float *Y, const float *X1, const float *X2, const size_t R1, co
 }
 
 
-int kronecker_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const char iscolmajor)
+int kronecker_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor)
 {
     const size_t R = R1*R2, C = C1*C2, S = S1*S2, H = H1*H2;
     const size_t N = R*C*S*H, N2 = R2*C2*S2*H2;

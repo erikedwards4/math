@@ -7,13 +7,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int split3_s (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int split3_d (double *Y1, double *Y2, double *Y3, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int split3_c (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int split3_z (double *Y1, double *Y2, double *Y3, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int split3_s (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int split3_d (double *Y1, double *Y2, double *Y3, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int split3_c (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int split3_z (double *Y1, double *Y2, double *Y3, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
 
 
-int split3_s (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int split3_s (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in split3_s: dim must be in [0 3]\n"); return 1; }
     if (dim==0u && R%3u) { fprintf(stderr,"error in split3_s: num rows X must be a multiple of 3 for dim=0"); return 1; }
@@ -35,7 +35,7 @@ int split3_s (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, c
 }
 
 
-int split3_d (double *Y1, double *Y2, double *Y3, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int split3_d (double *Y1, double *Y2, double *Y3, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in split3_d: dim must be in [0 3]\n"); return 1; }
     if (dim==0u && R%3u) { fprintf(stderr,"error in split3_d: num rows X must be a multiple of 3 for dim=0"); return 1; }
@@ -57,7 +57,7 @@ int split3_d (double *Y1, double *Y2, double *Y3, const double *X, const size_t 
 }
 
 
-int split3_c (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int split3_c (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in split3_c: dim must be in [0 3]\n"); return 1; }
     if (dim==0u && R%3u) { fprintf(stderr,"error in split3_c: num rows X must be a multiple of 3 for dim=0"); return 1; }
@@ -79,7 +79,7 @@ int split3_c (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, c
 }
 
 
-int split3_z (double *Y1, double *Y2, double *Y3, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int split3_z (double *Y1, double *Y2, double *Y3, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in split3_z: dim must be in [0 3]\n"); return 1; }
     if (dim==0u && R%3u) { fprintf(stderr,"error in split3_z: num rows X must be a multiple of 3 for dim=0"); return 1; }

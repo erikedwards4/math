@@ -12,13 +12,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
 
 
-int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in harmean_s: dim must be in [0 3]\n"); return 1; }
 
@@ -81,7 +81,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
 }
 
 
-int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in harmean_d: dim must be in [0 3]\n"); return 1; }
 
@@ -144,7 +144,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
 }
 
 
-int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in harmean_c: dim must be in [0 3]\n"); return 1; }
 
@@ -214,7 +214,7 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
 }
 
 
-int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in harmean_z: dim must be in [0 3]\n"); return 1; }
 

@@ -19,18 +19,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int transpose_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor);
-int transpose_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor);
-int transpose_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor);
-int transpose_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor);
+int transpose_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor);
+int transpose_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor);
+int transpose_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor);
+int transpose_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor);
 
-int transpose_inplace_s (float *X, const size_t R, const size_t C, const char iscolmajor);
-int transpose_inplace_d (double *X, const size_t R, const size_t C, const char iscolmajor);
-int transpose_inplace_c (float *X, const size_t R, const size_t C, const char iscolmajor);
-int transpose_inplace_z (double *X, const size_t R, const size_t C, const char iscolmajor);
+int transpose_inplace_s (float *X, const size_t R, const size_t C, const int iscolmajor);
+int transpose_inplace_d (double *X, const size_t R, const size_t C, const int iscolmajor);
+int transpose_inplace_c (float *X, const size_t R, const size_t C, const int iscolmajor);
+int transpose_inplace_z (double *X, const size_t R, const size_t C, const int iscolmajor);
 
 
-int transpose_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor)
+int transpose_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor)
 {
     const size_t N = R*C;
 
@@ -57,7 +57,7 @@ int transpose_s (float *Y, const float *X, const size_t R, const size_t C, const
 }
 
 
-int transpose_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor)
+int transpose_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor)
 {
     const size_t N = R*C;
 
@@ -84,7 +84,7 @@ int transpose_d (double *Y, const double *X, const size_t R, const size_t C, con
 }
 
 
-int transpose_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor)
+int transpose_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor)
 {
     const size_t N = R*C;
 
@@ -111,7 +111,7 @@ int transpose_c (float *Y, const float *X, const size_t R, const size_t C, const
 }
 
 
-int transpose_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor)
+int transpose_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor)
 {
     const size_t N = R*C;
 
@@ -138,7 +138,7 @@ int transpose_z (double *Y, const double *X, const size_t R, const size_t C, con
 }
 
 
-int transpose_inplace_s (float *X, const size_t R, const size_t C, const char iscolmajor)
+int transpose_inplace_s (float *X, const size_t R, const size_t C, const int iscolmajor)
 {
     if (R==1u || C==1u) {}
     else if (R==C)
@@ -188,7 +188,7 @@ int transpose_inplace_s (float *X, const size_t R, const size_t C, const char is
 }
 
 
-int transpose_inplace_d (double *X, const size_t R, const size_t C, const char iscolmajor)
+int transpose_inplace_d (double *X, const size_t R, const size_t C, const int iscolmajor)
 {
     if (R==1u || C==1u) {}
     else if (R==C)
@@ -234,7 +234,7 @@ int transpose_inplace_d (double *X, const size_t R, const size_t C, const char i
 }
 
 
-int transpose_inplace_c (float *X, const size_t R, const size_t C, const char iscolmajor)
+int transpose_inplace_c (float *X, const size_t R, const size_t C, const int iscolmajor)
 {
     if (R==1u || C==1u) {}
     else if (R==C)
@@ -292,7 +292,7 @@ int transpose_inplace_c (float *X, const size_t R, const size_t C, const char is
 }
 
 
-int transpose_inplace_z (double *X, const size_t R, const size_t C, const char iscolmajor)
+int transpose_inplace_z (double *X, const size_t R, const size_t C, const int iscolmajor)
 {
     if (R==1u || C==1u) {}
     else if (R==C)

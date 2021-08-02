@@ -7,13 +7,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int join3_s (float *Y, const float *X1, const float *X2, const float *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const char iscolmajor, const size_t dim);
-int join3_d (double *Y, const double *X1, const double *X2, const double *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const char iscolmajor, const size_t dim);
-int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const char iscolmajor, const size_t dim);
-int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const char iscolmajor, const size_t dim);
+int join3_s (float *Y, const float *X1, const float *X2, const float *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const int iscolmajor, const size_t dim);
+int join3_d (double *Y, const double *X1, const double *X2, const double *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const int iscolmajor, const size_t dim);
+int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const int iscolmajor, const size_t dim);
+int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const int iscolmajor, const size_t dim);
 
 
-int join3_s (float *Y, const float *X1, const float *X2, const float *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const char iscolmajor, const size_t dim)
+int join3_s (float *Y, const float *X1, const float *X2, const float *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in join3_s: dim must be in [0 3]\n"); return 1; }
     if (dim!=0u && (R1!=R2 || R1!=R3)) { fprintf(stderr,"error in join3_s: inputs must have same num rows for dim!=0\n"); return 1; }
@@ -37,7 +37,7 @@ int join3_s (float *Y, const float *X1, const float *X2, const float *X3,  const
 }
 
 
-int join3_d (double *Y, const double *X1, const double *X2, const double *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const char iscolmajor, const size_t dim)
+int join3_d (double *Y, const double *X1, const double *X2, const double *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in join3_d: dim must be in [0 3]\n"); return 1; }
     if (dim!=0u && (R1!=R2 || R1!=R3)) { fprintf(stderr,"error in join3_d: inputs must have same num rows for dim!=0\n"); return 1; }
@@ -61,7 +61,7 @@ int join3_d (double *Y, const double *X1, const double *X2, const double *X3,  c
 }
 
 
-int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const char iscolmajor, const size_t dim)
+int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in join3_c: dim must be in [0 3]\n"); return 1; }
     if (dim!=0u && (R1!=R2 || R1!=R3)) { fprintf(stderr,"error in join3_c: inputs must have same num rows for dim!=0\n"); return 1; }
@@ -85,7 +85,7 @@ int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const
 }
 
 
-int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const char iscolmajor, const size_t dim)
+int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const size_t R3, const size_t C3, const size_t S3, const size_t H3, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in join3_z: dim must be in [0 3]\n"); return 1; }
     if (dim!=0u && (R1!=R2 || R1!=R3)) { fprintf(stderr,"error in join3_z: inputs must have same num rows for dim!=0\n"); return 1; }

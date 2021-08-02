@@ -13,18 +13,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int chol_s (float *Y, const float *X, const size_t R, const char iscolmajor, const char upper);
-int chol_d (double *Y, const double *X, const size_t R, const char iscolmajor, const char upper);
-int chol_c (float *Y, const float *X, const size_t R, const char iscolmajor, const char upper);
-int chol_z (double *Y, const double *X, const size_t R, const char iscolmajor, const char upper);
+int chol_s (float *Y, const float *X, const size_t R, const int iscolmajor, const int upper);
+int chol_d (double *Y, const double *X, const size_t R, const int iscolmajor, const int upper);
+int chol_c (float *Y, const float *X, const size_t R, const int iscolmajor, const int upper);
+int chol_z (double *Y, const double *X, const size_t R, const int iscolmajor, const int upper);
 
-int chol_inplace_s (float *X, const size_t R, const char iscolmajor, const char upper);
-int chol_inplace_d (double *X, const size_t R, const char iscolmajor, const char upper);
-int chol_inplace_c (float *X, const size_t R, const char iscolmajor, const char upper);
-int chol_inplace_z (double *X, const size_t R, const char iscolmajor, const char upper);
+int chol_inplace_s (float *X, const size_t R, const int iscolmajor, const int upper);
+int chol_inplace_d (double *X, const size_t R, const int iscolmajor, const int upper);
+int chol_inplace_c (float *X, const size_t R, const int iscolmajor, const int upper);
+int chol_inplace_z (double *X, const size_t R, const int iscolmajor, const int upper);
 
 
-int chol_s (float *Y, const float *X, const size_t R, const char iscolmajor, const char upper)
+int chol_s (float *Y, const float *X, const size_t R, const int iscolmajor, const int upper)
 {
     const size_t N = R*R;
 
@@ -33,7 +33,7 @@ int chol_s (float *Y, const float *X, const size_t R, const char iscolmajor, con
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Uplo = (upper) ? 'U' : 'L';
+        const int Uplo = (upper) ? 'U' : 'L';
         
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
         Y -= N;
@@ -62,7 +62,7 @@ int chol_s (float *Y, const float *X, const size_t R, const char iscolmajor, con
 }
 
 
-int chol_d (double *Y, const double *X, const size_t R, const char iscolmajor, const char upper)
+int chol_d (double *Y, const double *X, const size_t R, const int iscolmajor, const int upper)
 {
     const size_t N = R*R;
 
@@ -71,7 +71,7 @@ int chol_d (double *Y, const double *X, const size_t R, const char iscolmajor, c
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Uplo = (upper) ? 'U' : 'L';
+        const int Uplo = (upper) ? 'U' : 'L';
         
         for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
         Y -= N;
@@ -100,7 +100,7 @@ int chol_d (double *Y, const double *X, const size_t R, const char iscolmajor, c
 }
 
 
-int chol_c (float *Y, const float *X, const size_t R, const char iscolmajor, const char upper)
+int chol_c (float *Y, const float *X, const size_t R, const int iscolmajor, const int upper)
 {
     const size_t N = R*R;
 
@@ -109,7 +109,7 @@ int chol_c (float *Y, const float *X, const size_t R, const char iscolmajor, con
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Uplo = (upper) ? 'U' : 'L';
+        const int Uplo = (upper) ? 'U' : 'L';
         
         for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
         Y -= 2u*N;
@@ -138,7 +138,7 @@ int chol_c (float *Y, const float *X, const size_t R, const char iscolmajor, con
 }
 
 
-int chol_z (double *Y, const double *X, const size_t R, const char iscolmajor, const char upper)
+int chol_z (double *Y, const double *X, const size_t R, const int iscolmajor, const int upper)
 {
     const size_t N = R*R;
 
@@ -147,7 +147,7 @@ int chol_z (double *Y, const double *X, const size_t R, const char iscolmajor, c
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Uplo = (upper) ? 'U' : 'L';
+        const int Uplo = (upper) ? 'U' : 'L';
         
         for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
         Y -= 2u*N;
@@ -176,13 +176,13 @@ int chol_z (double *Y, const double *X, const size_t R, const char iscolmajor, c
 }
 
 
-int chol_inplace_s (float *X, const size_t R, const char iscolmajor, const char upper)
+int chol_inplace_s (float *X, const size_t R, const int iscolmajor, const int upper)
 {
     if (R<2) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Uplo = (upper) ? 'U' : 'L';
+        const int Uplo = (upper) ? 'U' : 'L';
         
         if (LAPACKE_spotrf(Ord,Uplo,(int)R,X,(int)R))
         { fprintf(stderr,"error in chol_inplace_s: problem with LAPACKE_spotrf function\n"); }
@@ -208,13 +208,13 @@ int chol_inplace_s (float *X, const size_t R, const char iscolmajor, const char 
 }
 
 
-int chol_inplace_d (double *X, const size_t R, const char iscolmajor, const char upper)
+int chol_inplace_d (double *X, const size_t R, const int iscolmajor, const int upper)
 {
     if (R<2) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Uplo = (upper) ? 'U' : 'L';
+        const int Uplo = (upper) ? 'U' : 'L';
         
         if (LAPACKE_dpotrf(Ord,Uplo,(int)R,X,(int)R))
         { fprintf(stderr,"error in chol_inplace_d: problem with LAPACKE_dpotrf function\n"); }
@@ -240,13 +240,13 @@ int chol_inplace_d (double *X, const size_t R, const char iscolmajor, const char
 }
 
 
-int chol_inplace_c (float *X, const size_t R, const char iscolmajor, const char upper)
+int chol_inplace_c (float *X, const size_t R, const int iscolmajor, const int upper)
 {
     if (R<2) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Uplo = (upper) ? 'U' : 'L';
+        const int Uplo = (upper) ? 'U' : 'L';
         
         if (LAPACKE_cpotrf(Ord,Uplo,(int)R,(_Complex float *)X,(int)R))
         { fprintf(stderr,"error in chol_inplace_c: problem with LAPACKE_cpotrf function\n"); }
@@ -272,13 +272,13 @@ int chol_inplace_c (float *X, const size_t R, const char iscolmajor, const char 
 }
 
 
-int chol_inplace_z (double *X, const size_t R, const char iscolmajor, const char upper)
+int chol_inplace_z (double *X, const size_t R, const int iscolmajor, const int upper)
 {
     if (R<2) {}
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Uplo = (upper) ? 'U' : 'L';
+        const int Uplo = (upper) ? 'U' : 'L';
         
         if (LAPACKE_zpotrf(Ord,Uplo,(int)R,(_Complex double *)X,(int)R))
         { fprintf(stderr,"error in chol_inplace_z: problem with LAPACKE_zpotrf function\n"); }

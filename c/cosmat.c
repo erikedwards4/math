@@ -18,13 +18,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int cosmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int cosmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int cosmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int cosmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int cosmat_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim);
+int cosmat_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim);
+int cosmat_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim);
+int cosmat_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim);
 
 
-int cosmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int cosmat_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     float sm2;
@@ -149,7 +149,7 @@ int cosmat_s (float *Y, const float *X, const size_t R, const size_t C, const ch
 }
 
 
-int cosmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int cosmat_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     double sm2;
@@ -268,7 +268,7 @@ int cosmat_d (double *Y, const double *X, const size_t R, const size_t C, const 
 }
 
 
-int cosmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int cosmat_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
@@ -412,7 +412,7 @@ int cosmat_c (float *Y, const float *X, const size_t R, const size_t C, const ch
 }
 
 
-int cosmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int cosmat_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;

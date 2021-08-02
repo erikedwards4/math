@@ -17,14 +17,14 @@ namespace codee {
 extern "C" {
 #endif
 
-int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p, const float q);
-int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p, const double q);
+int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q);
+int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q);
 
-int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p, const float q);
-int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p, const double q);
+int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q);
+int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q);
 
 
-int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p, const float q)
+int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q)
 {
     if (dim>3u) { fprintf(stderr,"error in winsorize_s: dim must be in [0 3]\n"); return 1; }
     if (p<0.0f || p>=50.0f) { fprintf(stderr,"error in winsorize_s: p1 must be in [0 50)"); return 1; }
@@ -91,7 +91,7 @@ int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const
 }
 
 
-int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p, const double q)
+int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q)
 {
     if (dim>3u) { fprintf(stderr,"error in winsorize_d: dim must be in [0 3]\n"); return 1; }
     if (p<0.0 || p>50.0) { fprintf(stderr,"error in winsorize_d: p must be in [0 50]"); return 1; }
@@ -157,7 +157,7 @@ int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, con
 }
 
 
-int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p, const float q)
+int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q)
 {
     if (dim>3u) { fprintf(stderr,"error in winsorize_inplace_s: dim must be in [0 3]\n"); return 1; }
     if (p<0.0f || p>50.0f) { fprintf(stderr,"error in winsorize_inplace_s: p must be in [0 50]"); return 1; }
@@ -231,7 +231,7 @@ int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t 
 }
 
 
-int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p, const double q)
+int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q)
 {
     if (dim>3u) { fprintf(stderr,"error in winsorize_inplace_d: dim must be in [0 3]\n"); return 1; }
     if (p<0.0 || p>50.0) { fprintf(stderr,"error in winsorize_inplace_d: p must be in [0 50]"); return 1; }

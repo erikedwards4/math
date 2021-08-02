@@ -20,18 +20,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int svd_s (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t K);
-int svd_d (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t K);
-int svd_c (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t K);
-int svd_z (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t K);
+int svd_s (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
+int svd_d (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
+int svd_c (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
+int svd_z (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
 
-int svd_inplace_s (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const char iscolmajor, const size_t K);
-int svd_inplace_d (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const char iscolmajor, const size_t K);
-int svd_inplace_c (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const char iscolmajor, const size_t K);
-int svd_inplace_z (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const char iscolmajor, const size_t K);
+int svd_inplace_s (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
+int svd_inplace_d (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
+int svd_inplace_c (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
+int svd_inplace_z (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
 
 
-int svd_s (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t K)
+int svd_s (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)
 {
     const size_t N = R*C;
 
@@ -80,7 +80,7 @@ int svd_s (float *U, float *S, float *Vt, const float *X, const size_t R, const 
 }
 
 
-int svd_d (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t K)
+int svd_d (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)
 {
     const size_t N = R*C;
 
@@ -129,7 +129,7 @@ int svd_d (double *U, double *S, double *Vt, const double *X, const size_t R, co
 }
 
 
-int svd_c (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t K)
+int svd_c (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)
 {
     const size_t N = R*C;
 
@@ -178,7 +178,7 @@ int svd_c (float *U, float *S, float *Vt, const float *X, const size_t R, const 
 }
 
 
-int svd_z (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t K)
+int svd_z (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)
 {
     const size_t N = R*C;
 
@@ -227,7 +227,7 @@ int svd_z (double *U, double *S, double *Vt, const double *X, const size_t R, co
 }
 
 
-int svd_inplace_s (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const char iscolmajor, const size_t K)
+int svd_inplace_s (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)
 {
     if (R*C==0u) {}
     else
@@ -270,7 +270,7 @@ int svd_inplace_s (float *U, float *S, float *Vt, float *X, const size_t R, cons
 }
 
 
-int svd_inplace_d (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const char iscolmajor, const size_t K)
+int svd_inplace_d (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)
 {
     if (R*C==0u) {}
     else
@@ -313,7 +313,7 @@ int svd_inplace_d (double *U, double *S, double *Vt, double *X, const size_t R, 
 }
 
 
-int svd_inplace_c (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const char iscolmajor, const size_t K)
+int svd_inplace_c (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)
 {
     if (R*C==0u) {}
     else
@@ -356,7 +356,7 @@ int svd_inplace_c (float *U, float *S, float *Vt, float *X, const size_t R, cons
 }
 
 
-int svd_inplace_z (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const char iscolmajor, const size_t K)
+int svd_inplace_z (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)
 {
     if (R*C==0u) {}
     else

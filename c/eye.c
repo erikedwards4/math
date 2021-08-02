@@ -13,13 +13,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int eye_s (float *Y, const size_t R, const size_t C, const char iscolmajor);
-int eye_d (double *Y, const size_t R, const size_t C, const char iscolmajor);
-int eye_c (float *Y, const size_t R, const size_t C, const char iscolmajor);
-int eye_z (double *Y, const size_t R, const size_t C, const char iscolmajor);
+int eye_s (float *Y, const size_t R, const size_t C, const int iscolmajor);
+int eye_d (double *Y, const size_t R, const size_t C, const int iscolmajor);
+int eye_c (float *Y, const size_t R, const size_t C, const int iscolmajor);
+int eye_z (double *Y, const size_t R, const size_t C, const int iscolmajor);
 
 
-int eye_s (float *Y, const size_t R, const size_t C, const char iscolmajor)
+int eye_s (float *Y, const size_t R, const size_t C, const int iscolmajor)
 {
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     //const float z = 0.0f, o = 1.0f;
@@ -62,7 +62,7 @@ int eye_s (float *Y, const size_t R, const size_t C, const char iscolmajor)
 }
 
 
-int eye_d (double *Y, const size_t R, const size_t C, const char iscolmajor)
+int eye_d (double *Y, const size_t R, const size_t C, const int iscolmajor)
 {
     const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
 
@@ -75,7 +75,7 @@ int eye_d (double *Y, const size_t R, const size_t C, const char iscolmajor)
 }
 
 
-int eye_c (float *Y, const size_t R, const size_t C, const char iscolmajor)
+int eye_c (float *Y, const size_t R, const size_t C, const int iscolmajor)
 {
     const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
     
@@ -88,7 +88,7 @@ int eye_c (float *Y, const size_t R, const size_t C, const char iscolmajor)
 }
 
 
-int eye_z (double *Y, const size_t R, const size_t C, const char iscolmajor)
+int eye_z (double *Y, const size_t R, const size_t C, const int iscolmajor)
 {
     const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
     

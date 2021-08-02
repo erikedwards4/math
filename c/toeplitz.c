@@ -15,10 +15,10 @@ int toeplitz1_d (double *Y, const double *X, const size_t L);
 int toeplitz1_c (float *Y, const float *X, const size_t L);
 int toeplitz1_z (double *Y, const double *X, const size_t L);
 
-int toeplitz2_s (float *Y, const float *X1, const float *X2, const size_t L1, const size_t L2, const char iscolmajor);
-int toeplitz2_d (double *Y, const double *X1, const double *X2, const size_t L1, const size_t L2, const char iscolmajor);
-int toeplitz2_c (float *Y, const float *X1, const float *X2, const size_t L1, const size_t L2, const char iscolmajor);
-int toeplitz2_z (double *Y, const double *X1, const double *X2, const size_t L1, const size_t L2, const char iscolmajor);
+int toeplitz2_s (float *Y, const float *X1, const float *X2, const size_t L1, const size_t L2, const int iscolmajor);
+int toeplitz2_d (double *Y, const double *X1, const double *X2, const size_t L1, const size_t L2, const int iscolmajor);
+int toeplitz2_c (float *Y, const float *X1, const float *X2, const size_t L1, const size_t L2, const int iscolmajor);
+int toeplitz2_z (double *Y, const double *X1, const double *X2, const size_t L1, const size_t L2, const int iscolmajor);
 
 
 int toeplitz1_s (float *Y, const float *X, const size_t L)
@@ -69,7 +69,7 @@ int toeplitz1_z (double *Y, const double *X, const size_t L)
 }
 
 
-int toeplitz2_s (float *Y, const float *X1, const float *X2, const size_t R, const size_t C, const char iscolmajor)
+int toeplitz2_s (float *Y, const float *X1, const float *X2, const size_t R, const size_t C, const int iscolmajor)
 {
     if (iscolmajor)
     {
@@ -93,7 +93,7 @@ int toeplitz2_s (float *Y, const float *X1, const float *X2, const size_t R, con
 }
 
 
-int toeplitz2_d (double *Y, const double *X1, const double *X2, const size_t R, const size_t C, const char iscolmajor)
+int toeplitz2_d (double *Y, const double *X1, const double *X2, const size_t R, const size_t C, const int iscolmajor)
 {
     if (iscolmajor)
     {
@@ -117,7 +117,7 @@ int toeplitz2_d (double *Y, const double *X1, const double *X2, const size_t R, 
 }
 
 
-int toeplitz2_c (float *Y, const float *X1, const float *X2, const size_t R, const size_t C, const char iscolmajor)
+int toeplitz2_c (float *Y, const float *X1, const float *X2, const size_t R, const size_t C, const int iscolmajor)
 {
     if (iscolmajor)
     {
@@ -141,7 +141,7 @@ int toeplitz2_c (float *Y, const float *X1, const float *X2, const size_t R, con
 }
 
 
-int toeplitz2_z (double *Y, const double *X1, const double *X2, const size_t R, const size_t C, const char iscolmajor)
+int toeplitz2_z (double *Y, const double *X1, const double *X2, const size_t R, const size_t C, const int iscolmajor)
 {
     if (iscolmajor)
     {

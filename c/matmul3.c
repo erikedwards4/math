@@ -16,18 +16,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int mm2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor);
-int mm2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor);
-int mm2_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor);
-int mm2_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor);
+int mm2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor);
+int mm2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor);
+int mm2_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor);
+int mm2_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor);
 
-int matmul3_s (float *Y, const float *X1, const float *X2, const float *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const char iscolmajor);
-int matmul3_d (double *Y, const double *X1, const double *X2, const double *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const char iscolmajor);
-int matmul3_c (float *Y, const float *X1, const float *X2, const float *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const char iscolmajor);
-int matmul3_z (double *Y, const double *X1, const double *X2, const double *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const char iscolmajor);
+int matmul3_s (float *Y, const float *X1, const float *X2, const float *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const int iscolmajor);
+int matmul3_d (double *Y, const double *X1, const double *X2, const double *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const int iscolmajor);
+int matmul3_c (float *Y, const float *X1, const float *X2, const float *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const int iscolmajor);
+int matmul3_z (double *Y, const double *X1, const double *X2, const double *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const int iscolmajor);
 
 
-int mm2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor)
+int mm2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor)
 {
     const size_t N = R1*C2;
     float sm2;
@@ -88,7 +88,7 @@ int mm2_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
 }
 
 
-int mm2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor)
+int mm2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor)
 {
     const size_t N = R1*C2;
     double sm2;
@@ -149,7 +149,7 @@ int mm2_d (double *Y, const double *X1, const double *X2, const size_t R1, const
 }
 
 
-int mm2_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor)
+int mm2_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor)
 {
     const size_t N = R1*C2;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
@@ -217,7 +217,7 @@ int mm2_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
 }
 
 
-int mm2_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor)
+int mm2_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor)
 {
     const size_t N = R1*C2;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;
@@ -285,7 +285,7 @@ int mm2_z (double *Y, const double *X1, const double *X2, const size_t R1, const
 }
 
 
-int matmul3_s (float *Y, const float *X1, const float *X2, const float *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const char iscolmajor)
+int matmul3_s (float *Y, const float *X1, const float *X2, const float *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const int iscolmajor)
 {
     if (R1*C3==0u) {}
     else if (R1*C2*(C1+C3)<C1*C3*(R1+C2))
@@ -309,7 +309,7 @@ int matmul3_s (float *Y, const float *X1, const float *X2, const float *X3, cons
 }
 
 
-int matmul3_d (double *Y, const double *X1, const double *X2, const double *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const char iscolmajor)
+int matmul3_d (double *Y, const double *X1, const double *X2, const double *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const int iscolmajor)
 {
     if (R1*C3==0u) {}
     else if (R1*C2*(C1+C3)<C1*C3*(R1+C2))
@@ -333,7 +333,7 @@ int matmul3_d (double *Y, const double *X1, const double *X2, const double *X3, 
 }
 
 
-int matmul3_c (float *Y, const float *X1, const float *X2, const float *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const char iscolmajor)
+int matmul3_c (float *Y, const float *X1, const float *X2, const float *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const int iscolmajor)
 {
     if (R1*C3==0u) {}
     else if (R1*C2*(C1+C3)<C1*C3*(R1+C2))
@@ -357,7 +357,7 @@ int matmul3_c (float *Y, const float *X1, const float *X2, const float *X3, cons
 }
 
 
-int matmul3_z (double *Y, const double *X1, const double *X2, const double *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const char iscolmajor)
+int matmul3_z (double *Y, const double *X1, const double *X2, const double *X3, const size_t R1, const size_t C1, const size_t C2, const size_t C3, const int iscolmajor)
 {
     if (R1*C3==0u) {}
     else if (R1*C2*(C1+C3)<C1*C3*(R1+C2))

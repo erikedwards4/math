@@ -14,18 +14,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int shift_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P);
-int shift_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P);
-int shift_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P);
-int shift_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P);
+int shift_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P);
+int shift_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P);
+int shift_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P);
+int shift_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P);
 
-int shift_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P);
-int shift_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P);
-int shift_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P);
-int shift_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P);
+int shift_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P);
+int shift_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P);
+int shift_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P);
+int shift_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P);
 
 
-int shift_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P)
+int shift_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P)
 {
     if (dim>3u) { fprintf(stderr,"error in shift_s: dim must be in [0 3]\n"); return 1; }
 
@@ -93,7 +93,7 @@ int shift_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int shift_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P)
+int shift_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P)
 {
     if (dim>3u) { fprintf(stderr,"error in shift_d: dim must be in [0 3]\n"); return 1; }
 
@@ -161,7 +161,7 @@ int shift_d (double *Y, const double *X, const size_t R, const size_t C, const s
 }
 
 
-int shift_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P)
+int shift_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P)
 {
     if (dim>3u) { fprintf(stderr,"error in shift_c: dim must be in [0 3]\n"); return 1; }
 
@@ -229,7 +229,7 @@ int shift_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int shift_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P)
+int shift_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P)
 {
     if (dim>3u) { fprintf(stderr,"error in shift_z: dim must be in [0 3]\n"); return 1; }
 
@@ -297,7 +297,7 @@ int shift_z (double *Y, const double *X, const size_t R, const size_t C, const s
 }
 
 
-int shift_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P)
+int shift_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P)
 {
     if (dim>3u) { fprintf(stderr,"error in shift_inplace_s: dim must be in [0 3]\n"); return 1; }
 
@@ -396,7 +396,7 @@ int shift_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int shift_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P)
+int shift_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P)
 {
     if (dim>3u) { fprintf(stderr,"error in shift_inplace_d: dim must be in [0 3]\n"); return 1; }
 
@@ -495,7 +495,7 @@ int shift_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
 }
 
 
-int shift_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P)
+int shift_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P)
 {
     if (dim>3u) { fprintf(stderr,"error in shift_inplace_c: dim must be in [0 3]\n"); return 1; }
 
@@ -594,7 +594,7 @@ int shift_inplace_c (float *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int shift_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const int P)
+int shift_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int P)
 {
     if (dim>3u) { fprintf(stderr,"error in shift_inplace_z: dim must be in [0 3]\n"); return 1; }
 

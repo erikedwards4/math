@@ -16,13 +16,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor, const char tr);
-int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor, const char tr);
-int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor, const char tr);
-int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor, const char tr);
+int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr);
+int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr);
+int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr);
+int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr);
 
 
-int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor, const char tr)
+int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t N = (tr) ? C1*C2 : R1*R2;
     float sm2;
@@ -122,7 +122,7 @@ int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, con
 }
 
 
-int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor, const char tr)
+int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t N = (tr) ? C1*C2 : R1*R2;
     double sm2;
@@ -222,7 +222,7 @@ int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, 
 }
 
 
-int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor, const char tr)
+int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t N = (tr) ? C1*C2 : R1*R2;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
@@ -347,7 +347,7 @@ int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, con
 }
 
 
-int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const char iscolmajor, const char tr)
+int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t N = (tr) ? C1*C2 : R1*R2;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;

@@ -15,18 +15,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int solve_s (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr);
-int solve_d (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr);
-int solve_c (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr);
-int solve_z (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr);
+int solve_s (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
+int solve_d (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
+int solve_c (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
+int solve_z (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
 
-int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr);
-int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr);
-int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr);
-int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr);
+int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
+int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
+int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
+int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
 
 
-int solve_s (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr)
+int solve_s (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
@@ -36,7 +36,7 @@ int solve_s (float *X, const float *A, const float *B, const size_t R1, const si
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Trans = (tr) ? 'T' : 'N';
+        const int Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
 
@@ -78,7 +78,7 @@ int solve_s (float *X, const float *A, const float *B, const size_t R1, const si
 }
 
 
-int solve_d (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr)
+int solve_d (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
@@ -88,7 +88,7 @@ int solve_d (double *X, const double *A, const double *B, const size_t R1, const
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Trans = (tr) ? 'T' : 'N';
+        const int Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
 
@@ -130,7 +130,7 @@ int solve_d (double *X, const double *A, const double *B, const size_t R1, const
 }
 
 
-int solve_c (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr)
+int solve_c (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
@@ -140,7 +140,7 @@ int solve_c (float *X, const float *A, const float *B, const size_t R1, const si
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Trans = (tr) ? 'T' : 'N';
+        const int Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
 
@@ -182,7 +182,7 @@ int solve_c (float *X, const float *A, const float *B, const size_t R1, const si
 }
 
 
-int solve_z (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr)
+int solve_z (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
@@ -192,7 +192,7 @@ int solve_z (double *X, const double *A, const double *B, const size_t R1, const
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Trans = (tr) ? 'T' : 'N';
+        const int Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
 
@@ -234,7 +234,7 @@ int solve_z (double *X, const double *A, const double *B, const size_t R1, const
 }
 
 
-int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr)
+int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
@@ -243,7 +243,7 @@ int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Trans = (tr) ? 'T' : 'N';
+        const int Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
 
@@ -285,7 +285,7 @@ int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const
 }
 
 
-int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr)
+int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
@@ -294,7 +294,7 @@ int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, con
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Trans = (tr) ? 'T' : 'N';
+        const int Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
         
@@ -321,7 +321,7 @@ int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, con
 }
 
 
-int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr)
+int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
@@ -330,7 +330,7 @@ int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Trans = (tr) ? 'T' : 'N';
+        const int Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
         
@@ -357,7 +357,7 @@ int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const
 }
 
 
-int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const char iscolmajor, const char tr)
+int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)
 {
     const size_t R2 = (tr) ? C1 : R1;
     const size_t R = (tr) ? R1 : C1, C = C2;
@@ -366,7 +366,7 @@ int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, con
     else
     {
         const int Ord = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
-        const char Trans = (tr) ? 'T' : 'N';
+        const int Trans = (tr) ? 'T' : 'N';
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
         

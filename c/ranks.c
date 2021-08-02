@@ -29,13 +29,13 @@ static int cmp_descend_d (const void *a, const void *b);
 static int cmp_descend_c (const void *a, const void *b);
 static int cmp_descend_z (const void *a, const void *b);
 
-int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
-int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
-int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
-int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
+int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
+int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
+int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
+int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
 
-int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
-int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend);
+int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
+int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
 
 
 static int cmp_ascend_s (const void *a, const void *b)
@@ -128,7 +128,7 @@ static int cmp_descend_z (const void *a, const void *b)
 }
 
 
-int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in ranks_s: dim must be in [0 3]\n"); return 1; }
 
@@ -184,7 +184,7 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in ranks_d: dim must be in [0 3]\n"); return 1; }
 
@@ -240,7 +240,7 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
 }
 
 
-int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in ranks_c: dim must be in [0 3]\n"); return 1; }
 
@@ -296,7 +296,7 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 }
 
 
-int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in ranks_z: dim must be in [0 3]\n"); return 1; }
 
@@ -352,7 +352,7 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
 }
 
 
-int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in ranks_inplace_s: dim must be in [0 3]\n"); return 1; }
 
@@ -408,7 +408,7 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char ascend)
+int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
 {
     if (dim>3u) { fprintf(stderr,"error in ranks_inplace_d: dim must be in [0 3]\n"); return 1; }
 

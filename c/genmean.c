@@ -12,13 +12,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p);
-int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p);
-int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p);
-int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p);
+int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p);
+int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p);
+int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p);
+int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p);
 
 
-int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p)
+int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p)
 {
     if (dim>3u) { fprintf(stderr,"error in genmean_s: dim must be in [0 3]\n"); return 1; }
 
@@ -82,7 +82,7 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
 }
 
 
-int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p)
+int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p)
 {
     if (dim>3u) { fprintf(stderr,"error in genmean_d: dim must be in [0 3]\n"); return 1; }
 
@@ -146,7 +146,7 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
 }
 
 
-int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p)
+int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p)
 {
     if (dim>3u) { fprintf(stderr,"error in genmean_c: dim must be in [0 3]\n"); return 1; }
 
@@ -210,7 +210,7 @@ int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
 }
 
 
-int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p)
+int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p)
 {
     if (dim>3u) { fprintf(stderr,"error in genmean_z: dim must be in [0 3]\n"); return 1; }
 

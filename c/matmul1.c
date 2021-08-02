@@ -10,13 +10,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int matmul1_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor);
-int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor);
-int matmul1_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor);
-int matmul1_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor);
+int matmul1_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor);
+int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor);
+int matmul1_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor);
+int matmul1_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor);
 
 
-int matmul1_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor)
+int matmul1_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor)
 {
     if (R!=C) { fprintf(stderr,"error in matmul1_s: X must be a square matrix \n"); return 1; }
     
@@ -75,7 +75,7 @@ int matmul1_s (float *Y, const float *X, const size_t R, const size_t C, const c
 }
 
 
-int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor)
+int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor)
 {
     if (R!=C) { fprintf(stderr,"error in matmul1_d: X must be a square matrix \n"); return 1; }
     
@@ -132,7 +132,7 @@ int matmul1_d (double *Y, const double *X, const size_t R, const size_t C, const
 }
 
 
-int matmul1_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor)
+int matmul1_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor)
 {
     if (R!=C) { fprintf(stderr,"error in matmul1_c: X must be a square matrix \n"); return 1; }
     
@@ -196,7 +196,7 @@ int matmul1_c (float *Y, const float *X, const size_t R, const size_t C, const c
 }
 
 
-int matmul1_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor)
+int matmul1_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor)
 {
     if (R!=C) { fprintf(stderr,"error in matmul1_z: X must be a square matrix \n"); return 1; }
     

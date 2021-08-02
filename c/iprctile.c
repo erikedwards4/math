@@ -20,8 +20,8 @@ typedef struct { double val; double ind; } DBL;
 static int cmp_ascend_s (const void *a, const void *b);
 static int cmp_ascend_d (const void *a, const void *b);
 
-int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p);
-int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p);
+int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p);
+int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p);
 
 
 static int cmp_ascend_s (const void *a, const void *b)
@@ -43,7 +43,7 @@ static int cmp_ascend_d (const void *a, const void *b)
 }
 
 
-int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p)
+int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p)
 {
     if (dim>3u) { fprintf(stderr,"error in iprctile_s: dim must be in [0 3]\n"); return 1; }
     if (p<0.0f || p>100.0f) { fprintf(stderr,"error in iprctile_s: p must be in [0 100]"); return 1; }
@@ -105,7 +105,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
 }
 
 
-int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p)
+int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p)
 {
     if (dim>3u) { fprintf(stderr,"error in iprctile_d: dim must be in [0 3]\n"); return 1; }
     if (p<0.0 || p>100.0) { fprintf(stderr,"error in iprctile_d: p must be in [0 100]"); return 1; }

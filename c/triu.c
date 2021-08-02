@@ -8,18 +8,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int triu_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k);
-int triu_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k);
-int triu_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k);
-int triu_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k);
+int triu_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k);
+int triu_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k);
+int triu_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k);
+int triu_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k);
 
-int triu_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k);
-int triu_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k);
-int triu_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k);
-int triu_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k);
+int triu_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k);
+int triu_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k);
+int triu_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k);
+int triu_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k);
 
 
-int triu_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k)
+int triu_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k)
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_s: k must be in [1-R C-1]\n"); return 1; }
 
@@ -59,7 +59,7 @@ int triu_s (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int triu_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k)
+int triu_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k)
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_d: k must be in [1-R C-1]\n"); return 1; }
 
@@ -99,7 +99,7 @@ int triu_d (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int triu_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k)
+int triu_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k)
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_c: k must be in [1-R C-1]\n"); return 1; }
 
@@ -139,7 +139,7 @@ int triu_c (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int triu_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k)
+int triu_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k)
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_z: k must be in [1-R C-1]\n"); return 1; }
 
@@ -179,7 +179,7 @@ int triu_z (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int triu_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k)
+int triu_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k)
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_inplace_s: k must be in [1-R C-1]\n"); return 1; }
 
@@ -219,7 +219,7 @@ int triu_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 }
 
 
-int triu_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k)
+int triu_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k)
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_inplace_d: k must be in [1-R C-1]\n"); return 1; }
 
@@ -259,7 +259,7 @@ int triu_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int triu_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k)
+int triu_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k)
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_inplace_c: k must be in [1-R C-1]\n"); return 1; }
 
@@ -299,7 +299,7 @@ int triu_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
 }
 
 
-int triu_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const int k)
+int triu_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const int k)
 {
     if (k<=-(int)R || k>=(int)C) { fprintf(stderr,"error in triu_inplace_z: k must be in [1-R C-1]\n"); return 1; }
 

@@ -7,14 +7,14 @@ namespace codee {
 extern "C" {
 #endif
 
-int diagmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diagmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diagmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diagmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k);
+int diagmat_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k);
+int diagmat_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k);
+int diagmat_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k);
+int diagmat_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k);
 
 
 
-int diagmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
+int diagmat_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k)
 {
     const size_t L = (k>0) ? R : C;
     const size_t K = (iscolmajor) ? R+1u : C+1u;
@@ -28,7 +28,7 @@ int diagmat_s (float *Y, const float *X, const size_t R, const size_t C, const c
 }
 
 
-int diagmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
+int diagmat_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k)
 {
     const size_t L = (k>0) ? R : C;
     const size_t K = (iscolmajor) ? R+1u : C+1u;
@@ -42,7 +42,7 @@ int diagmat_d (double *Y, const double *X, const size_t R, const size_t C, const
 }
 
 
-int diagmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
+int diagmat_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k)
 {
     const size_t L = (k>0) ? R : C;
     const size_t K = (iscolmajor) ? R+1u : C+1u;
@@ -56,7 +56,7 @@ int diagmat_c (float *Y, const float *X, const size_t R, const size_t C, const c
 }
 
 
-int diagmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
+int diagmat_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k)
 {
     const size_t L = (k>0) ? R : C;
     const size_t K = (iscolmajor) ? R+1u : C+1u;

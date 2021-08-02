@@ -12,13 +12,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
-int var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
-int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
-int var_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased);
+int var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int biased);
+int var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int biased);
+int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int biased);
+int var_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int biased);
 
 
-int var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
+int var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int biased)
 {
     if (dim>3u) { fprintf(stderr,"error in var_s: dim must be in [0 3]\n"); return 1; }
 
@@ -100,7 +100,7 @@ int var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
+int var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int biased)
 {
     if (dim>3u) { fprintf(stderr,"error in var_d: dim must be in [0 3]\n"); return 1; }
 
@@ -182,7 +182,7 @@ int var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
 }
 
 
-int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
+int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int biased)
 {
     if (dim>3u) { fprintf(stderr,"error in var_c: dim must be in [0 3]\n"); return 1; }
 
@@ -251,7 +251,7 @@ int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int var_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char biased)
+int var_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int biased)
 {
     if (dim>3u) { fprintf(stderr,"error in var_z: dim must be in [0 3]\n"); return 1; }
 

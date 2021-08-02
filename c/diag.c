@@ -7,13 +7,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int diag_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diag_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k);
-int diag_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k);
+int diag_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k);
+int diag_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k);
+int diag_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k);
+int diag_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k);
 
 
-int diag_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
+int diag_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k)
 {
     const size_t K = (iscolmajor) ? R+1u : C+1u;
 
@@ -53,7 +53,7 @@ int diag_s (float *Y, const float *X, const size_t R, const size_t C, const char
 }
 
 
-int diag_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
+int diag_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k)
 {
     const size_t K = (iscolmajor) ? R+1u : C+1u;
 
@@ -82,7 +82,7 @@ int diag_d (double *Y, const double *X, const size_t R, const size_t C, const ch
 }
 
 
-int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int k)
+int diag_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k)
 {
     const size_t K = (iscolmajor) ? 2u*R+1u : 2u*C+1u;
 
@@ -111,7 +111,7 @@ int diag_c (float *Y, const float *X, const size_t R, const size_t C, const char
 }
 
 
-int diag_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int k)
+int diag_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k)
 {
     const size_t K = (iscolmajor) ? 2u*R+1u : 2u*C+1u;
 

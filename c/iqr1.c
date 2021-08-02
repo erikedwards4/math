@@ -13,11 +13,11 @@ namespace codee {
 extern "C" {
 #endif
 
-int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char m1);
-int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char m1);
+int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int m1);
+int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int m1);
 
 
-int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char m1)
+int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int m1)
 {
     if (dim>3u) { fprintf(stderr,"error in iqr1_s: dim must be in [0 3]\n"); return 1; }
 
@@ -118,7 +118,7 @@ int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size
 }
 
 
-int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const char m1)
+int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int m1)
 {
     if (dim>3u) { fprintf(stderr,"error in iqr1_d: dim must be in [0 3]\n"); return 1; }
 

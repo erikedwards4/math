@@ -16,18 +16,18 @@ namespace codee {
 extern "C" {
 #endif
 
-int eig_s (float *U, float *V, const float *X, const size_t R, const char iscolmajor, const size_t K);
-int eig_d (double *U, double *V, const double *X, const size_t R, const char iscolmajor, const size_t K);
-int eig_c (float *U, float *V, const float *X, const size_t R, const char iscolmajor, const size_t K);
-int eig_z (double *U, double *V, const double *X, const size_t R, const char iscolmajor, const size_t K);
+int eig_s (float *U, float *V, const float *X, const size_t R, const int iscolmajor, const size_t K);
+int eig_d (double *U, double *V, const double *X, const size_t R, const int iscolmajor, const size_t K);
+int eig_c (float *U, float *V, const float *X, const size_t R, const int iscolmajor, const size_t K);
+int eig_z (double *U, double *V, const double *X, const size_t R, const int iscolmajor, const size_t K);
 
-int eig_inplace_s (float *X, float *V, const size_t R, const char iscolmajor, const size_t K);
-int eig_inplace_d (double *X, double *V, const size_t R, const char iscolmajor, const size_t K);
-int eig_inplace_c (float *X, float *V, const size_t R, const char iscolmajor, const size_t K);
-int eig_inplace_z (double *X, double *V, const size_t R, const char iscolmajor, const size_t K);
+int eig_inplace_s (float *X, float *V, const size_t R, const int iscolmajor, const size_t K);
+int eig_inplace_d (double *X, double *V, const size_t R, const int iscolmajor, const size_t K);
+int eig_inplace_c (float *X, float *V, const size_t R, const int iscolmajor, const size_t K);
+int eig_inplace_z (double *X, double *V, const size_t R, const int iscolmajor, const size_t K);
 
 
-int eig_s (float *U, float *V, const float *X, const size_t R, const char iscolmajor, const size_t K)
+int eig_s (float *U, float *V, const float *X, const size_t R, const int iscolmajor, const size_t K)
 {
     if (R==0u) {}
     else
@@ -72,7 +72,7 @@ int eig_s (float *U, float *V, const float *X, const size_t R, const char iscolm
 }
 
 
-int eig_d (double *U, double *V, const double *X, const size_t R, const char iscolmajor, const size_t K)
+int eig_d (double *U, double *V, const double *X, const size_t R, const int iscolmajor, const size_t K)
 {
     if (R==0u) {}
     else
@@ -116,7 +116,7 @@ int eig_d (double *U, double *V, const double *X, const size_t R, const char isc
 }
 
 
-int eig_c (float *U, float *V, const float *X, const size_t R, const char iscolmajor, const size_t K)
+int eig_c (float *U, float *V, const float *X, const size_t R, const int iscolmajor, const size_t K)
 {
     if (R==0u) {}
     else
@@ -168,7 +168,7 @@ int eig_c (float *U, float *V, const float *X, const size_t R, const char iscolm
 }
 
 
-int eig_z (double *U, double *V, const double *X, const size_t R, const char iscolmajor, const size_t K)
+int eig_z (double *U, double *V, const double *X, const size_t R, const int iscolmajor, const size_t K)
 {
     if (R==0u) {}
     else
@@ -220,7 +220,7 @@ int eig_z (double *U, double *V, const double *X, const size_t R, const char isc
 }
 
 
-int eig_inplace_s (float *X, float *V, const size_t R, const char iscolmajor, const size_t K)
+int eig_inplace_s (float *X, float *V, const size_t R, const int iscolmajor, const size_t K)
 {
     if (R==0u) {}
     else
@@ -261,7 +261,7 @@ int eig_inplace_s (float *X, float *V, const size_t R, const char iscolmajor, co
 }
 
 
-int eig_inplace_d (double *X, double *V, const size_t R, const char iscolmajor, const size_t K)
+int eig_inplace_d (double *X, double *V, const size_t R, const int iscolmajor, const size_t K)
 {
     if (R==0u) {}
     else
@@ -302,7 +302,7 @@ int eig_inplace_d (double *X, double *V, const size_t R, const char iscolmajor, 
 }
 
 
-int eig_inplace_c (float *X, float *V, const size_t R, const char iscolmajor, const size_t K)
+int eig_inplace_c (float *X, float *V, const size_t R, const int iscolmajor, const size_t K)
 {
     if (R==0u) {}
     else
@@ -351,7 +351,7 @@ int eig_inplace_c (float *X, float *V, const size_t R, const char iscolmajor, co
 }
 
 
-int eig_inplace_z (double *X, double *V, const size_t R, const char iscolmajor, const size_t K)
+int eig_inplace_z (double *X, double *V, const size_t R, const int iscolmajor, const size_t K)
 {
     if (R==0u) {}
     else

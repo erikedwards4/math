@@ -9,13 +9,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int normalize2_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int normalize2_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int normalize2_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int normalize2_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int normalize2_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int normalize2_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int normalize2_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int normalize2_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
 
 
-int normalize2_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int normalize2_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in normalize2_s: dim must be in [0 3]\n"); return 1; }
 
@@ -70,7 +70,7 @@ int normalize2_s (float *X, const size_t R, const size_t C, const size_t S, cons
 }
 
 
-int normalize2_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int normalize2_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in normalize2_d: dim must be in [0 3]\n"); return 1; }
 
@@ -125,7 +125,7 @@ int normalize2_d (double *X, const size_t R, const size_t C, const size_t S, con
 }
 
 
-int normalize2_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int normalize2_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in normalize2_c: dim must be in [0 3]\n"); return 1; }
 
@@ -184,7 +184,7 @@ int normalize2_c (float *X, const size_t R, const size_t C, const size_t S, cons
 }
 
 
-int normalize2_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int normalize2_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in normalize2_c: dim must be in [0 3]\n"); return 1; }
 

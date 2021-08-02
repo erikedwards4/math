@@ -15,13 +15,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
-int dotmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim);
+int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim);
+int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim);
+int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim);
+int dotmat_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim);
 
 
-int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     float sm2;
@@ -140,7 +140,7 @@ int dotmat_s (float *Y, const float *X, const size_t R, const size_t C, const ch
 }
 
 
-int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     double sm2;
@@ -259,7 +259,7 @@ int dotmat_d (double *Y, const double *X, const size_t R, const size_t C, const 
 }
 
 
-int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
@@ -403,7 +403,7 @@ int dotmat_c (float *Y, const float *X, const size_t R, const size_t C, const ch
 }
 
 
-int dotmat_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const size_t dim)
+int dotmat_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t dim)
 {
     const size_t N = R*C;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;

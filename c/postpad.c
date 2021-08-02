@@ -11,13 +11,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val);
-int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val);
-int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val);
-int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val);
+int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t P, const float val);
+int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t P, const double val);
+int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t P, const float val);
+int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t P, const double val);
 
 
-int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val)
+int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t P, const float val)
 {
     if (dim>3u) { fprintf(stderr,"error in postpad_s: dim must be in [0 3]\n"); return 1; }
 
@@ -68,7 +68,7 @@ int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
 
 
 
-int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val)
+int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t P, const double val)
 {
     if (dim>3u) { fprintf(stderr,"error in postpad_d: dim must be in [0 3]\n"); return 1; }
 
@@ -118,7 +118,7 @@ int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_
 }
 
 
-int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const float val)
+int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t P, const float val)
 {
     if (dim>3u) { fprintf(stderr,"error in postpad_c: dim must be in [0 3]\n"); return 1; }
 
@@ -168,7 +168,7 @@ int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
 }
 
 
-int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const size_t P, const double val)
+int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t P, const double val)
 {
     if (dim>3u) { fprintf(stderr,"error in postpad_z: dim must be in [0 3]\n"); return 1; }
 

@@ -23,7 +23,7 @@ descr += "either X1 or X2 can be a single vector of appropriate length.\n";
 descr += "In that case, the single vector will be broadcast to the other input.\n";
 descr += "\n";
 descr += "Cokurtosis is essentially the corr of squared values, so is a measure\n";
-descr += "of the co-occurrence of extreme values. If X1=X2, it equals kurtosis.\n";
+descr += "of the co-occurrence of extreme values. It equals kurtosis if X1=X2.\n";
 descr += "\n";
 descr += "Examples:\n";
 descr += "$ cokurtosis X1 X2 -o Y \n";

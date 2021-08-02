@@ -7,13 +7,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int K);
-int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int K);
-int rot90_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int K);
-int rot90_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int K);
+int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int K);
+int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int K);
+int rot90_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int K);
+int rot90_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int K);
 
 
-int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int K)
+int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int K)
 {
     const size_t N = R*C;
     const int k = (K<0) ? 4+K%4 : K%4;
@@ -71,7 +71,7 @@ int rot90_s (float *Y, const float *X, const size_t R, const size_t C, const cha
 }
 
 
-int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int K)
+int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int K)
 {
     const size_t N = R*C;
     const int k = (K<0) ? 4+K%4 : K%4;
@@ -129,7 +129,7 @@ int rot90_d (double *Y, const double *X, const size_t R, const size_t C, const c
 }
 
 
-int rot90_c (float *Y, const float *X, const size_t R, const size_t C, const char iscolmajor, const int K)
+int rot90_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int K)
 {
     const size_t N = R*C;
     const int k = (K<0) ? 4+K%4 : K%4;
@@ -187,7 +187,7 @@ int rot90_c (float *Y, const float *X, const size_t R, const size_t C, const cha
 }
 
 
-int rot90_z (double *Y, const double *X, const size_t R, const size_t C, const char iscolmajor, const int K)
+int rot90_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int K)
 {
     const size_t N = R*C;
     const int k = (K<0) ? 4+K%4 : K%4;

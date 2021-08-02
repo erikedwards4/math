@@ -7,13 +7,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
 
 
-int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in split2_s: dim must be in [0 3]\n"); return 1; }
     if (dim==0u && R%2u) { fprintf(stderr,"error in split2_s: num rows X must be even for dim=0"); return 1; }
@@ -36,7 +36,7 @@ int split2_s (float *Y1, float *Y2, const float *X, const size_t R, const size_t
 }
 
 
-int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in split2_d: dim must be in [0 3]\n"); return 1; }
     if (dim==0u && R%2u) { fprintf(stderr,"error in split2_d: num rows X must be even for dim=0"); return 1; }
@@ -57,7 +57,7 @@ int split2_d (double *Y1, double *Y2, const double *X, const size_t R, const siz
 }
 
 
-int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in split2_c: dim must be in [0 3]\n"); return 1; }
     if (dim==0u && R%2u) { fprintf(stderr,"error in split2_c: num rows X must be even for dim=0"); return 1; }
@@ -78,7 +78,7 @@ int split2_c (float *Y1, float *Y2, const float *X, const size_t R, const size_t
 }
 
 
-int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int split2_z (double *Y1, double *Y2, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in split2_z: dim must be in [0 3]\n"); return 1; }
     if (dim==0u && R%2u) { fprintf(stderr,"error in split2_z: num rows X must be even for dim=0"); return 1; }

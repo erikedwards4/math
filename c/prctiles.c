@@ -14,14 +14,14 @@ namespace codee {
 extern "C" {
 #endif
 
-int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
 
-int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
-int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim);
+int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
+int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
 
 
-int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in prctiles_s: dim must be in [0 3]\n"); return 1; }
 
@@ -114,7 +114,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
 }
 
 
-int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in prctiles_d: dim must be in [0 3]\n"); return 1; }
 
@@ -207,7 +207,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
 }
 
 
-int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in prctiles_inplace_s: dim must be in [0 3]\n"); return 1; }
 
@@ -296,7 +296,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
 }
 
 
-int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim)
+int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in prctiles_inplace_d: dim must be in [0 3]\n"); return 1; }
 

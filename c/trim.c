@@ -18,14 +18,14 @@ namespace codee {
 extern "C" {
 #endif
 
-int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p, const float q);
-int trim_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p, const double q);
+int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q);
+int trim_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q);
 
-int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p, const float q);
-int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p, const double q);
+int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q);
+int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q);
 
 
-int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p, const float q)
+int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q)
 {
     if (dim>3u) { fprintf(stderr,"error in trim_s: dim must be in [0 3]\n"); return 1; }
     if (p<0.0f || p>50.0f) { fprintf(stderr,"error in trim_s: p must be in [0 50]"); return 1; }
@@ -92,7 +92,7 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int trim_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p, const double q)
+int trim_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q)
 {
     if (dim>3u) { fprintf(stderr,"error in trim_d: dim must be in [0 3]\n"); return 1; }
     if (p<0.0 || p>50.0) { fprintf(stderr,"error in trim_d: p must be in [0 50]"); return 1; }
@@ -159,7 +159,7 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p, const float q)
+int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q)
 {
     if (dim>3u) { fprintf(stderr,"error in trim_inplace_s: dim must be in [0 3]\n"); return 1; }
     if (p<0.0f || p>50.0f) { fprintf(stderr,"error in trim_inplace_s: p must be in [0 50]"); return 1; }
@@ -220,7 +220,7 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
 }
 
 
-int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p, const double q)
+int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q)
 {
     if (dim>3u) { fprintf(stderr,"error in trim_inplace_d: dim must be in [0 3]\n"); return 1; }
     if (p<0.0 || p>50.0) { fprintf(stderr,"error in trim_inplace_d: p must be in [0 50]"); return 1; }

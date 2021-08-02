@@ -9,13 +9,13 @@ namespace codee {
 extern "C" {
 #endif
 
-int normalizep_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p);
-int normalizep_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p);
-int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p);
-int normalizep_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p);
+int normalizep_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p);
+int normalizep_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p);
+int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p);
+int normalizep_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p);
 
 
-int normalizep_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p)
+int normalizep_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p)
 {
     if (dim>3u) { fprintf(stderr,"error in normalizep_s: dim must be in [0 3]\n"); return 1; }
 
@@ -71,7 +71,7 @@ int normalizep_s (float *X, const size_t R, const size_t C, const size_t S, cons
 }
 
 
-int normalizep_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p)
+int normalizep_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p)
 {
     if (dim>3u) { fprintf(stderr,"error in normalizep_d: dim must be in [0 3]\n"); return 1; }
 
@@ -127,7 +127,7 @@ int normalizep_d (double *X, const size_t R, const size_t C, const size_t S, con
 }
 
 
-int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const float p)
+int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p)
 {
     if (dim>3u) { fprintf(stderr,"error in normalizep_c: dim must be in [0 3]\n"); return 1; }
 
@@ -187,7 +187,7 @@ int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, cons
 }
 
 
-int normalizep_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const char iscolmajor, const size_t dim, const double p)
+int normalizep_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p)
 {
     if (dim>3u) { fprintf(stderr,"error in normalizep_c: dim must be in [0 3]\n"); return 1; }
 
