@@ -21,7 +21,6 @@ int mean0_s (float *X, const size_t R, const size_t C, const size_t S, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / (float)L;
     float mn = 0.0f;
 
     if (N==0u) {}
@@ -32,7 +31,7 @@ int mean0_s (float *X, const size_t R, const size_t C, const size_t S, const siz
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
-        mn *= den;
+        mn /= (float)L;
         for (size_t l=0u; l<L; ++l) { *--X -= mn; }
     }
     else
@@ -47,7 +46,7 @@ int mean0_s (float *X, const size_t R, const size_t C, const size_t S, const siz
             {
                 mn = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
-                mn *= den; X -= L;
+                mn /= (float)L; X -= L;
                 for (size_t l=0u; l<L; ++l, ++X) { *X -= mn; }
             }
         }
@@ -59,7 +58,7 @@ int mean0_s (float *X, const size_t R, const size_t C, const size_t S, const siz
                 {
                     mn = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { mn += *X; }
-                    mn *= den;
+                    mn /= (float)L;
                     for (size_t l=0u; l<L; ++l) { X-=K; *X -= mn; }
                 }
             }
@@ -76,7 +75,6 @@ int mean0_d (double *X, const size_t R, const size_t C, const size_t S, const si
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / (double)L;
     double mn = 0.0;
 
     if (N==0u) {}
@@ -87,7 +85,7 @@ int mean0_d (double *X, const size_t R, const size_t C, const size_t S, const si
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
-        mn *= den;
+        mn /= (double)L;
         for (size_t l=0u; l<L; ++l) { *--X -= mn; }
     }
     else
@@ -102,7 +100,7 @@ int mean0_d (double *X, const size_t R, const size_t C, const size_t S, const si
             {
                 mn = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
-                mn *= den; X -= L;
+                mn /= (double)L; X -= L;
                 for (size_t l=0u; l<L; ++l, ++X) { *X -= mn; }
             }
         }
@@ -114,7 +112,7 @@ int mean0_d (double *X, const size_t R, const size_t C, const size_t S, const si
                 {
                     mn = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { mn += *X; }
-                    mn *= den;
+                    mn /= (double)L;
                     for (size_t l=0u; l<L; ++l) { X-=K; *X -= mn; }
                 }
             }
@@ -131,7 +129,6 @@ int mean0_c (float *X, const size_t R, const size_t C, const size_t S, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / (float)L;
     float mnr = 0.0f, mni = 0.0f;
 
     if (N==0u) {}
@@ -142,7 +139,7 @@ int mean0_c (float *X, const size_t R, const size_t C, const size_t S, const siz
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
-        mnr *= den; mni *= den;
+        mnr /= (float)L; mni /= (float)L;
         for (size_t l=0u; l<L; ++l) { *--X -= mnr; *--X -= mni; }
     }
     else
@@ -157,7 +154,7 @@ int mean0_c (float *X, const size_t R, const size_t C, const size_t S, const siz
             {
                 mnr = mni = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
-                mnr *= den; mni *= den; X -= 2u*L;
+                mnr /= (float)L; mni /= (float)L; X -= 2u*L;
                 for (size_t l=0u; l<L; ++l, ++X) { *X -= mnr; *++X -= mni; }
             }
         }
@@ -169,7 +166,7 @@ int mean0_c (float *X, const size_t R, const size_t C, const size_t S, const siz
                 {
                     mnr = mni = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
-                    mnr *= den; mni *= den;
+                    mnr /= (float)L; mni /= (float)L;
                     for (size_t l=0u; l<L; ++l) { X-=2u*K-1u; *X -= mni; *--X -= mnr; }
                 }
             }
@@ -186,7 +183,6 @@ int mean0_z (double *X, const size_t R, const size_t C, const size_t S, const si
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / (double)L;
     double mnr = 0.0, mni = 0.0;
 
     if (N==0u) {}
@@ -197,7 +193,7 @@ int mean0_z (double *X, const size_t R, const size_t C, const size_t S, const si
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
-        mnr *= den; mni *= den;
+        mnr /= (double)L; mni /= (double)L;
         for (size_t l=0u; l<L; ++l) { *--X -= mnr; *--X -= mni; }
     }
     else
@@ -212,7 +208,7 @@ int mean0_z (double *X, const size_t R, const size_t C, const size_t S, const si
             {
                 mnr = mni = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
-                mnr *= den; mni *= den; X -= 2u*L;
+                mnr /= (double)L; mni /= (double)L; X -= 2u*L;
                 for (size_t l=0u; l<L; ++l, ++X) { *X -= mnr; *++X -= mni; }
             }
         }
@@ -224,7 +220,7 @@ int mean0_z (double *X, const size_t R, const size_t C, const size_t S, const si
                 {
                     mnr = mni = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
-                    mnr *= den; mni *= den;
+                    mnr /= (double)L; mni /= (double)L;
                     for (size_t l=0u; l<L; ++l) { X-=2u*K-1u; *X -= mni; *--X -= mnr; }
                 }
             }
