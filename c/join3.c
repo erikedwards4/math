@@ -26,7 +26,7 @@ int join3_s (float *Y, const float *X1, const float *X2, const float *X3,  const
     const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3*C3 : (dim==2u) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0u) ? H3*S3*C3*R3 : (dim==1u) ? H3*S3*C3 : (dim==2u) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
-    for (size_t g=0u; g<G; ++g)
+    for (size_t g=G; g>0u; --g)
     {
         for (size_t b=0u; b<B1; ++b, ++X1, ++Y) { *Y = *X1; }
         for (size_t b=0u; b<B2; ++b, ++X2, ++Y) { *Y = *X2; }
@@ -50,7 +50,7 @@ int join3_d (double *Y, const double *X1, const double *X2, const double *X3,  c
     const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3*C3 : (dim==2u) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0u) ? H3*S3*C3*R3 : (dim==1u) ? H3*S3*C3 : (dim==2u) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
-    for (size_t g=0u; g<G; ++g)
+    for (size_t g=G; g>0u; --g)
     {
         for (size_t b=0u; b<B1; ++b, ++X1, ++Y) { *Y = *X1; }
         for (size_t b=0u; b<B2; ++b, ++X2, ++Y) { *Y = *X2; }
@@ -74,7 +74,7 @@ int join3_c (float *Y, const float *X1, const float *X2, const float *X3,  const
     const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3*C3 : (dim==2u) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0u) ? H3*S3*C3*R3 : (dim==1u) ? H3*S3*C3 : (dim==2u) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
-    for (size_t g=0u; g<G; ++g)
+    for (size_t g=G; g>0u; --g)
     {
         for (size_t b=0u; b<B1; ++b, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
         for (size_t b=0u; b<B2; ++b, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }
@@ -98,7 +98,7 @@ int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  c
     const size_t B3 = (iscolmajor) ? ((dim==0u) ? R3 : (dim==1u) ? R3*C3 : (dim==2u) ? R3*C3*S3 : R3*C3*S3*H3) : ((dim==0u) ? H3*S3*C3*R3 : (dim==1u) ? H3*S3*C3 : (dim==2u) ? H3*S3 : H3);
     const size_t G = R1*C1*S1*H1/B1;
 
-    for (size_t g=0u; g<G; ++g)
+    for (size_t g=G; g>0u; --g)
     {
         for (size_t b=0u; b<B1; ++b, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
         for (size_t b=0u; b<B2; ++b, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }

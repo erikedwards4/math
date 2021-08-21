@@ -41,7 +41,7 @@ int imin_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = *X++; *Y = 0.0f;
                 for (size_t l=1u; l<L; ++l, ++X) { if (*X<mn) { mn = *X; *Y = (float)l; } }
@@ -49,9 +49,9 @@ int imin_s (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = *X; *Y = 0.0f; X += K;
                     for (size_t l=1u; l<L; ++l, X+=K) { if (*X<mn) { mn = *X; *Y = (float)l; } }
@@ -90,7 +90,7 @@ int imin_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = *X++; *Y = 0.0;
                 for (size_t l=1u; l<L; ++l, ++X) { if (*X<mn) { mn = *X; *Y = (double)l; } }
@@ -98,9 +98,9 @@ int imin_d (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = *X; *Y = 0.0; X += K;
                     for (size_t l=1u; l<L; ++l, X+=K) { if (*X<mn) { mn = *X; *Y = (double)l; } }
@@ -144,7 +144,7 @@ int imin_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = 0.0f; X += 2;
@@ -157,9 +157,9 @@ int imin_c (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mn = *X**X + *(X+1)**(X+1);
                     *Y = 0.0f; X += 2u*K;
@@ -208,7 +208,7 @@ int imin_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = 0.0; X += 2;
@@ -221,9 +221,9 @@ int imin_z (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mn = *X**X + *(X+1)**(X+1);
                     *Y = 0.0; X += 2u*K;

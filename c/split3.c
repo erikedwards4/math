@@ -24,11 +24,11 @@ int split3_s (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, c
     const size_t B = (iscolmajor) ? ((dim==0u) ? R/3u : (dim==1u) ? R*C/3u : (dim==2u) ? R*C*S/3u : R*C*S*H/3u) : ((dim==0u) ? H*S*C*R/3u : (dim==1u) ? H*S*C/3u : (dim==2u) ? H*S/3u : H/3u);
     const size_t G = R*C*S*H/(3u*B);
 
-    for (size_t g=0u; g<G; ++g)
+    for (size_t g=G; g>0u; --g)
     {
-        for (size_t b=0u; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
-        for (size_t b=0u; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
-        for (size_t b=0u; b<B; ++b, ++X, ++Y3) { *Y3 = *X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y1) { *Y1 = *X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y2) { *Y2 = *X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y3) { *Y3 = *X; }
     }
 
     return 0;
@@ -46,11 +46,11 @@ int split3_d (double *Y1, double *Y2, double *Y3, const double *X, const size_t 
     const size_t B = (iscolmajor) ? ((dim==0u) ? R/3u : (dim==1u) ? R*C/3u : (dim==2u) ? R*C*S/3u : R*C*S*H/3u) : ((dim==0u) ? H*S*C*R/3u : (dim==1u) ? H*S*C/3u : (dim==2u) ? H*S/3u : H/3u);
     const size_t G = R*C*S*H/(3u*B);
 
-    for (size_t g=0u; g<G; ++g)
+    for (size_t g=G; g>0u; --g)
     {
-        for (size_t b=0u; b<B; ++b, ++X, ++Y1) { *Y1 = *X; }
-        for (size_t b=0u; b<B; ++b, ++X, ++Y2) { *Y2 = *X; }
-        for (size_t b=0u; b<B; ++b, ++X, ++Y3) { *Y3 = *X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y1) { *Y1 = *X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y2) { *Y2 = *X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y3) { *Y3 = *X; }
     }
 
     return 0;
@@ -68,11 +68,11 @@ int split3_c (float *Y1, float *Y2, float *Y3, const float *X, const size_t R, c
     const size_t B = (iscolmajor) ? ((dim==0u) ? R/3u : (dim==1u) ? R*C/3u : (dim==2u) ? R*C*S/3u : R*C*S*H/3u) : ((dim==0u) ? H*S*C*R/3u : (dim==1u) ? H*S*C/3u : (dim==2u) ? H*S/3u : H/3u);
     const size_t G = R*C*S*H/(3u*B);
 
-    for (size_t g=0u; g<G; ++g)
+    for (size_t g=G; g>0u; --g)
     {
-        for (size_t b=0u; b<B; ++b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
-        for (size_t b=0u; b<B; ++b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
-        for (size_t b=0u; b<B; ++b, ++X, ++Y3) { *Y3 = *X; *++Y3 = *++X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y3) { *Y3 = *X; *++Y3 = *++X; }
     }
 
     return 0;
@@ -90,11 +90,11 @@ int split3_z (double *Y1, double *Y2, double *Y3, const double *X, const size_t 
     const size_t B = (iscolmajor) ? ((dim==0u) ? R/3u : (dim==1u) ? R*C/3u : (dim==2u) ? R*C*S/3u : R*C*S*H/3u) : ((dim==0u) ? H*S*C*R/3u : (dim==1u) ? H*S*C/3u : (dim==2u) ? H*S/3u : H/3u);
     const size_t G = R*C*S*H/(3u*B);
 
-    for (size_t g=0u; g<G; ++g)
+    for (size_t g=G; g>0u; --g)
     {
-        for (size_t b=0u; b<B; ++b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
-        for (size_t b=0u; b<B; ++b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
-        for (size_t b=0u; b<B; ++b, ++X, ++Y3) { *Y3 = *X; *++Y3 = *++X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y1) { *Y1 = *X; *++Y1 = *++X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y2) { *Y2 = *X; *++Y2 = *++X; }
+        for (size_t b=B; b>0u; --b, ++X, ++Y3) { *Y3 = *X; *++Y3 = *++X; }
     }
 
     return 0;

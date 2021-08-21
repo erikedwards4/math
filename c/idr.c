@@ -62,7 +62,7 @@ int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
@@ -76,9 +76,9 @@ int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
@@ -138,7 +138,7 @@ int idr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
@@ -152,9 +152,9 @@ int idr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
@@ -208,7 +208,7 @@ int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L-i2, ++Y)
+            for (size_t v=V; v>0u; --v, X+=L-i2, ++Y)
             {
                 if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_s: problem with LAPACKE function\n"); }
                 X += i1;
@@ -221,9 +221,9 @@ int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in idr_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
@@ -277,7 +277,7 @@ int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L-i2, ++Y)
+            for (size_t v=V; v>0u; --v, X+=L-i2, ++Y)
             {
                 if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_d: problem with LAPACKE function\n"); }
                 X += i1;
@@ -290,9 +290,9 @@ int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in idr_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;

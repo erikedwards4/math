@@ -52,7 +52,7 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             if (L<10u)
             {
-                for (size_t v=0u; v<V; ++v, ++Y)
+                for (size_t v=V; v>0u; --v, ++Y)
                 {
                     *Y = 0.0f;
                     for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
@@ -62,7 +62,7 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
             else
             {
                 float sm;
-                for (size_t v=0u; v<V; ++v, ++Y)
+                for (size_t v=V; v>0u; --v, ++Y)
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, ++X) { sm += *X; }
@@ -72,20 +72,20 @@ int mean_s (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
+            for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y *= den; }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; }
         }
         else
         {
             float sm;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { sm += *X; }
@@ -137,7 +137,7 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             if (L<10u)
             {
-                for (size_t v=0u; v<V; ++v, ++Y)
+                for (size_t v=V; v>0u; --v, ++Y)
                 {
                     *Y = 0.0;
                     for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
@@ -147,7 +147,7 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
             else
             {
                 double sm;
-                for (size_t v=0u; v<V; ++v, ++Y)
+                for (size_t v=V; v>0u; --v, ++Y)
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, ++X) { sm += *X; }
@@ -157,20 +157,20 @@ int mean_d (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
+            for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y *= den; }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; }
         }
         else
         {
             double sm;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { sm += *X; }
@@ -212,7 +212,7 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 yr = yi = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { yr += *X; yi += *++X; }
@@ -221,19 +221,19 @@ int mean_c (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             Y -= 2u*V;
             for (size_t l=1u; l<L; ++l, Y-=2u*V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y *= den; *++Y *= den; }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; *++Y *= den; }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     yr = yi = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { yr += *X; yi += *++X; }
@@ -275,7 +275,7 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 yr = yi = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { yr += *X; yi += *++X; }
@@ -284,19 +284,19 @@ int mean_z (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             Y -= 2u*V;
             for (size_t l=1u; l<L; ++l, Y-=2u*V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; *++Y += *++X; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y *= den; *++Y *= den; }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; *++Y *= den; }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     yr = yi = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { yr += *X; yi += *++X; }

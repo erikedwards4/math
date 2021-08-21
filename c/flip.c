@@ -49,7 +49,7 @@ int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size
         if (K==1u && (G==1u || B==1u))
         {
             Y += L - 1;
-            for (size_t v=0u; v<V; ++v, Y+=2u*L)
+            for (size_t v=V; v>0u; --v, Y+=2u*L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, --Y) { *Y = *X; }
             }
@@ -59,14 +59,14 @@ int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size
             Y += V*(L-1u);
             for (size_t l=0u; l<L; ++l, Y-=2u*V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, Y+=K+1u)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, Y+=K+1u)
                 {
                     Y += K*(L-1u);
                     for (size_t l=0u; l<L; ++l, Y-=K, X+=K) { *Y = *X; }
@@ -105,7 +105,7 @@ int flip_d (double *Y, const double *X, const size_t R, const size_t C, const si
         if (K==1u && (G==1u || B==1u))
         {
             Y += L - 1;
-            for (size_t v=0u; v<V; ++v, Y+=2u*L)
+            for (size_t v=V; v>0u; --v, Y+=2u*L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, --Y) { *Y = *X; }
             }
@@ -115,14 +115,14 @@ int flip_d (double *Y, const double *X, const size_t R, const size_t C, const si
             Y += V*(L-1u);
             for (size_t l=0u; l<L; ++l, Y-=2u*V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X; }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, Y+=K+1u)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, Y+=K+1u)
                 {
                     Y += K*(L-1u);
                     for (size_t l=0u; l<L; ++l, Y-=K, X+=K) { *Y = *X; }
@@ -161,7 +161,7 @@ int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size
         if (K==1u && (G==1u || B==1u))
         {
             Y += 2u*(L-1u);
-            for (size_t v=0u; v<V; ++v, Y+=4*L)
+            for (size_t v=V; v>0u; --v, Y+=4*L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
             }
@@ -176,9 +176,9 @@ int flip_c (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, Y+=2u*K+2u)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, Y+=2u*K+2u)
                 {
                     Y += 2u*K*(L-1u);
                     for (size_t l=0u; l<L; ++l, Y-=2u*K, X+=2u*K) { *Y = *X; *(Y+1) = *(X+1); }
@@ -217,7 +217,7 @@ int flip_z (double *Y, const double *X, const size_t R, const size_t C, const si
         if (K==1u && (G==1u || B==1u))
         {
             Y += 2u*(L-1u);
-            for (size_t v=0u; v<V; ++v, Y+=4*L)
+            for (size_t v=V; v>0u; --v, Y+=4*L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, Y-=2) { *Y = *X; *(Y+1) = *++X; }
             }
@@ -232,9 +232,9 @@ int flip_z (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, Y+=2u*K+2u)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, Y+=2u*K+2u)
                 {
                     Y += 2u*K*(L-1u);
                     for (size_t l=0u; l<L; ++l, Y-=2u*K, X+=2u*K) { *Y = *X; *(Y+1) = *(X+1); }
@@ -268,16 +268,16 @@ int flip_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L-L/2u)
+            for (size_t v=V; v>0u; --v, X+=L-L/2u)
             {
                 for (size_t l=0u; l<L/2u; ++l) { x1 = *X; *X = *(X+L-2u*l-1u); ++X; *(X+L-2u*l-2u) = x1; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*(L/2u)-1u)
+                for (size_t b=B; b>0u; --b, X-=K*(L/2u)-1u)
                 {
                     for (size_t l=0u; l<L/2u; ++l)
                     {
@@ -314,16 +314,16 @@ int flip_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L-L/2u)
+            for (size_t v=V; v>0u; --v, X+=L-L/2u)
             {
                 for (size_t l=0u; l<L/2u; ++l) { x1 = *X; *X = *(X+L-2u*l-1u); ++X; *(X+L-2u*l-2u) = x1; }
             }
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*(L/2u)-1u)
+                for (size_t b=B; b>0u; --b, X-=K*(L/2u)-1u)
                 {
                     for (size_t l=0u; l<L/2u; ++l)
                     {
@@ -367,7 +367,7 @@ int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=2u*(L-L/2u))
+            for (size_t v=V; v>0u; --v, X+=2u*(L-L/2u))
             {
                 for (size_t l=0u; l<L/2u; ++l)
                 {
@@ -381,9 +381,9 @@ int flip_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*(L/2u)-2u)
+                for (size_t b=B; b>0u; --b, X-=2u*K*(L/2u)-2u)
                 {
                     for (size_t l=0u; l<L/2u; ++l)
                     {
@@ -430,7 +430,7 @@ int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=2u*(L-L/2u))
+            for (size_t v=V; v>0u; --v, X+=2u*(L-L/2u))
             {
                 for (size_t l=0u; l<L/2u; ++l)
                 {
@@ -444,9 +444,9 @@ int flip_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*(L/2u)-2u)
+                for (size_t b=B; b>0u; --b, X-=2u*K*(L/2u)-2u)
                 {
                     for (size_t l=0u; l<L/2u; ++l)
                     {

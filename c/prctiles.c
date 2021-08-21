@@ -73,7 +73,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=V; v>0u; --v, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
@@ -89,9 +89,9 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
+                for (size_t b=B; b>0u; --b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -166,7 +166,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=V; v>0u; --v, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
@@ -182,9 +182,9 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
+                for (size_t b=B; b>0u; --b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -254,7 +254,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=Lx-*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=V; v>0u; --v, X+=Lx-*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
                 X += *i1++;
@@ -270,9 +270,9 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
         {
             float *X1;
             if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
+                for (size_t b=B; b>0u; --b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
@@ -343,7 +343,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=Lx-*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
+            for (size_t v=V; v>0u; --v, X+=Lx-*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
                 if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
                 X += *i1++;
@@ -359,9 +359,9 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
         {
             double *X1;
             if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
+                for (size_t b=B; b>0u; --b, X-=K*Lx-1u, X1-=*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;

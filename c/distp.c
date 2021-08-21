@@ -57,7 +57,7 @@ int distp_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
         {
             const size_t J1 = (L==N1) ? L : 0u, J2 = (L==N2) ? L : 0u;
             float sm;
-            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 sm = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X1, ++X2)
@@ -70,13 +70,13 @@ int distp_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
         else if (G==1u)
         {
             const size_t J1 = (L==N1) ? 0u : 1u, J2 = (L==N2) ? 0u : 1u;
-            for (size_t v=0u; v<V; ++v, X1+=J1, X2+=J2, ++Y) { *Y = powf(fabsf(*X1-*X2),p); }
+            for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y) { *Y = powf(fabsf(*X1-*X2),p); }
             Y -= V; X1 += 1u-J1; X2 += 1u-J2;
             for (size_t l=1u; l<L; ++l, Y-=V, X1+=1u-J1, X2+=1u-J2)
             {
-                for (size_t v=0u; v<V; ++v, X1+=J1, X2+=J2, ++Y) { *Y += powf(fabsf(*X1-*X2),p); }
+                for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y) { *Y += powf(fabsf(*X1-*X2),p); }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y = powf(*Y,ip); }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y = powf(*Y,ip); }
         }
         else
         {
@@ -84,9 +84,9 @@ int distp_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
             const size_t K1 = (L==N1) ? 1u : K, K2 = (L==N2) ? 1u : K;
             const size_t I1 = (L==N1) ? 0u : B*(L-1u), I2 = (L==N2) ? 0u : B*(L-1u);
             float sm;
-            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=G; g>0u; --g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
@@ -142,7 +142,7 @@ int distp_d (double *Y, const double *X1, const double *X2, const size_t R1, con
         {
             const size_t J1 = (L==N1) ? L : 0u, J2 = (L==N2) ? L : 0u;
             double sm;
-            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 sm = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X1, ++X2)
@@ -155,13 +155,13 @@ int distp_d (double *Y, const double *X1, const double *X2, const size_t R1, con
         else if (G==1u)
         {
             const size_t J1 = (L==N1) ? 0u : 1u, J2 = (L==N2) ? 0u : 1u;
-            for (size_t v=0u; v<V; ++v, X1+=J1, X2+=J2, ++Y) { *Y = pow(fabs(*X1-*X2),p); }
+            for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y) { *Y = pow(fabs(*X1-*X2),p); }
             Y -= V; X1 += 1u-J1; X2 += 1u-J2;
             for (size_t l=1u; l<L; ++l, Y-=V, X1+=1u-J1, X2+=1u-J2)
             {
-                for (size_t v=0u; v<V; ++v, X1+=J1, X2+=J2, ++Y) { *Y += pow(fabs(*X1-*X2),p); }
+                for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y) { *Y += pow(fabs(*X1-*X2),p); }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y = pow(*Y,ip); }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y = pow(*Y,ip); }
         }
         else
         {
@@ -169,9 +169,9 @@ int distp_d (double *Y, const double *X1, const double *X2, const size_t R1, con
             const size_t K1 = (L==N1) ? 1u : K, K2 = (L==N2) ? 1u : K;
             const size_t I1 = (L==N1) ? 0u : B*(L-1u), I2 = (L==N2) ? 0u : B*(L-1u);
             double sm;
-            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=G; g>0u; --g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
@@ -234,7 +234,7 @@ int distp_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
         if (K==1u && (G==1u || B==1u))
         {
             const size_t J1 = (L==N1) ? 2u*L : 0u, J2 = (L==N2) ? 2u*L : 0u;
-            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 float sm = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X1, ++X2)
@@ -251,9 +251,9 @@ int distp_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
             const size_t J1 = (L==N1) ? 0u : 2u, J2 = (L==N2) ? 0u : 2u;
             const size_t K1 = (L==N1) ? 2u : 2u*K, K2 = (L==N2) ? 2u : 2u*K;
             const size_t I1 = (L==N1) ? 0u : 2u*B*(L-1u), I2 = (L==N2) ? 0u : 2u*B*(L-1u);
-            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=G; g>0u; --g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     float sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u)
@@ -318,7 +318,7 @@ int distp_z (double *Y, const double *X1, const double *X2, const size_t R1, con
         if (K==1u && (G==1u || B==1u))
         {
             const size_t J1 = (L==N1) ? 2u*L : 0u, J2 = (L==N2) ? 2u*L : 0u;
-            for (size_t v=0u; v<V; ++v, X1-=J1, X2-=J2, ++Y)
+            for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 double sm = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X1, ++X2)
@@ -335,9 +335,9 @@ int distp_z (double *Y, const double *X1, const double *X2, const size_t R1, con
             const size_t J1 = (L==N1) ? 0u : 2u, J2 = (L==N2) ? 0u : 2u;
             const size_t K1 = (L==N1) ? 2u : 2u*K, K2 = (L==N2) ? 2u : 2u*K;
             const size_t I1 = (L==N1) ? 0u : 2u*B*(L-1u), I2 = (L==N2) ? 0u : 2u*B*(L-1u);
-            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=G; g>0u; --g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
+                for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     double sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u)

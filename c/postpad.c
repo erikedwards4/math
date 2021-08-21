@@ -38,7 +38,7 @@ int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
                 for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
@@ -52,9 +52,9 @@ int postpad_s (float *Y, float *X, const size_t R, const size_t C, const size_t 
         else
         {
             const size_t Ly = Lx + P;
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, Y-=K*Ly-1u)
+                for (size_t b=B; b>0u; --b, X-=K*Lx-1u, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
                     for (size_t p=0u; p<P; ++p, Y+=K) { *Y = val; }
@@ -89,7 +89,7 @@ int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
                 for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
@@ -103,9 +103,9 @@ int postpad_d (double *Y, double *X, const size_t R, const size_t C, const size_
         else
         {
             const size_t Ly = Lx + P;
-            for (size_t g=0u; g<G; ++g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(Lx-1u), Y+=B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*Lx-1u, Y-=K*Ly-1u)
+                for (size_t b=B; b>0u; --b, X-=K*Lx-1u, Y-=K*Ly-1u)
                 {
                     for (size_t l=0u; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
                     for (size_t p=0u; p<P; ++p, Y+=K) { *Y = val; }
@@ -139,7 +139,7 @@ int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<2u*Lx; ++l, ++X, ++Y) { *Y = *X; }
                 for (size_t p=0u; p<2u*P; ++p, ++Y) { *Y = val; }
@@ -153,9 +153,9 @@ int postpad_c (float *Y, float *X, const size_t R, const size_t C, const size_t 
         else
         {
             const size_t Ly = Lx + P;
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(Lx-1u), Y+=2u*B*(Ly-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(Lx-1u), Y+=2u*B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*Lx-2u, Y-=2u*K*Ly-2u)
+                for (size_t b=B; b>0u; --b, X-=2u*K*Lx-2u, Y-=2u*K*Ly-2u)
                 {
                     for (size_t l=0u; l<Lx; ++l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
                     for (size_t p=0u; p<P; ++p, Y+=2u*K-1u) { *Y = val; *++Y = val; }
@@ -189,7 +189,7 @@ int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<2u*Lx; ++l, ++X, ++Y) { *Y = *X; }
                 for (size_t p=0u; p<2u*P; ++p, ++Y) { *Y = val; }
@@ -203,9 +203,9 @@ int postpad_z (double *Y, double *X, const size_t R, const size_t C, const size_
         else
         {
             const size_t Ly = Lx + P;
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(Lx-1u), Y+=2u*B*(Ly-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(Lx-1u), Y+=2u*B*(Ly-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*Lx-2u, Y-=2u*K*Ly-2u)
+                for (size_t b=B; b>0u; --b, X-=2u*K*Lx-2u, Y-=2u*K*Ly-2u)
                 {
                     for (size_t l=0u; l<Lx; ++l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
                     for (size_t p=0u; p<P; ++p, Y+=2u*K-1u) { *Y = val; *++Y = val; }

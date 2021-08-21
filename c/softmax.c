@@ -44,7 +44,7 @@ int softmax_s (float *Y, const float *X, const size_t R, const size_t C, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 sm = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = expf(*X); sm += *Y; }
@@ -54,9 +54,9 @@ int softmax_s (float *Y, const float *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K, Y+=K) { *Y = expf(*X); sm += *Y; }
@@ -96,7 +96,7 @@ int softmax_d (double *Y, const double *X, const size_t R, const size_t C, const
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 sm = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = exp(*X); sm += *Y; }
@@ -106,9 +106,9 @@ int softmax_d (double *Y, const double *X, const size_t R, const size_t C, const
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K, Y+=K) { *Y = exp(*X); sm += *Y; }
@@ -148,7 +148,7 @@ int softmax_inplace_s (float *X, const size_t R, const size_t C, const size_t S,
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 sm = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { *X = expf(*X); sm += *X; }
@@ -158,9 +158,9 @@ int softmax_inplace_s (float *X, const size_t R, const size_t C, const size_t S,
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X)
+                for (size_t b=B; b>0u; --b, ++X)
                 {
                     sm = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { *X = expf(*X); sm += *X; }
@@ -200,7 +200,7 @@ int softmax_inplace_d (double *X, const size_t R, const size_t C, const size_t S
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 sm = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { *X = exp(*X); sm += *X; }
@@ -210,9 +210,9 @@ int softmax_inplace_d (double *X, const size_t R, const size_t C, const size_t S
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X)
+                for (size_t b=B; b>0u; --b, ++X)
                 {
                     sm = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { *X = exp(*X); sm += *X; }

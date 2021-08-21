@@ -42,7 +42,7 @@ int zscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 mn = sd = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
@@ -54,9 +54,9 @@ int zscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u)
                 {
                     mn = sd = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { mn += *X; }
@@ -100,7 +100,7 @@ int zscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 mn = sd = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
@@ -112,9 +112,9 @@ int zscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u)
                 {
                     mn = sd = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { mn += *X; }
@@ -158,7 +158,7 @@ int zscore_c (float *X, const size_t R, const size_t C, const size_t S, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 mnr = mni = sd = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
@@ -170,9 +170,9 @@ int zscore_c (float *X, const size_t R, const size_t C, const size_t S, const si
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u)
                 {
                     mnr = mni = sd = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
@@ -216,7 +216,7 @@ int zscore_z (double *X, const size_t R, const size_t C, const size_t S, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 mnr = mni = sd = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
@@ -228,9 +228,9 @@ int zscore_z (double *X, const size_t R, const size_t C, const size_t S, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u)
                 {
                     mnr = mni = sd = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }

@@ -55,7 +55,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
         if (K==1u && (G==1u || B==1u))
         {
             const size_t J1 = (L==N1) ? 0u : L, J2 = (L==N2) ? 0u : L;
-            for (size_t v=0u; v<V; ++v, X1+=J1, X2+=J2, ++Y)
+            for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y)
             {
                 ssm = 0;
                 for (size_t l2=1u; l2<L; ++l2)
@@ -75,9 +75,9 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
             const size_t J1 = (L==N1) ? 0u : 1u, J2 = (L==N2) ? 0u : 1u;
             const size_t K1 = (L==N1) ? 1u : K, K2 = (L==N2) ? 1u : K;
             const size_t I1 = (L==N1) ? 0u : B*(L-1u), I2 = (L==N2) ? 0u : B*(L-1u);
-            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=G; g>0u; --g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1+=J1, X2+=J2, ++Y)
+                for (size_t b=B; b>0u; --b, X1+=J1, X2+=J2, ++Y)
                 {
                     ssm = 0;
                     for (size_t l2=1u; l2<L; ++l2)
@@ -142,7 +142,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
         if (K==1u && (G==1u || B==1u))
         {
             const size_t J1 = (L==N1) ? 0u : L, J2 = (L==N2) ? 0u : L;
-            for (size_t v=0u; v<V; ++v, X1+=J1, X2+=J2, ++Y)
+            for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y)
             {
                 ssm = 0;
                 for (size_t l2=1u; l2<L; ++l2)
@@ -162,9 +162,9 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
             const size_t J1 = (L==N1) ? 0u : 1u, J2 = (L==N2) ? 0u : 1u;
             const size_t K1 = (L==N1) ? 1u : K, K2 = (L==N2) ? 1u : K;
             const size_t I1 = (L==N1) ? 0u : B*(L-1u), I2 = (L==N2) ? 0u : B*(L-1u);
-            for (size_t g=0u; g<G; ++g, X1+=I1, X2+=I2)
+            for (size_t g=G; g>0u; --g, X1+=I1, X2+=I2)
             {
-                for (size_t b=0u; b<B; ++b, X1+=J1, X2+=J2, ++Y)
+                for (size_t b=B; b>0u; --b, X1+=J1, X2+=J2, ++Y)
                 {
                     ssm = 0;
                     for (size_t l2=1u; l2<L; ++l2)

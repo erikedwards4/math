@@ -48,7 +48,7 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         if (K==1u && (G==1u || B==1u))
         {
             size_t cnt;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
@@ -57,19 +57,19 @@ int norm0_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = (float)(*X>pthresh || *X<nthresh); }
+            for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = (float)(*X>pthresh || *X<nthresh); }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += (float)(*X>pthresh || *X<nthresh); }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += (float)(*X>pthresh || *X<nthresh); }
             }
         }
         else
         {
             size_t cnt;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=K) { cnt += (*X>pthresh || *X<nthresh); }
@@ -111,7 +111,7 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
         if (K==1u && (G==1u || B==1u))
         {
             size_t cnt;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, ++X) { cnt += (*X>pthresh || *X<nthresh); }
@@ -120,19 +120,19 @@ int norm0_d (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = (double)(*X>pthresh || *X<nthresh); }
+            for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = (double)(*X>pthresh || *X<nthresh); }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += (double)(*X>pthresh || *X<nthresh); }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += (double)(*X>pthresh || *X<nthresh); }
             }
         }
         else
         {
             size_t cnt;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=K) { cnt += (*X>pthresh || *X<nthresh); }
@@ -174,7 +174,7 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         if (K==1u && (G==1u || B==1u))
         {
             size_t cnt;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
@@ -183,19 +183,19 @@ int norm0_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = (float)(*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
+            for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y = (float)(*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += (float)(*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
+                for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y += (float)(*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
             }
         }
         else
         {
             size_t cnt;
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=2u*K) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
@@ -237,7 +237,7 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
         if (K==1u && (G==1u || B==1u))
         {
             size_t cnt;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 cnt = 0u;
                 for (size_t l=0u; l<L; ++l, X+=2) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
@@ -246,19 +246,19 @@ int norm0_z (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = (double)(*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
+            for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y = (double)(*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += (double)(*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
+                for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y += (double)(*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }
             }
         }
         else
         {
             size_t cnt;
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     cnt = 0u;
                     for (size_t l=0u; l<L; ++l, X+=2u*K) { cnt += (*X>pthresh || *X<nthresh || *(X+1)>pthresh || *(X+1)<nthresh); }

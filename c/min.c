@@ -47,7 +47,7 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = *X++;
                 for (size_t l=1u; l<L; ++l, ++X) { if (*X<mn) { mn = *X; } }
@@ -56,9 +56,9 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = *X; X += K;
                     for (size_t l=1u; l<L; ++l, X+=K) { if (*X<mn) { mn = *X; } }
@@ -99,7 +99,7 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = *X++;
                 for (size_t l=1u; l<L; ++l, ++X) { if (*X<mn) { mn = *X; } }
@@ -108,9 +108,9 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = *X; X += K;
                     for (size_t l=1u; l<L; ++l, X+=K) { if (*X<mn) { mn = *X; } }
@@ -155,7 +155,7 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, Y+=2)
+            for (size_t v=V; v>0u; --v, Y+=2)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2;
@@ -168,9 +168,9 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, Y+=2)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, Y+=2)
                 {
                     mn = *X**X + *(X+1)**(X+1);
                     *Y = *X; *(Y+1) = *(X+1); X += 2u*K;
@@ -219,7 +219,7 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, Y+=2)
+            for (size_t v=V; v>0u; --v, Y+=2)
             {
                 mn = *X**X + *(X+1)**(X+1);
                 *Y = *X; *(Y+1) = *(X+1); X += 2;
@@ -232,9 +232,9 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, Y+=2)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, Y+=2)
                 {
                     mn = *X**X + *(X+1)**(X+1);
                     *Y = *X; *(Y+1) = *(X+1); X += 2u*K;

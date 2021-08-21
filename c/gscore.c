@@ -41,7 +41,7 @@ int gscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 mn = sd = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { *X = logf(*X); mn += *X; }
@@ -53,9 +53,9 @@ int gscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u)
                 {
                     mn = sd = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { *X = logf(*X); mn += *X; }
@@ -99,7 +99,7 @@ int gscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 mn = sd = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { *X = log(*X); mn += *X; }
@@ -111,9 +111,9 @@ int gscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u)
                 {
                     mn = sd = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { *X = log(*X); mn += *X; }

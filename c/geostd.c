@@ -59,7 +59,7 @@ int geostd_s (float *Y, const float *X, const size_t R, const size_t C, const si
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in geostd_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X1, ++X) { *X1 = logf(*X); mn += *X1; }
@@ -73,9 +73,9 @@ int geostd_s (float *Y, const float *X, const size_t R, const size_t C, const si
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in geostd_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = sm2 = 0.0f;
                     for (size_t l=0u; l<L; ++l, ++X1, X+=K) { *X1 = logf(*X); mn += *X1; }
@@ -136,7 +136,7 @@ int geostd_d (double *Y, const double *X, const size_t R, const size_t C, const 
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in geostd_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X1, ++X) { *X1 = log(*X); mn += *X1; }
@@ -150,9 +150,9 @@ int geostd_d (double *Y, const double *X, const size_t R, const size_t C, const 
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in geostd_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = sm2 = 0.0;
                     for (size_t l=0u; l<L; ++l, ++X1, X+=K) { *X1 = log(*X); mn += *X1; }

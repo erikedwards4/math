@@ -46,7 +46,7 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = mx = *X++;
                 for (size_t l=1u; l<L; ++l, ++X)
@@ -59,9 +59,9 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = mx = *X; X += K;
                     for (size_t l=1u; l<L; ++l, X+=K)
@@ -110,7 +110,7 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = mx = *X++;
                 for (size_t l=1u; l<L; ++l, ++X)
@@ -123,9 +123,9 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = mx = *X; X += K;
                     for (size_t l=1u; l<L; ++l, X+=K)

@@ -158,7 +158,7 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, Y+=L)
+            for (size_t v=V; v>0u; --v, Y+=L)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
                 qsort(XI,L,sizeof(FLT),comp);
@@ -167,9 +167,9 @@ int ranks_s (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X, ++Y)
+                for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(FLT),comp);
@@ -214,7 +214,7 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, Y+=L)
+            for (size_t v=V; v>0u; --v, Y+=L)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = l; }
                 qsort(XI,L,sizeof(DBL),comp);
@@ -223,9 +223,9 @@ int ranks_d (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X, ++Y)
+                for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(DBL),comp);
@@ -270,7 +270,7 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
                 qsort(XI,L,sizeof(CFLT),comp);
@@ -279,9 +279,9 @@ int ranks_c (float *Y, const float *X, const size_t R, const size_t C, const siz
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X, ++Y)
+                for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].r = X[2u*l*K]; XI[l].i = X[2u*l*K+1u]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(CFLT),comp);
@@ -326,7 +326,7 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = l; }
                 qsort(XI,L,sizeof(ZDBL),comp);
@@ -335,9 +335,9 @@ int ranks_z (double *Y, const double *X, const size_t R, const size_t C, const s
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X, ++Y)
+                for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].r = X[2u*l*K]; XI[l].i = X[2u*l*K+1u]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(ZDBL),comp);
@@ -382,7 +382,7 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L)
+            for (size_t v=V; v>0u; --v, X+=L)
             {
                 for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
                 qsort(XI,L,sizeof(FLT),comp);
@@ -391,9 +391,9 @@ int ranks_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X)
+                for (size_t b=B; b>0u; --b, ++X)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(FLT),comp);
@@ -438,7 +438,7 @@ int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L)
+            for (size_t v=V; v>0u; --v, X+=L)
             {
                 for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = l; }
                 qsort(XI,L,sizeof(DBL),comp);
@@ -447,9 +447,9 @@ int ranks_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X)
+                for (size_t b=B; b>0u; --b, ++X)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = l; }
                     qsort(XI,L,sizeof(DBL),comp);

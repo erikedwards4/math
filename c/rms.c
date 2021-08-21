@@ -46,7 +46,7 @@ int rms_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (K==1u && (G==1u || B==1u))
         {
             float sm2;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm2 = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { sm2 += *X * *X; }
@@ -55,20 +55,20 @@ int rms_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X**X; }
+            for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X**X; }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X**X; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y = sqrtf(*Y*den); }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y = sqrtf(*Y*den); }
         }
         else
         {
             float sm2;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm2 = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=K) { sm2 += *X * *X; }
@@ -110,7 +110,7 @@ int rms_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (K==1u && (G==1u || B==1u))
         {
             double sm2;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm2 = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { sm2 += *X * *X; }
@@ -119,20 +119,20 @@ int rms_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y = *X**X; }
+            for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X**X; }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y) { *Y += *X**X; }
+                for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X**X; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y = sqrt(*Y*den); }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y = sqrt(*Y*den); }
         }
         else
         {
             double sm2;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm2 = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=K) { sm2 += *X * *X; }
@@ -175,7 +175,7 @@ int rms_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (K==1u && (G==1u || B==1u))
         {
             float sm2;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm2 = 0.0f;
                 for (size_t l=0u; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
@@ -184,20 +184,20 @@ int rms_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); }
+            for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
+                for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y = sqrtf(*Y); }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y = sqrtf(*Y); }
         }
         else
         {
             float sm2;
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     sm2 = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=2u*K) { sm2 += *X**X + *(X+1)**(X+1); }
@@ -240,7 +240,7 @@ int rms_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (K==1u && (G==1u || B==1u))
         {
             double sm2;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm2 = 0.0;
                 for (size_t l=0u; l<L; ++l, X+=2) { sm2 += *X**X + *(X+1)**(X+1); }
@@ -249,20 +249,20 @@ int rms_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         }
         else if (G==1u)
         {
-            for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); }
+            for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y = *X**X + *(X+1)**(X+1); }
             Y -= V;
             for (size_t l=1u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
+                for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y += *X**X + *(X+1)**(X+1); }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y = sqrt(*Y); }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y = sqrt(*Y); }
         }
         else
         {
             double sm2;
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     sm2 = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=2u*K) { sm2 += *X**X + *(X+1)**(X+1); }

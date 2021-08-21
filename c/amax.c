@@ -48,7 +48,7 @@ int amax_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 size_t l = cblas_isamax((int)L,X,1);
                 X += l; *Y = *X; X += L-l;
@@ -60,7 +60,7 @@ int amax_s (float *Y, const float *X, const size_t R, const size_t C, const size
             if (!(mxs=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in amax_s: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t l=0u; l<L; ++l, Y-=V, mxs-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y, ++mxs)
+                for (size_t v=V; v>0u; --v, ++X, ++Y, ++mxs)
                 {
                     if (*X**X>*mxs) { *Y = *X; *mxs = *X**X; }
                 }
@@ -69,9 +69,9 @@ int amax_s (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++Y)
+                for (size_t b=B; b>0u; --b, ++Y)
                 {
                     size_t l = cblas_isamax((int)L,X,(int)K);
                     X += l*K; *Y = *X;
@@ -109,7 +109,7 @@ int amax_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 size_t l = cblas_idamax((int)L,X,1);
                 X += l; *Y = *X; X += L-l;
@@ -121,7 +121,7 @@ int amax_d (double *Y, const double *X, const size_t R, const size_t C, const si
             if (!(mxs=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in amax_d: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t l=0u; l<L; ++l, Y-=V, mxs-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++Y, ++mxs)
+                for (size_t v=V; v>0u; --v, ++X, ++Y, ++mxs)
                 {
                     if (*X**X>*mxs) { *Y = *X; *mxs = *X**X; }
                 }
@@ -130,9 +130,9 @@ int amax_d (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++Y)
+                for (size_t b=B; b>0u; --b, ++Y)
                 {
                     size_t l = cblas_idamax((int)L,X,(int)K);
                     X += l*K; *Y = *X;
@@ -170,7 +170,7 @@ int amax_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 size_t l = cblas_icamax((int)L,X,1);
                 X += 2u*l;
@@ -182,7 +182,7 @@ int amax_c (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             for (size_t l=0u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, X+=2, ++Y)
+                for (size_t v=V; v>0u; --v, X+=2, ++Y)
                 {
                     float ax = fabsf(*X) + fabsf(*(X+1));
                     if (l==0u || ax>*Y) { *Y = ax;}
@@ -191,9 +191,9 @@ int amax_c (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b)
+                for (size_t b=B; b>0u; --b)
                 {
                     size_t l = cblas_icamax((int)L,X,(int)K);
                     X += 2u*l*K;
@@ -232,7 +232,7 @@ int amax_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v)
+            for (size_t v=V; v>0u; --v)
             {
                 size_t l = cblas_izamax((int)L,X,1);
                 X += 2u*l;
@@ -244,7 +244,7 @@ int amax_z (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t l=0u; l<L; ++l, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, X+=2, ++Y)
+                for (size_t v=V; v>0u; --v, X+=2, ++Y)
                 {
                     double ax = fabs(*X) + fabs(*(X+1));
                     if (l==0u || ax>*Y) { *Y = ax;}
@@ -253,9 +253,9 @@ int amax_z (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else
         {
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b)
+                for (size_t b=B; b>0u; --b)
                 {
                     size_t l = cblas_izamax((int)L,X,(int)K);
                     X += 2u*l*K;

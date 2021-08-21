@@ -165,7 +165,7 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             //for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
             //Y -= N; //surprisingly, only same speed
-            for (size_t v=0u; v<V; ++v, Y+=L)
+            for (size_t v=V; v>0u; --v, Y+=L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = *X; }
                 Y -= L;
@@ -176,9 +176,9 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sort_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, X1-=L, Y-=K*L-1u)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=L, Y-=K*L-1u)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
@@ -220,7 +220,7 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, Y+=L)
+            for (size_t v=V; v>0u; --v, Y+=L)
             {
                 for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = *X; }
                 Y -= L;
@@ -231,9 +231,9 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sort_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u), Y+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=K*L-1u, X1-=L, Y-=K*L-1u)
+                for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=L, Y-=K*L-1u)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
@@ -275,7 +275,7 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, Y+=2u*L)
+            for (size_t v=V; v>0u; --v, Y+=2u*L)
             {
                 for (size_t l=0u; l<2u*L; ++l, ++X, ++Y) { *Y = *X; }
                 Y -= 2u*L;
@@ -286,9 +286,9 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             float *X1;
             if (!(X1=(float *)malloc(2u*L*sizeof(float)))) { fprintf(stderr,"error in sort_c: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X1-=2u*L, X-=K*L-1u, Y-=K*L-1u)
+                for (size_t b=B; b>0u; --b, X1-=2u*L, X-=K*L-1u, Y-=K*L-1u)
                 {
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
@@ -331,7 +331,7 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, Y+=2u*L)
+            for (size_t v=V; v>0u; --v, Y+=2u*L)
             {
                 for (size_t l=0u; l<2u*L; ++l, ++X, ++Y) { *Y = *X; }
                 Y -= 2u*L;
@@ -342,9 +342,9 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             double *X1;
             if (!(X1=(double *)malloc(2u*L*sizeof(double)))) { fprintf(stderr,"error in sort_z: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X1-=2u*L, X-=K*L-1u, Y-=K*L-1u)
+                for (size_t b=B; b>0u; --b, X1-=2u*L, X-=K*L-1u, Y-=K*L-1u)
                 {
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
@@ -384,7 +384,7 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L)
+            for (size_t v=V; v>0u; --v, X+=L)
             {
                 if (LAPACKE_slasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
             }
@@ -393,9 +393,9 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X1, X+=K+1u)
+                for (size_t b=B; b>0u; --b, ++X1, X+=K+1u)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
@@ -433,7 +433,7 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=L)
+            for (size_t v=V; v>0u; --v, X+=L)
             {
                 if (LAPACKE_dlasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
             }
@@ -442,9 +442,9 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X1, X+=K+1u)
+                for (size_t b=B; b>0u; --b, ++X1, X+=K+1u)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
@@ -482,7 +482,7 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=2u*L)
+            for (size_t v=V; v>0u; --v, X+=2u*L)
             {
                 qsort(X,L,2*sizeof(float),comp);
             }
@@ -491,9 +491,9 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
         {
             float *X1;
             if (!(X1=(float *)malloc(2u*L*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X1+=2, X+=2u*K+2u)
+                for (size_t b=B; b>0u; --b, X1+=2, X+=2u*K+2u)
                 {
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
@@ -531,7 +531,7 @@ int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=0u; v<V; ++v, X+=2u*L)
+            for (size_t v=V; v>0u; --v, X+=2u*L)
             {
                 qsort(X,L,2*sizeof(double),comp);
             }
@@ -540,9 +540,9 @@ int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
         {
             double *X1;
             if (!(X1=(double *)malloc(2u*L*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X1+=2, X+=2u*K+2u)
+                for (size_t b=B; b>0u; --b, X1+=2, X+=2u*K+2u)
                 {
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;

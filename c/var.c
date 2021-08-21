@@ -48,7 +48,7 @@ int var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
         if (K==1u && (G==1u || B==1u))
         {
             float x, mn, sm2;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
@@ -64,26 +64,26 @@ int var_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
             if (!(mn=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in var_s: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t l=0u; l<L; ++l, mn-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++mn) { *mn += *X; }
+                for (size_t v=V; v>0u; --v, ++X, ++mn) { *mn += *X; }
             }
             X -= N;
-            for (size_t v=0u; v<V; ++v, ++mn) { *mn *= den; }
+            for (size_t v=V; v>0u; --v, ++mn) { *mn *= den; }
             mn -= V;
-            for (size_t v=0u; v<V; ++v, ++X, ++mn, ++Y) { x = *X - *mn; *Y = x*x; }
+            for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y = x*x; }
             mn -= V; Y -= V;
             for (size_t l=1u; l<L; ++l, mn-=V, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
+                for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y *= den2; }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y *= den2; }
             free(mn);
         }
         else
         {
             float x, mn, sm2;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X, ++Y)
+                for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = 0.0f;
                     for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
@@ -130,7 +130,7 @@ int var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
         if (K==1u && (G==1u || B==1u))
         {
             double x, mn, sm2;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
@@ -146,26 +146,26 @@ int var_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
             if (!(mn=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in var_d: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t l=0u; l<L; ++l, mn-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++mn) { *mn += *X; }
+                for (size_t v=V; v>0u; --v, ++X, ++mn) { *mn += *X; }
             }
             X -= N;
-            for (size_t v=0u; v<V; ++v, ++mn) { *mn *= den; }
+            for (size_t v=V; v>0u; --v, ++mn) { *mn *= den; }
             mn -= V;
-            for (size_t v=0u; v<V; ++v, ++X, ++mn, ++Y) { x = *X - *mn; *Y = x*x; }
+            for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y = x*x; }
             mn -= V; Y -= V;
             for (size_t l=1u; l<L; ++l, mn-=V, Y-=V)
             {
-                for (size_t v=0u; v<V; ++v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
+                for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
             }
-            for (size_t v=0u; v<V; ++v, ++Y) { *Y *= den2; }
+            for (size_t v=V; v>0u; --v, ++Y) { *Y *= den2; }
             free(mn);
         }
         else
         {
             double x, mn, sm2;
-            for (size_t g=0u; g<G; ++g, X+=B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, ++X, ++Y)
+                for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = 0.0;
                     for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
@@ -219,7 +219,7 @@ int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
         if (K==1u && (G==1u || B==1u))
         {
             float mnr, mni, sm2;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = 0.0f;
                 for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
@@ -232,9 +232,9 @@ int var_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
         else
         {
             float mnr, mni, sm2;
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mnr = mni = sm2 = 0.0f;
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
@@ -283,7 +283,7 @@ int var_z (double *Y, double *X, const size_t R, const size_t C, const size_t S,
         if (K==1u && (G==1u || B==1u))
         {
             double mnr, mni, sm2;
-            for (size_t v=0u; v<V; ++v, ++Y)
+            for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = 0.0;
                 for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
@@ -296,9 +296,9 @@ int var_z (double *Y, double *X, const size_t R, const size_t C, const size_t S,
         else
         {
             double mnr, mni, sm2;
-            for (size_t g=0u; g<G; ++g, X+=2u*B*(L-1u))
+            for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
-                for (size_t b=0u; b<B; ++b, X-=2u*K*L-2u, ++Y)
+                for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mnr = mni = sm2 = 0.0;
                     for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
