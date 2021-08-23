@@ -29,13 +29,12 @@ int randn_s (float *Y, const float mu, const float sig, const size_t N)
 
     if (sig<=0.0f)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = mu; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = mu; }
     }
     else
     {
         const float M_2PI = (float)(2.0*M_PI);
         float u1, u2, R;
-        size_t n;
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
         const uint64_t mul = 6364136223846793005u;
@@ -49,7 +48,7 @@ int randn_s (float *Y, const float mu, const float sig, const size_t N)
         //Generate
         if (mu==0.0f && sig==1.0f)
         {
-            for (n=0u; n<N-1u; n+=2u)
+            for (size_t n=N; n>1u; n-=2u)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -65,7 +64,7 @@ int randn_s (float *Y, const float mu, const float sig, const size_t N)
                 *Y++ = R * cosf(M_2PI*u2);
                 *Y++ = R * sinf(M_2PI*u2);
             }
-            if (n<N)
+            if (N%2u)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -83,7 +82,7 @@ int randn_s (float *Y, const float mu, const float sig, const size_t N)
         }
         else
         {
-            for (n=0u; n<N-1u; n+=2u)
+            for (size_t n=N; n>1u; n-=2u)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -99,7 +98,7 @@ int randn_s (float *Y, const float mu, const float sig, const size_t N)
                 *Y++ = R*cosf(M_2PI*u2) + mu;
                 *Y++ = R*sinf(M_2PI*u2) + mu;
             }
-            if (n<N)
+            if (N%2u)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -127,12 +126,11 @@ int randn_d (double *Y, const double mu, const double sig, const size_t N)
 
     if (sig<=0.0)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = mu; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = mu; }
     }
     else
     {
         const double M_2PI = 2.0*M_PI;
-        size_t n;
         double u1, u2, R;
         uint32_t r, xorshifted, rot;
         uint64_t state = 0u;
@@ -147,7 +145,7 @@ int randn_d (double *Y, const double mu, const double sig, const size_t N)
         //Generate
         if (mu==0.0 && sig==1.0)
         {
-            for (n=0u; n<N-1u; n+=2u)
+            for (size_t n=N; n>1u; n-=2u)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -163,7 +161,7 @@ int randn_d (double *Y, const double mu, const double sig, const size_t N)
                 *Y++ = R * cos(M_2PI*u2);
                 *Y++ = R * sin(M_2PI*u2);
             }
-            if (n<N)
+            if (N%2u)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -181,7 +179,7 @@ int randn_d (double *Y, const double mu, const double sig, const size_t N)
         }
         else
         {
-            for (n=0u; n<N-1u; n+=2u)
+            for (size_t n=N; n>1u; n-=2u)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -197,7 +195,7 @@ int randn_d (double *Y, const double mu, const double sig, const size_t N)
                 *Y++ = R*cos(M_2PI*u2) + mu;
                 *Y++ = R*sin(M_2PI*u2) + mu;
             }
-            if (n<N)
+            if (N%2u)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -225,7 +223,7 @@ int randn_c (float *Y, const float mu, const float sig, const size_t N)
 
     if (sig<=0.0f)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = mu; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = mu; }
     }
     else
     {
@@ -244,7 +242,7 @@ int randn_c (float *Y, const float mu, const float sig, const size_t N)
         //Generate
         if (mu==0.0f && sig==1.0f)
         {
-            for (size_t n=0u; n<N; ++n)
+            for (size_t n=N; n>0u; --n)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -263,7 +261,7 @@ int randn_c (float *Y, const float mu, const float sig, const size_t N)
         }
         else
         {
-            for (size_t n=0u; n<N; ++n)
+            for (size_t n=N; n>0u; --n)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -292,7 +290,7 @@ int randn_z (double *Y, const double mu, const double sig, const size_t N)
 
     if (sig<=0.0)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = mu; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = mu; }
     }
     else
     {
@@ -311,7 +309,7 @@ int randn_z (double *Y, const double mu, const double sig, const size_t N)
         //Generate
         if (mu==0.0 && sig==1.0)
         {
-            for (size_t n=0u; n<N; ++n)
+            for (size_t n=N; n>0u; --n)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -330,7 +328,7 @@ int randn_z (double *Y, const double mu, const double sig, const size_t N)
         }
         else
         {
-            for (size_t n=0u; n<N; ++n)
+            for (size_t n=N; n>0u; --n)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);

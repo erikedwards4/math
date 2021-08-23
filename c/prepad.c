@@ -27,8 +27,8 @@ int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S
     if (N==0u && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
-        for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=P; p>0u; --p, ++Y) { *Y = val; }
+        for (size_t l=Lx; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -40,14 +40,14 @@ int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
-                for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=P; p>0u; --p, ++Y) { *Y = val; }
+                for (size_t l=Lx; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else if (G==1u)
         {
-            for (size_t n=0u; n<V*P; ++n, ++Y) { *Y = val; }
-            for (size_t n=0u; n<V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=V*P; n>0u; --n, ++Y) { *Y = val; }
+            for (size_t n=V*Lx; n>0u; --n, ++X, ++Y) { *Y = *X; }
         }
         else
         {
@@ -56,8 +56,8 @@ int prepad_s (float *Y, float *X, const size_t R, const size_t C, const size_t S
             {
                 for (size_t b=B; b>0u; --b, X-=K*Lx-1u, Y-=K*Ly-1u)
                 {
-                    for (size_t p=0u; p<P; ++p, Y+=K) { *Y = val; }
-                    for (size_t l=0u; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t p=P; p>0u; --p, Y+=K) { *Y = val; }
+                    for (size_t l=Lx; l>0u; --l, X+=K, Y+=K) { *Y = *X; }
                 }
             }
         }
@@ -78,8 +78,8 @@ int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t
     if (N==0u && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
-        for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=P; p>0u; --p, ++Y) { *Y = val; }
+        for (size_t l=Lx; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -91,14 +91,14 @@ int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t p=0u; p<P; ++p, ++Y) { *Y = val; }
-                for (size_t l=0u; l<Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=P; p>0u; --p, ++Y) { *Y = val; }
+                for (size_t l=Lx; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else if (G==1u)
         {
-            for (size_t n=0u; n<V*P; ++n, ++Y) { *Y = val; }
-            for (size_t n=0u; n<V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=V*P; n>0u; --n, ++Y) { *Y = val; }
+            for (size_t n=V*Lx; n>0u; --n, ++X, ++Y) { *Y = *X; }
         }
         else
         {
@@ -107,8 +107,8 @@ int prepad_d (double *Y, double *X, const size_t R, const size_t C, const size_t
             {
                 for (size_t b=B; b>0u; --b, X-=K*Lx-1u, Y-=K*Ly-1u)
                 {
-                    for (size_t p=0u; p<P; ++p, Y+=K) { *Y = val; }
-                    for (size_t l=0u; l<Lx; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t p=P; p>0u; --p, Y+=K) { *Y = val; }
+                    for (size_t l=Lx; l>0u; --l, X+=K, Y+=K) { *Y = *X; }
                 }
             }
         }
@@ -128,8 +128,8 @@ int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S
     if (N==0u && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t p=0u; p<2u*P; ++p, ++Y) { *Y = val; }
-        for (size_t l=0u; l<2u*Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=2u*P; p>0u; --p, ++Y) { *Y = val; }
+        for (size_t l=2u*Lx; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -141,14 +141,14 @@ int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t p=0u; p<2u*P; ++p, ++Y) { *Y = val; }
-                for (size_t l=0u; l<2u*Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=2u*P; p>0u; --p, ++Y) { *Y = val; }
+                for (size_t l=2u*Lx; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else if (G==1u)
         {
-            for (size_t n=0u; n<2u*V*P; ++n, ++Y) { *Y = val; }
-            for (size_t n=0u; n<2u*V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=2u*V*P; n>0u; --n, ++Y) { *Y = val; }
+            for (size_t n=2u*V*Lx; n>0u; --n, ++X, ++Y) { *Y = *X; }
         }
         else
         {
@@ -157,8 +157,8 @@ int prepad_c (float *Y, float *X, const size_t R, const size_t C, const size_t S
             {
                 for (size_t b=B; b>0u; --b, X-=2u*K*Lx-2u, Y-=2u*K*Ly-2u)
                 {
-                    for (size_t p=0u; p<P; ++p, Y+=2u*K-1u) { *Y = val; *++Y = val; }
-                    for (size_t l=0u; l<Lx; ++l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
+                    for (size_t p=P; p>0u; --p, Y+=2u*K-1u) { *Y = val; *++Y = val; }
+                    for (size_t l=Lx; l>0u; --l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
                 }
             }
         }
@@ -178,8 +178,8 @@ int prepad_z (double *Y, double *X, const size_t R, const size_t C, const size_t
     if (N==0u && Lx>0) {}
     else if (Lx==N)
     {
-        for (size_t p=0u; p<2u*P; ++p, ++Y) { *Y = val; }
-        for (size_t l=0u; l<2u*Lx; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t p=2u*P; p>0u; --p, ++Y) { *Y = val; }
+        for (size_t l=2u*Lx; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -191,14 +191,14 @@ int prepad_z (double *Y, double *X, const size_t R, const size_t C, const size_t
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t p=0u; p<2u*P; ++p, ++Y) { *Y = val; }
-                for (size_t l=0u; l<2u*Lx; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t p=2u*P; p>0u; --p, ++Y) { *Y = val; }
+                for (size_t l=2u*Lx; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else if (G==1u)
         {
-            for (size_t n=0u; n<2u*V*P; ++n, ++Y) { *Y = val; }
-            for (size_t n=0u; n<2u*V*Lx; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=2u*V*P; n>0u; --n, ++Y) { *Y = val; }
+            for (size_t n=2u*V*Lx; n>0u; --n, ++X, ++Y) { *Y = *X; }
         }
         else
         {
@@ -207,8 +207,8 @@ int prepad_z (double *Y, double *X, const size_t R, const size_t C, const size_t
             {
                 for (size_t b=B; b>0u; --b, X-=2u*K*Lx-2u, Y-=2u*K*Ly-2u)
                 {
-                    for (size_t p=0u; p<P; ++p, Y+=2u*K-1u) { *Y = val; *++Y = val; }
-                    for (size_t l=0u; l<Lx; ++l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
+                    for (size_t p=P; p>0u; --p, Y+=2u*K-1u) { *Y = val; *++Y = val; }
+                    for (size_t l=Lx; l>0u; --l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
                 }
             }
         }

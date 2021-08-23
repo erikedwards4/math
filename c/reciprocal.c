@@ -21,7 +21,7 @@ int reciprocal_inplace_z (double *X, const size_t N);
 
 int reciprocal_s (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = 1.0f / *X; }
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = 1.0f / *X; }
 
     return 0;
 }
@@ -29,7 +29,7 @@ int reciprocal_s (float *Y, const float *X, const size_t N)
 
 int reciprocal_d (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = 1.0 / *X; }
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = 1.0 / *X; }
     
     return 0;
 }
@@ -39,7 +39,7 @@ int reciprocal_c (float *Y, const float *X, const size_t N)
 {
     float xr, xi, sq;
 
-    for (size_t n=0u; n<N; ++n, ++X, ++Y)
+    for (size_t n=N; n>0u; --n, ++X, ++Y)
     {
         xr = *X; xi = *++X;
         sq = xr*xr + xi*xi;
@@ -54,7 +54,7 @@ int reciprocal_z (double *Y, const double *X, const size_t N)
 {
     double xr, xi, sq;
 
-    for (size_t n=0u; n<N; ++n, ++X, ++Y)
+    for (size_t n=N; n>0u; --n, ++X, ++Y)
     {
         xr = *X; xi = *++X;
         sq = xr*xr + xi*xi;
@@ -67,7 +67,7 @@ int reciprocal_z (double *Y, const double *X, const size_t N)
 
 int reciprocal_inplace_s (float *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++X) { *X = 1.0f / *X; }
+    for (size_t n=N; n>0u; --n, ++X) { *X = 1.0f / *X; }
 
     return 0;
 }
@@ -75,7 +75,7 @@ int reciprocal_inplace_s (float *X, const size_t N)
 
 int reciprocal_inplace_d (double *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++X) { *X = 1.0 / *X; }
+    for (size_t n=N; n>0u; --n, ++X) { *X = 1.0 / *X; }
     
     return 0;
 }
@@ -85,7 +85,7 @@ int reciprocal_inplace_c (float *X, const size_t N)
 {
     float xr, xi, sq;
 
-    for (size_t n=0u; n<N; ++n, ++X)
+    for (size_t n=N; n>0u; --n, ++X)
     {
         xr = *X; xi = *(X+1);
         sq = xr*xr + xi*xi;
@@ -100,7 +100,7 @@ int reciprocal_inplace_z (double *X, const size_t N)
 {
     double xr, xi, sq;
 
-    for (size_t n=0u; n<N; ++n, ++X)
+    for (size_t n=N; n>0u; --n, ++X)
     {
         xr = *X; xi = *(X+1);
         sq = xr*xr + xi*xi;

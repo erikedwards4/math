@@ -43,11 +43,11 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
         sm = 0.0f; X1 += i1;
@@ -65,7 +65,7 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
         {
             for (size_t v=V; v>0u; --v, X1-=i2+1u, ++Y)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
                 sm = 0.0f; X1 += i1;
@@ -79,7 +79,7 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
             {
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=i2+1u, ++Y)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
                     sm = 0.0f; X1 += i1;
@@ -114,11 +114,11 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
         sm = 0.0; X1 += i1;
@@ -136,7 +136,7 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
         {
             for (size_t v=V; v>0u; --v, X1-=i2+1u, ++Y)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
                 sm = 0.0; X1 += i1;
@@ -150,7 +150,7 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
             {
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=i2+1u, ++Y)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
                     sm = 0.0; X1 += i1;
@@ -182,7 +182,7 @@ int trimmean_inplace_s (float *Y, float *X, const size_t R, const size_t C, cons
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -215,7 +215,7 @@ int trimmean_inplace_s (float *Y, float *X, const size_t R, const size_t C, cons
             {
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=i2+1u, ++Y)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
                     sm = 0.0f; X1 += i1;
@@ -247,7 +247,7 @@ int trimmean_inplace_d (double *Y, double *X, const size_t R, const size_t C, co
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -280,7 +280,7 @@ int trimmean_inplace_d (double *Y, double *X, const size_t R, const size_t C, co
             {
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=i2+1u, ++Y)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
                     sm = 0.0; X1 += i1;

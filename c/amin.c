@@ -32,7 +32,7 @@ int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
     if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -57,7 +57,7 @@ int amin_s (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             float *mns;
             if (!(mns=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in amin_s: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t l=0u; l<L; ++l, Y-=V, mns-=V)
+            for (size_t l=L; l>0u; --l, Y-=V, mns-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y, ++mns)
                 {
@@ -93,7 +93,7 @@ int amin_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
     if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -118,7 +118,7 @@ int amin_d (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             double *mns;
             if (!(mns=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in amin_d: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t l=0u; l<L; ++l, Y-=V, mns-=V)
+            for (size_t l=L; l>0u; --l, Y-=V, mns-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y, ++mns)
                 {
@@ -154,7 +154,7 @@ int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size
 
     if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = fabsf(*X) + fabsf(*(X+1)); }
+        for (size_t n=N; n>0u; --n, X+=2, ++Y) { *Y = fabsf(*X) + fabsf(*(X+1)); }
     }
     else if (L==N)
     {
@@ -179,7 +179,7 @@ int amin_c (float *Y, const float *X, const size_t R, const size_t C, const size
         }
         else if (G==1u)
         {
-            for (size_t l=0u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>0u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, X+=2, ++Y)
                 {
@@ -216,7 +216,7 @@ int amin_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
     if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = fabs(*X) + fabs(*(X+1)); }
+        for (size_t n=N; n>0u; --n, X+=2, ++Y) { *Y = fabs(*X) + fabs(*(X+1)); }
     }
     else if (L==N)
     {
@@ -241,7 +241,7 @@ int amin_z (double *Y, const double *X, const size_t R, const size_t C, const si
         }
         else if (G==1u)
         {
-            for (size_t l=0u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>0u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, X+=2, ++Y)
                 {

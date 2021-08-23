@@ -49,23 +49,23 @@ int solve_s (float *X, const float *A, const float *B, const size_t R1, const si
         Atmp -= N1; Btmp -= N2;
         
         //Solve
-        if (LAPACKE_sgels(Ord,Trans,(int)R1,(int)C1,(int)C2,Atmp,lda,Btmp,ldb))
+        if (LAPACKE_sgels(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,Atmp,lda,Btmp,ldb))
         { fprintf(stderr,"error in solve_s: problem with LAPACKE_sgels function\n"); }
 
         //Copy B to output X
         if (iscolmajor)
         {
-            for (size_t c=0u; c<C; ++c, Btmp+=R2-R)
+            for (size_t c=C; c>0u; --c, Btmp+=R2-R)
             {
-                for (size_t r=0u; r<R; ++r, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t r=R; r>0u; --r, ++Btmp, ++X) { *X = *Btmp; }
             }
             Btmp -= R2* C;
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, Btmp+=C2-C)
+            for (size_t r=R; r>0u; --r, Btmp+=C2-C)
             {
-                for (size_t c=0u; c<C; ++c, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t c=C; c>0u; --c, ++Btmp, ++X) { *X = *Btmp; }
             }
             Btmp -= R*C2;
         }
@@ -101,23 +101,23 @@ int solve_d (double *X, const double *A, const double *B, const size_t R1, const
         Atmp -= N1; Btmp -= N2;
         
         //Solve
-        if (LAPACKE_dgels(Ord,Trans,(int)R1,(int)C1,(int)C2,Atmp,lda,Btmp,ldb))
+        if (LAPACKE_dgels(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,Atmp,lda,Btmp,ldb))
         { fprintf(stderr,"error in solve_d: problem with LAPACKE_dgels function\n"); }
 
         //Copy B to output X
         if (iscolmajor)
         {
-            for (size_t c=0u; c<C; ++c, Btmp+=R2-R)
+            for (size_t c=C; c>0u; --c, Btmp+=R2-R)
             {
-                for (size_t r=0u; r<R; ++r, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t r=R; r>0u; --r, ++Btmp, ++X) { *X = *Btmp; }
             }
             Btmp -= R2* C;
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, Btmp+=C2-C)
+            for (size_t r=R; r>0u; --r, Btmp+=C2-C)
             {
-                for (size_t c=0u; c<C; ++c, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t c=C; c>0u; --c, ++Btmp, ++X) { *X = *Btmp; }
             }
             Btmp -= R*C2;
         }
@@ -153,23 +153,23 @@ int solve_c (float *X, const float *A, const float *B, const size_t R1, const si
         Atmp -= 2u*N1; Btmp -= 2u*N2;
         
         //Solve
-        if (LAPACKE_cgels(Ord,Trans,(int)R1,(int)C1,(int)C2,(_Complex float *)Atmp,lda,(_Complex float *)Btmp,ldb))
+        if (LAPACKE_cgels(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,(_Complex float *)Atmp,lda,(_Complex float *)Btmp,ldb))
         { fprintf(stderr,"error in solve_c: problem with LAPACKE_cgels function\n"); }
 
         //Copy B to output X
         if (iscolmajor)
         {
-            for (size_t c=0u; c<C; ++c, Btmp+=2u*(R2-R))
+            for (size_t c=C; c>0u; --c, Btmp+=2u*(R2-R))
             {
-                for (size_t r=0u; r<2u*R; ++r, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t r=2u*R; r>0u; --r, ++Btmp, ++X) { *X = *Btmp; }
             }
             Btmp -= 2u*R2* C;
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, Btmp+=2u*(C2-C))
+            for (size_t r=R; r>0u; --r, Btmp+=2u*(C2-C))
             {
-                for (size_t c=0u; c<2u*C; ++c, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t c=2u*C; c>0u; --c, ++Btmp, ++X) { *X = *Btmp; }
             }
             Btmp -= 2u*R*C2;
         }
@@ -205,23 +205,23 @@ int solve_z (double *X, const double *A, const double *B, const size_t R1, const
         Atmp -= 2u*N1; Btmp -= 2u*N2;
         
         //Solve
-        if (LAPACKE_zgels(Ord,Trans,(int)R1,(int)C1,(int)C2,(_Complex double *)Atmp,lda,(_Complex double *)Btmp,ldb))
+        if (LAPACKE_zgels(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,(_Complex double *)Atmp,lda,(_Complex double *)Btmp,ldb))
         { fprintf(stderr,"error in solve_z: problem with LAPACKE_zgels function\n"); }
 
         //Copy B to output X
         if (iscolmajor)
         {
-            for (size_t c=0u; c<C; ++c, Btmp+=2u*(R2-R))
+            for (size_t c=C; c>0u; --c, Btmp+=2u*(R2-R))
             {
-                for (size_t r=0u; r<2u*R; ++r, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t r=2u*R; r>0u; --r, ++Btmp, ++X) { *X = *Btmp; }
             }
             Btmp -= 2u*R2* C;
         }
         else
         {
-            for (size_t r=0u; r<R; ++r, Btmp+=2u*(C2-C))
+            for (size_t r=R; r>0u; --r, Btmp+=2u*(C2-C))
             {
-                for (size_t c=0u; c<2u*C; ++c, ++Btmp, ++X) { *X = *Btmp; }
+                for (size_t c=2u*C; c>0u; --c, ++Btmp, ++X) { *X = *Btmp; }
             }
             Btmp -= 2u*R*C2;
         }
@@ -249,17 +249,17 @@ int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const
 
         //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
         
-        if (LAPACKE_sgels(Ord,Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb))
+        if (LAPACKE_sgels(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb))
         { fprintf(stderr,"error in solve_inplace_s: problem with LAPACKE_sgels function\n"); }
 
         //This works, but is not any faster (skips Nan check, but not significant)
         // float work_query, *work;
         // int lwork = -1;
-        // if (LAPACKE_sgels_work(Ord,Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb,&work_query,lwork))
+        // if (LAPACKE_sgels_work(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb,&work_query,lwork))
         // { fprintf(stderr,"error in solve_inplace_s: problem with LAPACKE_sgels_work function\n"); }
         // lwork = (int)work_query;
         // if (!(work=(float *)malloc((size_t)lwork*sizeof(float)))) { fprintf(stderr,"error in solve_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
-        // if (LAPACKE_sgels_work(Ord,Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb,work,lwork))
+        // if (LAPACKE_sgels_work(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb,work,lwork))
         // { fprintf(stderr,"error in solve_inplace_s: problem with LAPACKE_sgels_work function\n"); }
         // free(work);
 
@@ -269,14 +269,14 @@ int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const
         {
             for (size_t c=0u; c<C; ++c)
             {
-                for (size_t r=0u; r<R; ++r, ++B) { *B = *(B+c*(R2-R)); }
+                for (size_t r=R; r>0u; --r, ++B) { *B = *(B+c*(R2-R)); }
             }
         }
         else
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t c=0u; c<C; ++c, ++B) { *B = *(B+r*(C2-C)); }
+                for (size_t c=C; c>0u; --c, ++B) { *B = *(B+r*(C2-C)); }
             }
         }
     }
@@ -298,21 +298,21 @@ int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, con
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
         
-        if (LAPACKE_dgels(Ord,Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb))
+        if (LAPACKE_dgels(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,A,lda,B,ldb))
         { fprintf(stderr,"error in solve_inplace_d: problem with LAPACKE_dgels function\n"); }
 
         if (iscolmajor)
         {
             for (size_t c=0u; c<C; ++c)
             {
-                for (size_t r=0u; r<R; ++r, ++B) { *B = *(B+c*(R2-R)); }
+                for (size_t r=R; r>0u; --r, ++B) { *B = *(B+c*(R2-R)); }
             }
         }
         else
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t c=0u; c<C; ++c, ++B) { *B = *(B+r*(C2-C)); }
+                for (size_t c=C; c>0u; --c, ++B) { *B = *(B+r*(C2-C)); }
             }
         }
     }
@@ -334,21 +334,21 @@ int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
         
-        if (LAPACKE_cgels(Ord,Trans,(int)R1,(int)C1,(int)C2,(_Complex float *)A,lda,(_Complex float *)B,ldb))
+        if (LAPACKE_cgels(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,(_Complex float *)A,lda,(_Complex float *)B,ldb))
         { fprintf(stderr,"error in solve_inplace_c: problem with LAPACKE_cgels function\n"); }
 
         if (iscolmajor)
         {
             for (size_t c=0u; c<C; ++c)
             {
-                for (size_t r=0u; r<2u*R; ++r, ++B) { *B = *(B+2u*c*(R2-R)); }
+                for (size_t r=2u*R; r>0u; --r, ++B) { *B = *(B+2u*c*(R2-R)); }
             }
         }
         else
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t c=0u; c<2u*C; ++c, ++B) { *B = *(B+2u*r*(C2-C)); }
+                for (size_t c=2u*C; c>0u; --c, ++B) { *B = *(B+2u*r*(C2-C)); }
             }
         }
     }
@@ -370,21 +370,21 @@ int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, con
         const int lda = (iscolmajor) ? (int)R1 : (int)C1;
         const int ldb = (iscolmajor) ? (int)R2 : (int)C2;
         
-        if (LAPACKE_zgels(Ord,Trans,(int)R1,(int)C1,(int)C2,(_Complex double *)A,lda,(_Complex double *)B,ldb))
+        if (LAPACKE_zgels(Ord,(char)Trans,(int)R1,(int)C1,(int)C2,(_Complex double *)A,lda,(_Complex double *)B,ldb))
         { fprintf(stderr,"error in solve_inplace_z: problem with LAPACKE_zgels function\n"); }
 
         if (iscolmajor)
         {
             for (size_t c=0u; c<C; ++c)
             {
-                for (size_t r=0u; r<2u*R; ++r, ++B) { *B = *(B+2u*c*(R2-R)); }
+                for (size_t r=2u*R; r>0u; --r, ++B) { *B = *(B+2u*c*(R2-R)); }
             }
         }
         else
         {
             for (size_t r=0u; r<R; ++r)
             {
-                for (size_t c=0u; c<2u*C; ++c, ++B) { *B = *(B+2u*r*(C2-C)); }
+                for (size_t c=2u*C; c>0u; --c, ++B) { *B = *(B+2u*r*(C2-C)); }
             }
         }
     }

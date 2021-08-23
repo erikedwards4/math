@@ -24,7 +24,7 @@ int floor_inplace_z (double *X, const size_t N);
 
 int floor_s (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = floorf(*X); }
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = floorf(*X); }
 
     return 0;
 }
@@ -32,7 +32,7 @@ int floor_s (float *Y, const float *X, const size_t N)
 
 int floor_d (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = floor(*X); }
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = floor(*X); }
     
     return 0;
 }
@@ -40,7 +40,7 @@ int floor_d (double *Y, const double *X, const size_t N)
 
 int floor_c (float *Y, const float *X, const size_t N)
 {
-    for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = floorf(*X); }
+    for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = floorf(*X); }
     
     return 0;
 }
@@ -48,7 +48,7 @@ int floor_c (float *Y, const float *X, const size_t N)
 
 int floor_z (double *Y, const double *X, const size_t N)
 {
-    for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = floor(*X); }
+    for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = floor(*X); }
     
     return 0;
 }
@@ -56,7 +56,7 @@ int floor_z (double *Y, const double *X, const size_t N)
 
 int floor_inplace_s (float *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++X) { *X = floorf(*X); }
+    for (size_t n=N; n>0u; --n, ++X) { *X = floorf(*X); }
 
     return 0;
 }
@@ -64,7 +64,7 @@ int floor_inplace_s (float *X, const size_t N)
 
 int floor_inplace_d (double *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++X) { *X = floor(*X); }
+    for (size_t n=N; n>0u; --n, ++X) { *X = floor(*X); }
     
     return 0;
 }
@@ -72,7 +72,7 @@ int floor_inplace_d (double *X, const size_t N)
 
 int floor_inplace_c (float *X, const size_t N)
 {
-    for (size_t n=0u; n<2u*N; ++n, ++X) { *X = floorf(*X); }
+    for (size_t n=2u*N; n>0u; --n, ++X) { *X = floorf(*X); }
     
     return 0;
 }
@@ -80,7 +80,7 @@ int floor_inplace_c (float *X, const size_t N)
 
 int floor_inplace_z (double *X, const size_t N)
 {
-    for (size_t n=0u; n<2u*N; ++n, ++X) { *X = floor(*X); }
+    for (size_t n=2u*N; n>0u; --n, ++X) { *X = floor(*X); }
     
     return 0;
 }

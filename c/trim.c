@@ -43,15 +43,15 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
     if (N==0u) {}
     else if (Lx==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (Lx==N)
     {
-        for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= Lx;
         if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
         X1 += i1;
-        for (size_t l=0u; l<Ly; ++l, ++X1, ++Y) { *Y = *X1; }
+        for (size_t l=Ly; l>0u; --l, ++X1, ++Y) { *Y = *X1; }
         X1 -= i1 + Ly;
     }
     else
@@ -64,11 +64,11 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             for (size_t v=V; v>0u; --v, X1-=i1+Ly)
             {
-                for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
                 if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
                 X1 += i1;
-                for (size_t l=0u; l<Ly; ++l, ++X1, ++Y) { *Y = *X1; }
+                for (size_t l=Ly; l>0u; --l, ++X1, ++Y) { *Y = *X1; }
             }
         }
         else
@@ -77,11 +77,11 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
             {
                 for (size_t b=B; b>0u; --b, X-=K*Lx-1u, X1-=i1+Ly, Y-=K*Ly-1u)
                 {
-                    for (size_t l=0u; l<Lx; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=Lx; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= Lx;
                     if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
                     X1 += i1;
-                    for (size_t l=0u; l<Ly; ++l, ++X1, Y+=K) { *Y = *X1; }
+                    for (size_t l=Ly; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
         }
@@ -110,15 +110,15 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (Lx==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (Lx==N)
     {
-        for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= Lx;
         if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
         X1 += i1;
-        for (size_t l=0u; l<Ly; ++l, ++X1, ++Y) { *Y = *X1; }
+        for (size_t l=Ly; l>0u; --l, ++X1, ++Y) { *Y = *X1; }
         X1 -= i1 + Ly;
     }
     else
@@ -131,11 +131,11 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t v=V; v>0u; --v, X1-=i1+Ly)
             {
-                for (size_t l=0u; l<Lx; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
                 if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
                 X1 += i1;
-                for (size_t l=0u; l<Ly; ++l, ++X1, ++Y) { *Y = *X1; }
+                for (size_t l=Ly; l>0u; --l, ++X1, ++Y) { *Y = *X1; }
             }
         }
         else
@@ -144,11 +144,11 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t b=B; b>0u; --b, X-=K*Lx-1u, X1-=i1+Ly, Y-=K*Ly-1u)
                 {
-                    for (size_t l=0u; l<Lx; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=Lx; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= Lx;
                     if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
                     X1 += i1;
-                    for (size_t l=0u; l<Ly; ++l, ++X1, Y+=K) { *Y = *X1; }
+                    for (size_t l=Ly; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
         }
@@ -174,13 +174,13 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (Lx==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (Lx==N)
     {
         if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
         X += i1;
-        for (size_t l=0u; l<Ly; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=Ly; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -194,7 +194,7 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
             {
                 if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
                 X += i1;
-                for (size_t l=0u; l<Ly; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=Ly; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else
@@ -205,11 +205,11 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
             {
                 for (size_t b=B; b>0u; --b, X-=K*Lx-1u, X1-=i1+Ly, Y-=K*Ly-1u)
                 {
-                    for (size_t l=0u; l<Lx; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=Lx; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= Lx;
                     if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
                     X1 += i1;
-                    for (size_t l=0u; l<Ly; ++l, ++X1, Y+=K) { *Y = *X1; }
+                    for (size_t l=Ly; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
             free(X1);
@@ -235,13 +235,13 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
     if (N==0u) {}
     else if (Lx==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (Lx==N)
     {
         if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
         X += i1;
-        for (size_t l=0u; l<Ly; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=Ly; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -255,7 +255,7 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
             {
                 if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
                 X += i1;
-                for (size_t l=0u; l<Ly; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=Ly; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else
@@ -266,11 +266,11 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
             {
                 for (size_t b=B; b>0u; --b, X-=K*Lx-1u, X1-=i1+Ly, Y-=K*Ly-1u)
                 {
-                    for (size_t l=0u; l<Lx; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=Lx; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= Lx;
                     if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
                     X1 += i1;
-                    for (size_t l=0u; l<Ly; ++l, ++X1, Y+=K) { *Y = *X1; }
+                    for (size_t l=Ly; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
             free(X1);

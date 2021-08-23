@@ -25,8 +25,8 @@ int cosh_s (float *Y, const float *X, const size_t N)
 {
     float xp, xm;
 
-    //for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = coshf(*X); }
-    for (size_t n=0u; n<N; ++n, ++X, ++Y) { xp = expf(*X); xm = expf(-*X); *Y = 0.5f*(xp+xm); }
+    //for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = coshf(*X); }
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { xp = expf(*X); xm = expf(-*X); *Y = 0.5f*(xp+xm); }
 
     return 0;
 }
@@ -36,8 +36,8 @@ int cosh_d (double *Y, const double *X, const size_t N)
 {
     double xp, xm;
 
-    //for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = cosh(*X); }
-    for (size_t n=0u; n<N; ++n, ++X, ++Y) { xp = exp(*X); xm = exp(-*X); *Y = 0.5*(xp+xm); }
+    //for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = cosh(*X); }
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { xp = exp(*X); xm = exp(-*X); *Y = 0.5*(xp+xm); }
     
     return 0;
 }
@@ -47,7 +47,7 @@ int cosh_c (float *Y, const float *X, const size_t N)
 {
     _Complex float y, xp, xm;
 
-    for (size_t n=0u; n<N; ++n, X+=2, ++Y)
+    for (size_t n=N; n>0u; --n, X+=2, ++Y)
     {
         //y = ccoshf(X[n2]+1.0if*X[n2+1]);
         xp = cexpf(*X + 1.0if**(X+1));
@@ -64,7 +64,7 @@ int cosh_z (double *Y, const double *X, const size_t N)
 {
     _Complex double y, xp, xm;
     
-    for (size_t n=0u; n<N; ++n, X+=2, ++Y)
+    for (size_t n=N; n>0u; --n, X+=2, ++Y)
     {
         xp = cexp(*X + 1.0i**(X+1));
         xm = cexp(-*X - 1.0i**(X+1));
@@ -80,8 +80,8 @@ int cosh_inplace_s (float *X, const size_t N)
 {
     float xp, xm;
 
-    //for (size_t n=0u; n<N; ++n, ++X) { *X = coshf(*X); }
-    for (size_t n=0u; n<N; ++n, ++X) { xp = expf(*X); xm = expf(-*X); *X = 0.5f*(xp+xm); }
+    //for (size_t n=N; n>0u; --n, ++X) { *X = coshf(*X); }
+    for (size_t n=N; n>0u; --n, ++X) { xp = expf(*X); xm = expf(-*X); *X = 0.5f*(xp+xm); }
 
     return 0;
 }
@@ -91,8 +91,8 @@ int cosh_inplace_d (double *X, const size_t N)
 {
     double xp, xm;
 
-    //for (size_t n=0u; n<N; ++n, ++X) { *X = cosh(*X); }
-    for (size_t n=0u; n<N; ++n, ++X) { xp = exp(*X); xm = exp(-*X); *X = 0.5*(xp+xm); }
+    //for (size_t n=N; n>0u; --n, ++X) { *X = cosh(*X); }
+    for (size_t n=N; n>0u; --n, ++X) { xp = exp(*X); xm = exp(-*X); *X = 0.5*(xp+xm); }
     
     return 0;
 }
@@ -102,7 +102,7 @@ int cosh_inplace_c (float *X, const size_t N)
 {
     _Complex float y, xp, xm;
 
-    for (size_t n=0u; n<N; ++n, ++X)
+    for (size_t n=N; n>0u; --n, ++X)
     {
         //y = ccoshf(*X + 1.0if**(X+1));
         xp = cexpf(*X + 1.0if**(X+1));
@@ -119,7 +119,7 @@ int cosh_inplace_z (double *X, const size_t N)
 {
     _Complex double y, xp, xm;
     
-    for (size_t n=0u; n<N; ++n, ++X)
+    for (size_t n=N; n>0u; --n, ++X)
     {
         xp = cexp(*X + 1.0i**(X+1));
         xm = cexp(-*X - 1.0i**(X+1));

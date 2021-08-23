@@ -26,12 +26,12 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
         mn = mx = *X++;
-        for (size_t l=1u; l<L; ++l, ++X)
+        for (size_t l=L; l>1u; --l, ++X)
         {
             if (*X<mn) { mn = *X; }
             else if (*X>mx) { mx = *X; }
@@ -49,7 +49,7 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = mx = *X++;
-                for (size_t l=1u; l<L; ++l, ++X)
+                for (size_t l=L; l>1u; --l, ++X)
                 {
                     if (*X<mn) { mn = *X; }
                     else if (*X>mx) { mx = *X; }
@@ -64,7 +64,7 @@ int range_s (float *Y, const float *X, const size_t R, const size_t C, const siz
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = mx = *X; X += K;
-                    for (size_t l=1u; l<L; ++l, X+=K)
+                    for (size_t l=L; l>1u; --l, X+=K)
                     {
                         if (*X<mn) { mn = *X; }
                         else if (*X>mx) { mx = *X; }
@@ -90,12 +90,12 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
         mn = mx = *X++;
-        for (size_t l=1u; l<L; ++l, ++X)
+        for (size_t l=L; l>1u; --l, ++X)
         {
             if (*X<mn) { mn = *X; }
             else if (*X>mx) { mx = *X; }
@@ -113,7 +113,7 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = mx = *X++;
-                for (size_t l=1u; l<L; ++l, ++X)
+                for (size_t l=L; l>1u; --l, ++X)
                 {
                     if (*X<mn) { mn = *X; }
                     else if (*X>mx) { mx = *X; }
@@ -128,7 +128,7 @@ int range_d (double *Y, const double *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = mx = *X; X += K;
-                    for (size_t l=1u; l<L; ++l, X+=K)
+                    for (size_t l=L; l>1u; --l, X+=K)
                     {
                         if (*X<mn) { mn = *X; }
                         else if (*X>mx) { mx = *X; }

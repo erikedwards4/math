@@ -31,7 +31,7 @@ int kendall_s (float *Y, const float *X1, const float *X2, const size_t R1, cons
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0f; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
@@ -118,7 +118,7 @@ int kendall_d (double *Y, const double *X1, const double *X2, const size_t R1, c
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {

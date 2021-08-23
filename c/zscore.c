@@ -28,11 +28,11 @@ int zscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
     if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { *--X -= mn; sd += *X**X; }
+        for (size_t l=L; l>0u; --l) { *--X -= mn; sd += *X**X; }
         sd = sqrtf(sd*den2);
-        for (size_t l=0u; l<L; ++l, ++X) { *X /= sd; }
+        for (size_t l=L; l>0u; --l, ++X) { *X /= sd; }
     }
     else
     {
@@ -45,11 +45,11 @@ int zscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
             for (size_t v=V; v>0u; --v)
             {
                 mn = sd = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
                 mn *= den;
-                for (size_t l=0u; l<L; ++l) { *--X -= mn; sd += *X**X; }
+                for (size_t l=L; l>0u; --l) { *--X -= mn; sd += *X**X; }
                 sd = sqrtf(sd*den2);
-                for (size_t l=0u; l<L; ++l, ++X) { *X /= sd; }
+                for (size_t l=L; l>0u; --l, ++X) { *X /= sd; }
             }
         }
         else
@@ -59,11 +59,11 @@ int zscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
                 for (size_t b=B; b>0u; --b, X-=K*L-1u)
                 {
                     mn = sd = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>0u; --l, X+=K) { mn += *X; }
                     mn *= den;
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X -= mn; sd += *X**X; }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X -= mn; sd += *X**X; }
                     sd = sqrtf(sd*den2);
-                    for (size_t l=0u; l<L; ++l, X+=K) { *X /= sd; }
+                    for (size_t l=L; l>0u; --l, X+=K) { *X /= sd; }
                 }
             }
         }
@@ -86,11 +86,11 @@ int zscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
     if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { *--X -= mn; sd += *X**X; }
+        for (size_t l=L; l>0u; --l) { *--X -= mn; sd += *X**X; }
         sd = sqrt(sd*den2);
-        for (size_t l=0u; l<L; ++l, ++X) { *X /= sd; }
+        for (size_t l=L; l>0u; --l, ++X) { *X /= sd; }
     }
     else
     {
@@ -103,11 +103,11 @@ int zscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
             for (size_t v=V; v>0u; --v)
             {
                 mn = sd = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
                 mn *= den;
-                for (size_t l=0u; l<L; ++l) { *--X -= mn; sd += *X**X; }
+                for (size_t l=L; l>0u; --l) { *--X -= mn; sd += *X**X; }
                 sd = sqrt(sd*den2);
-                for (size_t l=0u; l<L; ++l, ++X) { *X /= sd; }
+                for (size_t l=L; l>0u; --l, ++X) { *X /= sd; }
             }
         }
         else
@@ -117,11 +117,11 @@ int zscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
                 for (size_t b=B; b>0u; --b, X-=K*L-1u)
                 {
                     mn = sd = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>0u; --l, X+=K) { mn += *X; }
                     mn *= den;
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X -= mn; sd += *X**X; }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X -= mn; sd += *X**X; }
                     sd = sqrt(sd*den2);
-                    for (size_t l=0u; l<L; ++l, X+=K) { *X /= sd; }
+                    for (size_t l=L; l>0u; --l, X+=K) { *X /= sd; }
                 }
             }
         }
@@ -144,11 +144,11 @@ int zscore_c (float *X, const size_t R, const size_t C, const size_t S, const si
     if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
-        for (size_t l=0u; l<L; ++l) { *--X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
+        for (size_t l=L; l>0u; --l) { *--X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
         sd = sqrtf(sd*den2);
-        for (size_t l=0u; l<2u*L; ++l, ++X) { *X /= sd; }
+        for (size_t l=2u*L; l>0u; --l, ++X) { *X /= sd; }
     }
     else
     {
@@ -161,11 +161,11 @@ int zscore_c (float *X, const size_t R, const size_t C, const size_t S, const si
             for (size_t v=V; v>0u; --v)
             {
                 mnr = mni = sd = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
-                for (size_t l=0u; l<L; ++l) { *--X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
+                for (size_t l=L; l>0u; --l) { *--X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
                 sd = sqrtf(sd*den2);
-                for (size_t l=0u; l<2u*L; ++l, ++X) { *X /= sd; }
+                for (size_t l=2u*L; l>0u; --l, ++X) { *X /= sd; }
             }
         }
         else
@@ -175,11 +175,11 @@ int zscore_c (float *X, const size_t R, const size_t C, const size_t S, const si
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u)
                 {
                     mnr = mni = sd = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
-                    for (size_t l=0u; l<L; ++l) { X-=2u*K-1u; *X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
+                    for (size_t l=L; l>0u; --l) { X-=2u*K-1u; *X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
                     sd = sqrtf(sd*den2);
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { *X /= sd; *++X /= sd; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { *X /= sd; *++X /= sd; }
                 }
             }
         }
@@ -202,11 +202,11 @@ int zscore_z (double *X, const size_t R, const size_t C, const size_t S, const s
     if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
-        for (size_t l=0u; l<L; ++l) { *--X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
+        for (size_t l=L; l>0u; --l) { *--X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
         sd = sqrt(sd*den2);
-        for (size_t l=0u; l<2u*L; ++l, ++X) { *X /= sd; }
+        for (size_t l=2u*L; l>0u; --l, ++X) { *X /= sd; }
     }
     else
     {
@@ -219,11 +219,11 @@ int zscore_z (double *X, const size_t R, const size_t C, const size_t S, const s
             for (size_t v=V; v>0u; --v)
             {
                 mnr = mni = sd = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
-                for (size_t l=0u; l<L; ++l) { *--X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
+                for (size_t l=L; l>0u; --l) { *--X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
                 sd = sqrt(sd*den2);
-                for (size_t l=0u; l<2u*L; ++l, ++X) { *X /= sd; }
+                for (size_t l=2u*L; l>0u; --l, ++X) { *X /= sd; }
             }
         }
         else
@@ -233,11 +233,11 @@ int zscore_z (double *X, const size_t R, const size_t C, const size_t S, const s
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u)
                 {
                     mnr = mni = sd = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
-                    for (size_t l=0u; l<L; ++l) { X-=2u*K-1u; *X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
+                    for (size_t l=L; l>0u; --l) { X-=2u*K-1u; *X -= mni; sd += *X**X; *--X -= mnr; sd += *X**X; }
                     sd = sqrt(sd*den2);
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { *X /= sd; *++X /= sd; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { *X /= sd; *++X /= sd; }
                 }
             }
         }

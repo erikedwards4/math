@@ -34,7 +34,7 @@ int dist_cos_s (float *Y, const float *X1, const float *X2, const size_t R1, con
     else if (L==N)
     {
         sm11 = sm22 = sm12 = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
         }
@@ -52,7 +52,7 @@ int dist_cos_s (float *Y, const float *X1, const float *X2, const size_t R1, con
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 sm11 = sm22 = sm12 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
                 }
@@ -69,7 +69,7 @@ int dist_cos_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm11 = sm22 = sm12 = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2)
                     {
                         sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
                     }
@@ -102,7 +102,7 @@ int dist_cos_d (double *Y, const double *X1, const double *X2, const size_t R1, 
     else if (L==N)
     {
         sm11 = sm22 = sm12 = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
         }
@@ -120,7 +120,7 @@ int dist_cos_d (double *Y, const double *X1, const double *X2, const size_t R1, 
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 sm11 = sm22 = sm12 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
                 }
@@ -137,7 +137,7 @@ int dist_cos_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm11 = sm22 = sm12 = 0.0;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2)
                     {
                         sm11 += *X1**X1; sm22 += *X2**X2; sm12 += *X1**X2;
                     }

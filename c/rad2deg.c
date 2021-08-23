@@ -26,7 +26,7 @@ int rad2deg_s (float *Y, const float *X, const size_t N)
 {
     const float r2d = (float)(180.0*M_1_PI);
 
-    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X * r2d; }
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X * r2d; }
 
     return 0;
 }
@@ -36,7 +36,7 @@ int rad2deg_d (double *Y, const double *X, const size_t N)
 {
     const double r2d = 180.0 * M_1_PI;
 
-    for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X * r2d; }
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X * r2d; }
     
     return 0;
 }
@@ -48,7 +48,7 @@ int rad2deg_inplace_s (float *X, const size_t N)
     const float r2d = (float)(180.0*M_1_PI);
 
     //cblas_sscal((int)N,r2d,X,1);
-    for (size_t n=0u; n<N; ++n, ++X) { *X *= r2d; }
+    for (size_t n=N; n>0u; --n, ++X) { *X *= r2d; }
 
     return 0;
 }
@@ -58,7 +58,7 @@ int rad2deg_inplace_d (double *X, const size_t N)
 {
     const double r2d = 180.0 * M_1_PI;
 
-    for (size_t n=0u; n<N; ++n, ++X) { *X *= r2d; }
+    for (size_t n=N; n>0u; --n, ++X) { *X *= r2d; }
     
     return 0;
 }

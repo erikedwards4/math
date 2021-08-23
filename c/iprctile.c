@@ -63,7 +63,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
@@ -125,7 +125,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {

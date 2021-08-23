@@ -22,7 +22,7 @@ int linspace_s (float *Y, const size_t N, const float a, const float b)
         const float stp = (b-a)/(float)(N-1u);
         float y = a;
 
-        for (size_t n=0u; n<N-1u; ++n, ++Y, y+=stp) { *Y = y; }
+        for (size_t n=N-1u; n>0u; --n, ++Y, y+=stp) { *Y = y; }
         *Y = b;
     }
 
@@ -38,7 +38,7 @@ int linspace_d (double *Y, const size_t N, const double a, const double b)
         const double stp = (b-a)/(double)(N-1u);
         double y = a;
 
-        for (size_t n=0u; n<N-1u; ++n, ++Y, y+=stp) { *Y = y; }
+        for (size_t n=N-1u; n>0u; --n, ++Y, y+=stp) { *Y = y; }
         *Y = b;
     }
 
@@ -54,7 +54,7 @@ int linspace_c (float *Y, const size_t N, const float a, const float b)
         const float stp = (b-a)/(float)(N-1u);
         float yr = a;
 
-        for (size_t n=0u; n<N-1u; ++n, ++Y, yr+=stp) { *Y = yr; *++Y = 0.0f; }
+        for (size_t n=N-1u; n>0u; --n, ++Y, yr+=stp) { *Y = yr; *++Y = 0.0f; }
         *Y = b; *++Y = 0.0f;
     }
 
@@ -70,7 +70,7 @@ int linspace_z (double *Y, const size_t N, const double a, const double b)
         const double stp = (b-a)/(double)(N-1u);
         double yr = a;
 
-        for (size_t n=0u; n<N-1u; ++n, ++Y, yr+=stp) { *Y = yr; *++Y = 0.0; }
+        for (size_t n=N-1u; n>0u; --n, ++Y, yr+=stp) { *Y = yr; *++Y = 0.0; }
         *Y = b; *++Y = 0.0;
     }
 

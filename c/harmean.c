@@ -28,12 +28,12 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         float sm = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X) { sm += 1.0f / *X; }
+        for (size_t l=L; l>0u; --l, ++X) { sm += 1.0f / *X; }
         *Y = (float)L / sm;
     }
     else
@@ -48,7 +48,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { sm += 1.0f / *X; }
+                for (size_t l=L; l>0u; --l, ++X) { sm += 1.0f / *X; }
                 *Y = (float)L / sm;
             }
         }
@@ -56,7 +56,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
         {
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = 1.0f / *X; }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += 1.0f / *X; }
             }
@@ -70,7 +70,7 @@ int harmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=K) { sm += 1.0f / *X; }
+                    for (size_t l=L; l>0u; --l, X+=K) { sm += 1.0f / *X; }
                     *Y = (float)L / sm;
                 }
             }
@@ -91,12 +91,12 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         double sm = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X) { sm += 1.0 / *X; }
+        for (size_t l=L; l>0u; --l, ++X) { sm += 1.0 / *X; }
         *Y = (double)L / sm;
     }
     else
@@ -111,7 +111,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { sm += 1.0 / *X; }
+                for (size_t l=L; l>0u; --l, ++X) { sm += 1.0 / *X; }
                 *Y = (double)L / sm;
             }
         }
@@ -119,7 +119,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
         {
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = 1.0 / *X; }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += 1.0 / *X; }
             }
@@ -133,7 +133,7 @@ int harmean_d (double *Y, const double *X, const size_t R, const size_t C, const
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=K) { sm += 1.0 / *X; }
+                    for (size_t l=L; l>0u; --l, X+=K) { sm += 1.0 / *X; }
                     *Y = (double)L / sm;
                 }
             }
@@ -155,12 +155,12 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         yr = yi = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X)
+        for (size_t l=L; l>0u; --l, ++X)
         {
             xr = *X; xi = *++X;
             sq = xr*xr + xi*xi;
@@ -180,7 +180,7 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 yr = yi = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X)
+                for (size_t l=L; l>0u; --l, ++X)
                 {
                     xr = *X; xi = *++X;
                     sq = xr*xr + xi*xi;
@@ -197,7 +197,7 @@ int harmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     yr = yi = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u)
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u)
                     {
                         xr = *X; xi = *++X;
                         sq = xr*xr + xi*xi;
@@ -225,12 +225,12 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         yr = yi = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X)
+        for (size_t l=L; l>0u; --l, ++X)
         {
             xr = *X; xi = *++X;
             sq = xr*xr + xi*xi;
@@ -250,7 +250,7 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 yr = yi = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X)
+                for (size_t l=L; l>0u; --l, ++X)
                 {
                     xr = *X; xi = *++X;
                     sq = xr*xr + xi*xi;
@@ -267,7 +267,7 @@ int harmean_z (double *Y, const double *X, const size_t R, const size_t C, const
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     yr = yi = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u)
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u)
                     {
                         xr = *X; xi = *++X;
                         sq = xr*xr + xi*xi;

@@ -73,7 +73,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0f; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
@@ -85,7 +85,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
         qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
         for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
-        for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+        for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
         *Y = (float)(den-dsm*6) / (float)den;
         r1 -= L; r2 -= L;
     }
@@ -108,7 +108,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                 qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
                 for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
-                for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+                for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
                 *Y = (float)(den-dsm*6) / (float)den;
             }
         }
@@ -129,7 +129,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                     qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
                     for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
-                    for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+                    for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
                     *Y = (float)(den-dsm*6) / (float)den;
                 }
             }
@@ -168,7 +168,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
@@ -180,7 +180,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
         qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
         for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
-        for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+        for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
         *Y = (double)(den-dsm*6) / (double)den;
         r1 -= L; r2 -= L;
     }
@@ -203,7 +203,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                 qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
                 for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
-                for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+                for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
                 *Y = (double)(den-dsm*6) / (double)den;
             }
         }
@@ -224,7 +224,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                     qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
                     for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
-                    for (size_t l=0u; l<L; ++l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
+                    for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
                     *Y = (double)(den-dsm*6) / (double)den;
                 }
             }

@@ -31,7 +31,7 @@ int min_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -83,7 +83,7 @@ int min_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -135,7 +135,7 @@ int min_c (float *Y, const float *X, const size_t R, const size_t C, const size_
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
@@ -199,7 +199,7 @@ int min_z (double *Y, const double *X, const size_t R, const size_t C, const siz
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {

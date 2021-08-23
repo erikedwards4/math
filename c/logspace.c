@@ -23,7 +23,7 @@ int logspace_s (float *Y, const size_t N, const float a, const float b)
         const float stp = (b-a)/(float)(N-1u);
         float y = a;
 
-        for (size_t n=0u; n<N-1u; ++n, ++Y, y+=stp) { *Y = powf(10.0f,y); }
+        for (size_t n=N-1u; n>0u; --n, ++Y, y+=stp) { *Y = powf(10.0f,y); }
         *Y = powf(10.0f,b);
     }
 
@@ -39,7 +39,7 @@ int logspace_d (double *Y, const size_t N, const double a, const double b)
         const double stp = (b-a)/(double)(N-1u);
         double y = a;
 
-        for (size_t n=0u; n<N-1u; ++n, ++Y, y+=stp) { *Y = pow(10.0,y); }
+        for (size_t n=N-1u; n>0u; --n, ++Y, y+=stp) { *Y = pow(10.0,y); }
         *Y = pow(10.0,b);
     }
 
@@ -55,7 +55,7 @@ int logspace_c (float *Y, const size_t N, const float a, const float b)
         const float stp = (b-a)/(float)(N-1u);
         float yr = a;
 
-        for (size_t n=0u; n<N-1u; ++n, ++Y, yr+=stp) { *Y = powf(10.0f,yr); *++Y = 0.0f; }
+        for (size_t n=N-1u; n>0u; --n, ++Y, yr+=stp) { *Y = powf(10.0f,yr); *++Y = 0.0f; }
         *Y = powf(10.0f,b); *++Y = 0.0f;
     }
 
@@ -71,7 +71,7 @@ int logspace_z (double *Y, const size_t N, const double a, const double b)
         const double stp = (b-a)/(double)(N-1u);
         double yr = a;
 
-        for (size_t n=0u; n<N-1u; ++n, ++Y, yr+=stp) { *Y = pow(10.0,yr); *++Y = 0.0; }
+        for (size_t n=N-1u; n>0u; --n, ++Y, yr+=stp) { *Y = pow(10.0,yr); *++Y = 0.0; }
         *Y = pow(10.0,b); *++Y = 0.0;
     }
 

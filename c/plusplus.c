@@ -14,7 +14,7 @@ int plusplus_d (double *X, const size_t N);
 
 int plusplus_s (float *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n) { X[n]++; }
+    for (size_t n=N; n>0u; --n) { X[n]++; }
 
     return 0;
 }
@@ -22,7 +22,7 @@ int plusplus_s (float *X, const size_t N)
 
 int plusplus_d (double *X, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n) { X[n]++; }
+    for (size_t n=N; n>0u; --n) { X[n]++; }
     
     return 0;
 }

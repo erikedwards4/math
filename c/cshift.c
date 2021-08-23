@@ -28,14 +28,14 @@ int cshift_s (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (D==0)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         X += L2;
-        for (size_t l=0u; l<L1; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=L1; l>0u; --l, ++X, ++Y) { *Y = *X; }
         X -= L;
-        for (size_t l=0u; l<L2; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=L2; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -48,17 +48,17 @@ int cshift_s (float *Y, const float *X, const size_t R, const size_t C, const si
             X += L2;
             for (size_t v=V; v>0u; --v, X+=L)
             {
-                for (size_t l=0u; l<L1; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=L1; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 X -= L;
-                for (size_t l=0u; l<L2; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=L2; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else if (G==1u)
         {
             X += V * L2;
-            for (size_t n=0u; n<V*L1; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=V*L1; n>0u; --n, ++X, ++Y) { *Y = *X; }
             X -= N;
-            for (size_t n=0u; n<V*L2; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=V*L2; n>0u; --n, ++X, ++Y) { *Y = *X; }
         }
         else
         {
@@ -67,9 +67,9 @@ int cshift_s (float *Y, const float *X, const size_t R, const size_t C, const si
                 X += K * L2;
                 for (size_t b=B; b>0u; --b, X-=K*L2-1u, Y-=K*L-1u)
                 {
-                    for (size_t l=0u; l<L1; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t l=L1; l>0u; --l, X+=K, Y+=K) { *Y = *X; }
                     X -= K*L;
-                    for (size_t l=0u; l<L2; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t l=L2; l>0u; --l, X+=K, Y+=K) { *Y = *X; }
                 }
             }
         }
@@ -92,14 +92,14 @@ int cshift_d (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0u) {}
     else if (D==0)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         X += L2;
-        for (size_t l=0u; l<L1; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=L1; l>0u; --l, ++X, ++Y) { *Y = *X; }
         X -= L;
-        for (size_t l=0u; l<L2; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=L2; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -112,17 +112,17 @@ int cshift_d (double *Y, const double *X, const size_t R, const size_t C, const 
             X += L2;
             for (size_t v=V; v>0u; --v, X+=L)
             {
-                for (size_t l=0u; l<L1; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=L1; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 X -= L;
-                for (size_t l=0u; l<L2; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=L2; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else if (G==1u)
         {
             X += V * L2;
-            for (size_t n=0u; n<V*L1; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=V*L1; n>0u; --n, ++X, ++Y) { *Y = *X; }
             X -= N;
-            for (size_t n=0u; n<V*L2; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=V*L2; n>0u; --n, ++X, ++Y) { *Y = *X; }
         }
         else
         {
@@ -131,9 +131,9 @@ int cshift_d (double *Y, const double *X, const size_t R, const size_t C, const 
                 X += K * L2;
                 for (size_t b=B; b>0u; --b, X-=K*L2-1u, Y-=K*L-1u)
                 {
-                    for (size_t l=0u; l<L1; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t l=L1; l>0u; --l, X+=K, Y+=K) { *Y = *X; }
                     X -= K*L;
-                    for (size_t l=0u; l<L2; ++l, X+=K, Y+=K) { *Y = *X; }
+                    for (size_t l=L2; l>0u; --l, X+=K, Y+=K) { *Y = *X; }
                 }
             }
         }
@@ -156,14 +156,14 @@ int cshift_c (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (D==0)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         X += 2u*L2;
-        for (size_t l=0u; l<2u*L1; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=2u*L1; l>0u; --l, ++X, ++Y) { *Y = *X; }
         X -= 2u*L;
-        for (size_t l=0u; l<2u*L2; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=2u*L2; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -176,17 +176,17 @@ int cshift_c (float *Y, const float *X, const size_t R, const size_t C, const si
             X += 2u*L2;
             for (size_t v=V; v>0u; --v, X+=2u*L)
             {
-                for (size_t l=0u; l<2u*L1; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=2u*L1; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 X -= 2u*L;
-                for (size_t l=0u; l<2u*L2; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=2u*L2; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else if (G==1u)
         {
             X += 2u*V*L2;
-            for (size_t n=0u; n<2u*V*L1; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=2u*V*L1; n>0u; --n, ++X, ++Y) { *Y = *X; }
             X -= 2u*N;
-            for (size_t n=0u; n<2u*V*L2; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=2u*V*L2; n>0u; --n, ++X, ++Y) { *Y = *X; }
         }
         else
         {
@@ -195,9 +195,9 @@ int cshift_c (float *Y, const float *X, const size_t R, const size_t C, const si
                 X += 2u*K*L2;
                 for (size_t b=B; b>0u; --b, X-=2u*K*L2-2u, Y-=2u*K*L-2u)
                 {
-                    for (size_t l=0u; l<L1; ++l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
+                    for (size_t l=L1; l>0u; --l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
                     X -= 2u*K*L;
-                    for (size_t l=0u; l<L2; ++l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
+                    for (size_t l=L2; l>0u; --l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
                 }
             }
         }
@@ -220,14 +220,14 @@ int cshift_z (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0u) {}
     else if (D==0)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         X += 2u*L2;
-        for (size_t l=0u; l<2u*L1; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=2u*L1; l>0u; --l, ++X, ++Y) { *Y = *X; }
         X -= 2u*L;
-        for (size_t l=0u; l<2u*L2; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=2u*L2; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
     else
     {
@@ -240,17 +240,17 @@ int cshift_z (double *Y, const double *X, const size_t R, const size_t C, const 
             X += 2u*L2;
             for (size_t v=V; v>0u; --v, X+=2u*L)
             {
-                for (size_t l=0u; l<2u*L1; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=2u*L1; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 X -= 2u*L;
-                for (size_t l=0u; l<2u*L2; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=2u*L2; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
         }
         else if (G==1u)
         {
             X += 2u*V*L2;
-            for (size_t n=0u; n<2u*V*L1; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=2u*V*L1; n>0u; --n, ++X, ++Y) { *Y = *X; }
             X -= 2u*N;
-            for (size_t n=0u; n<2u*V*L2; ++n, ++X, ++Y) { *Y = *X; }
+            for (size_t n=2u*V*L2; n>0u; --n, ++X, ++Y) { *Y = *X; }
         }
         else
         {
@@ -259,9 +259,9 @@ int cshift_z (double *Y, const double *X, const size_t R, const size_t C, const 
                 X += 2u*K*L2;
                 for (size_t b=B; b>0u; --b, X-=2u*K*L2-2u, Y-=2u*K*L-2u)
                 {
-                    for (size_t l=0u; l<L1; ++l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
+                    for (size_t l=L1; l>0u; --l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
                     X -= 2u*K*L;
-                    for (size_t l=0u; l<L2; ++l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
+                    for (size_t l=L2; l>0u; --l, X+=2u*K-1u, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
                 }
             }
         }

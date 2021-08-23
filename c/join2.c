@@ -27,8 +27,8 @@ int join2_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
 
     for (size_t g=G; g>0u; --g)
     {
-        for (size_t b=0u; b<B1; ++b, ++X1, ++Y) { *Y = *X1; }
-        for (size_t b=0u; b<B2; ++b, ++X2, ++Y) { *Y = *X2; }
+        for (size_t b=B1; b>0u; --b, ++X1, ++Y) { *Y = *X1; }
+        for (size_t b=B2; b>0u; --b, ++X2, ++Y) { *Y = *X2; }
     }
 
     return 0;
@@ -49,8 +49,8 @@ int join2_d (double *Y, const double *X1, const double *X2, const size_t R1, con
 
     for (size_t g=G; g>0u; --g)
     {
-        for (size_t b=0u; b<B1; ++b, ++X1, ++Y) { *Y = *X1; }
-        for (size_t b=0u; b<B2; ++b, ++X2, ++Y) { *Y = *X2; }
+        for (size_t b=B1; b>0u; --b, ++X1, ++Y) { *Y = *X1; }
+        for (size_t b=B2; b>0u; --b, ++X2, ++Y) { *Y = *X2; }
     }
 
     return 0;
@@ -71,8 +71,8 @@ int join2_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
 
     for (size_t g=G; g>0u; --g)
     {
-        for (size_t b=0u; b<B1; ++b, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
-        for (size_t b=0u; b<B2; ++b, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }
+        for (size_t b=B1; b>0u; --b, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
+        for (size_t b=B2; b>0u; --b, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }
     }
 
     return 0;
@@ -93,8 +93,8 @@ int join2_z (double *Y, const double *X1, const double *X2, const size_t R1, con
 
     for (size_t g=G; g>0u; --g)
     {
-        for (size_t b=0u; b<B1; ++b, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
-        for (size_t b=0u; b<B2; ++b, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }
+        for (size_t b=B1; b>0u; --b, ++X1, ++Y) { *Y = *X1; *++Y = *++X1; }
+        for (size_t b=B2; b>0u; --b, ++X2, ++Y) { *Y = *X2; *++Y = *++X2; }
     }
 
     return 0;

@@ -27,13 +27,13 @@ int normalizep_s (float *X, const size_t R, const size_t C, const size_t S, cons
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X) { *X = (*X<0.0f) ? -1.0f : 1.0f; }
+        for (size_t n=N; n>0u; --n, ++X) { *X = (*X<0.0f) ? -1.0f : 1.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { nrm += powf(fabsf(*X),p); }
+        for (size_t l=L; l>0u; --l, ++X) { nrm += powf(fabsf(*X),p); }
         nrm = powf(nrm,ip);
-        for (size_t l=0u; l<L; ++l) { *--X /= nrm; }
+        for (size_t l=L; l>0u; --l) { *--X /= nrm; }
     }
     else
     {
@@ -46,10 +46,10 @@ int normalizep_s (float *X, const size_t R, const size_t C, const size_t S, cons
             for (size_t v=V; v>0u; --v)
             {
                 nrm = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { nrm += powf(fabsf(*X),p); }
+                for (size_t l=L; l>0u; --l, ++X) { nrm += powf(fabsf(*X),p); }
                 nrm = powf(nrm,ip);
                 X -= L;
-                for (size_t l=0u; l<L; ++l, ++X) { *X /= nrm; }
+                for (size_t l=L; l>0u; --l, ++X) { *X /= nrm; }
             }
         }
         else
@@ -59,9 +59,9 @@ int normalizep_s (float *X, const size_t R, const size_t C, const size_t S, cons
                 for (size_t b=B; b>0u; --b, ++X)
                 {
                     nrm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=K) { nrm += powf(fabsf(*X),p); }
+                    for (size_t l=L; l>0u; --l, X+=K) { nrm += powf(fabsf(*X),p); }
                     nrm = powf(nrm,ip);
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X /= nrm; }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X /= nrm; }
                 }
             }
         }
@@ -83,13 +83,13 @@ int normalizep_d (double *X, const size_t R, const size_t C, const size_t S, con
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X) { *X = (*X<0.0) ? -1.0 : 1.0; }
+        for (size_t n=N; n>0u; --n, ++X) { *X = (*X<0.0) ? -1.0 : 1.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { nrm += pow(fabs(*X),p); }
+        for (size_t l=L; l>0u; --l, ++X) { nrm += pow(fabs(*X),p); }
         nrm = pow(nrm,ip);
-        for (size_t l=0u; l<L; ++l) { *--X /= nrm; }
+        for (size_t l=L; l>0u; --l) { *--X /= nrm; }
     }
     else
     {
@@ -102,10 +102,10 @@ int normalizep_d (double *X, const size_t R, const size_t C, const size_t S, con
             for (size_t v=V; v>0u; --v)
             {
                 nrm = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { nrm += pow(fabs(*X),p); }
+                for (size_t l=L; l>0u; --l, ++X) { nrm += pow(fabs(*X),p); }
                 nrm = pow(nrm,ip);
                 X -= L;
-                for (size_t l=0u; l<L; ++l, ++X) { *X /= nrm; }
+                for (size_t l=L; l>0u; --l, ++X) { *X /= nrm; }
             }
         }
         else
@@ -115,9 +115,9 @@ int normalizep_d (double *X, const size_t R, const size_t C, const size_t S, con
                 for (size_t b=B; b>0u; --b, ++X)
                 {
                     nrm = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=K) { nrm += pow(fabs(*X),p); }
+                    for (size_t l=L; l>0u; --l, X+=K) { nrm += pow(fabs(*X),p); }
                     nrm = pow(nrm,ip);
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X /= nrm; }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X /= nrm; }
                 }
             }
         }
@@ -139,7 +139,7 @@ int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, cons
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X)
+        for (size_t n=N; n>0u; --n, ++X)
         {
             nrm = sqrtf(*X**X + *(X+1)**(X+1));
             *X /= nrm; *++X /= nrm;
@@ -147,9 +147,9 @@ int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, cons
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, X+=2) { nrm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+        for (size_t l=L; l>0u; --l, X+=2) { nrm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
         nrm = powf(nrm,ip);
-        for (size_t l=0u; l<2u*L; ++l) { *--X /= nrm; }
+        for (size_t l=2u*L; l>0u; --l) { *--X /= nrm; }
     }
     else
     {
@@ -162,10 +162,10 @@ int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, cons
             for (size_t v=V; v>0u; --v)
             {
                 nrm = 0.0f;
-                for (size_t l=0u; l<L; ++l, X+=2) { nrm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+                for (size_t l=L; l>0u; --l, X+=2) { nrm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
                 nrm = powf(nrm,ip);
                 X -= 2u*L;
-                for (size_t l=0u; l<2u*L; ++l, ++X) { *X /= nrm; }
+                for (size_t l=2u*L; l>0u; --l, ++X) { *X /= nrm; }
             }
         }
         else
@@ -175,9 +175,9 @@ int normalizep_c (float *X, const size_t R, const size_t C, const size_t S, cons
                 for (size_t b=B; b>0u; --b, X+=2)
                 {
                     nrm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K) { nrm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+                    for (size_t l=L; l>0u; --l, X+=2u*K) { nrm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
                     nrm = powf(nrm,ip);
-                    for (size_t l=0u; l<L; ++l) { X-=2u*K; *X /= nrm; *(X+1) /= nrm; }
+                    for (size_t l=L; l>0u; --l) { X-=2u*K; *X /= nrm; *(X+1) /= nrm; }
                 }
             }
         }
@@ -199,7 +199,7 @@ int normalizep_z (double *X, const size_t R, const size_t C, const size_t S, con
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X)
+        for (size_t n=N; n>0u; --n, ++X)
         {
             nrm = sqrt(*X**X + *(X+1)**(X+1));
             *X /= nrm; *++X /= nrm;
@@ -207,9 +207,9 @@ int normalizep_z (double *X, const size_t R, const size_t C, const size_t S, con
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, X+=2) { nrm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+        for (size_t l=L; l>0u; --l, X+=2) { nrm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
         nrm = pow(nrm,ip);
-        for (size_t l=0u; l<2u*L; ++l) { *--X /= nrm; }
+        for (size_t l=2u*L; l>0u; --l) { *--X /= nrm; }
     }
     else
     {
@@ -222,10 +222,10 @@ int normalizep_z (double *X, const size_t R, const size_t C, const size_t S, con
             for (size_t v=V; v>0u; --v)
             {
                 nrm = 0.0;
-                for (size_t l=0u; l<L; ++l, X+=2) { nrm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+                for (size_t l=L; l>0u; --l, X+=2) { nrm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
                 nrm = pow(nrm,ip);
                 X -= 2u*L;
-                for (size_t l=0u; l<2u*L; ++l, ++X) { *X /= nrm; }
+                for (size_t l=2u*L; l>0u; --l, ++X) { *X /= nrm; }
             }
         }
         else
@@ -235,9 +235,9 @@ int normalizep_z (double *X, const size_t R, const size_t C, const size_t S, con
                 for (size_t b=B; b>0u; --b, X+=2)
                 {
                     nrm = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K) { nrm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+                    for (size_t l=L; l>0u; --l, X+=2u*K) { nrm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
                     nrm = pow(nrm,ip);
-                    for (size_t l=0u; l<L; ++l) { X-=2u*K; *X /= nrm; *(X+1) /= nrm; }
+                    for (size_t l=L; l>0u; --l) { X-=2u*K; *X /= nrm; *(X+1) /= nrm; }
                 }
             }
         }

@@ -24,7 +24,7 @@ int randu_s (float *Y, const float a, const float b, const size_t N)
 
     if (a>=b)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = a; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = a; }
     }
     else
     {
@@ -41,7 +41,7 @@ int randu_s (float *Y, const float a, const float b, const size_t N)
         //Generate
         if (a==0.0f && b==1.0f)
         {
-            for (size_t n=0u; n<N; ++n, ++Y)
+            for (size_t n=N; n>0u; --n, ++Y)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -53,7 +53,7 @@ int randu_s (float *Y, const float a, const float b, const size_t N)
         else
         {
             const float sc = b - a;
-            for (size_t n=0u; n<N; ++n, ++Y)
+            for (size_t n=N; n>0u; --n, ++Y)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -74,7 +74,7 @@ int randu_d (double *Y, const double a, const double b, const size_t N)
 
     if (a>=b)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = a; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = a; }
     }
     else
     {
@@ -91,7 +91,7 @@ int randu_d (double *Y, const double a, const double b, const size_t N)
         //Generate
         if (a==0.0 && b==1.0)
         {
-            for (size_t n=0u; n<N; ++n, ++Y)
+            for (size_t n=N; n>0u; --n, ++Y)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -103,7 +103,7 @@ int randu_d (double *Y, const double a, const double b, const size_t N)
         else
         {
             const double sc = b - a;
-            for (size_t n=0u; n<N; ++n, ++Y)
+            for (size_t n=N; n>0u; --n, ++Y)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -124,7 +124,7 @@ int randu_c (float *Y, const float a, const float b, const size_t N)
 
     if (a>=b)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = a; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = a; }
     }
     else
     {
@@ -141,7 +141,7 @@ int randu_c (float *Y, const float a, const float b, const size_t N)
         //Generate
         if (a==0.0f && b==1.0f)
         {
-            for (size_t n=0u; n<2u*N; ++n, ++Y)
+            for (size_t n=2u*N; n>0u; --n, ++Y)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -153,7 +153,7 @@ int randu_c (float *Y, const float a, const float b, const size_t N)
         else
         {
             const float sc = b - a;
-            for (size_t n=0u; n<2u*N; ++n, ++Y)
+            for (size_t n=2u*N; n>0u; --n, ++Y)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -174,7 +174,7 @@ int randu_z (double *Y, const double a, const double b, const size_t N)
 
     if (a>=b)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = a; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = a; }
     }
     else
     {
@@ -191,7 +191,7 @@ int randu_z (double *Y, const double a, const double b, const size_t N)
         //Generate
         if (a==0.0 && b==1.0)
         {
-            for (size_t n=0u; n<2u*N; ++n, ++Y)
+            for (size_t n=2u*N; n>0u; --n, ++Y)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -203,7 +203,7 @@ int randu_z (double *Y, const double a, const double b, const size_t N)
         else
         {
             const double sc = b - a;
-            for (size_t n=0u; n<2u*N; ++n, ++Y)
+            for (size_t n=2u*N; n>0u; --n, ++Y)
             {
                 state = state*mul + inc;
                 xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);

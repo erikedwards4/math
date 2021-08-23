@@ -11,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "cmli.hpp"
+#include "../util/cmli.hpp"
 #include "primes.c"
 
 #ifdef I
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
 
     //Check stdout
-    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0 || strcmp(a_fo->filename[0],"-")==0); }
+    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0u || strcmp(a_fo->filename[0],"-")==0); }
     else { stdo1 = (!isatty(fileno(stdout))); }
     wo1 = (stdo1 || a_fo->count>0);
 
@@ -112,9 +112,9 @@ int main(int argc, char *argv[])
 
 
     //Set output header info
-    try { X = new size_t[1+(P-1)/2]; }
+    try { X = new size_t[1u+(P-1u)/2u]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for integer file (X)" << endl; return 1; }
-    if (codee::primes_i(X,&cnt,(P-1)/2))
+    if (codee::primes_u(X,&cnt,(P-1u)/2u))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     o1.C = cnt;
     o1.R = o1.S = o1.H = 1u;
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
         float *Y;
         try { Y = new float[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        for (size_t c=0u; c<o1.C; c++) { Y[c] = float(X[c]); }
+        for (size_t c=0u; c<o1.C; ++c) { Y[c] = float(X[c]); }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
@@ -149,12 +149,12 @@ int main(int argc, char *argv[])
         }
         delete[] Y;
     }
-    else if (o1.T==2)
+    else if (o1.T==2u)
     {
         double *Y;
         try { Y = new double[o1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-        for (size_t c=0u; c<o1.C; c++) { Y[c] = double(X[c]); }
+        for (size_t c=0u; c<o1.C; ++c) { Y[c] = double(X[c]); }
         if (wo1)
         {
             try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
@@ -171,4 +171,3 @@ int main(int argc, char *argv[])
     //Exit
     return ret;
 }
-

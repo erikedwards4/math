@@ -39,8 +39,8 @@ int dist0_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
     if (N==0u) {}
     else if (L==N)
     {
-        size_t cnt = 0u;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        int cnt = 0;
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             cnt += (fabsf(*X1-*X2)>thresh);
         }
@@ -57,8 +57,8 @@ int dist0_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
             const size_t J1 = (L==N1) ? L : 0u, J2 = (L==N2) ? L : 0u;
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
-                size_t cnt = 0u;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                int cnt = 0;
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     //cnt += (*X1!=*X2);
                     cnt += (fabsf(*X1-*X2)>thresh);
@@ -75,7 +75,7 @@ int dist0_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
                 *Y = (float)(fabsf(*X1-*X2)>thresh);
             }
             X1 += 1u-J1; X2 += 1u-J2; Y -= V;
-            for (size_t l=1u; l<L; ++l, X1+=1u-J1, X2+=1u-J2, Y-=V)
+            for (size_t l=L; l>1u; --l, X1+=1u-J1, X2+=1u-J2, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y)
                 {
@@ -93,8 +93,8 @@ int dist0_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
             {
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
-                    size_t cnt = 0u;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
+                    int cnt = 0;
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2)
                     {
                         //cnt += (*X1!=*X2);
                         cnt += (fabsf(*X1-*X2)>thresh);
@@ -127,8 +127,8 @@ int dist0_d (double *Y, const double *X1, const double *X2, const size_t R1, con
     if (N==0u) {}
     else if (L==N)
     {
-        size_t cnt = 0u;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        int cnt = 0;
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             cnt += (fabs(*X1-*X2)>thresh);
         }
@@ -145,8 +145,8 @@ int dist0_d (double *Y, const double *X1, const double *X2, const size_t R1, con
             const size_t J1 = (L==N1) ? L : 0u, J2 = (L==N2) ? L : 0u;
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
-                size_t cnt = 0u;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                int cnt = 0;
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     cnt += (fabs(*X1-*X2)>thresh);
                 }
@@ -161,7 +161,7 @@ int dist0_d (double *Y, const double *X1, const double *X2, const size_t R1, con
                 *Y = (double)(fabs(*X1-*X2)>thresh);
             }
             X1 += 1u-J1; X2 += 1u-J2; Y -= V;
-            for (size_t l=1u; l<L; ++l, X1+=1u-J1, X2+=1u-J2, Y-=V)
+            for (size_t l=L; l>1u; --l, X1+=1u-J1, X2+=1u-J2, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y)
                 {
@@ -178,8 +178,8 @@ int dist0_d (double *Y, const double *X1, const double *X2, const size_t R1, con
             {
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    size_t cnt = 0u;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
+                    int cnt = 0;
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2)
                     {
                         cnt += (fabs(*X1-*X2)>thresh);
                     }
@@ -211,8 +211,8 @@ int dist0_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
     if (N==0u) {}
     else if (L==N)
     {
-        size_t cnt = 0u;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        int cnt = 0;
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             cnt += (fabsf(*X1++-*X2++)>thresh || fabsf(*X1-*X2)>thresh);
         }
@@ -229,8 +229,8 @@ int dist0_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
             const size_t J1 = (L==N1) ? 2u*L : 0u, J2 = (L==N2) ? 2u*L : 0u;
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
-                size_t cnt = 0u;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                int cnt = 0;
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     cnt += (fabsf(*X1++-*X2++)>thresh || fabsf(*X1-*X2)>thresh);
                 }
@@ -246,8 +246,8 @@ int dist0_c (float *Y, const float *X1, const float *X2, const size_t R1, const 
             {
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    size_t cnt = 0u;
-                    for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u)
+                    int cnt = 0;
+                    for (size_t l=L; l>0u; --l, X1+=K1-1u, X2+=K2-1u)
                     {
                         cnt += (fabsf(*X1++-*X2++)>thresh || fabsf(*X1-*X2)>thresh);
                     }
@@ -279,8 +279,8 @@ int dist0_z (double *Y, const double *X1, const double *X2, const size_t R1, con
     if (N==0u) {}
     else if (L==N)
     {
-        size_t cnt = 0u;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        int cnt = 0;
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             cnt += (fabs(*X1++-*X2++)>thresh || fabs(*X1-*X2)>thresh);
         }
@@ -297,8 +297,8 @@ int dist0_z (double *Y, const double *X1, const double *X2, const size_t R1, con
             const size_t J1 = (L==N1) ? 2u*L : 0u, J2 = (L==N2) ? 2u*L : 0u;
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
-                size_t cnt = 0u;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                int cnt = 0;
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     cnt += (fabs(*X1++-*X2++)>thresh || fabs(*X1-*X2)>thresh);
                 }
@@ -314,8 +314,8 @@ int dist0_z (double *Y, const double *X1, const double *X2, const size_t R1, con
             {
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
-                    size_t cnt = 0u;
-                    for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u)
+                    int cnt = 0;
+                    for (size_t l=L; l>0u; --l, X1+=K1-1u, X2+=K2-1u)
                     {
                         cnt += (fabs(*X1++-*X2++)>thresh || fabs(*X1-*X2)>thresh);
                     }

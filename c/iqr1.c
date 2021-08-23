@@ -38,7 +38,7 @@ int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size
     if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr1_s: problem with LAPACKE function\n"); }
         X1 += i1;
@@ -49,11 +49,11 @@ int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size
         rng = mx - mn;
         if (m1)
         {
-            for (size_t l=0u; l<L; ++l) { --X; *X = 2.0f*(*X-mn)/rng - 1.0f; }
+            for (size_t l=L; l>0u; --l) { --X; *X = 2.0f*(*X-mn)/rng - 1.0f; }
         }
         else
         {
-            for (size_t l=0u; l<L; ++l) { --X; *X = (*X-mn)/rng; }
+            for (size_t l=L; l>0u; --l) { --X; *X = (*X-mn)/rng; }
         }
     }
     else
@@ -66,7 +66,7 @@ int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L; X -= L;
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr1_s: problem with LAPACKE function\n"); }
                 X1 += i1;
@@ -77,11 +77,11 @@ int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size
                 rng = mx - mn;
                 if (m1)
                 {
-                    for (size_t l=0u; l<L; ++l, ++X) { *X = 2.0f*(*X-mn)/rng - 1.0f; }
+                    for (size_t l=L; l>0u; --l, ++X) { *X = 2.0f*(*X-mn)/rng - 1.0f; }
                 }
                 else
                 {
-                    for (size_t l=0u; l<L; ++l, ++X) { *X = (*X-mn)/rng; }
+                    for (size_t l=L; l>0u; --l, ++X) { *X = (*X-mn)/rng; }
                 }
             }
         }
@@ -91,7 +91,7 @@ int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size
             {
                 for (size_t b=B; b>0u; --b, ++X)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr1_s: problem with LAPACKE function\n"); }
                     X1 += i1;
@@ -102,11 +102,11 @@ int iqr1_s (float *X, const size_t R, const size_t C, const size_t S, const size
                     rng = mx - mn;
                     if (m1)
                     {
-                        for (size_t l=0u; l<L; ++l) { X-=K; *X = 2.0f*(*X-mn)/rng - 1.0f; }
+                        for (size_t l=L; l>0u; --l) { X-=K; *X = 2.0f*(*X-mn)/rng - 1.0f; }
                     }
                     else
                     {
-                        for (size_t l=0u; l<L; ++l) { X-=K; *X = (*X-mn)/rng; }
+                        for (size_t l=L; l>0u; --l) { X-=K; *X = (*X-mn)/rng; }
                     }
                 }
             }
@@ -139,7 +139,7 @@ int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const siz
     if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr1_d: problem with LAPACKE function\n"); }
         X1 += i1;
@@ -150,11 +150,11 @@ int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const siz
         rng = mx - mn;
         if (m1)
         {
-            for (size_t l=0u; l<L; ++l) { --X; *X = 2.0*(*X-mn)/rng - 1.0; }
+            for (size_t l=L; l>0u; --l) { --X; *X = 2.0*(*X-mn)/rng - 1.0; }
         }
         else
         {
-            for (size_t l=0u; l<L; ++l) { --X; *X = (*X-mn)/rng; }
+            for (size_t l=L; l>0u; --l) { --X; *X = (*X-mn)/rng; }
         }
     }
     else
@@ -167,7 +167,7 @@ int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const siz
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L; X -= L;
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr1_d: problem with LAPACKE function\n"); }
                 X1 += i1;
@@ -178,11 +178,11 @@ int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const siz
                 rng = mx - mn;
                 if (m1)
                 {
-                    for (size_t l=0u; l<L; ++l, ++X) { *X = 2.0*(*X-mn)/rng - 1.0; }
+                    for (size_t l=L; l>0u; --l, ++X) { *X = 2.0*(*X-mn)/rng - 1.0; }
                 }
                 else
                 {
-                    for (size_t l=0u; l<L; ++l, ++X) { *X = (*X-mn)/rng; }
+                    for (size_t l=L; l>0u; --l, ++X) { *X = (*X-mn)/rng; }
                 }
             }
         }
@@ -192,7 +192,7 @@ int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const siz
             {
                 for (size_t b=B; b>0u; --b, ++X)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in iqr1_d: problem with LAPACKE function\n"); }
                     X1 += i1;
@@ -203,11 +203,11 @@ int iqr1_d (double *X, const size_t R, const size_t C, const size_t S, const siz
                     rng = mx - mn;
                     if (m1)
                     {
-                        for (size_t l=0u; l<L; ++l) { X-=K; *X = 2.0*(*X-mn)/rng - 1.0; }
+                        for (size_t l=L; l>0u; --l) { X-=K; *X = 2.0*(*X-mn)/rng - 1.0; }
                     }
                     else
                     {
-                        for (size_t l=0u; l<L; ++l) { X-=K; *X = (*X-mn)/rng; }
+                        for (size_t l=L; l>0u; --l) { X-=K; *X = (*X-mn)/rng; }
                     }
                 }
             }

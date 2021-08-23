@@ -20,9 +20,9 @@ int diagmat_s (float *Y, const float *X, const size_t R, const size_t C, const i
     const size_t K = (iscolmajor) ? R+1u : C+1u;
     const int S = (iscolmajor) ? (k<0) ? -k : k*(int)R : (k<0) ? -k*(int)C : k;
 
-    for (size_t n=0u; n<R*C; ++n, ++Y) { *Y = 0.0f; }
+    for (size_t n=R*C; n>0u; --n, ++Y) { *Y = 0.0f; }
     Y -= (int)(R*C) - S;
-    for (size_t l=0u; l<L; ++l, ++X, Y+=K) { *Y = *X; }
+    for (size_t l=L; l>0u; --l, ++X, Y+=K) { *Y = *X; }
     
     return 0;
 }
@@ -34,9 +34,9 @@ int diagmat_d (double *Y, const double *X, const size_t R, const size_t C, const
     const size_t K = (iscolmajor) ? R+1u : C+1u;
     const int S = (iscolmajor) ? (k<0) ? -k : k*(int)R : (k<0) ? -k*(int)C : k;
 
-    for (size_t n=0u; n<R*C; ++n, ++Y) { *Y = 0.0; }
+    for (size_t n=R*C; n>0u; --n, ++Y) { *Y = 0.0; }
     Y -= (int)(R*C) - S;
-    for (size_t l=0u; l<L; ++l, ++X, Y+=K) { *Y = *X; }
+    for (size_t l=L; l>0u; --l, ++X, Y+=K) { *Y = *X; }
 
     return 0;
 }
@@ -50,7 +50,7 @@ int diagmat_c (float *Y, const float *X, const size_t R, const size_t C, const i
 
     for (size_t n=0u; n<2u*R*C; ++n, ++Y) { *Y = 0.0f; }
     Y -= 2*(int)(R*C) - S;
-    for (size_t l=0u; l<L; ++l, ++X, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
+    for (size_t l=L; l>0u; --l, ++X, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
 
     return 0;
 }
@@ -64,7 +64,7 @@ int diagmat_z (double *Y, const double *X, const size_t R, const size_t C, const
 
     for (size_t n=0u; n<2u*R*C; ++n, ++Y) { *Y = 0.0; }
     Y -= 2*(int)(R*C) - S;
-    for (size_t l=0u; l<L; ++l, ++X, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
+    for (size_t l=L; l>0u; --l, ++X, Y+=2u*K-1u) { *Y = *X; *++Y = *++X; }
 
     return 0;
 }

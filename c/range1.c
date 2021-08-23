@@ -27,7 +27,7 @@ int range1_s (float *X, const size_t R, const size_t C, const size_t S, const si
     else if (L==N)
     {
         mn = mx = *X++;
-        for (size_t l=1u; l<L; ++l, ++X)
+        for (size_t l=L; l>1u; --l, ++X)
         {
             if (*X<mn) { mn = *X; }
             else if (*X>mx) { mx = *X; }
@@ -35,11 +35,11 @@ int range1_s (float *X, const size_t R, const size_t C, const size_t S, const si
         rng = mx - mn;
         if (m1)
         {
-            for (size_t l=0u; l<L; ++l) { --X; *X = 2.0f*(*X-mn)/rng - 1.0f; }
+            for (size_t l=L; l>0u; --l) { --X; *X = 2.0f*(*X-mn)/rng - 1.0f; }
         }
         else
         {
-            for (size_t l=0u; l<L; ++l) { --X; *X = (*X-mn)/rng; }
+            for (size_t l=L; l>0u; --l) { --X; *X = (*X-mn)/rng; }
         }
     }
     else
@@ -53,7 +53,7 @@ int range1_s (float *X, const size_t R, const size_t C, const size_t S, const si
             for (size_t v=V; v>0u; --v)
             {
                 mn = mx = *X++;
-                for (size_t l=1u; l<L; ++l, ++X)
+                for (size_t l=L; l>1u; --l, ++X)
                 {
                     if (*X<mn) { mn = *X; }
                     else if (*X>mx) { mx = *X; }
@@ -61,11 +61,11 @@ int range1_s (float *X, const size_t R, const size_t C, const size_t S, const si
                 rng = mx - mn; X -= L;
                 if (m1)
                 {
-                    for (size_t l=0u; l<L; ++l, ++X) { *X = 2.0f*(*X-mn)/rng - 1.0f; }
+                    for (size_t l=L; l>0u; --l, ++X) { *X = 2.0f*(*X-mn)/rng - 1.0f; }
                 }
                 else
                 {
-                    for (size_t l=0u; l<L; ++l, ++X) { *X = (*X-mn)/rng; }
+                    for (size_t l=L; l>0u; --l, ++X) { *X = (*X-mn)/rng; }
                 }
             }
         }
@@ -76,7 +76,7 @@ int range1_s (float *X, const size_t R, const size_t C, const size_t S, const si
                 for (size_t b=B; b>0u; --b, ++X)
                 {
                     mn = mx = *X; X += K;
-                    for (size_t l=1u; l<L; ++l, X+=K)
+                    for (size_t l=L; l>1u; --l, X+=K)
                     {
                         if (*X<mn) { mn = *X; }
                         else if (*X>mx) { mx = *X; }
@@ -84,11 +84,11 @@ int range1_s (float *X, const size_t R, const size_t C, const size_t S, const si
                     rng = mx - mn;
                     if (m1)
                     {
-                        for (size_t l=0u; l<L; ++l) { X-=K; *X = 2.0f*(*X-mn)/rng - 1.0f; }
+                        for (size_t l=L; l>0u; --l) { X-=K; *X = 2.0f*(*X-mn)/rng - 1.0f; }
                     }
                     else
                     {
-                        for (size_t l=0u; l<L; ++l) { X-=K; *X = (*X-mn)/rng; }
+                        for (size_t l=L; l>0u; --l) { X-=K; *X = (*X-mn)/rng; }
                     }
                 }
             }
@@ -112,7 +112,7 @@ int range1_d (double *X, const size_t R, const size_t C, const size_t S, const s
     else if (L==N)
     {
         mn = mx = *X++;
-        for (size_t l=1u; l<L; ++l, ++X)
+        for (size_t l=L; l>1u; --l, ++X)
         {
             if (*X<mn) { mn = *X; }
             else if (*X>mx) { mx = *X; }
@@ -120,11 +120,11 @@ int range1_d (double *X, const size_t R, const size_t C, const size_t S, const s
         rng = mx - mn;
         if (m1)
         {
-            for (size_t l=0u; l<L; ++l) { --X; *X = 2.0*(*X-mn)/rng - 1.0; }
+            for (size_t l=L; l>0u; --l) { --X; *X = 2.0*(*X-mn)/rng - 1.0; }
         }
         else
         {
-            for (size_t l=0u; l<L; ++l) { --X; *X = (*X-mn)/rng; }
+            for (size_t l=L; l>0u; --l) { --X; *X = (*X-mn)/rng; }
         }
     }
     else
@@ -138,7 +138,7 @@ int range1_d (double *X, const size_t R, const size_t C, const size_t S, const s
             for (size_t v=V; v>0u; --v)
             {
                 mn = mx = *X++;
-                for (size_t l=1u; l<L; ++l, ++X)
+                for (size_t l=L; l>1u; --l, ++X)
                 {
                     if (*X<mn) { mn = *X; }
                     else if (*X>mx) { mx = *X; }
@@ -146,11 +146,11 @@ int range1_d (double *X, const size_t R, const size_t C, const size_t S, const s
                 rng = mx - mn; X -= L;
                 if (m1)
                 {
-                    for (size_t l=0u; l<L; ++l, ++X) { *X = 2.0*(*X-mn)/rng - 1.0; }
+                    for (size_t l=L; l>0u; --l, ++X) { *X = 2.0*(*X-mn)/rng - 1.0; }
                 }
                 else
                 {
-                    for (size_t l=0u; l<L; ++l, ++X) { *X = (*X-mn)/rng; }
+                    for (size_t l=L; l>0u; --l, ++X) { *X = (*X-mn)/rng; }
                 }
             }
         }
@@ -161,7 +161,7 @@ int range1_d (double *X, const size_t R, const size_t C, const size_t S, const s
                 for (size_t b=B; b>0u; --b, ++X)
                 {
                     mn = mx = *X; X += K;
-                    for (size_t l=1u; l<L; ++l, X+=K)
+                    for (size_t l=L; l>1u; --l, X+=K)
                     {
                         if (*X<mn) { mn = *X; }
                         else if (*X>mx) { mx = *X; }
@@ -169,11 +169,11 @@ int range1_d (double *X, const size_t R, const size_t C, const size_t S, const s
                     rng = mx - mn;
                     if (m1)
                     {
-                        for (size_t l=0u; l<L; ++l) { X-=K; *X = 2.0*(*X-mn)/rng - 1.0; }
+                        for (size_t l=L; l>0u; --l) { X-=K; *X = 2.0*(*X-mn)/rng - 1.0; }
                     }
                     else
                     {
-                        for (size_t l=0u; l<L; ++l) { X-=K; *X = (*X-mn)/rng; }
+                        for (size_t l=L; l>0u; --l) { X-=K; *X = (*X-mn)/rng; }
                     }
                 }
             }

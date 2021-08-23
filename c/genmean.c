@@ -29,12 +29,12 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         float sm = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X) { sm += powf(fabsf(*X),p); }
+        for (size_t l=L; l>0u; --l, ++X) { sm += powf(fabsf(*X),p); }
         *Y = powf(sm*den,ip);
     }
     else
@@ -49,7 +49,7 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { sm += powf(fabsf(*X),p); }
+                for (size_t l=L; l>0u; --l, ++X) { sm += powf(fabsf(*X),p); }
                 *Y = powf(sm*den,ip);
             }
         }
@@ -57,7 +57,7 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
         {
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = powf(fabsf(*X),p); }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += powf(fabsf(*X),p); }
             }
@@ -71,7 +71,7 @@ int genmean_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=K) { sm += powf(fabsf(*X),p); }
+                    for (size_t l=L; l>0u; --l, X+=K) { sm += powf(fabsf(*X),p); }
                     *Y = powf(sm*den,ip);
                 }
             }
@@ -93,12 +93,12 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         double sm = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X) { sm += pow(fabs(*X),p); }
+        for (size_t l=L; l>0u; --l, ++X) { sm += pow(fabs(*X),p); }
         *Y = pow(sm*den,ip);
     }
     else
@@ -113,7 +113,7 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { sm += pow(fabs(*X),p); }
+                for (size_t l=L; l>0u; --l, ++X) { sm += pow(fabs(*X),p); }
                 *Y = pow(sm*den,ip);
             }
         }
@@ -121,7 +121,7 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
         {
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = pow(fabs(*X),p); }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += pow(fabs(*X),p); }
             }
@@ -135,7 +135,7 @@ int genmean_d (double *Y, const double *X, const size_t R, const size_t C, const
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=K) { sm += pow(fabs(*X),p); }
+                    for (size_t l=L; l>0u; --l, X+=K) { sm += pow(fabs(*X),p); }
                     *Y = pow(sm*den,ip);
                 }
             }
@@ -157,12 +157,12 @@ int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y, X+=2) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
+        for (size_t n=N; n>0u; --n, ++Y, X+=2) { *Y = sqrtf(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
         float sm = 0.0f;
-        for (size_t l=0u; l<L; ++l, X+=2) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+        for (size_t l=L; l>0u; --l, X+=2) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
         *Y = powf(sm*den,ip);
     }
     else
@@ -177,7 +177,7 @@ int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm = 0.0f;
-                for (size_t l=0u; l<L; ++l, X+=2) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+                for (size_t l=L; l>0u; --l, X+=2) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
                 *Y = powf(sm*den,ip);
             }
         }
@@ -185,7 +185,7 @@ int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
         {
             for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y = powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
             }
@@ -199,7 +199,7 @@ int genmean_c (float *Y, const float *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
+                    for (size_t l=L; l>0u; --l, X+=2u*K) { sm += powf(sqrtf(*X**X + *(X+1)**(X+1)),p); }
                     *Y = powf(sm*den,ip);
                 }
             }
@@ -221,12 +221,12 @@ int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y, X+=2) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
+        for (size_t n=N; n>0u; --n, ++Y, X+=2) { *Y = sqrt(*X**X + *(X+1)**(X+1)); }
     }
     else if (L==N)
     {
         double sm = 0.0;
-        for (size_t l=0u; l<L; ++l, X+=2) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+        for (size_t l=L; l>0u; --l, X+=2) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
         *Y = pow(sm*den,ip);
     }
     else
@@ -241,7 +241,7 @@ int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 sm = 0.0;
-                for (size_t l=0u; l<L; ++l, X+=2) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+                for (size_t l=L; l>0u; --l, X+=2) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
                 *Y = pow(sm*den,ip);
             }
         }
@@ -249,7 +249,7 @@ int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const
         {
             for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y = pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, X+=2, ++Y) { *Y += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
             }
@@ -263,7 +263,7 @@ int genmean_z (double *Y, const double *X, const size_t R, const size_t C, const
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
+                    for (size_t l=L; l>0u; --l, X+=2u*K) { sm += pow(sqrt(*X**X + *(X+1)**(X+1)),p); }
                     *Y = pow(sm*den,ip);
                 }
             }

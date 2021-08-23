@@ -47,14 +47,14 @@ int corr_opus_s (float *Y, const float *X1, const float *X2, const size_t R1, co
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0f; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
+        for (size_t l=L; l>0u; --l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
         mn1 *= den; mn2 *= den;
         X1 -= L; X2 -= L;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             x1 = *X1 - mn1; x2 = *X2 - mn2;
             sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
@@ -73,10 +73,10 @@ int corr_opus_s (float *Y, const float *X1, const float *X2, const size_t R1, co
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 mn1 = mn2 = sd1 = sd2 = sm2 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
+                for (size_t l=L; l>0u; --l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
                 mn1 *= den; mn2 *= den;
                 X1 -= L; X2 -= L;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     x1 = *X1 - mn1; x2 = *X2 - mn2;
                     sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
@@ -94,10 +94,10 @@ int corr_opus_s (float *Y, const float *X1, const float *X2, const size_t R1, co
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     mn1 = mn2 = sd1 = sd2 = sm2 = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
                     mn1 *= den; mn2 *= den;
                     X1 -= L*K1; X2 -= L*K2;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2)
                     {
                         x1 = *X1 - mn1; x2 = *X2 - mn2;
                         sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
@@ -131,14 +131,14 @@ int corr_opus_d (double *Y, const double *X1, const double *X2, const size_t R1,
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
+        for (size_t l=L; l>0u; --l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
         mn1 *= den; mn2 *= den;
         X1 -= L; X2 -= L;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             x1 = *X1 - mn1; x2 = *X2 - mn2;
             sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
@@ -157,10 +157,10 @@ int corr_opus_d (double *Y, const double *X1, const double *X2, const size_t R1,
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 mn1 = mn2 = sd1 = sd2 = sm2 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
+                for (size_t l=L; l>0u; --l, ++X1, ++X2) { mn1 += *X1; mn2 += *X2; }
                 mn1 *= den; mn2 *= den;
                 X1 -= L; X2 -= L;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     x1 = *X1 - mn1; x2 = *X2 - mn2;
                     sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
@@ -178,10 +178,10 @@ int corr_opus_d (double *Y, const double *X1, const double *X2, const size_t R1,
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     mn1 = mn2 = sd1 = sd2 = sm2 = 0.0;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2) { mn1 += *X1; mn2 += *X2; }
                     mn1 *= den; mn2 *= den;
                     X1 -= L*K1; X2 -= L*K2;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2)
                     {
                         x1 = *X1 - mn1; x2 = *X2 - mn2;
                         sd1 += x1*x1; sd2 += x2*x2; sm2 += x1*x2;
@@ -215,12 +215,12 @@ int corr_opus_c (float *Y, const float *X1, const float *X2, const size_t R1, co
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = 1.0f; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
         mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             mn1r += *X1; mn1i += *++X1;
             mn2r += *X2; mn2i += *++X2;
@@ -228,7 +228,7 @@ int corr_opus_c (float *Y, const float *X1, const float *X2, const size_t R1, co
         mn1r *= den; mn1i *= den;
         mn2r *= den; mn2i *= den;
         X1 -= 2u*L; X2 -= 2u*L;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
             x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
@@ -252,7 +252,7 @@ int corr_opus_c (float *Y, const float *X1, const float *X2, const size_t R1, co
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2)
             {
                 mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     mn1r += *X1; mn1i += *++X1;
                     mn2r += *X2; mn2i += *++X2;
@@ -260,7 +260,7 @@ int corr_opus_c (float *Y, const float *X1, const float *X2, const size_t R1, co
                 mn1r *= den; mn1i *= den;
                 mn2r *= den; mn2i *= den;
                 X1 -= 2u*L; X2 -= 2u*L;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2, ++Y)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2, ++Y)
                 {
                     x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
                     x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
@@ -283,7 +283,7 @@ int corr_opus_c (float *Y, const float *X1, const float *X2, const size_t R1, co
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
                     mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u)
+                    for (size_t l=L; l>0u; --l, X1+=K1-1u, X2+=K2-1u)
                     {
                         mn1r += *X1; mn1i += *++X1;
                         mn2r += *X2; mn2i += *++X2;
@@ -291,7 +291,7 @@ int corr_opus_c (float *Y, const float *X1, const float *X2, const size_t R1, co
                     mn1r *= den; mn1i *= den;
                     mn2r *= den; mn2i *= den;
                     X1 -= L*K1; X2 -= L*K2;
-                    for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u, ++Y)
+                    for (size_t l=L; l>0u; --l, X1+=K1-1u, X2+=K2-1u, ++Y)
                     {
                         x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
                         x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
@@ -330,12 +330,12 @@ int corr_opus_z (double *Y, const double *X1, const double *X2, const size_t R1,
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = 1.0; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
         mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             mn1r += *X1; mn1i += *++X1;
             mn2r += *X2; mn2i += *++X2;
@@ -343,7 +343,7 @@ int corr_opus_z (double *Y, const double *X1, const double *X2, const size_t R1,
         mn1r *= den; mn1i *= den;
         mn2r *= den; mn2i *= den;
         X1 -= 2u*L; X2 -= 2u*L;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
             x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
@@ -367,7 +367,7 @@ int corr_opus_z (double *Y, const double *X1, const double *X2, const size_t R1,
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2)
             {
                 mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     mn1r += *X1; mn1i += *++X1;
                     mn2r += *X2; mn2i += *++X2;
@@ -375,7 +375,7 @@ int corr_opus_z (double *Y, const double *X1, const double *X2, const size_t R1,
                 mn1r *= den; mn1i *= den;
                 mn2r *= den; mn2i *= den;
                 X1 -= 2u*L; X2 -= 2u*L;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2, ++Y)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2, ++Y)
                 {
                     x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
                     x2r = *X2 - mn2r; x2i = *++X2 - mn2i;
@@ -398,7 +398,7 @@ int corr_opus_z (double *Y, const double *X1, const double *X2, const size_t R1,
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
                     mn1r = mn1i = mn2r = mn2i = sd1 = sd2 = yr = yi = 0.0;
-                    for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u)
+                    for (size_t l=L; l>0u; --l, X1+=K1-1u, X2+=K2-1u)
                     {
                         mn1r += *X1; mn1i += *++X1;
                         mn2r += *X2; mn2i += *++X2;
@@ -406,7 +406,7 @@ int corr_opus_z (double *Y, const double *X1, const double *X2, const size_t R1,
                     mn1r *= den; mn1i *= den;
                     mn2r *= den; mn2i *= den;
                     X1 -= L*K1; X2 -= L*K2;
-                    for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u, ++Y)
+                    for (size_t l=L; l>0u; --l, X1+=K1-1u, X2+=K2-1u, ++Y)
                     {
                         x1r = *X1 - mn1r; x1i = *++X1 - mn1i;
                         x2r = *X2 - mn2r; x2i = *++X2 - mn2i;

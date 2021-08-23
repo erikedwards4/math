@@ -17,7 +17,7 @@ int eps_z (double *Y, const size_t N);
 
 int eps_s (float *Y, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++Y) { *Y = FLT_EPSILON; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = FLT_EPSILON; }
 
     return 0;
 }
@@ -25,7 +25,7 @@ int eps_s (float *Y, const size_t N)
 
 int eps_d (double *Y, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++Y) { *Y = DBL_EPSILON; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = DBL_EPSILON; }
 
     return 0;
 }
@@ -33,7 +33,7 @@ int eps_d (double *Y, const size_t N)
 
 int eps_c (float *Y, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++Y) { *Y = FLT_EPSILON; *++Y = 0.0f; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = FLT_EPSILON; *++Y = 0.0f; }
 
     return 0;
 }
@@ -41,7 +41,7 @@ int eps_c (float *Y, const size_t N)
 
 int eps_z (double *Y, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++Y) { *Y = DBL_EPSILON; *++Y = 0.0; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = DBL_EPSILON; *++Y = 0.0; }
 
     return 0;
 }

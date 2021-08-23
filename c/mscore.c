@@ -33,19 +33,19 @@ int mscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
     if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L; X -= L;
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_s: problem with LAPACKE function\n"); }
         X1 += i2;
         med = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
         X1 -= i2;
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X -= med; *X1 = fabsf(*X); }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X -= med; *X1 = fabsf(*X); }
         X1 -= L; X -= L;
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_s: problem with LAPACKE function\n"); }
         X1 += i2;
         mad = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
         X1 -= i2;
-        for (size_t l=0u; l<L; ++l, ++X) { *X /= mad; }
+        for (size_t l=L; l>0u; --l, ++X) { *X /= mad; }
     }
     else
     {
@@ -57,19 +57,19 @@ int mscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L; X -= L;
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_s: problem with LAPACKE function\n"); }
                 X1 += i2;
                 med = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
                 X1 -= i2;
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X -= med; *X1 = fabsf(*X); }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X -= med; *X1 = fabsf(*X); }
                 X1 -= L; X -= L;
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_s: problem with LAPACKE function\n"); }
                 X1 += i2;
                 mad = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
                 X1 -= i2;
-                for (size_t l=0u; l<L; ++l, ++X) { *X /= mad; }
+                for (size_t l=L; l>0u; --l, ++X) { *X /= mad; }
             }
         }
         else
@@ -78,19 +78,19 @@ int mscore_s (float *X, const size_t R, const size_t C, const size_t S, const si
             {
                 for (size_t b=B; b>0u; --b, ++X)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L; X -= K*L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_s: problem with LAPACKE function\n"); }
                     X1 += i2;
                     med = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
                     X1 -= i2;
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X -= med; *X1 = fabsf(*X); }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X -= med; *X1 = fabsf(*X); }
                     X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_s: problem with LAPACKE function\n"); }
                     X1 += i2;
                     mad = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
                     X1 -= i2;
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X /= mad; }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X /= mad; }
                 }
             }
         }
@@ -116,19 +116,19 @@ int mscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
     if (N==0u) {}
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L; X -= L;
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_d: problem with LAPACKE function\n"); }
         X1 += i2;
         med = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
         X1 -= i2;
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X -= med; *X1 = fabs(*X); }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X -= med; *X1 = fabs(*X); }
         X1 -= L; X -= L;
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_d: problem with LAPACKE function\n"); }
         X1 += i2;
         mad = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
         X1 -= i2;
-        for (size_t l=0u; l<L; ++l, ++X) { *X /= mad; }
+        for (size_t l=L; l>0u; --l, ++X) { *X /= mad; }
     }
     else
     {
@@ -140,19 +140,19 @@ int mscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L; X -= L;
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_d: problem with LAPACKE function\n"); }
                 X1 += i2;
                 med = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
                 X1 -= i2;
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X -= med; *X1 = fabs(*X); }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X -= med; *X1 = fabs(*X); }
                 X1 -= L; X -= L;
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_d: problem with LAPACKE function\n"); }
                 X1 += i2;
                 mad = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
                 X1 -= i2;
-                for (size_t l=0u; l<L; ++l, ++X) { *X /= mad; }
+                for (size_t l=L; l>0u; --l, ++X) { *X /= mad; }
             }
         }
         else
@@ -161,19 +161,19 @@ int mscore_d (double *X, const size_t R, const size_t C, const size_t S, const s
             {
                 for (size_t b=B; b>0u; --b, ++X)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L; X -= K*L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_d: problem with LAPACKE function\n"); }
                     X1 += i2;
                     med = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
                     X1 -= i2;
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X -= med; *X1 = fabs(*X); }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X -= med; *X1 = fabs(*X); }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in mscore_d: problem with LAPACKE function\n"); }
                     X1 += i2;
                     mad = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
                     X1 -= i2;
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X /= mad; }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X /= mad; }
                 }
             }
         }

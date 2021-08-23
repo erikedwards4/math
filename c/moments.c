@@ -36,9 +36,9 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
     {
         float x, x2, mn = 0.0f, sm2 = 0.0f, sm3 = 0.0f, sm4 = 0.0f;
         mn = 0.0f;
-        for (size_t l=0u; l<Lx; ++l, ++X) { mn += *X; }
+        for (size_t l=Lx; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<Lx; ++l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
+        for (size_t l=Lx; l>0u; --l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
         *Y = mn;
         *++Y = sm2 * den2;
         *++Y = w * sm3 / (sm2*sqrtf(sm2));
@@ -57,10 +57,10 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = sm3 = sm4 = 0.0f;
-                for (size_t l=0u; l<Lx; ++l, ++X) { mn += *X; }
+                for (size_t l=Lx; l>0u; --l, ++X) { mn += *X; }
                 X -= Lx;
                 mn *= den;
-                for (size_t l=0u; l<Lx; ++l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
+                for (size_t l=Lx; l>0u; --l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
                 *Y = mn;
                 *++Y = sm2 * den2;
                 *++Y = w * sm3 / (sm2*sqrtf(sm2));
@@ -76,14 +76,14 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
             if (!(sm4=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in moments_s: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1u; l<Lx; ++l, Y-=V)
+            for (size_t l=Lx; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
             for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; }
             Y -= V;
-            for (size_t l=0u; l<Lx; ++l, sm2-=V, sm3-=V, sm4-=V, Y-=V)
+            for (size_t l=Lx; l>0u; --l, sm2-=V, sm3-=V, sm4-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++sm2, ++sm3, ++sm4, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm3 += x*x2; *sm4 += x2*x2; }
             }
@@ -108,9 +108,9 @@ int moments_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, ++X, Y-=(Ly-1u)*K-1u)
                 {
                     mn = sm2 = sm3 = sm4 = 0.0f;
-                    for (size_t l=0u; l<Lx-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=Lx; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<Lx-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
+                    for (size_t l=Lx; l>1u; --l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2;
                     *Y = mn; Y += K;
                     *Y = sm2 * den2; Y += K;
@@ -142,9 +142,9 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
     {
         double x, x2, mn = 0.0, sm2 = 0.0, sm3 = 0.0, sm4 = 0.0;
         mn = 0.0;
-        for (size_t l=0u; l<Lx; ++l, ++X) { mn += *X; }
+        for (size_t l=Lx; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<Lx; ++l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
+        for (size_t l=Lx; l>0u; --l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
         *Y = mn;
         *++Y = sm2 * den2;
         *++Y = w * sm3 / (sm2*sqrt(sm2));
@@ -163,10 +163,10 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = sm3 = sm4 = 0.0;
-                for (size_t l=0u; l<Lx; ++l, ++X) { mn += *X; }
+                for (size_t l=Lx; l>0u; --l, ++X) { mn += *X; }
                 X -= Lx;
                 mn *= den;
-                for (size_t l=0u; l<Lx; ++l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
+                for (size_t l=Lx; l>0u; --l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
                 *Y = mn;
                 *++Y = sm2 * den2;
                 *++Y = w * sm3 / (sm2*sqrt(sm2));
@@ -182,14 +182,14 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
             if (!(sm4=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in moments_d: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1u; l<Lx; ++l, Y-=V)
+            for (size_t l=Lx; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
             for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; }
             Y -= V;
-            for (size_t l=0u; l<Lx; ++l, sm2-=V, sm3-=V, sm4-=V, Y-=V)
+            for (size_t l=Lx; l>0u; --l, sm2-=V, sm3-=V, sm4-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++sm2, ++sm3, ++sm4, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm3 += x*x2; *sm4 += x2*x2; }
             }
@@ -214,9 +214,9 @@ int moments_d (double *Y, const double *X, const size_t R, const size_t C, const
                 for (size_t b=B; b>0u; --b, ++X, Y-=(Ly-1u)*K-1u)
                 {
                     mn = sm2 = sm3 = sm4 = 0.0;
-                    for (size_t l=0u; l<Lx-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=Lx; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<Lx-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
+                    for (size_t l=Lx; l>1u; --l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; sm4 += x2*x2;
                     *Y = mn; Y += K;
                     *Y = sm2 * den2; Y += K;
@@ -248,10 +248,10 @@ int moments_c (float *Y, const float *X, const size_t R, const size_t C, const s
     else if (Lx<4u) { fprintf(stderr,"error in moments_c: Lx must be > 3\n"); return 1; }
     else if (Lx==N)
     {
-        for (size_t l=0u; l<Lx; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=Lx; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
         X -= 2u*Lx;
-        for (size_t l=0u; l<Lx; ++l, ++X)
+        for (size_t l=Lx; l>0u; --l, ++X)
         {
             xr = *X - mnr; xi = *++X - mni;
             xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -284,10 +284,10 @@ int moments_c (float *Y, const float *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = sm3r = sm3i = sm4r = sm4i = 0.0f;
-                for (size_t l=0u; l<Lx; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=Lx; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
                 X -= 2u*Lx;
-                for (size_t l=0u; l<Lx; ++l, ++X)
+                for (size_t l=Lx; l>0u; --l, ++X)
                 {
                     xr = *X - mnr; xi = *++X - mni;
                     xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -318,10 +318,10 @@ int moments_c (float *Y, const float *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, X-=2u*K*Lx-2u, Y-=2u*(Ly-1u)*K-1u)
                 {
                     mnr = mni = sm2 = sm3r = sm3i = sm4r = sm4i = 0.0f;
-                    for (size_t l=0u; l<Lx; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=Lx; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
                     X -= 2u*K*Lx;
-                    for (size_t l=0u; l<Lx; ++l, X+=2u*K-1u)
+                    for (size_t l=Lx; l>0u; --l, X+=2u*K-1u)
                     {
                         xr = *X - mnr; xi = *++X - mni;
                         xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -368,10 +368,10 @@ int moments_z (double *Y, const double *X, const size_t R, const size_t C, const
     else if (Lx<4u) { fprintf(stderr,"error in moments_z: Lx must be > 3\n"); return 1; }
     else if (Lx==N)
     {
-        for (size_t l=0u; l<Lx; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=Lx; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
         X -= 2u*Lx;
-        for (size_t l=0u; l<Lx; ++l, ++X)
+        for (size_t l=Lx; l>0u; --l, ++X)
         {
             xr = *X - mnr; xi = *++X - mni;
             xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -404,10 +404,10 @@ int moments_z (double *Y, const double *X, const size_t R, const size_t C, const
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = sm3r = sm3i = sm4r = sm4i = 0.0;
-                for (size_t l=0u; l<Lx; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=Lx; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
                 X -= 2u*Lx;
-                for (size_t l=0u; l<Lx; ++l, ++X)
+                for (size_t l=Lx; l>0u; --l, ++X)
                 {
                     xr = *X - mnr; xi = *++X - mni;
                     xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -438,10 +438,10 @@ int moments_z (double *Y, const double *X, const size_t R, const size_t C, const
                 for (size_t b=B; b>0u; --b, X-=2u*K*Lx-2u, Y-=2u*(Ly-1u)*K-1u)
                 {
                     mnr = mni = sm2 = sm3r = sm3i = sm4r = sm4i = 0.0;
-                    for (size_t l=0u; l<Lx; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=Lx; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
                     X -= 2u*K*Lx;
-                    for (size_t l=0u; l<Lx; ++l, X+=2u*K-1u)
+                    for (size_t l=Lx; l>0u; --l, X+=2u*K-1u)
                     {
                         xr = *X - mnr; xi = *++X - mni;
                         xrr = xr*xr; xii = xi*xi; xri = xr*xi;

@@ -30,17 +30,17 @@ int med0_s (float *X, const size_t R, const size_t C, const size_t S, const size
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X) { *X = 0.0f; }
+        for (size_t n=N; n>0u; --n, ++X) { *X = 0.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in med0_s: problem with LAPACKE function\n"); }
         X1 += i2;
         med = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
         X1 -= i2;
-        for (size_t l=0u; l<L; ++l) { --X; *X -= med; }
+        for (size_t l=L; l>0u; --l) { --X; *X -= med; }
     }
     else
     {
@@ -52,13 +52,13 @@ int med0_s (float *X, const size_t R, const size_t C, const size_t S, const size
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L; X -= L;
                 if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in med0_s: problem with LAPACKE function\n"); }
                 X1 += i2;
                 med = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
                 X1 -= i2;
-                for (size_t l=0u; l<L; ++l, ++X) { *X -= med; }
+                for (size_t l=L; l>0u; --l, ++X) { *X -= med; }
             }
         }
         else
@@ -67,13 +67,13 @@ int med0_s (float *X, const size_t R, const size_t C, const size_t S, const size
             {
                 for (size_t b=B; b>0u; --b, ++X)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in med0_s: problem with LAPACKE function\n"); }
                     X1 += i2;
                     med = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
                     X1 -= i2;
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X -= med; }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X -= med; }
                 }
             }
         }
@@ -99,17 +99,17 @@ int med0_d (double *X, const size_t R, const size_t C, const size_t S, const siz
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X) { *X = 0.0; }
+        for (size_t n=N; n>0u; --n, ++X) { *X = 0.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in med0_d: problem with LAPACKE function\n"); }
         X1 += i2;
         med = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
         X1 -= i2;
-        for (size_t l=0u; l<L; ++l) { --X; *X -= med; }
+        for (size_t l=L; l>0u; --l) { --X; *X -= med; }
     }
     else
     {
@@ -121,13 +121,13 @@ int med0_d (double *X, const size_t R, const size_t C, const size_t S, const siz
         {
             for (size_t v=V; v>0u; --v)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++X1) { *X1 = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L; X -= L;
                 if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in med0_d: problem with LAPACKE function\n"); }
                 X1 += i2;
                 med = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
                 X1 -= i2;
-                for (size_t l=0u; l<L; ++l, ++X) { *X -= med; }
+                for (size_t l=L; l>0u; --l, ++X) { *X -= med; }
             }
         }
         else
@@ -136,13 +136,13 @@ int med0_d (double *X, const size_t R, const size_t C, const size_t S, const siz
             {
                 for (size_t b=B; b>0u; --b, ++X)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in med0_d: problem with LAPACKE function\n"); }
                     X1 += i2;
                     med = (L%2u) ? *X1 : 0.5*(*X1 + *(X1-1));
                     X1 -= i2;
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X -= med; }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X -= med; }
                 }
             }
         }

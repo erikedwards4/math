@@ -34,9 +34,9 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
     else if (L==N)
     {
         float x, x2, mn = 0.0f, sm2 = 0.0f, sm3 = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
+        for (size_t l=L; l>0u; --l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
         *Y = w * sm3 / (sm2*sqrtf(sm2));
     }
     else
@@ -51,10 +51,10 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = sm3 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
                 X -= L;
                 mn *= den;
-                for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
+                for (size_t l=L; l>0u; --l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
                 *Y = w * sm3 / (sm2*sqrtf(sm2));
             }
         }
@@ -65,14 +65,14 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
             if (!(sm3=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in skewness_s: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
             for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; }
             Y -= V;
-            for (size_t l=0u; l<L; ++l, sm2-=V, sm3-=V, Y-=V)
+            for (size_t l=L; l>0u; --l, sm2-=V, sm3-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++sm2, ++sm3, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm3 += x*x2; }
             }
@@ -88,9 +88,9 @@ int skewness_s (float *Y, float *X, const size_t R, const size_t C, const size_t
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = sm3 = 0.0f;
-                    for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
+                    for (size_t l=L; l>1u; --l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2;
                     *Y = w * sm3 / (sm2*sqrtf(sm2));
                 }
@@ -116,9 +116,9 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
     else if (L==N)
     {
         double x, x2, mn = 0.0, sm2 = 0.0, sm3 = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
+        for (size_t l=L; l>0u; --l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
         *Y = w * sm3 / (sm2*sqrt(sm2));
     }
     else
@@ -133,10 +133,10 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = sm3 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
                 X -= L;
                 mn *= den;
-                for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
+                for (size_t l=L; l>0u; --l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
                 *Y = w * sm3 / (sm2*sqrt(sm2));
             }
         }
@@ -147,14 +147,14 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
             if (!(sm3=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in skewness_d: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
             for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; }
             Y -= V;
-            for (size_t l=0u; l<L; ++l, sm2-=V, sm3-=V, Y-=V)
+            for (size_t l=L; l>0u; --l, sm2-=V, sm3-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++sm2, ++sm3, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm3 += x*x2; }
             }
@@ -170,9 +170,9 @@ int skewness_d (double *Y, double *X, const size_t R, const size_t C, const size
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = sm3 = 0.0;
-                    for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
+                    for (size_t l=L; l>1u; --l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm3 += x*x2;
                     *Y = w * sm3 / (sm2*sqrt(sm2));
                 }
@@ -199,10 +199,10 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
     else if (L==N)
     {
         float mnr = 0.0f, mni = 0.0f, sm2 = 0.0f, sm3r = 0.0f, sm3i = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
         X -= 2u*L;
-        for (size_t l=0u; l<L; ++l, ++X)
+        for (size_t l=L; l>0u; --l, ++X)
         {
             xr = *X - mnr; xi = *++X - mni;
             xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -225,10 +225,10 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = sm3r = sm3i = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
                 X -= 2u*L;
-                for (size_t l=0u; l<L; ++l, ++X)
+                for (size_t l=L; l>0u; --l, ++X)
                 {
                     xr = *X - mnr; xi = *++X - mni;
                     xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -248,10 +248,10 @@ int skewness_c (float *Y, float *X, const size_t R, const size_t C, const size_t
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mnr = mni = sm2 = sm3r = sm3i = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
                     X -= 2u*K*L;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u)
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u)
                     {
                         xr = *X - mnr; xi = *++X - mni;
                         xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -285,10 +285,10 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
     else if (L==N)
     {
         double mnr = 0.0, mni = 0.0, sm2 = 0.0, sm3r = 0.0, sm3i = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
         X -= 2u*L;
-        for (size_t l=0u; l<L; ++l, ++X)
+        for (size_t l=L; l>0u; --l, ++X)
         {
             xr = *X - mnr; xi = *++X - mni;
             xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -311,10 +311,10 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = sm3r = sm3i = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
                 X -= 2u*L;
-                for (size_t l=0u; l<L; ++l, ++X)
+                for (size_t l=L; l>0u; --l, ++X)
                 {
                     xr = *X - mnr; xi = *++X - mni;
                     xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -334,10 +334,10 @@ int skewness_z (double *Y, double *X, const size_t R, const size_t C, const size
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mnr = mni = sm2 = sm3r = sm3i = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
                     X -= 2u*K*L;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u)
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u)
                     {
                         xr = *X - mnr; xi = *++X - mni;
                         xrr = xr*xr; xii = xi*xi; xri = xr*xi;

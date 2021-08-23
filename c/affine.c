@@ -44,16 +44,16 @@ int affine_s (float *Y, const float *X, const float *A, const float *B, const si
     {
         if (Na<30000u)
         {
-            for (size_t ly=0u; ly<Ly; ++ly, X-=Lx, ++B, ++Y)
+            for (size_t ly=Ly; ly>0u; --ly, X-=Lx, ++B, ++Y)
             {
                 sm2 = *B;
-                for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A) { sm2 = fmaf(*X,*A,sm2); }
+                for (size_t lx=Lx; lx>0u; --lx, ++X, ++A) { sm2 = fmaf(*X,*A,sm2); }
                 *Y = sm2;
             }
         }
         else
         {
-            for (size_t ly=0u; ly<Ly; ++ly, ++B, ++Y) { *Y = *B; }
+            for (size_t ly=Ly; ly>0u; --ly, ++B, ++Y) { *Y = *B; }
             Y -= Ly;
             cblas_sgemv(CblasColMajor,CblasTrans,(int)Lx,(int)Ly,1.0f,A,(int)Lx,X,1,1.0f,Y,1);
         }
@@ -70,12 +70,12 @@ int affine_s (float *Y, const float *X, const float *A, const float *B, const si
             {
                 for (size_t v=V; v>0u; --v, A-=Lx*Ly, B-=Ly)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++B, ++Y)
+                    for (size_t ly=Ly; ly>0u; --ly, ++B, ++Y)
                     {
                         sm2 = *B;
-                        for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A) { sm2 = fmaf(*X,*A,sm2); }
+                        for (size_t lx=Lx; lx>0u; --lx, ++X, ++A) { sm2 = fmaf(*X,*A,sm2); }
                         *Y = sm2;
-                        if (ly<Ly-1u) { X -= Lx; }
+                        if (ly>1u) { X -= Lx; }
                     }
                 }
             }
@@ -83,7 +83,7 @@ int affine_s (float *Y, const float *X, const float *A, const float *B, const si
             {
                 for (size_t v=V; v>0u; --v, X+=Lx, B-=Ly, Y+=Ly)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++B, ++Y) { *Y = *B; }
+                    for (size_t ly=Ly; ly>0u; --ly, ++B, ++Y) { *Y = *B; }
                     Y -= Ly;
                     cblas_sgemv(CblasColMajor,CblasTrans,(int)Lx,(int)Ly,1.0f,A,(int)Lx,X,1,1.0f,Y,1);
                 }
@@ -95,10 +95,10 @@ int affine_s (float *Y, const float *X, const float *A, const float *B, const si
             {
                 for (size_t b=0u; b<BS; ++b, ++X, A-=Lx*Ly, B-=Ly, Y-=K*Ly-1u)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, X-=K*Lx, ++B, Y+=K)
+                    for (size_t ly=Ly; ly>0u; --ly, X-=K*Lx, ++B, Y+=K)
                     {
                         sm2 = *B;
-                        for (size_t lx=0u; lx<Lx; ++lx, X+=K, ++A) { sm2 = fmaf(*X,*A,sm2); }
+                        for (size_t lx=Lx; lx>0u; --lx, X+=K, ++A) { sm2 = fmaf(*X,*A,sm2); }
                         *Y = sm2;
                     }
                 }
@@ -122,16 +122,16 @@ int affine_d (double *Y, const double *X, const double *A, const double *B, cons
     {
         if (Na<30000u)
         {
-            for (size_t ly=0u; ly<Ly; ++ly, X-=Lx, ++B, ++Y)
+            for (size_t ly=Ly; ly>0u; --ly, X-=Lx, ++B, ++Y)
             {
                 sm2 = *B;
-                for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A) { sm2 = fma(*X,*A,sm2); }
+                for (size_t lx=Lx; lx>0u; --lx, ++X, ++A) { sm2 = fma(*X,*A,sm2); }
                 *Y = sm2;
             }
         }
         else
         {
-            for (size_t ly=0u; ly<Ly; ++ly, ++B, ++Y) { *Y = *B; }
+            for (size_t ly=Ly; ly>0u; --ly, ++B, ++Y) { *Y = *B; }
             Y -= Ly;
             cblas_dgemv(CblasColMajor,CblasTrans,(int)Lx,(int)Ly,1.0,A,(int)Lx,X,1,1.0,Y,1);
         }
@@ -148,12 +148,12 @@ int affine_d (double *Y, const double *X, const double *A, const double *B, cons
             {
                 for (size_t v=V; v>0u; --v, A-=Lx*Ly, B-=Ly)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++B, ++Y)
+                    for (size_t ly=Ly; ly>0u; --ly, ++B, ++Y)
                     {
                         sm2 = *B;
-                        for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A) { sm2 = fma(*X,*A,sm2); }
+                        for (size_t lx=Lx; lx>0u; --lx, ++X, ++A) { sm2 = fma(*X,*A,sm2); }
                         *Y = sm2;
-                        if (ly<Ly-1u) { X -= Lx; }
+                        if (ly>1u) { X -= Lx; }
                     }
                 }
             }
@@ -161,7 +161,7 @@ int affine_d (double *Y, const double *X, const double *A, const double *B, cons
             {
                 for (size_t v=V; v>0u; --v, X+=Lx, B-=Ly, Y+=Ly)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++B, ++Y) { *Y = *B; }
+                    for (size_t ly=Ly; ly>0u; --ly, ++B, ++Y) { *Y = *B; }
                     Y -= Ly;
                     cblas_dgemv(CblasColMajor,CblasTrans,(int)Lx,(int)Ly,1.0,A,(int)Lx,X,1,1.0,Y,1);
                 }
@@ -173,10 +173,10 @@ int affine_d (double *Y, const double *X, const double *A, const double *B, cons
             {
                 for (size_t b=0u; b<BS; ++b, ++X, A-=Lx*Ly, B-=Ly, Y-=K*Ly-1u)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, X-=K*Lx, ++B, Y+=K)
+                    for (size_t ly=Ly; ly>0u; --ly, X-=K*Lx, ++B, Y+=K)
                     {
                         sm2 = *B;
-                        for (size_t lx=0u; lx<Lx; ++lx, X+=K, ++A) { sm2 = fma(*X,*A,sm2); }
+                        for (size_t lx=Lx; lx>0u; --lx, X+=K, ++A) { sm2 = fma(*X,*A,sm2); }
                         *Y = sm2;
                     }
                 }
@@ -200,10 +200,10 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
     {
         if (Lx<30000)
         {
-            for (size_t ly=0u; ly<Ly; ++ly, X-=2u*Lx, ++B, ++Y)
+            for (size_t ly=Ly; ly>0u; --ly, X-=2u*Lx, ++B, ++Y)
             {
                 sm2r = *B; sm2i = *++B;
-                for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A)
+                for (size_t lx=Lx; lx>0u; --lx, ++X, ++A)
                 {
                     xr = *X; xi = *++X;
                     ar = *A; ai = *++A;
@@ -216,7 +216,7 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
         else
         {
             const float o[2] = {1.0f,0.0f};
-            for (size_t ly=0u; ly<2u*Ly; ++ly, ++B, ++Y) { *Y = *B; }
+            for (size_t ly=2u*Ly; ly>0u; --ly, ++B, ++Y) { *Y = *B; }
             Y -= 2u*Ly;
             cblas_cgemv(CblasColMajor,CblasTrans,(int)Lx,(int)Ly,o,A,(int)Lx,X,1,o,Y,1);
         }
@@ -233,10 +233,10 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
             {
                 for (size_t v=V; v>0u; --v, A-=2u*Na, B-=2u*Ly)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++B, ++Y)
+                    for (size_t ly=Ly; ly>0u; --ly, ++B, ++Y)
                     {
                         sm2r = *B; sm2i = *++B;
-                        for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A)
+                        for (size_t lx=Lx; lx>0u; --lx, ++X, ++A)
                         {
                             xr = *X; xi = *++X;
                             ar = *A; ai = *++A;
@@ -244,7 +244,7 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
                             sm2i += xr*ai + xi*ar;
                         }
                         *Y = sm2r; *++Y = sm2i;
-                        if (ly<Ly-1u) { X -= 2u*Lx; }
+                        if (ly>1u) { X -= 2u*Lx; }
                     }
                 }
             }
@@ -253,7 +253,7 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
                 const float o[2] = {1.0f,0.0f};
                 for (size_t v=V; v>0u; --v, X+=2u*Lx, B-=2u*Ly, Y+=2u*Ly)
                 {
-                    for (size_t ly=0u; ly<2u*Ly; ++ly, ++B, ++Y) { *Y = *B; }
+                    for (size_t ly=2u*Ly; ly>0u; --ly, ++B, ++Y) { *Y = *B; }
                     Y -= 2u*Ly;
                     cblas_cgemv(CblasColMajor,CblasTrans,(int)Lx,(int)Ly,o,A,(int)Lx,X,1,o,Y,1);
                 }
@@ -265,10 +265,10 @@ int affine_c (float *Y, const float *X, const float *A, const float *B, const si
             {
                 for (size_t b=0u; b<BS; ++b, X+=2, A-=2u*Na, B-=2u*Ly, Y-=2u*K*Ly-2u)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, X-=2u*K*Lx, ++B, Y+=2u*K-1u)
+                    for (size_t ly=Ly; ly>0u; --ly, X-=2u*K*Lx, ++B, Y+=2u*K-1u)
                     {
                         sm2r = *B; sm2i = *++B;
-                        for (size_t lx=0u; lx<Lx; ++lx, X+=2u*K-1u, ++A)
+                        for (size_t lx=Lx; lx>0u; --lx, X+=2u*K-1u, ++A)
                         {
                             xr = *X; xi = *++X;
                             ar = *A; ai = *++A;
@@ -298,10 +298,10 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
     {
         if (Lx<30000)
         {
-            for (size_t ly=0u; ly<Ly; ++ly, X-=2u*Lx, ++B, ++Y)
+            for (size_t ly=Ly; ly>0u; --ly, X-=2u*Lx, ++B, ++Y)
             {
                 sm2r = *B; sm2i = *++B;
-                for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A)
+                for (size_t lx=Lx; lx>0u; --lx, ++X, ++A)
                 {
                     xr = *X; xi = *++X;
                     ar = *A; ai = *++A;
@@ -314,7 +314,7 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
         else
         {
             const double o[2] = {1.0,0.0};
-            for (size_t ly=0u; ly<2u*Ly; ++ly, ++B, ++Y) { *Y = *B; }
+            for (size_t ly=2u*Ly; ly>0u; --ly, ++B, ++Y) { *Y = *B; }
             Y -= 2u*Ly;
             cblas_zgemv(CblasColMajor,CblasTrans,(int)Lx,(int)Ly,o,A,(int)Lx,X,1,o,Y,1);
         }
@@ -331,10 +331,10 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
             {
                 for (size_t v=V; v>0u; --v, A-=2u*Na, B-=2u*Ly)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++B, ++Y)
+                    for (size_t ly=Ly; ly>0u; --ly, ++B, ++Y)
                     {
                         sm2r = *B; sm2i = *++B;
-                        for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A)
+                        for (size_t lx=Lx; lx>0u; --lx, ++X, ++A)
                         {
                             xr = *X; xi = *++X;
                             ar = *A; ai = *++A;
@@ -342,7 +342,7 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
                             sm2i += xr*ai + xi*ar;
                         }
                         *Y = sm2r; *++Y = sm2i;
-                        if (ly<Ly-1u) { X -= 2u*Lx; }
+                        if (ly>1u) { X -= 2u*Lx; }
                     }
                 }
             }
@@ -351,7 +351,7 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
                 const double o[2] = {1.0,0.0};
                 for (size_t v=V; v>0u; --v, X+=2u*Lx, B-=2u*Ly, Y+=2u*Ly)
                 {
-                    for (size_t ly=0u; ly<2u*Ly; ++ly, ++B, ++Y) { *Y = *B; }
+                    for (size_t ly=2u*Ly; ly>0u; --ly, ++B, ++Y) { *Y = *B; }
                     Y -= 2u*Ly;
                     cblas_zgemv(CblasColMajor,CblasTrans,(int)Lx,(int)Ly,o,A,(int)Lx,X,1,o,Y,1);
                 }
@@ -363,10 +363,10 @@ int affine_z (double *Y, const double *X, const double *A, const double *B, cons
             {
                 for (size_t b=0u; b<BS; ++b, X+=2, A-=2u*Na, B-=2u*Ly, Y-=2u*K*Ly-2u)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, X-=2u*K*Lx, ++B, Y+=2u*K-1u)
+                    for (size_t ly=Ly; ly>0u; --ly, X-=2u*K*Lx, ++B, Y+=2u*K-1u)
                     {
                         sm2r = *B; sm2i = *++B;
-                        for (size_t lx=0u; lx<Lx; ++lx, X+=2u*K-1u, ++A)
+                        for (size_t lx=Lx; lx>0u; --lx, X+=2u*K-1u, ++A)
                         {
                             xr = *X; xi = *++X;
                             ar = *A; ai = *++A;

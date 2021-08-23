@@ -24,6 +24,9 @@ int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, 
 
 int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr)
 {
+    if (tr && R1!=R2) { fprintf(stderr,"error in matmul2t_s: R1 (nrows X1) must equal R2 (nrows X2) for X1'*X2\n"); return 1; }
+    if (!tr && C1!=C2) { fprintf(stderr,"error in matmul2t_s: C1 (ncols X1) must equal C2 (ncols X2) for X1*X2'\n"); return 1; }
+
     const size_t N = (tr) ? C1*C2 : R1*R2;
     float sm2;
 
@@ -35,29 +38,29 @@ int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, con
         {
             if (iscolmajor)
             {
-                for (size_t c2=0u; c2<C2; ++c2)
+                for (size_t c2=C2; c2>0u; --c2)
                 {
-                    for (size_t c1=0u; c1<C1; ++c1, ++Y)
+                    for (size_t c1=C1; c1>0u; --c1, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t r2=0u; r2<R2; ++r2, ++X1, ++X2) { sm2 = fmaf(*X1,*X2,sm2); }
+                        for (size_t r2=R2; r2>0u; --r2, ++X1, ++X2) { sm2 = fmaf(*X1,*X2,sm2); }
                         *Y = sm2;
-                        if (c1<C1-1u) { X2 -= R2; }
+                        if (c1>1u) { X2 -= R2; }
                     }
-                    if (c2<C2-1u) { X1 -= N1; }
+                    if (c2>1u) { X1 -= N1; }
                 }
             }
             else
             {
-                for (size_t c1=0u; c1<C1; ++c1)
+                for (size_t c1=C1; c1>0u; --c1)
                 {
-                    for (size_t c2=0u; c2<C2; ++c2, X1-=N1, X2-=N2-1u, ++Y)
+                    for (size_t c2=C2; c2>0u; --c2, X1-=N1, X2-=N2-1u, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t r1=0u; r1<R1; ++r1, X1+=C1, X2+=C2) { sm2 = fmaf(*X1,*X2,sm2); }
+                        for (size_t r1=R1; r1>0u; --r1, X1+=C1, X2+=C2) { sm2 = fmaf(*X1,*X2,sm2); }
                         *Y = sm2;
                     }
-                    if (c1<C1-1u) { ++X1; X2 -= C2; }
+                    if (c1>1u) { ++X1; X2 -= C2; }
                 }
             }
         }
@@ -65,29 +68,29 @@ int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, con
         {
             if (iscolmajor)
             {
-                for (size_t r2=0u; r2<R2; ++r2)
+                for (size_t r2=R2; r2>0u; --r2)
                 {
-                    for (size_t r1=0u; r1<R1; ++r1, X1-=N1-1u, X2-=N2, ++Y)
+                    for (size_t r1=R1; r1>0u; --r1, X1-=N1-1u, X2-=N2, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t c2=0u; c2<C2; ++c2, X1+=R1, X2+=R2) { sm2 = fmaf(*X1,*X2,sm2); }
+                        for (size_t c2=C2; c2>0u; --c2, X1+=R1, X2+=R2) { sm2 = fmaf(*X1,*X2,sm2); }
                         *Y = sm2;
                     }
-                    if (r2<R2-1u) { X1 -= R1; ++X2; }
+                    if (r2>1u) { X1 -= R1; ++X2; }
                 }
             }
             else
             {
-                for (size_t r1=0u; r1<R1; ++r1)
+                for (size_t r1=R1; r1>0u; --r1)
                 {
-                    for (size_t r2=0u; r2<R2; ++r2, ++Y)
+                    for (size_t r2=R2; r2>0u; --r2, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t c1=0u; c1<C1; ++c1, ++X1, ++X2) { sm2 = fmaf(*X1,*X2,sm2); }
+                        for (size_t c1=C1; c1>0u; --c1, ++X1, ++X2) { sm2 = fmaf(*X1,*X2,sm2); }
                         *Y = sm2;
-                        if (r2<R2-1u) { X1 -= C1; }
+                        if (r2>1u) { X1 -= C1; }
                     }
-                    if (r1<R1-1u) { X2 -= N2; }
+                    if (r1>1u) { X2 -= N2; }
                 }
             }
         }
@@ -124,6 +127,9 @@ int matmul2t_s (float *Y, const float *X1, const float *X2, const size_t R1, con
 
 int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr)
 {
+    if (tr && R1!=R2) { fprintf(stderr,"error in matmul2t_d: R1 (nrows X1) must equal R2 (nrows X2) for X1'*X2\n"); return 1; }
+    if (!tr && C1!=C2) { fprintf(stderr,"error in matmul2t_d: C1 (ncols X1) must equal C2 (ncols X2) for X1*X2'\n"); return 1; }
+
     const size_t N = (tr) ? C1*C2 : R1*R2;
     double sm2;
 
@@ -135,29 +141,29 @@ int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, 
         {
             if (iscolmajor)
             {
-                for (size_t c2=0u; c2<C2; ++c2)
+                for (size_t c2=C2; c2>0u; --c2)
                 {
-                    for (size_t c1=0u; c1<C1; ++c1, ++Y)
+                    for (size_t c1=C1; c1>0u; --c1, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t r2=0u; r2<R2; ++r2, ++X1, ++X2) { sm2 = fma(*X1,*X2,sm2); }
+                        for (size_t r2=R2; r2>0u; --r2, ++X1, ++X2) { sm2 = fma(*X1,*X2,sm2); }
                         *Y = sm2;
-                        if (c1<C1-1u) { X2 -= R2; }
+                        if (c1>1u) { X2 -= R2; }
                     }
-                    if (c2<C2-1u) { X1 -= N1; }
+                    if (c2>1u) { X1 -= N1; }
                 }
             }
             else
             {
-                for (size_t c1=0u; c1<C1; ++c1)
+                for (size_t c1=C1; c1>0u; --c1)
                 {
-                    for (size_t c2=0u; c2<C2; ++c2, X1-=N1, X2-=N2-1u, ++Y)
+                    for (size_t c2=C2; c2>0u; --c2, X1-=N1, X2-=N2-1u, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t r1=0u; r1<R1; ++r1, X1+=C1, X2+=C2) { sm2 = fma(*X1,*X2,sm2); }
+                        for (size_t r1=R1; r1>0u; --r1, X1+=C1, X2+=C2) { sm2 = fma(*X1,*X2,sm2); }
                         *Y = sm2;
                     }
-                    if (c1<C1-1u) { ++X1; X2 -= C2; }
+                    if (c1>1u) { ++X1; X2 -= C2; }
                 }
             }
         }
@@ -165,29 +171,29 @@ int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, 
         {
             if (iscolmajor)
             {
-                for (size_t r2=0u; r2<R2; ++r2)
+                for (size_t r2=R2; r2>0u; --r2)
                 {
-                    for (size_t r1=0u; r1<R1; ++r1, X1-=N1-1u, X2-=N2, ++Y)
+                    for (size_t r1=R1; r1>0u; --r1, X1-=N1-1u, X2-=N2, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t c2=0u; c2<C2; ++c2, X1+=R1, X2+=R2) { sm2 = fma(*X1,*X2,sm2); }
+                        for (size_t c2=C2; c2>0u; --c2, X1+=R1, X2+=R2) { sm2 = fma(*X1,*X2,sm2); }
                         *Y = sm2;
                     }
-                    if (r2<R2-1u) { X1 -= R1; ++X2; }
+                    if (r2>1u) { X1 -= R1; ++X2; }
                 }
             }
             else
             {
-                for (size_t r1=0u; r1<R1; ++r1)
+                for (size_t r1=R1; r1>0u; --r1)
                 {
-                    for (size_t r2=0u; r2<R2; ++r2, ++Y)
+                    for (size_t r2=R2; r2>0u; --r2, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t c1=0u; c1<C1; ++c1, ++X1, ++X2) { sm2 = fma(*X1,*X2,sm2); }
+                        for (size_t c1=C1; c1>0u; --c1, ++X1, ++X2) { sm2 = fma(*X1,*X2,sm2); }
                         *Y = sm2;
-                        if (r2<R2-1u) { X1 -= C1; }
+                        if (r2>1u) { X1 -= C1; }
                     }
-                    if (r1<R1-1u) { X2 -= N2; }
+                    if (r1>1u) { X2 -= N2; }
                 }
             }
         }
@@ -224,6 +230,9 @@ int matmul2t_d (double *Y, const double *X1, const double *X2, const size_t R1, 
 
 int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr)
 {
+    if (tr && R1!=R2) { fprintf(stderr,"error in matmul2t_c: R1 (nrows X1) must equal R2 (nrows X2) for X1'*X2\n"); return 1; }
+    if (!tr && C1!=C2) { fprintf(stderr,"error in matmul2t_c: C1 (ncols X1) must equal C2 (ncols X2) for X1*X2'\n"); return 1; }
+
     const size_t N = (tr) ? C1*C2 : R1*R2;
     float x1r, x1i, x2r, x2i, sm2r, sm2i;
 
@@ -235,12 +244,12 @@ int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, con
         {
             if (iscolmajor)
             {
-                for (size_t c2=0u; c2<C2; ++c2)
+                for (size_t c2=C2; c2>0u; --c2)
                 {
-                    for (size_t c1=0u; c1<C1; ++c1, ++Y)
+                    for (size_t c1=C1; c1>0u; --c1, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t r2=0u; r2<R2; ++r2, ++X1, ++X2)
+                        for (size_t r2=R2; r2>0u; --r2, ++X1, ++X2)
                         {
                             x1r = *X1; x1i = -*++X1;
                             x2r = *X2; x2i = *++X2;
@@ -248,19 +257,19 @@ int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, con
                             sm2i += x1r*x2i + x1i*x2r;
                         }
                         *Y = sm2r; *++Y = sm2i;
-                        if (c1<C1-1u) { X2 -= 2u*R2; }
+                        if (c1>1u) { X2 -= 2u*R2; }
                     }
-                    if (c2<C2-1u) { X1 -= 2u*N1; }
+                    if (c2>1u) { X1 -= 2u*N1; }
                 }
             }
             else
             {
-                for (size_t c1=0u; c1<C1; ++c1)
+                for (size_t c1=C1; c1>0u; --c1)
                 {
-                    for (size_t c2=0u; c2<C2; ++c2, X1-=2u*N1, X2-=2u*N2-2u, ++Y)
+                    for (size_t c2=C2; c2>0u; --c2, X1-=2u*N1, X2-=2u*N2-2u, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t r1=0u; r1<R1; ++r1, X1+=2u*C1-1u, X2+=2u*C2-1u)
+                        for (size_t r1=R1; r1>0u; --r1, X1+=2u*C1-1u, X2+=2u*C2-1u)
                         {
                             x1r = *X1; x1i = -*++X1;
                             x2r = *X2; x2i = *++X2;
@@ -269,7 +278,7 @@ int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, con
                         }
                         *Y = sm2r; *++Y = sm2i;
                     }
-                    if (c1<C1-1u) { X1 += 2; X2 -= 2u*C2; }
+                    if (c1>1u) { X1 += 2; X2 -= 2u*C2; }
                 }
             }
         }
@@ -277,12 +286,12 @@ int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, con
         {
             if (iscolmajor)
             {
-                for (size_t r2=0u; r2<R2; ++r2)
+                for (size_t r2=R2; r2>0u; --r2)
                 {
-                    for (size_t r1=0u; r1<R1; ++r1, X1-=2u*N1-2u, X2-=2u*N2, ++Y)
+                    for (size_t r1=R1; r1>0u; --r1, X1-=2u*N1-2u, X2-=2u*N2, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t c2=0u; c2<C2; ++c2, X1+=2u*R1-1u, X2+=2u*R2-1u)
+                        for (size_t c2=C2; c2>0u; --c2, X1+=2u*R1-1u, X2+=2u*R2-1u)
                         {
                             x1r = *X1; x1i = *++X1;
                             x2r = *X2; x2i = -*++X2;
@@ -291,17 +300,17 @@ int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, con
                         }
                         *Y = sm2r; *++Y = sm2i;
                     }
-                    if (r2<R2-1u) { X1 -= 2u*R1; X2 += 2; }
+                    if (r2>1u) { X1 -= 2u*R1; X2 += 2; }
                 }
             }
             else
             {
-                for (size_t r1=0u; r1<R1; ++r1)
+                for (size_t r1=R1; r1>0u; --r1)
                 {
-                    for (size_t r2=0u; r2<R2; ++r2, ++Y)
+                    for (size_t r2=R2; r2>0u; --r2, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t c1=0u; c1<C1; ++c1, ++X1, ++X2)
+                        for (size_t c1=C1; c1>0u; --c1, ++X1, ++X2)
                         {
                             x1r = *X1; x1i = *++X1;
                             x2r = *X2; x2i = -*++X2;
@@ -309,9 +318,9 @@ int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, con
                             sm2i += x1r*x2i + x1i*x2r;
                         }
                         *Y = sm2r; *++Y = sm2i;
-                        if (r2<R2-1u) { X1 -= 2u*C1; }
+                        if (r2>1u) { X1 -= 2u*C1; }
                     }
-                    if (r1<R1-1u) { X2 -= 2u*N2; }
+                    if (r1>1u) { X2 -= 2u*N2; }
                 }
             }
         }
@@ -349,6 +358,9 @@ int matmul2t_c (float *Y, const float *X1, const float *X2, const size_t R1, con
 
 int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t R2, const size_t C2, const int iscolmajor, const int tr)
 {
+    if (tr && R1!=R2) { fprintf(stderr,"error in matmul2t_z: R1 (nrows X1) must equal R2 (nrows X2) for X1'*X2\n"); return 1; }
+    if (!tr && C1!=C2) { fprintf(stderr,"error in matmul2t_z: C1 (ncols X1) must equal C2 (ncols X2) for X1*X2'\n"); return 1; }
+
     const size_t N = (tr) ? C1*C2 : R1*R2;
     double x1r, x1i, x2r, x2i, sm2r, sm2i;
 
@@ -360,12 +372,12 @@ int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, 
         {
             if (iscolmajor)
             {
-                for (size_t c2=0u; c2<C2; ++c2)
+                for (size_t c2=C2; c2>0u; --c2)
                 {
-                    for (size_t c1=0u; c1<C1; ++c1, ++Y)
+                    for (size_t c1=C1; c1>0u; --c1, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t r2=0u; r2<R2; ++r2, ++X1, ++X2)
+                        for (size_t r2=R2; r2>0u; --r2, ++X1, ++X2)
                         {
                             x1r = *X1; x1i = -*++X1;
                             x2r = *X2; x2i = *++X2;
@@ -373,19 +385,19 @@ int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, 
                             sm2i += x1r*x2i + x1i*x2r;
                         }
                         *Y = sm2r; *++Y = sm2i;
-                        if (c1<C1-1u) { X2 -= 2u*R2; }
+                        if (c1>1u) { X2 -= 2u*R2; }
                     }
-                    if (c2<C2-1u) { X1 -= 2u*N1; }
+                    if (c2>1u) { X1 -= 2u*N1; }
                 }
             }
             else
             {
-                for (size_t c1=0u; c1<C1; ++c1)
+                for (size_t c1=C1; c1>0u; --c1)
                 {
-                    for (size_t c2=0u; c2<C2; ++c2, X1-=2u*N1, X2-=2u*N2-2u, ++Y)
+                    for (size_t c2=C2; c2>0u; --c2, X1-=2u*N1, X2-=2u*N2-2u, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t r1=0u; r1<R1; ++r1, X1+=2u*C1-1u, X2+=2u*C2-1u)
+                        for (size_t r1=R1; r1>0u; --r1, X1+=2u*C1-1u, X2+=2u*C2-1u)
                         {
                             x1r = *X1; x1i = -*++X1;
                             x2r = *X2; x2i = *++X2;
@@ -394,7 +406,7 @@ int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, 
                         }
                         *Y = sm2r; *++Y = sm2i;
                     }
-                    if (c1<C1-1u) { X1 += 2; X2 -= 2u*C2; }
+                    if (c1>1u) { X1 += 2; X2 -= 2u*C2; }
                 }
             }
         }
@@ -402,12 +414,12 @@ int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, 
         {
             if (iscolmajor)
             {
-                for (size_t r2=0u; r2<R2; ++r2)
+                for (size_t r2=R2; r2>0u; --r2)
                 {
-                    for (size_t r1=0u; r1<R1; ++r1, X1-=2u*N1-2u, X2-=2u*N2, ++Y)
+                    for (size_t r1=R1; r1>0u; --r1, X1-=2u*N1-2u, X2-=2u*N2, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t c2=0u; c2<C2; ++c2, X1+=2u*R1-1u, X2+=2u*R2-1u)
+                        for (size_t c2=C2; c2>0u; --c2, X1+=2u*R1-1u, X2+=2u*R2-1u)
                         {
                             x1r = *X1; x1i = *++X1;
                             x2r = *X2; x2i = -*++X2;
@@ -416,17 +428,17 @@ int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, 
                         }
                         *Y = sm2r; *++Y = sm2i;
                     }
-                    if (r2<R2-1u) { X1 -= 2u*R1; X2 += 2; }
+                    if (r2>1u) { X1 -= 2u*R1; X2 += 2; }
                 }
             }
             else
             {
-                for (size_t r1=0u; r1<R1; ++r1)
+                for (size_t r1=R1; r1>0u; --r1)
                 {
-                    for (size_t r2=0u; r2<R2; ++r2, ++Y)
+                    for (size_t r2=R2; r2>0u; --r2, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t c1=0u; c1<C1; ++c1, ++X1, ++X2)
+                        for (size_t c1=C1; c1>0u; --c1, ++X1, ++X2)
                         {
                             x1r = *X1; x1i = *++X1;
                             x2r = *X2; x2i = -*++X2;
@@ -434,9 +446,9 @@ int matmul2t_z (double *Y, const double *X1, const double *X2, const size_t R1, 
                             sm2i += x1r*x2i + x1i*x2r;
                         }
                         *Y = sm2r; *++Y = sm2i;
-                        if (r2<R2-1u) { X1 -= 2u*C1; }
+                        if (r2>1u) { X1 -= 2u*C1; }
                     }
-                    if (r1<R1-1u) { X2 -= 2u*N2; }
+                    if (r1>1u) { X2 -= 2u*N2; }
                 }
             }
         }

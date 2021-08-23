@@ -37,7 +37,7 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
     else if (L==N)
     {
         sm2 = sd1 = sd2 = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             sd1 += *X1**X1; sd2 += *X2**X2;
             sm2 += *X1**X2;
@@ -56,7 +56,7 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 sm2 = sd1 = sd2 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     sd1 += *X1**X1; sd2 += *X2**X2;
                     sm2 += *X1**X2;
@@ -74,7 +74,7 @@ int cos2_s (float *Y, const float *X1, const float *X2, const size_t R1, const s
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm2 = sd1 = sd2 = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2)
                     {
                         sd1 += *X1**X1; sd2 += *X2**X2;
                         sm2 += *X1**X2;
@@ -108,7 +108,7 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
     else if (L==N)
     {
         sm2 = sd1 = sd2 = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             sd1 += *X1**X1; sd2 += *X2**X2;
             sm2 += *X1**X2;
@@ -127,7 +127,7 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 sm2 = sd1 = sd2 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2)
                 {
                     sd1 += *X1**X1; sd2 += *X2**X2;
                     sm2 += *X1**X2;
@@ -145,7 +145,7 @@ int cos2_d (double *Y, const double *X1, const double *X2, const size_t R1, cons
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2, ++Y)
                 {
                     sm2 = sd1 = sd2 = 0.0;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2)
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2)
                     {
                         sd1 += *X1**X1; sd2 += *X2**X2;
                         sm2 += *X1**X2;
@@ -179,7 +179,7 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
     else if (L==N)
     {
         sd1 = sd2 = yr = yi = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             x1r = *X1++; x2r = *X2++;
             sd1 += x1r*x1r + *X1**X1;
@@ -202,7 +202,7 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 sd1 = sd2 = yr = yi = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2, ++Y)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2, ++Y)
                 {
                     x1r = *X1++; x2r = *X2++;
                     sd1 += x1r*x1r + *X1**X1;
@@ -224,7 +224,7 @@ int cos2_c (float *Y, const float *X1, const float *X2, const size_t R1, const s
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
                     sd1 = sd2 = yr = yi = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u, ++Y)
+                    for (size_t l=L; l>0u; --l, X1+=K1-1u, X2+=K2-1u, ++Y)
                     {
                         x1r = *X1++; x2r = *X2++;
                         sd1 += x1r*x1r + *X1**X1;
@@ -262,7 +262,7 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
     else if (L==N)
     {
         sd1 = sd2 = yr = yi = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2)
+        for (size_t l=L; l>0u; --l, ++X1, ++X2)
         {
             x1r = *X1++; x2r = *X2++;
             sd1 += x1r*x1r + *X1**X1;
@@ -285,7 +285,7 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
             for (size_t v=V; v>0u; --v, X1-=J1, X2-=J2, ++Y)
             {
                 sd1 = sd2 = yr = yi = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2, ++Y)
+                for (size_t l=L; l>0u; --l, ++X1, ++X2, ++Y)
                 {
                     x1r = *X1++; x2r = *X2++;
                     sd1 += x1r*x1r + *X1**X1;
@@ -307,7 +307,7 @@ int cos2_z (double *Y, const double *X1, const double *X2, const size_t R1, cons
                 for (size_t b=B; b>0u; --b, X1-=L*K1-J1, X2-=L*K2-J2)
                 {
                     sd1 = sd2 = yr = yi = 0.0;
-                    for (size_t l=0u; l<L; ++l, X1+=K1-1u, X2+=K2-1u, ++Y)
+                    for (size_t l=L; l>0u; --l, X1+=K1-1u, X2+=K2-1u, ++Y)
                     {
                         x1r = *X1++; x2r = *X2++;
                         sd1 += x1r*x1r + *X1**X1;

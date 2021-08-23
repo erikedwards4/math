@@ -32,9 +32,9 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
     {
         float x, x2, mn = 0.0f, sm2 = 0.0f, sm4 = 0.0f;
         mn = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
+        for (size_t l=L; l>0u; --l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
         *Y = (float)L * sm4 / (sm2*sm2);
         if (!biased) { *Y =  3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u)); }
     }
@@ -50,9 +50,9 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = sm4 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
                 mn *= den; X -= L;
-                for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
+                for (size_t l=L; l>0u; --l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
                 *Y = (float)L * sm4 / (sm2*sm2);
                 if (!biased) { *Y =  3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u)); }
             }
@@ -64,14 +64,14 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
             if (!(sm4=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in kurtosis_s: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
             for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; }
             Y -= V;
-            for (size_t l=0u; l<L; ++l, sm2-=V, sm4-=V, Y-=V)
+            for (size_t l=L; l>0u; --l, sm2-=V, sm4-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++sm2, ++sm4, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm4 += x2*x2; }
             }
@@ -91,9 +91,9 @@ int kurtosis_s (float *Y, float *X, const size_t R, const size_t C, const size_t
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = sm4 = 0.0f;
-                    for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
+                    for (size_t l=L; l>1u; --l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2;
                     *Y = (float)L * sm4 / (sm2*sm2);
                     if (!biased) { *Y =  3.0f + (*Y*(float)(L+1u)-(float)(3u*(L-1u))) * (float)(L-1u)/(float)((L-2u)*(L-3u)); }
@@ -120,9 +120,9 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
     {
         double x, x2, mn = 0.0, sm2 = 0.0, sm4 = 0.0;
         mn = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
+        for (size_t l=L; l>0u; --l) { x = *--X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
         *Y = (double)L * sm4 / (sm2*sm2);
         if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
         if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
@@ -139,9 +139,9 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = sm4 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
                 mn *= den; X -= L;
-                for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
+                for (size_t l=L; l>0u; --l, ++X) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
                 *Y = (double)L * sm4 / (sm2*sm2);
                 if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
             }
@@ -153,14 +153,14 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
             if (!(sm4=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in kurtosis_d: problem with calloc. "); perror("calloc"); return 1; }
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
             Y -= V;
-            for (size_t l=1u; l<L; ++l, Y-=V)
+            for (size_t l=L; l>1u; --l, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y += *X; }
             }
             X -= N;
             for (size_t v=V; v>0u; --v, ++Y) { *Y *= den; }
             Y -= V;
-            for (size_t l=0u; l<L; ++l, sm2-=V, sm4-=V, Y-=V)
+            for (size_t l=L; l>0u; --l, sm2-=V, sm4-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++sm2, ++sm4, ++Y) { x = *X - *Y; x2 = x*x; *sm2 += x2; *sm4 += x2*x2; }
             }
@@ -180,9 +180,9 @@ int kurtosis_d (double *Y, double *X, const size_t R, const size_t C, const size
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = sm4 = 0.0;
-                    for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
+                    for (size_t l=L; l>1u; --l, X-=K) { x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2; }
                     x = *X - mn; x2 = x*x; sm2 += x2; sm4 += x2*x2;
                     *Y = (double)L * sm4 / (sm2*sm2);
                     if (!biased) { *Y =  3.0 + (*Y*(double)(L+1u)-(double)(3u*(L-1u))) * (double)(L-1u)/(double)((L-2u)*(L-3u)); }
@@ -209,10 +209,10 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t
     else if (L<4u) { fprintf(stderr,"error in kurtosis_c: L must be > 3\n"); return 1; }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
         X -= 2u*L;
-        for (size_t l=0u; l<L; ++l, ++X)
+        for (size_t l=L; l>0u; --l, ++X)
         {
             xr = *X - mnr; xi = *++X - mni;
             xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -240,10 +240,10 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = sm4r = sm4i = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
                 X -= 2u*L;
-                for (size_t l=0u; l<L; ++l, ++X)
+                for (size_t l=L; l>0u; --l, ++X)
                 {
                     xr = *X - mnr; xi = *++X - mni;
                     xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -269,10 +269,10 @@ int kurtosis_c (float *Y, float *X, const size_t R, const size_t C, const size_t
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mnr = mni = sm2 = sm4r = sm4i = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
                     X -= 2u*K*L;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u)
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u)
                     {
                         xr = *X - mnr; xi = *++X - mni;
                         xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -312,10 +312,10 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size
     else if (L<4u) { fprintf(stderr,"error in kurtosis_z: L must be > 3\n"); return 1; }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
         X -= 2u*L;
-        for (size_t l=0u; l<L; ++l, ++X)
+        for (size_t l=L; l>0u; --l, ++X)
         {
             xr = *X - mnr; xi = *++X - mni;
             xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -343,10 +343,10 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = sm4r = sm4i = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
                 X -= 2u*L;
-                for (size_t l=0u; l<L; ++l, ++X)
+                for (size_t l=L; l>0u; --l, ++X)
                 {
                     xr = *X - mnr; xi = *++X - mni;
                     xrr = xr*xr; xii = xi*xi; xri = xr*xi;
@@ -372,10 +372,10 @@ int kurtosis_z (double *Y, double *X, const size_t R, const size_t C, const size
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mnr = mni = sm2 = sm4r = sm4i = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
                     X -= 2u*K*L;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u)
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u)
                     {
                         xr = *X - mnr; xi = *++X - mni;
                         xrr = xr*xr; xii = xi*xi; xri = xr*xi;

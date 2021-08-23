@@ -21,7 +21,7 @@ int nextpow2_i (int *Y, const int *X, const size_t N)
 {
     int x, y;
 
-    for (size_t n=0u; n<N; ++n, ++X, ++Y)
+    for (size_t n=N; n>0u; --n, ++X, ++Y)
     {
         if (*X==0) { *Y = 0u; }
         else if (*X<0)
@@ -46,7 +46,7 @@ int nextpow2_u (size_t *Y, const size_t *X, const size_t N)
 {
     size_t x, y;
     
-    for (size_t n=0u; n<N; ++n, ++X, ++Y)
+    for (size_t n=N; n>0u; --n, ++X, ++Y)
     {
         if (*X==0u) { *Y = 0u; }
         else

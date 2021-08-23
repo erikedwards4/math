@@ -146,11 +146,11 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = *X; }
         Y -= L;
         if (LAPACKE_slasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
         //qsort(Y,L,sizeof(float),comp);
@@ -163,11 +163,11 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1u && (G==1u || B==1u))
         {
-            //for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+            //for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
             //Y -= N; //surprisingly, only same speed
             for (size_t v=V; v>0u; --v, Y+=L)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 Y -= L;
                 if (LAPACKE_slasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
             }
@@ -180,10 +180,10 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
             {
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=L, Y-=K*L-1u)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
-                    for (size_t l=0u; l<L; ++l, ++X1, Y+=K) { *Y = *X1; }
+                    for (size_t l=L; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
             free(X1);
@@ -205,11 +205,11 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = *X; }
         if (LAPACKE_dlasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
     }
     else
@@ -222,7 +222,7 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t v=V; v>0u; --v, Y+=L)
             {
-                for (size_t l=0u; l<L; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 Y -= L;
                 if (LAPACKE_dlasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
             }
@@ -235,10 +235,10 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=L, Y-=K*L-1u)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
-                    for (size_t l=0u; l<L; ++l, ++X1, Y+=K) { *Y = *X1; }
+                    for (size_t l=L; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
             free(X1);
@@ -260,11 +260,11 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<2u*L; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=2u*L; l>0u; --l, ++X, ++Y) { *Y = *X; }
         qsort(Y,L,2*sizeof(float),comp);
     }
     else
@@ -277,7 +277,7 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
         {
             for (size_t v=V; v>0u; --v, Y+=2u*L)
             {
-                for (size_t l=0u; l<2u*L; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=2u*L; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 Y -= 2u*L;
                 qsort(Y,L,2*sizeof(float),comp);
             }
@@ -290,11 +290,11 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
             {
                 for (size_t b=B; b>0u; --b, X1-=2u*L, X-=K*L-1u, Y-=K*L-1u)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
                     qsort(X1,L,2*sizeof(float),comp);
                     X1 -= 2u*L;
-                    for (size_t l=0u; l<L; ++l, ++X1, Y+=2u*K-1u) { *Y = *X1; *++Y = *++X1; }
+                    for (size_t l=L; l>0u; --l, ++X1, Y+=2u*K-1u) { *Y = *X1; *++Y = *++X1; }
                 }
             }
             free(X1);
@@ -316,11 +316,11 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<2u*L; ++l, ++X, ++Y) { *Y = *X; }
+        for (size_t l=2u*L; l>0u; --l, ++X, ++Y) { *Y = *X; }
         qsort(Y,L,2*sizeof(double),comp);
     }
     else
@@ -333,7 +333,7 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
         {
             for (size_t v=V; v>0u; --v, Y+=2u*L)
             {
-                for (size_t l=0u; l<2u*L; ++l, ++X, ++Y) { *Y = *X; }
+                for (size_t l=2u*L; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 Y -= 2u*L;
                 qsort(Y,L,2*sizeof(double),comp);
             }
@@ -346,11 +346,11 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t b=B; b>0u; --b, X1-=2u*L, X-=K*L-1u, Y-=K*L-1u)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
                     qsort(X1,L,2*sizeof(double),comp);
                     X1 -= 2u*L;
-                    for (size_t l=0u; l<L; ++l, ++X1, Y+=2u*K-1u) { *Y = *X1; *++Y = *++X1; }
+                    for (size_t l=L; l>0u; --l, ++X1, Y+=2u*K-1u) { *Y = *X1; *++Y = *++X1; }
                 }
             }
             free(X1);
@@ -397,11 +397,11 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
             {
                 for (size_t b=B; b>0u; --b, ++X1, X+=K+1u)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
                     X1 += L-1u; X -= K;
-                    for (size_t l=0u; l<L; ++l, --X1, X-=K) { *X = *X1; }
+                    for (size_t l=L; l>0u; --l, --X1, X-=K) { *X = *X1; }
                 }
             }
             free(X1);
@@ -446,11 +446,11 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
             {
                 for (size_t b=B; b>0u; --b, ++X1, X+=K+1u)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=K, ++X1) { *X1 = *X; }
+                    for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     if (LAPACKE_dlasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
                     X1 += L-1u; X -= K;
-                    for (size_t l=0u; l<L; ++l, --X1, X-=K) { *X = *X1; }
+                    for (size_t l=L; l>0u; --l, --X1, X-=K) { *X = *X1; }
                 }
             }
             free(X1);
@@ -495,11 +495,11 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
             {
                 for (size_t b=B; b>0u; --b, X1+=2, X+=2u*K+2u)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
                     qsort(X1,L,2*sizeof(float),comp);
                     X1 += 2u*L-2u; X -= 2u*K;
-                    for (size_t l=0u; l<L; ++l, X1-=2, X-=2u*K) { *X = *X1; *(X+1) = *(X1+1); }
+                    for (size_t l=L; l>0u; --l, X1-=2, X-=2u*K) { *X = *X1; *(X+1) = *(X1+1); }
                 }
             }
             free(X1);
@@ -544,11 +544,11 @@ int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
             {
                 for (size_t b=B; b>0u; --b, X1+=2, X+=2u*K+2u)
                 {
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
                     qsort(X1,L,2*sizeof(double),comp);
                     X1 += 2u*L-2u; X -= 2u*K;
-                    for (size_t l=0u; l<L; ++l, X1-=2, X-=2u*K) { *X = *X1; *(X+1) = *(X1+1); }
+                    for (size_t l=L; l>0u; --l, X1-=2, X-=2u*K) { *X = *X1; *(X+1) = *(X1+1); }
                 }
             }
             free(X1);

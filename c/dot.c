@@ -38,7 +38,7 @@ int dot_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
     else if (L==N)
     {
         float sm2 = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2) { sm2 += *X1 * *X2; }
+        for (size_t l=L; l>0u; --l, ++X1, ++X2) { sm2 += *X1 * *X2; }
         *Y = sm2;
     }
     else
@@ -54,7 +54,7 @@ int dot_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
             for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y)
             {
                 sm2 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2) { sm2 += *X1 * *X2; }
+                for (size_t l=L; l>0u; --l, ++X1, ++X2) { sm2 += *X1 * *X2; }
                 *Y = sm2;
             }
         }
@@ -63,7 +63,7 @@ int dot_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
             const size_t J1 = (L==N1) ? 0u : 1u, J2 = (L==N2) ? 0u : 1u;
             for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y) { *Y = *X1 * *X2; }
             X1 += 1u-J1; X2 += 1u-J2;  Y -= V;
-            for (size_t l=1u; l<L; ++l, X1+=1u-J1, X2+=1u-J2, Y-=V)
+            for (size_t l=L; l>1u; --l, X1+=1u-J1, X2+=1u-J2, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y) { *Y += *X1 * *X2; }
             }
@@ -79,7 +79,7 @@ int dot_s (float *Y, const float *X1, const float *X2, const size_t R1, const si
                 for (size_t b=B; b>0u; --b, X1-=K1*L-J1, X2-=K2*L-J2, ++Y)
                 {
                     sm2 = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2) { sm2 += *X1 * *X2; }
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2) { sm2 += *X1 * *X2; }
                     *Y = sm2;
                 }
             }
@@ -108,7 +108,7 @@ int dot_d (double *Y, const double *X1, const double *X2, const size_t R1, const
     else if (L==N)
     {
         double sm2 = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X1, ++X2) { sm2 += *X1 * *X2; }
+        for (size_t l=L; l>0u; --l, ++X1, ++X2) { sm2 += *X1 * *X2; }
         *Y = sm2;
     }
     else
@@ -124,7 +124,7 @@ int dot_d (double *Y, const double *X1, const double *X2, const size_t R1, const
             for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y)
             {
                 sm2 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X2) { sm2 += *X1 * *X2; }
+                for (size_t l=L; l>0u; --l, ++X1, ++X2) { sm2 += *X1 * *X2; }
                 *Y = sm2;
             }
         }
@@ -133,7 +133,7 @@ int dot_d (double *Y, const double *X1, const double *X2, const size_t R1, const
             const size_t J1 = (L==N1) ? 0u : 1u, J2 = (L==N2) ? 0u : 1u;
             for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y) { *Y = *X1 * *X2; }
             X1 += 1u-J1; X2 += 1u-J2;  Y -= V;
-            for (size_t l=1u; l<L; ++l, X1+=1u-J1, X2+=1u-J2, Y-=V)
+            for (size_t l=L; l>1u; --l, X1+=1u-J1, X2+=1u-J2, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, X1+=J1, X2+=J2, ++Y) { *Y += *X1 * *X2; }
             }
@@ -149,7 +149,7 @@ int dot_d (double *Y, const double *X1, const double *X2, const size_t R1, const
                 for (size_t b=B; b>0u; --b, X1-=K1*L-J1, X2-=K2*L-J2, ++Y)
                 {
                     sm2 = 0.0;
-                    for (size_t l=0u; l<L; ++l, X1+=K1, X2+=K2) { sm2 += *X1 * *X2; }
+                    for (size_t l=L; l>0u; --l, X1+=K1, X2+=K2) { sm2 += *X1 * *X2; }
                     *Y = sm2;
                 }
             }
@@ -180,7 +180,7 @@ int dot_c (float *Y, const float *X1, const float *X2, const size_t R1, const si
         if (L<5000u)
         {
             float sm2r = 0.0f, sm2i = 0.0f;
-            for (size_t l=0u; l<L; ++l, X1+=2, X2+=2) { sm2r += *X1**X2 - *(X1+1)**(X2+1); sm2i += *X1**(X2+1) + *(X1+1)**X2; }
+            for (size_t l=L; l>0u; --l, X1+=2, X2+=2) { sm2r += *X1**X2 - *(X1+1)**(X2+1); sm2i += *X1**(X2+1) + *(X1+1)**X2; }
             *Y = sm2r; *++Y = sm2i;
         }
         else { cblas_cdotu_sub((int)L,X1,1,X2,1,(_Complex float *)Y); }
@@ -238,7 +238,7 @@ int dot_z (double *Y, const double *X1, const double *X2, const size_t R1, const
         if (L<5000u)
         {
             double sm2r = 0.0, sm2i = 0.0;
-            for (size_t l=0u; l<L; ++l, X1+=2, X2+=2) { sm2r += *X1**X2 - *(X1+1)**(X2+1); sm2i += *X1**(X2+1) + *(X1+1)**X2; }
+            for (size_t l=L; l>0u; --l, X1+=2, X2+=2) { sm2r += *X1**X2 - *(X1+1)**(X2+1); sm2i += *X1**(X2+1) + *(X1+1)**X2; }
             *Y = sm2r; *++Y = sm2i;
         }
         else { cblas_zdotu_sub((int)L,X1,1,X2,1,(_Complex double *)Y); }

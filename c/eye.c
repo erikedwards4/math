@@ -22,33 +22,33 @@ int eye_z (double *Y, const size_t R, const size_t C, const int iscolmajor);
 int eye_s (float *Y, const size_t R, const size_t C, const int iscolmajor)
 {
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-    //const float z = 0.0f, o = 1.0f;
-    //const size_t N = R*C, M = (R<C) ? R : C;
 
-    const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
-    for (size_t d0=0u; d0<D0; ++d0)
+    if (iscolmajor)
     {
-        for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (d0==d1); }
+        for (size_t c=0u; c<C; ++c)
+        {
+            for (size_t r=0u; r<R; ++r, ++Y) { *Y = (float)(r==c); }
+        }
+    }
+    else
+    {
+        for (size_t r=0u; r<R; ++r)
+        {
+            for (size_t c=0u; c<C; ++c, ++Y) { *Y = (float)(r==c); }
+        }
     }
 
-    // if (iscolmajor)
-    // {
-    //     for (size_t c=0u; c<C; ++c)
-    //     {
-    //         for (size_t r=0u; r<R; ++r, ++Y) { *Y = (r==c); }
-    //     }
-    // }
-    // else
-    // {
-    //     for (size_t r=0u; r<R; ++r)
-    //     {
-    //         for (size_t c=0u; c<C; ++c, ++Y) { *Y = (r==c); }
-    //     }
-    // }
+    //const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
+    //for (size_t d0=0u; d0<D0; ++d0)
+    //{
+    //    for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (float)(d0==d1); }
+    //}
 
-    // cblas_scopy((int)N,&z,0,Y,1);
-    // if (iscolmajor) { cblas_scopy((int)M,&o,0,Y,(int)R+1); }
-    // else { cblas_scopy((int)M,&o,0,Y,(int)C+1); }
+    //const float z = 0.0f, o = 1.0f;
+    //const size_t N = R*C, M = (R<C) ? R : C;
+    //cblas_scopy((int)N,&z,0,Y,1);
+    //if (iscolmajor) { cblas_scopy((int)M,&o,0,Y,(int)R+1); }
+    //else { cblas_scopy((int)M,&o,0,Y,(int)C+1); }
 
     //LAPACKE solution
     //const size_t LO = (iscolmajor) ? LAPACK_COL_MAJOR : LAPACK_ROW_MAJOR;
@@ -66,9 +66,19 @@ int eye_d (double *Y, const size_t R, const size_t C, const int iscolmajor)
 {
     const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
 
-    for (size_t d0=0u; d0<D0; ++d0)
+    if (iscolmajor)
     {
-        for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (d0==d1); }
+        for (size_t c=0u; c<C; ++c)
+        {
+            for (size_t r=0u; r<R; ++r, ++Y) { *Y = (double)(r==c); }
+        }
+    }
+    else
+    {
+        for (size_t r=0u; r<R; ++r)
+        {
+            for (size_t c=0u; c<C; ++c, ++Y) { *Y = (double)(r==c); }
+        }
     }
 
     return 0;
@@ -77,12 +87,21 @@ int eye_d (double *Y, const size_t R, const size_t C, const int iscolmajor)
 
 int eye_c (float *Y, const size_t R, const size_t C, const int iscolmajor)
 {
-    const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
-    
-    for (size_t d0=0u; d0<D0; ++d0)
+    if (iscolmajor)
     {
-        for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (d0==d1); *++Y = 0.0f; }
+        for (size_t c=0u; c<C; ++c)
+        {
+            for (size_t r=0u; r<R; ++r, ++Y) { *Y = (float)(r==c); *++Y = 0.0f; }
+        }
     }
+    else
+    {
+        for (size_t r=0u; r<R; ++r)
+        {
+            for (size_t c=0u; c<C; ++c, ++Y) { *Y = (float)(r==c); *++Y = 0.0f; }
+        }
+    }
+    
 
     return 0;
 }
@@ -90,11 +109,19 @@ int eye_c (float *Y, const size_t R, const size_t C, const int iscolmajor)
 
 int eye_z (double *Y, const size_t R, const size_t C, const int iscolmajor)
 {
-    const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
-    
-    for (size_t d0=0u; d0<D0; ++d0)
+    if (iscolmajor)
     {
-        for (size_t d1=0u; d1<D1; ++d1, ++Y) { *Y = (d0==d1); *++Y = 0.0; }
+        for (size_t c=0u; c<C; ++c)
+        {
+            for (size_t r=0u; r<R; ++r, ++Y) { *Y = (double)(r==c); *++Y = 0.0; }
+        }
+    }
+    else
+    {
+        for (size_t r=0u; r<R; ++r)
+        {
+            for (size_t c=0u; c<C; ++c, ++Y) { *Y = (double)(r==c); *++Y = 0.0; }
+        }
     }
 
     return 0;

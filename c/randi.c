@@ -24,7 +24,7 @@ int randi_s (float *Y, const int a, const int b, const size_t N)
 
     if (a==b)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = (float)a; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = (float)a; }
     }
     else
     {
@@ -41,7 +41,7 @@ int randi_s (float *Y, const int a, const int b, const size_t N)
 	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
-        for (size_t n=0u; n<N; ++n, ++Y)
+        for (size_t n=N; n>0u; --n, ++Y)
         {
             state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -68,7 +68,7 @@ int randi_d (double *Y, const int a, const int b, const size_t N)
 
     if (a==b)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = (double)a; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = (double)a; }
     }
     else
     {
@@ -85,7 +85,7 @@ int randi_d (double *Y, const int a, const int b, const size_t N)
 	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
-        for (size_t n=0u; n<N; ++n, ++Y)
+        for (size_t n=N; n>0u; --n, ++Y)
         {
             state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -112,7 +112,7 @@ int randi_c (float *Y, const int a, const int b, const size_t N)
 
     if (a==b)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = (float)a; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = (float)a; }
     }
     else
     {
@@ -129,7 +129,7 @@ int randi_c (float *Y, const int a, const int b, const size_t N)
 	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
-        for (size_t n=0u; n<2u*N; ++n, ++Y)
+        for (size_t n=2u*N; n>0u; --n, ++Y)
         {
             state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);
@@ -156,7 +156,7 @@ int randi_z (double *Y, const int a, const int b, const size_t N)
 
     if (a==b)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = (double)a; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = (double)a; }
     }
     else
     {
@@ -173,7 +173,7 @@ int randi_z (double *Y, const int a, const int b, const size_t N)
 	    state = (uint64_t)(ts.tv_nsec^ts.tv_sec) + inc;
 
         //Generate
-        for (size_t n=0u; n<2u*N; ++n, ++Y)
+        for (size_t n=2u*N; n>0u; --n, ++Y)
         {
             state = state*mul + inc;
             xorshifted = (uint32_t)(((state >> 18u) ^ state) >> 27u);

@@ -29,12 +29,12 @@ int cumsum_s (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         *Y++ = *X++;
-        for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
+        for (size_t l=L; l>1u; --l, ++X, ++Y) { *Y = *(Y-1) + *X; }
     }
     else
     {
@@ -47,13 +47,13 @@ int cumsum_s (float *Y, const float *X, const size_t R, const size_t C, const si
             for (size_t v=V; v>0u; --v)
             {
                 *Y++ = *X++;
-                for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
+                for (size_t l=L; l>1u; --l, ++X, ++Y) { *Y = *(Y-1) + *X; }
             }
         }
         else if (G==1u)
         {
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
-            for (size_t l=1u; l<L; ++l)
+            for (size_t l=L; l>1u; --l)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *(Y-V) + *X; }
             }
@@ -65,7 +65,7 @@ int cumsum_s (float *Y, const float *X, const size_t R, const size_t C, const si
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, Y-=K*L-1u)
                 {
                     *Y = *X; X += K; Y += K;
-                    for (size_t l=1u; l<L; ++l, X+=K, Y+=K) { *Y = *(Y-K) + *X; }
+                    for (size_t l=L; l>1u; --l, X+=K, Y+=K) { *Y = *(Y-K) + *X; }
                 }
             }
         }
@@ -85,12 +85,12 @@ int cumsum_d (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         *Y++ = *X++;
-        for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
+        for (size_t l=L; l>1u; --l, ++X, ++Y) { *Y = *(Y-1) + *X; }
     }
     else
     {
@@ -103,13 +103,13 @@ int cumsum_d (double *Y, const double *X, const size_t R, const size_t C, const 
             for (size_t v=V; v>0u; --v)
             {
                 *Y++ = *X++;
-                for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-1) + *X; }
+                for (size_t l=L; l>1u; --l, ++X, ++Y) { *Y = *(Y-1) + *X; }
             }
         }
         else if (G==1u)
         {
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; }
-            for (size_t l=1u; l<L; ++l)
+            for (size_t l=L; l>1u; --l)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *(Y-V) + *X; }
             }
@@ -121,7 +121,7 @@ int cumsum_d (double *Y, const double *X, const size_t R, const size_t C, const 
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, Y-=K*L-1u)
                 {
                     *Y = *X; X += K; Y += K;
-                    for (size_t l=1u; l<L; ++l, X+=K, Y+=K) { *Y = *(Y-K) + *X; }
+                    for (size_t l=L; l>1u; --l, X+=K, Y+=K) { *Y = *(Y-K) + *X; }
                 }
             }
         }
@@ -141,12 +141,12 @@ int cumsum_c (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         *Y++ = *X++; *Y++ = *X++;
-        for (size_t l=1u; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
+        for (size_t l=L; l>1u; --l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
     }
     else
     {
@@ -159,13 +159,13 @@ int cumsum_c (float *Y, const float *X, const size_t R, const size_t C, const si
             for (size_t v=V; v>0u; --v)
             {
                 *Y++ = *X++; *Y++ = *X++;
-                for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
+                for (size_t l=L; l>1u; --l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
             }
         }
         else if (G==1u)
         {
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
-            for (size_t l=1u; l<L; ++l)
+            for (size_t l=L; l>1u; --l)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *(Y-2u*V) + *X; ++Y; *Y = *(Y-2u*V) + *++X; }
             }
@@ -177,7 +177,7 @@ int cumsum_c (float *Y, const float *X, const size_t R, const size_t C, const si
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, Y-=2u*K*L-2u)
                 {
                     *Y = *X; *(Y+1) = *(X+1); X += 2u*K; Y += 2u*K;
-                    for (size_t l=1u; l<L; ++l, X+=2u*K, Y+=2u*K) { *Y = *(Y-2u*K) + *X; *(Y+1) = *(Y-2u*K+1u) + *(X+1); }
+                    for (size_t l=L; l>1u; --l, X+=2u*K, Y+=2u*K) { *Y = *(Y-2u*K) + *X; *(Y+1) = *(Y-2u*K+1u) + *(X+1); }
                 }
             }
         }
@@ -197,12 +197,12 @@ int cumsum_z (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++X, ++Y) { *Y = *X; }
+        for (size_t n=2u*N; n>0u; --n, ++X, ++Y) { *Y = *X; }
     }
     else if (L==N)
     {
         *Y++ = *X++; *Y++ = *X++;
-        for (size_t l=1u; l<L; ++l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
+        for (size_t l=L; l>1u; --l, ++Y) { *Y = *(Y-2) + *X++; ++Y; *Y = *(Y-2) + *X++; }
     }
     else
     {
@@ -215,13 +215,13 @@ int cumsum_z (double *Y, const double *X, const size_t R, const size_t C, const 
             for (size_t v=V; v>0u; --v)
             {
                 *Y++ = *X++; *Y++ = *X++;
-                for (size_t l=1u; l<L; ++l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
+                for (size_t l=L; l>1u; --l, ++X, ++Y) { *Y = *(Y-2) + *X; ++Y; *Y = *(Y-2) + *++X; }
             }
         }
         else if (G==1u)
         {
             for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *X; *++Y = *++X; }
-            for (size_t l=1u; l<L; ++l)
+            for (size_t l=L; l>1u; --l)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++Y) { *Y = *(Y-2u*V) + *X; ++Y; *Y = *(Y-2u*V) + *++X; }
             }
@@ -233,7 +233,7 @@ int cumsum_z (double *Y, const double *X, const size_t R, const size_t C, const 
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, Y-=2u*K*L-2u)
                 {
                     *Y = *X; *(Y+1) = *(X+1); X += 2u*K; Y += 2u*K;
-                    for (size_t l=1u; l<L; ++l, X+=2u*K, Y+=2u*K) { *Y = *(Y-2u*K) + *X; *(Y+1) = *(Y-2u*K+1u) + *(X+1); }
+                    for (size_t l=L; l>1u; --l, X+=2u*K, Y+=2u*K) { *Y = *(Y-2u*K) + *X; *(Y+1) = *(Y-2u*K+1u) + *(X+1); }
                 }
             }
         }
@@ -254,7 +254,7 @@ int cumsum_inplace_s (float *X, const size_t R, const size_t C, const size_t S, 
     else if (L==N)
     {
         ++X;
-        for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-1); }
+        for (size_t l=L; l>1u; --l, ++X) { *X += *(X-1); }
     }
     else
     {
@@ -267,13 +267,13 @@ int cumsum_inplace_s (float *X, const size_t R, const size_t C, const size_t S, 
             for (size_t v=V; v>0u; --v)
             {
                 ++X;
-                for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-1); }
+                for (size_t l=L; l>1u; --l, ++X) { *X += *(X-1); }
             }
         }
         else if (G==1u)
         {
             X += V;
-            for (size_t l=1u; l<L; ++l)
+            for (size_t l=L; l>1u; --l)
             {
                 for (size_t v=V; v>0u; --v, ++X) { *X += *(X-V); }
             }
@@ -285,7 +285,7 @@ int cumsum_inplace_s (float *X, const size_t R, const size_t C, const size_t S, 
                 for (size_t b=B; b>0u; --b, X-=K*L-1u)
                 {
                     X += K;
-                    for (size_t l=1u; l<L; ++l, X+=K) { *X += *(X-K); }
+                    for (size_t l=L; l>1u; --l, X+=K) { *X += *(X-K); }
                 }
             }
         }
@@ -306,7 +306,7 @@ int cumsum_inplace_d (double *X, const size_t R, const size_t C, const size_t S,
     else if (L==N)
     {
         ++X;
-        for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-1); }
+        for (size_t l=L; l>1u; --l, ++X) { *X += *(X-1); }
     }
     else
     {
@@ -319,13 +319,13 @@ int cumsum_inplace_d (double *X, const size_t R, const size_t C, const size_t S,
             for (size_t v=V; v>0u; --v)
             {
                 ++X;
-                for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-1); }
+                for (size_t l=L; l>1u; --l, ++X) { *X += *(X-1); }
             }
         }
         else if (G==1u)
         {
             X += V;
-            for (size_t l=1u; l<L; ++l)
+            for (size_t l=L; l>1u; --l)
             {
                 for (size_t v=V; v>0u; --v, ++X) { *X += *(X-V); }
             }
@@ -337,7 +337,7 @@ int cumsum_inplace_d (double *X, const size_t R, const size_t C, const size_t S,
                 for (size_t b=B; b>0u; --b, X-=K*L-1u)
                 {
                     X += K;
-                    for (size_t l=1u; l<L; ++l, X+=K) { *X += *(X-K); }
+                    for (size_t l=L; l>1u; --l, X+=K) { *X += *(X-K); }
                 }
             }
         }
@@ -358,7 +358,7 @@ int cumsum_inplace_c (float *X, const size_t R, const size_t C, const size_t S, 
     else if (L==N)
     {
         X += 2;
-        for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
+        for (size_t l=L; l>1u; --l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
     }
     else
     {
@@ -371,13 +371,13 @@ int cumsum_inplace_c (float *X, const size_t R, const size_t C, const size_t S, 
             for (size_t v=V; v>0u; --v)
             {
                 X += 2;
-                for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
+                for (size_t l=L; l>1u; --l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
             }
         }
         else if (G==1u)
         {
             X += 2u*V;
-            for (size_t l=1u; l<L; ++l)
+            for (size_t l=L; l>1u; --l)
             {
                 for (size_t v=V; v>0u; --v, ++X) { *X += *(X-2u*V); ++X; *X += *(X-2u*V); }
             }
@@ -389,7 +389,7 @@ int cumsum_inplace_c (float *X, const size_t R, const size_t C, const size_t S, 
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u)
                 {
                     X += 2u*K;
-                    for (size_t l=1u; l<L; ++l, X+=2u*K-1u) { *X += *(X-2u*K); ++X; *X += *(X-2u*K); }
+                    for (size_t l=L; l>1u; --l, X+=2u*K-1u) { *X += *(X-2u*K); ++X; *X += *(X-2u*K); }
                 }
             }
         }
@@ -410,7 +410,7 @@ int cumsum_inplace_z (double *X, const size_t R, const size_t C, const size_t S,
     else if (L==N)
     {
         X += 2;
-        for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
+        for (size_t l=L; l>1u; --l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
     }
     else
     {
@@ -423,13 +423,13 @@ int cumsum_inplace_z (double *X, const size_t R, const size_t C, const size_t S,
             for (size_t v=V; v>0u; --v)
             {
                 X += 2;
-                for (size_t l=1u; l<L; ++l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
+                for (size_t l=L; l>1u; --l, ++X) { *X += *(X-2); ++X; *X += *(X-2); }
             }
         }
         else if (G==1u)
         {
             X += 2u*V;
-            for (size_t l=1u; l<L; ++l)
+            for (size_t l=L; l>1u; --l)
             {
                 for (size_t v=V; v>0u; --v, ++X) { *X += *(X-2u*V); ++X; *X += *(X-2u*V); }
             }
@@ -441,7 +441,7 @@ int cumsum_inplace_z (double *X, const size_t R, const size_t C, const size_t S,
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u)
                 {
                     X += 2u*K;
-                    for (size_t l=1u; l<L; ++l, X+=2u*K-1u) { *X += *(X-2u*K); ++X; *X += *(X-2u*K); }
+                    for (size_t l=L; l>1u; --l, X+=2u*K-1u) { *X += *(X-2u*K); ++X; *X += *(X-2u*K); }
                 }
             }
         }

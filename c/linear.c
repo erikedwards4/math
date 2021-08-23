@@ -41,10 +41,10 @@ int linear_s (float *Y, const float *X, const float *A, const size_t R, const si
     {
         if (Na<30000u)
         {
-            for (size_t ly=0u; ly<Ly; ++ly, X-=Lx, ++Y)
+            for (size_t ly=Ly; ly>0u; --ly, X-=Lx, ++Y)
             {
                 sm2 = 0.0f;
-                for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A) { sm2 = fmaf(*X,*A,sm2); }
+                for (size_t lx=Lx; lx>0u; --lx, ++X, ++A) { sm2 = fmaf(*X,*A,sm2); }
                 *Y = sm2;
             }
         }
@@ -65,12 +65,12 @@ int linear_s (float *Y, const float *X, const float *A, const size_t R, const si
             {
                 for (size_t v=V; v>0u; --v, A-=Na)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++Y)
+                    for (size_t ly=Ly; ly>0u; --ly, ++Y)
                     {
                         sm2 = 0.0f;
-                        for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A) { sm2 = fmaf(*X,*A,sm2); }
+                        for (size_t lx=Lx; lx>0u; --lx, ++X, ++A) { sm2 = fmaf(*X,*A,sm2); }
                         *Y = sm2;
-                        if (ly<Ly-1u) { X -= Lx; }
+                        if (ly>1u) { X -= Lx; }
                     }
                 }
             }
@@ -85,10 +85,10 @@ int linear_s (float *Y, const float *X, const float *A, const size_t R, const si
             {
                 for (size_t b=B; b>0u; --b, ++X, A-=Na, Y-=K*Ly-1u)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, X-=K*Lx, Y+=K)
+                    for (size_t ly=Ly; ly>0u; --ly, X-=K*Lx, Y+=K)
                     {
                         sm2 = 0.0f;
-                        for (size_t lx=0u; lx<Lx; ++lx, X+=K, ++A) { sm2 = fmaf(*X,*A,sm2); }
+                        for (size_t lx=Lx; lx>0u; --lx, X+=K, ++A) { sm2 = fmaf(*X,*A,sm2); }
                         *Y = sm2;
                     }
                 }
@@ -112,10 +112,10 @@ int linear_d (double *Y, const double *X, const double *A, const size_t R, const
     {
         if (Na<30000u)
         {
-            for (size_t ly=0u; ly<Ly; ++ly, X-=Lx, ++Y)
+            for (size_t ly=Ly; ly>0u; --ly, X-=Lx, ++Y)
             {
                 sm2 = 0.0;
-                for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A) { sm2 = fma(*X,*A,sm2); }
+                for (size_t lx=Lx; lx>0u; --lx, ++X, ++A) { sm2 = fma(*X,*A,sm2); }
                 *Y = sm2;
             }
         }
@@ -136,12 +136,12 @@ int linear_d (double *Y, const double *X, const double *A, const size_t R, const
             {
                 for (size_t v=V; v>0u; --v, A-=Na)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++Y)
+                    for (size_t ly=Ly; ly>0u; --ly, ++Y)
                     {
                         sm2 = 0.0;
-                        for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A) { sm2 = fma(*X,*A,sm2); }
+                        for (size_t lx=Lx; lx>0u; --lx, ++X, ++A) { sm2 = fma(*X,*A,sm2); }
                         *Y = sm2;
-                        if (ly<Ly-1u) { X -= Lx; }
+                        if (ly>1u) { X -= Lx; }
                     }
                 }
             }
@@ -156,10 +156,10 @@ int linear_d (double *Y, const double *X, const double *A, const size_t R, const
             {
                 for (size_t b=B; b>0u; --b, ++X, A-=Na, Y-=K*Ly-1u)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, X-=K*Lx, Y+=K)
+                    for (size_t ly=Ly; ly>0u; --ly, X-=K*Lx, Y+=K)
                     {
                         sm2 = 0.0;
-                        for (size_t lx=0u; lx<Lx; ++lx, X+=K, ++A) { sm2 = fma(*X,*A,sm2); }
+                        for (size_t lx=Lx; lx>0u; --lx, X+=K, ++A) { sm2 = fma(*X,*A,sm2); }
                         *Y = sm2;
                     }
                 }
@@ -183,10 +183,10 @@ int linear_c (float *Y, const float *X, const float *A, const size_t R, const si
     {
         if (Na<30000u)
         {
-            for (size_t ly=0u; ly<Ly; ++ly, X-=2u*Lx, ++Y)
+            for (size_t ly=Ly; ly>0u; --ly, X-=2u*Lx, ++Y)
             {
                 sm2r = sm2i = 0.0f;
-                for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A)
+                for (size_t lx=Lx; lx>0u; --lx, ++X, ++A)
                 {
                     xr = *X; xi = *++X;
                     ar = *A; ai = *++A;
@@ -214,10 +214,10 @@ int linear_c (float *Y, const float *X, const float *A, const size_t R, const si
             {
                 for (size_t v=V; v>0u; --v, A-=2u*Na)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++Y)
+                    for (size_t ly=Ly; ly>0u; --ly, ++Y)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A)
+                        for (size_t lx=Lx; lx>0u; --lx, ++X, ++A)
                         {
                             xr = *X; xi = *++X;
                             ar = *A; ai = *++A;
@@ -225,7 +225,7 @@ int linear_c (float *Y, const float *X, const float *A, const size_t R, const si
                             sm2i += xr*ai + xi*ar;
                         }
                         *Y = sm2r; *++Y = sm2i;
-                        if (ly<Ly-1u) { X -= 2u*Lx; }
+                        if (ly>1u) { X -= 2u*Lx; }
                     }
                 }
             }
@@ -241,10 +241,10 @@ int linear_c (float *Y, const float *X, const float *A, const size_t R, const si
             {
                 for (size_t b=B; b>0u; --b, ++X, A-=2u*Na, Y-=2u*K*Ly-2u)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, X-=2u*K*Lx, Y+=2u*K-1u)
+                    for (size_t ly=Ly; ly>0u; --ly, X-=2u*K*Lx, Y+=2u*K-1u)
                     {
                         sm2r = sm2i = 0.0f;
-                        for (size_t lx=0u; lx<Lx; ++lx, X+=2u*K-1u, ++A)
+                        for (size_t lx=Lx; lx>0u; --lx, X+=2u*K-1u, ++A)
                         {
                             xr = *X; xi = *++X;
                             ar = *A; ai = *++A;
@@ -274,10 +274,10 @@ int linear_z (double *Y, const double *X, const double *A, const size_t R, const
     {
         if (Na<150)
         {
-            for (size_t ly=0u; ly<Ly; ++ly, X-=2u*Lx, ++Y)
+            for (size_t ly=Ly; ly>0u; --ly, X-=2u*Lx, ++Y)
             {
                 sm2r = sm2i = 0.0;
-                for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A)
+                for (size_t lx=Lx; lx>0u; --lx, ++X, ++A)
                 {
                     xr = *X; xi = *++X;
                     ar = *A; ai = *++A;
@@ -305,10 +305,10 @@ int linear_z (double *Y, const double *X, const double *A, const size_t R, const
             {
                 for (size_t v=V; v>0u; --v, A-=2u*Na)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, ++Y)
+                    for (size_t ly=Ly; ly>0u; --ly, ++Y)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t lx=0u; lx<Lx; ++lx, ++X, ++A)
+                        for (size_t lx=Lx; lx>0u; --lx, ++X, ++A)
                         {
                             xr = *X; xi = *++X;
                             ar = *A; ai = *++A;
@@ -316,7 +316,7 @@ int linear_z (double *Y, const double *X, const double *A, const size_t R, const
                             sm2i += xr*ai + xi*ar;
                         }
                         *Y = sm2r; *++Y = sm2i;
-                        if (ly<Ly-1u) { X -= 2u*Lx; }
+                        if (ly>1u) { X -= 2u*Lx; }
                     }
                 }
             }
@@ -332,10 +332,10 @@ int linear_z (double *Y, const double *X, const double *A, const size_t R, const
             {
                 for (size_t b=B; b>0u; --b, ++X, A-=2u*Na, Y-=2u*K*Ly-2u)
                 {
-                    for (size_t ly=0u; ly<Ly; ++ly, X-=2u*K*Lx, Y+=2u*K-1u)
+                    for (size_t ly=Ly; ly>0u; --ly, X-=2u*K*Lx, Y+=2u*K-1u)
                     {
                         sm2r = sm2i = 0.0;
-                        for (size_t lx=0u; lx<Lx; ++lx, X+=2u*K-1u, ++A)
+                        for (size_t lx=Lx; lx>0u; --lx, X+=2u*K-1u, ++A)
                         {
                             xr = *X; xi = *++X;
                             ar = *A; ai = *++A;

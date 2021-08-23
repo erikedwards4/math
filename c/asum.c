@@ -29,14 +29,14 @@ int asum_s (float *Y, const float *X, const size_t R, const size_t C, const size
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = fabsf(*X); }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = fabsf(*X); }
     }
     else if (L==N)
     {
         if (L<20000u)
         {
             float sm = 0.0f;
-            for (size_t l=0u; l<L; ++l, ++X) { sm += fabsf(*X); }
+            for (size_t l=L; l>0u; --l, ++X) { sm += fabsf(*X); }
             *Y = sm;
         }
         else { *Y = cblas_sasum((int)L,X,1); }
@@ -55,7 +55,7 @@ int asum_s (float *Y, const float *X, const size_t R, const size_t C, const size
                 for (size_t v=V; v>0u; --v, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, ++X) { sm += fabsf(*X); }
+                    for (size_t l=L; l>0u; --l, ++X) { sm += fabsf(*X); }
                     *Y = sm;
                 }
             }
@@ -84,7 +84,7 @@ int asum_s (float *Y, const float *X, const size_t R, const size_t C, const size
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=K) { sm += fabsf(*X); }
+                    for (size_t l=L; l>0u; --l, X+=K) { sm += fabsf(*X); }
                     *Y = sm;
                 }
             }
@@ -105,14 +105,14 @@ int asum_d (double *Y, const double *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X, ++Y) { *Y = fabs(*X); }
+        for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = fabs(*X); }
     }
     else if (L==N)
     {
         if (L<20000u)
         {
             double sm = 0.0;
-            for (size_t l=0u; l<L; ++l, ++X) { sm += fabs(*X); }
+            for (size_t l=L; l>0u; --l, ++X) { sm += fabs(*X); }
             *Y = sm;
         }
         else { *Y = cblas_dasum((int)L,X,1); }
@@ -131,7 +131,7 @@ int asum_d (double *Y, const double *X, const size_t R, const size_t C, const si
                 for (size_t v=V; v>0u; --v, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0u; l<L; ++l, ++X) { sm += fabs(*X); }
+                    for (size_t l=L; l>0u; --l, ++X) { sm += fabs(*X); }
                     *Y = sm;
                 }
             }
@@ -160,7 +160,7 @@ int asum_d (double *Y, const double *X, const size_t R, const size_t C, const si
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     sm = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=K) { sm += fabs(*X); }
+                    for (size_t l=L; l>0u; --l, X+=K) { sm += fabs(*X); }
                     *Y = sm;
                 }
             }
@@ -181,14 +181,14 @@ int asum_c (float *Y, const float *X, const size_t R, const size_t C, const size
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = fabsf(*X) + fabsf(*(X+1)); }
+        for (size_t n=N; n>0u; --n, X+=2, ++Y) { *Y = fabsf(*X) + fabsf(*(X+1)); }
     }
     else if (L==N)
     {
         if (L<5000u)
         {
             float sm = 0.0f;
-            for (size_t l=0u; l<L; ++l, X+=2) { sm += fabsf(*X) + fabsf(*(X+1)); }
+            for (size_t l=L; l>0u; --l, X+=2) { sm += fabsf(*X) + fabsf(*(X+1)); }
             *Y = sm;
         }
         else { *Y = cblas_scasum((int)L,X,1); }
@@ -241,14 +241,14 @@ int asum_z (double *Y, const double *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, X+=2, ++Y) { *Y = fabs(*X) + fabs(*(X+1)); }
+        for (size_t n=N; n>0u; --n, X+=2, ++Y) { *Y = fabs(*X) + fabs(*(X+1)); }
     }
     else if (L==N)
     {
         if (L<5000u)
         {
             double sm = 0.0;
-            for (size_t l=0u; l<L; ++l, X+=2) { sm += fabs(*X) + fabs(*(X+1)); }
+            for (size_t l=L; l>0u; --l, X+=2) { sm += fabs(*X) + fabs(*(X+1)); }
             *Y = sm;
         }
         else { *Y = cblas_dzasum((int)L,X,1); }

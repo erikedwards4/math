@@ -26,12 +26,12 @@ int normalize1_s (float *X, const size_t R, const size_t C, const size_t S, cons
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X) { *X = (*X<0.0f) ? -1.0f : 1.0f; }
+        for (size_t n=N; n>0u; --n, ++X) { *X = (*X<0.0f) ? -1.0f : 1.0f; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { nrm += fabsf(*X); }
-        for (size_t l=0u; l<L; ++l) { *--X /= nrm; }
+        for (size_t l=L; l>0u; --l, ++X) { nrm += fabsf(*X); }
+        for (size_t l=L; l>0u; --l) { *--X /= nrm; }
     }
     else
     {
@@ -44,9 +44,9 @@ int normalize1_s (float *X, const size_t R, const size_t C, const size_t S, cons
             for (size_t v=V; v>0u; --v)
             {
                 nrm = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { nrm += fabsf(*X); }
+                for (size_t l=L; l>0u; --l, ++X) { nrm += fabsf(*X); }
                 X -= L;
-                for (size_t l=0u; l<L; ++l, ++X) { *X /= nrm; }
+                for (size_t l=L; l>0u; --l, ++X) { *X /= nrm; }
             }
         }
         else
@@ -56,8 +56,8 @@ int normalize1_s (float *X, const size_t R, const size_t C, const size_t S, cons
                 for (size_t b=B; b>0u; --b, ++X)
                 {
                     nrm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=K) { nrm += fabsf(*X); }
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X /= nrm; }
+                    for (size_t l=L; l>0u; --l, X+=K) { nrm += fabsf(*X); }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X /= nrm; }
                 }
             }
         }
@@ -78,12 +78,12 @@ int normalize1_d (double *X, const size_t R, const size_t C, const size_t S, con
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X) { *X = (*X<0.0) ? -1.0 : 1.0; }
+        for (size_t n=N; n>0u; --n, ++X) { *X = (*X<0.0) ? -1.0 : 1.0; }
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, ++X) { nrm += fabs(*X); }
-        for (size_t l=0u; l<L; ++l) { *--X /= nrm; }
+        for (size_t l=L; l>0u; --l, ++X) { nrm += fabs(*X); }
+        for (size_t l=L; l>0u; --l) { *--X /= nrm; }
     }
     else
     {
@@ -96,9 +96,9 @@ int normalize1_d (double *X, const size_t R, const size_t C, const size_t S, con
             for (size_t v=V; v>0u; --v)
             {
                 nrm = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { nrm += fabs(*X); }
+                for (size_t l=L; l>0u; --l, ++X) { nrm += fabs(*X); }
                 X -= L;
-                for (size_t l=0u; l<L; ++l, ++X) { *X /= nrm; }
+                for (size_t l=L; l>0u; --l, ++X) { *X /= nrm; }
             }
         }
         else
@@ -108,8 +108,8 @@ int normalize1_d (double *X, const size_t R, const size_t C, const size_t S, con
                 for (size_t b=B; b>0u; --b, ++X)
                 {
                     nrm = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=K) { nrm += fabs(*X); }
-                    for (size_t l=0u; l<L; ++l) { X-=K; *X /= nrm; }
+                    for (size_t l=L; l>0u; --l, X+=K) { nrm += fabs(*X); }
+                    for (size_t l=L; l>0u; --l) { X-=K; *X /= nrm; }
                 }
             }
         }
@@ -130,7 +130,7 @@ int normalize1_c (float *X, const size_t R, const size_t C, const size_t S, cons
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X)
+        for (size_t n=N; n>0u; --n, ++X)
         {
             nrm = sqrtf(*X**X + *(X+1)**(X+1));
             *X /= nrm; *++X /= nrm;
@@ -138,8 +138,8 @@ int normalize1_c (float *X, const size_t R, const size_t C, const size_t S, cons
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, X+=2) { nrm += sqrtf(*X**X + *(X+1)**(X+1)); }
-        for (size_t l=0u; l<2u*L; ++l) { *--X /= nrm; }
+        for (size_t l=L; l>0u; --l, X+=2) { nrm += sqrtf(*X**X + *(X+1)**(X+1)); }
+        for (size_t l=2u*L; l>0u; --l) { *--X /= nrm; }
     }
     else
     {
@@ -152,9 +152,9 @@ int normalize1_c (float *X, const size_t R, const size_t C, const size_t S, cons
             for (size_t v=V; v>0u; --v)
             {
                 nrm = 0.0f;
-                for (size_t l=0u; l<L; ++l, X+=2) { nrm += sqrtf(*X**X + *(X+1)**(X+1)); }
+                for (size_t l=L; l>0u; --l, X+=2) { nrm += sqrtf(*X**X + *(X+1)**(X+1)); }
                 X -= 2u*L;
-                for (size_t l=0u; l<2u*L; ++l, ++X) { *X /= nrm; }
+                for (size_t l=2u*L; l>0u; --l, ++X) { *X /= nrm; }
             }
         }
         else
@@ -164,8 +164,8 @@ int normalize1_c (float *X, const size_t R, const size_t C, const size_t S, cons
                 for (size_t b=B; b>0u; --b, X+=2)
                 {
                     nrm = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K) { nrm += sqrtf(*X**X + *(X+1)**(X+1)); }
-                    for (size_t l=0u; l<L; ++l) { X-=2u*K; *X /= nrm; *(X+1) /= nrm; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K) { nrm += sqrtf(*X**X + *(X+1)**(X+1)); }
+                    for (size_t l=L; l>0u; --l) { X-=2u*K; *X /= nrm; *(X+1) /= nrm; }
                 }
             }
         }
@@ -186,7 +186,7 @@ int normalize1_z (double *X, const size_t R, const size_t C, const size_t S, con
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++X)
+        for (size_t n=N; n>0u; --n, ++X)
         {
             nrm = sqrt(*X**X + *(X+1)**(X+1));
             *X /= nrm; *++X /= nrm;
@@ -194,8 +194,8 @@ int normalize1_z (double *X, const size_t R, const size_t C, const size_t S, con
     }
     else if (L==N)
     {
-        for (size_t l=0u; l<L; ++l, X+=2) { nrm += sqrt(*X**X + *(X+1)**(X+1)); }
-        for (size_t l=0u; l<2u*L; ++l) { *--X /= nrm; }
+        for (size_t l=L; l>0u; --l, X+=2) { nrm += sqrt(*X**X + *(X+1)**(X+1)); }
+        for (size_t l=2u*L; l>0u; --l) { *--X /= nrm; }
     }
     else
     {
@@ -208,9 +208,9 @@ int normalize1_z (double *X, const size_t R, const size_t C, const size_t S, con
             for (size_t v=V; v>0u; --v)
             {
                 nrm = 0.0;
-                for (size_t l=0u; l<L; ++l, X+=2) { nrm += sqrt(*X**X + *(X+1)**(X+1)); }
+                for (size_t l=L; l>0u; --l, X+=2) { nrm += sqrt(*X**X + *(X+1)**(X+1)); }
                 X -= 2u*L;
-                for (size_t l=0u; l<2u*L; ++l, ++X) { *X /= nrm; }
+                for (size_t l=2u*L; l>0u; --l, ++X) { *X /= nrm; }
             }
         }
         else
@@ -220,8 +220,8 @@ int normalize1_z (double *X, const size_t R, const size_t C, const size_t S, con
                 for (size_t b=B; b>0u; --b, X+=2)
                 {
                     nrm = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K) { nrm += sqrt(*X**X + *(X+1)**(X+1)); }
-                    for (size_t l=0u; l<L; ++l) { X-=2u*K; *X /= nrm; *(X+1) /= nrm; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K) { nrm += sqrt(*X**X + *(X+1)**(X+1)); }
+                    for (size_t l=L; l>0u; --l) { X-=2u*K; *X /= nrm; *(X+1) /= nrm; }
                 }
             }
         }

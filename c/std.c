@@ -30,14 +30,14 @@ int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
         float x, mn = 0.0f, sm2 = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { x = *--X - mn; sm2 += x*x; }
+        for (size_t l=L; l>0u; --l) { x = *--X - mn; sm2 += x*x; }
         *Y = sqrtf(sm2*den2);
     }
     else
@@ -52,10 +52,10 @@ int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
                 X -= L;
                 mn *= den;
-                for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; sm2 += x*x; }
+                for (size_t l=L; l>0u; --l, ++X) { x = *X - mn; sm2 += x*x; }
                 *Y = sqrtf(sm2*den2);
             }
         }
@@ -63,7 +63,7 @@ int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
         {
             float x, *mn;
             if (!(mn=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in std_s: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t l=0u; l<L; ++l, mn-=V)
+            for (size_t l=L; l>0u; --l, mn-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++mn) { *mn += *X; }
             }
@@ -72,7 +72,7 @@ int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
             mn -= V;
             for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y = x*x; }
             mn -= V; Y -= V;
-            for (size_t l=1u; l<L; ++l, mn-=V, Y-=V)
+            for (size_t l=L; l>1u; --l, mn-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
             }
@@ -87,9 +87,9 @@ int std_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = 0.0f;
-                    for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; sm2 += x*x; }
+                    for (size_t l=L; l>1u; --l, X-=K) { x = *X - mn; sm2 += x*x; }
                     x = *X - mn; sm2 += x*x;
                     *Y = sqrtf(sm2*den2);
                 }
@@ -112,14 +112,14 @@ int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
         double x, mn = 0.0, sm2 = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { x = *--X - mn; sm2 += x*x; }
+        for (size_t l=L; l>0u; --l) { x = *--X - mn; sm2 += x*x; }
         *Y = sqrt(sm2*den2);
     }
     else
@@ -134,10 +134,10 @@ int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
                 X -= L;
                 mn *= den;
-                for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; sm2 += x*x; }
+                for (size_t l=L; l>0u; --l, ++X) { x = *X - mn; sm2 += x*x; }
                 *Y = sqrt(sm2*den2);
             }
         }
@@ -145,7 +145,7 @@ int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
         {
             double x, *mn;
             if (!(mn=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in std_d: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t l=0u; l<L; ++l, mn-=V)
+            for (size_t l=L; l>0u; --l, mn-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++mn) { *mn += *X; }
             }
@@ -154,7 +154,7 @@ int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
             mn -= V;
             for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y = x*x; }
             mn -= V; Y -= V;
-            for (size_t l=1u; l<L; ++l, mn-=V, Y-=V)
+            for (size_t l=L; l>1u; --l, mn-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
             }
@@ -169,9 +169,9 @@ int std_d (double *Y, double *X, const size_t R, const size_t C, const size_t S,
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = 0.0;
-                    for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; sm2 += x*x; }
+                    for (size_t l=L; l>1u; --l, X-=K) { x = *X - mn; sm2 += x*x; }
                     x = *X - mn; sm2 += x*x;
                     *Y = sqrt(sm2*den2);
                 }
@@ -195,15 +195,15 @@ int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = 0.0f; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = 0.0f; }
     }
     else if (L==N)
     {
         float mnr = 0.0f, mni = 0.0f, sm2 = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
         X -= 2u*L;
-        for (size_t l=0u; l<L; ++l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
+        for (size_t l=L; l>0u; --l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
         *Y = sqrtf(sm2*den2);
     }
     else
@@ -218,10 +218,10 @@ int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
                 X -= 2u*L;
-                for (size_t l=0u; l<L; ++l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
+                for (size_t l=L; l>0u; --l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
                 *Y = sqrtf(sm2*den2);
             }
         }
@@ -233,10 +233,10 @@ int std_c (float *Y, float *X, const size_t R, const size_t C, const size_t S, c
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mnr = mni = sm2 = 0.0f;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
                     X -= 2u*K*L;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
                     *Y = sqrtf(sm2*den2);
                 }
             }
@@ -259,15 +259,15 @@ int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S,
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<2u*N; ++n, ++Y) { *Y = 0.0; }
+        for (size_t n=2u*N; n>0u; --n, ++Y) { *Y = 0.0; }
     }
     else if (L==N)
     {
         double mnr = 0.0, mni = 0.0, sm2 = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+        for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
         mnr *= den; mni *= den;
         X -= 2u*L;
-        for (size_t l=0u; l<L; ++l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
+        for (size_t l=L; l>0u; --l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
         *Y = sqrt(sm2*den2);
     }
     else
@@ -282,10 +282,10 @@ int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S,
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mnr = mni = sm2 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { mnr += *X; mni += *++X; }
+                for (size_t l=L; l>0u; --l, ++X) { mnr += *X; mni += *++X; }
                 mnr *= den; mni *= den;
                 X -= 2u*L;
-                for (size_t l=0u; l<L; ++l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
+                for (size_t l=L; l>0u; --l, ++X) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
                 *Y = sqrt(sm2*den2);
             }
         }
@@ -297,10 +297,10 @@ int std_z (double *Y, double *X, const size_t R, const size_t C, const size_t S,
                 for (size_t b=B; b>0u; --b, X-=2u*K*L-2u, ++Y)
                 {
                     mnr = mni = sm2 = 0.0;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { mnr += *X; mni += *++X; }
                     mnr *= den; mni *= den;
                     X -= 2u*K*L;
-                    for (size_t l=0u; l<L; ++l, X+=2u*K-1u) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
+                    for (size_t l=L; l>0u; --l, X+=2u*K-1u) { xr = *X - mnr; xi = *++X - mni; sm2 += xr*xr + xi*xi; }
                     *Y = sqrt(sm2*den2);
                 }
             }

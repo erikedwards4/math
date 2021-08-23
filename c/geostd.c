@@ -27,24 +27,24 @@ int geostd_s (float *Y, const float *X, const size_t R, const size_t C, const si
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0f; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 1.0f; }
     }
     else if (L==N)
     {
         mn = sm2 = 0.0f;
         if (L<150u)
         {
-            for (size_t l=0u; l<L; ++l, ++X) { mn += logf(*X); }
+            for (size_t l=L; l>0u; --l, ++X) { mn += logf(*X); }
             mn *= den;
-            for (size_t l=0u; l<L; ++l) { x = logf(*--X) - mn; sm2 += x*x; }
+            for (size_t l=L; l>0u; --l) { x = logf(*--X) - mn; sm2 += x*x; }
         }
         else
         {
             float *X1;
             if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in geostd_s: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t l=0u; l<L; ++l, ++X1, ++X) { *X1 = logf(*X); mn += *X1; }
+            for (size_t l=L; l>0u; --l, ++X1, ++X) { *X1 = logf(*X); mn += *X1; }
             mn *= den;
-            for (size_t l=0u; l<L; ++l) { x = *--X1 - mn; sm2 += x*x; }
+            for (size_t l=L; l>0u; --l) { x = *--X1 - mn; sm2 += x*x; }
             free(X1);
         }
         *Y = expf(sm2*den2);
@@ -62,9 +62,9 @@ int geostd_s (float *Y, const float *X, const size_t R, const size_t C, const si
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X) { *X1 = logf(*X); mn += *X1; }
+                for (size_t l=L; l>0u; --l, ++X1, ++X) { *X1 = logf(*X); mn += *X1; }
                 mn *= den;
-                for (size_t l=0u; l<L; ++l) { x = *--X1 - mn; sm2 += x*x; }
+                for (size_t l=L; l>0u; --l) { x = *--X1 - mn; sm2 += x*x; }
                 *Y = expf(sm2*den2);
             }
             free(X1);
@@ -78,9 +78,9 @@ int geostd_s (float *Y, const float *X, const size_t R, const size_t C, const si
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = sm2 = 0.0f;
-                    for (size_t l=0u; l<L; ++l, ++X1, X+=K) { *X1 = logf(*X); mn += *X1; }
+                    for (size_t l=L; l>0u; --l, ++X1, X+=K) { *X1 = logf(*X); mn += *X1; }
                     mn *= den;
-                    for (size_t l=0u; l<L; ++l) { x = *--X1 - mn; sm2 += x*x; }
+                    for (size_t l=L; l>0u; --l) { x = *--X1 - mn; sm2 += x*x; }
                     *Y = expf(sm2*den2);
                 }
             }
@@ -104,24 +104,24 @@ int geostd_d (double *Y, const double *X, const size_t R, const size_t C, const 
     if (N==0u) {}
     else if (L==1u)
     {
-        for (size_t n=0u; n<N; ++n, ++Y) { *Y = 1.0; }
+        for (size_t n=N; n>0u; --n, ++Y) { *Y = 1.0; }
     }
     else if (L==N)
     {
         mn = sm2 = 0.0;
         if (L<150u)
         {
-            for (size_t l=0u; l<L; ++l, ++X) { mn += log(*X); }
+            for (size_t l=L; l>0u; --l, ++X) { mn += log(*X); }
             mn *= den;
-            for (size_t l=0u; l<L; ++l) { x = log(*--X) - mn; sm2 += x*x; }
+            for (size_t l=L; l>0u; --l) { x = log(*--X) - mn; sm2 += x*x; }
         }
         else
         {
             double *X1;
             if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in geostd_d: problem with malloc. "); perror("malloc"); return 1; }
-            for (size_t l=0u; l<L; ++l, ++X1, ++X) { *X1 = log(*X); mn += *X1; }
+            for (size_t l=L; l>0u; --l, ++X1, ++X) { *X1 = log(*X); mn += *X1; }
             mn *= den;
-            for (size_t l=0u; l<L; ++l) { x = *--X1 - mn; sm2 += x*x; }
+            for (size_t l=L; l>0u; --l) { x = *--X1 - mn; sm2 += x*x; }
             free(X1);
         }
         *Y = exp(sm2*den2);
@@ -139,9 +139,9 @@ int geostd_d (double *Y, const double *X, const size_t R, const size_t C, const 
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X1, ++X) { *X1 = log(*X); mn += *X1; }
+                for (size_t l=L; l>0u; --l, ++X1, ++X) { *X1 = log(*X); mn += *X1; }
                 mn *= den;
-                for (size_t l=0u; l<L; ++l) { x = *--X1 - mn; sm2 += x*x; }
+                for (size_t l=L; l>0u; --l) { x = *--X1 - mn; sm2 += x*x; }
                 *Y = exp(sm2*den2);
             }
             free(X1);
@@ -155,9 +155,9 @@ int geostd_d (double *Y, const double *X, const size_t R, const size_t C, const 
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     mn = sm2 = 0.0;
-                    for (size_t l=0u; l<L; ++l, ++X1, X+=K) { *X1 = log(*X); mn += *X1; }
+                    for (size_t l=L; l>0u; --l, ++X1, X+=K) { *X1 = log(*X); mn += *X1; }
                     mn *= den;
-                    for (size_t l=0u; l<L; ++l) { x = *--X1 - mn; sm2 += x*x; }
+                    for (size_t l=L; l>0u; --l) { x = *--X1 - mn; sm2 += x*x; }
                     *Y = exp(sm2*den2);
                 }
             }

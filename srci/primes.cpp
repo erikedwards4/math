@@ -61,9 +61,9 @@ if ((o1.T==oktypes).sum()==0)
 //Checks
 
 //Set output header info
-try { X = new size_t[1+(P-1)/2]; }
+try { X = new size_t[1u+(P-1u)/2u]; }
 catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for integer file (X)" << endl; return 1; }
-if (codee::primes_i(X,&cnt,(P-1)/2))
+if (codee::primes_u(X,&cnt,(P-1u)/2u))
 { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
 o1.C = cnt;
 o1.R = o1.S = o1.H = 1u;
@@ -76,7 +76,7 @@ if (o1.T==1u)
     float *Y;
     try { Y = new float[o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    for (size_t c=0u; c<o1.C; c++) { Y[c] = float(X[c]); }
+    for (size_t c=0u; c<o1.C; ++c) { Y[c] = float(X[c]); }
     if (wo1)
     {
         try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }

@@ -21,7 +21,7 @@ int pi_4_z (double *Y, const size_t N);
 
 int pi_4_s (float *Y, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++Y) { *Y = (float)M_PI_4; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = (float)M_PI_4; }
 
     return 0;
 }
@@ -29,7 +29,7 @@ int pi_4_s (float *Y, const size_t N)
 
 int pi_4_d (double *Y, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++Y) { *Y = M_PI_4; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = M_PI_4; }
 
     return 0;
 }
@@ -37,7 +37,7 @@ int pi_4_d (double *Y, const size_t N)
 
 int pi_4_c (float *Y, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++Y) { *Y = (float)M_PI_4; *++Y = 0.0f; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = (float)M_PI_4; *++Y = 0.0f; }
 
     return 0;
 }
@@ -45,7 +45,7 @@ int pi_4_c (float *Y, const size_t N)
 
 int pi_4_z (double *Y, const size_t N)
 {
-    for (size_t n=0u; n<N; ++n, ++Y) { *Y = M_PI_4; *++Y = 0.0; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = M_PI_4; *++Y = 0.0; }
 
     return 0;
 }

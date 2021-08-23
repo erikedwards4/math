@@ -22,31 +22,31 @@ int col_s (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (iscolmajor)
         {
             X += c*R;
-            for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; }
+            for (size_t r=R; r>0u; --r, ++X, ++Y) { *Y = *X; }
         }
         else
         {
             X += c;
-            for (size_t r=0u; r<R; ++r, X+=C, ++Y) { *Y = *X; }
+            for (size_t r=R; r>0u; --r, X+=C, ++Y) { *Y = *X; }
         }
     }
     else if (iscolmajor)
     {
         X += c*R;
-        for (size_t h=0u; h<H; ++h)
+        for (size_t h=H; h>0u; --h)
         {
-            for (size_t s=0u; s<S; ++s, X+=R*(C-1u))
+            for (size_t s=S; s>0u; --s, X+=R*(C-1u))
             {
-                for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; }
+                for (size_t r=R; r>0u; --r, ++X, ++Y) { *Y = *X; }
             }
         }
     }
     else
     {
         X += c*H*S;
-        for (size_t r=0u; r<R; ++r, X+=(C-1u)*H*S)
+        for (size_t r=R; r>0u; --r, X+=(C-1u)*H*S)
         {
-            for (size_t s=0u; s<H*S; ++s, ++X, ++Y) { *Y = *X; }
+            for (size_t s=H*S; s>0u; --s, ++X, ++Y) { *Y = *X; }
         }
     }
 
@@ -63,31 +63,31 @@ int col_d (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (iscolmajor)
         {
             X += c*R;
-            for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; }
+            for (size_t r=R; r>0u; --r, ++X, ++Y) { *Y = *X; }
         }
         else
         {
             X += c;
-            for (size_t r=0u; r<R; ++r, X+=C, ++Y) { *Y = *X; }
+            for (size_t r=R; r>0u; --r, X+=C, ++Y) { *Y = *X; }
         }
     }
     else if (iscolmajor)
     {
         X += c*R;
-        for (size_t h=0u; h<H; ++h)
+        for (size_t h=H; h>0u; --h)
         {
-            for (size_t s=0u; s<S; ++s, X+=R*(C-1u))
+            for (size_t s=S; s>0u; --s, X+=R*(C-1u))
             {
-                for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; }
+                for (size_t r=R; r>0u; --r, ++X, ++Y) { *Y = *X; }
             }
         }
     }
     else
     {
         X += c*H*S;
-        for (size_t r=0u; r<R; ++r, X+=(C-1u)*H*S)
+        for (size_t r=R; r>0u; --r, X+=(C-1u)*H*S)
         {
-            for (size_t s=0u; s<H*S; ++s, ++X, ++Y) { *Y = *X; }
+            for (size_t s=H*S; s>0u; --s, ++X, ++Y) { *Y = *X; }
         }
     }
 
@@ -104,31 +104,31 @@ int col_c (float *Y, const float *X, const size_t R, const size_t C, const size_
         if (iscolmajor)
         {
             X += 2u*c*R;
-            for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t r=R; r>0u; --r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
         }
         else
         {
             X += 2u*c;
-            for (size_t r=0u; r<R; ++r, X+=2u*C-1u, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t r=R; r>0u; --r, X+=2u*C-1u, ++Y) { *Y = *X; *++Y = *++X; }
         }
     }
     else if (iscolmajor)
     {
         X += 2u*c*R;
-        for (size_t h=0u; h<H; ++h)
+        for (size_t h=H; h>0u; --h)
         {
-            for (size_t s=0u; s<S; ++s, X+=2u*R*(C-1u))
+            for (size_t s=S; s>0u; --s, X+=2u*R*(C-1u))
             {
-                for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t r=R; r>0u; --r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             }
         }
     }
     else
     {
         X += 2u*c*H*S;
-        for (size_t r=0u; r<R; ++r, X+=2u*(C-1u)*H*S)
+        for (size_t r=R; r>0u; --r, X+=2u*(C-1u)*H*S)
         {
-            for (size_t s=0u; s<H*S; ++s, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t s=H*S; s>0u; --s, ++X, ++Y) { *Y = *X; *++Y = *++X; }
         }
     }
 
@@ -145,31 +145,31 @@ int col_z (double *Y, const double *X, const size_t R, const size_t C, const siz
         if (iscolmajor)
         {
             X += 2u*c*R;
-            for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t r=R; r>0u; --r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
         }
         else
         {
             X += 2u*c;
-            for (size_t r=0u; r<R; ++r, X+=2u*C-1u, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t r=R; r>0u; --r, X+=2u*C-1u, ++Y) { *Y = *X; *++Y = *++X; }
         }
     }
     else if (iscolmajor)
     {
         X += 2u*c*R;
-        for (size_t h=0u; h<H; ++h)
+        for (size_t h=H; h>0u; --h)
         {
-            for (size_t s=0u; s<S; ++s, X+=2u*R*(C-1u))
+            for (size_t s=S; s>0u; --s, X+=2u*R*(C-1u))
             {
-                for (size_t r=0u; r<R; ++r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+                for (size_t r=R; r>0u; --r, ++X, ++Y) { *Y = *X; *++Y = *++X; }
             }
         }
     }
     else
     {
         X += 2u*c*H*S;
-        for (size_t r=0u; r<R; ++r, X+=2u*(C-1u)*H*S)
+        for (size_t r=R; r>0u; --r, X+=2u*(C-1u)*H*S)
         {
-            for (size_t s=0u; s<H*S; ++s, ++X, ++Y) { *Y = *X; *++Y = *++X; }
+            for (size_t s=H*S; s>0u; --s, ++X, ++Y) { *Y = *X; *++Y = *++X; }
         }
     }
 

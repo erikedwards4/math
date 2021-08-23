@@ -27,9 +27,9 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
     else if (L==N)
     {
         float x, mn = 0.0f, sm2 = 0.0f;
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { x = *--X - mn; sm2 += x*x; }
+        for (size_t l=L; l>0u; --l) { x = *--X - mn; sm2 += x*x; }
         *Y = sqrtf(sm2*den2) / mn;
     }
     else
@@ -44,10 +44,10 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0f;
-                for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { *Y += *X; }
                 mn *= den;
                 X -= L;
-                for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; sm2 += x*x; }
+                for (size_t l=L; l>0u; --l, ++X) { x = *X - mn; sm2 += x*x; }
                 *Y = sqrtf(sm2*den2) / mn;
             }
         }
@@ -55,14 +55,14 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
         {
             float x, *mn;
             if (!(mn=(float *)calloc(V,sizeof(float)))) { fprintf(stderr,"error in coeff_var_s: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t l=0u; l<L; ++l, mn-=V)
+            for (size_t l=L; l>0u; --l, mn-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++mn) { *mn += *X; }
             }
             X -= N;
             for (size_t v=V; v>0u; --v, ++mn, ++Y) { *mn *= den; *Y = 0.0f; }
             mn -= V; Y -= V;
-            for (size_t l=0u; l<L; ++l, mn-=V, Y-=V)
+            for (size_t l=L; l>0u; --l, mn-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
             }
@@ -77,9 +77,9 @@ int coeff_var_s (float *Y, float *X, const size_t R, const size_t C, const size_
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = 0.0f;
-                    for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; sm2 += x*x; }
+                    for (size_t l=L; l>1u; --l, X-=K) { x = *X - mn; sm2 += x*x; }
                     x = *X - mn; sm2 += x*x;
                     *Y = sqrtf(sm2*den2) / mn;
                 }
@@ -104,9 +104,9 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
     else if (L==N)
     {
         double x, mn = 0.0, sm2 = 0.0;
-        for (size_t l=0u; l<L; ++l, ++X) { mn += *X; }
+        for (size_t l=L; l>0u; --l, ++X) { mn += *X; }
         mn *= den;
-        for (size_t l=0u; l<L; ++l) { x = *--X - mn; sm2 += x*x; }
+        for (size_t l=L; l>0u; --l) { x = *--X - mn; sm2 += x*x; }
         *Y = sqrt(sm2*den2) / mn;
     }
     else
@@ -121,10 +121,10 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 mn = sm2 = 0.0;
-                for (size_t l=0u; l<L; ++l, ++X) { *Y += *X; }
+                for (size_t l=L; l>0u; --l, ++X) { *Y += *X; }
                 mn *= den;
                 X -= L;
-                for (size_t l=0u; l<L; ++l, ++X) { x = *X - mn; sm2 += x*x; }
+                for (size_t l=L; l>0u; --l, ++X) { x = *X - mn; sm2 += x*x; }
                 *Y = sqrt(sm2*den2) / mn;
             }
         }
@@ -132,14 +132,14 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
         {
             double x, *mn;
             if (!(mn=(double *)calloc(V,sizeof(double)))) { fprintf(stderr,"error in coeff_var_d: problem with calloc. "); perror("calloc"); return 1; }
-            for (size_t l=0u; l<L; ++l, mn-=V)
+            for (size_t l=L; l>0u; --l, mn-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++mn) { *mn += *X; }
             }
             X -= N;
             for (size_t v=V; v>0u; --v, ++mn, ++Y) { *mn *= den; *Y = 0.0; }
             mn -= V; Y -= V;
-            for (size_t l=0u; l<L; ++l, mn-=V, Y-=V)
+            for (size_t l=L; l>0u; --l, mn-=V, Y-=V)
             {
                 for (size_t v=V; v>0u; --v, ++X, ++mn, ++Y) { x = *X - *mn; *Y += x*x; }
             }
@@ -154,9 +154,9 @@ int coeff_var_d (double *Y, double *X, const size_t R, const size_t C, const siz
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     mn = sm2 = 0.0;
-                    for (size_t l=0u; l<L-1u; ++l, X+=K) { mn += *X; }
+                    for (size_t l=L; l>1u; --l, X+=K) { mn += *X; }
                     mn += *X; mn *= den;
-                    for (size_t l=0u; l<L-1u; ++l, X-=K) { x = *X - mn; sm2 += x*x; }
+                    for (size_t l=L; l>1u; --l, X-=K) { x = *X - mn; sm2 += x*x; }
                     x = *X - mn; sm2 += x*x;
                     *Y = sqrt(sm2*den2) / mn;
                 }
