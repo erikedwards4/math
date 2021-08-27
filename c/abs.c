@@ -25,7 +25,7 @@ int abs_s (float *Y, const float *X, const size_t N)
     for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = fabsf(*X); }
     //for (size_t n=N; n>0u; --n) { Y[n] = fabsf(X[n]); }                 //same speed, but more instructions
     //for (size_t n=N; n>0u; --n) { Y[n] = (X[n]<0.0f) ? -X[n] : X[n]; }  //slower
-    //clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+    //clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -46,7 +46,8 @@ int abs_c (float *Y, const float *X, const size_t N)
     {
         *Y = sqrtf(*X**X + *(X+1)**(X+1));
     }
-    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(toc.tv_sec-tic.tv_sec)*1e3+(toc.tv_nsec-tic.tv_nsec)/1e6);
+    //clock_gettime(CLOCK_REALTIME,&toc);
+    //fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
     
     return 0;
 }

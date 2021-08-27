@@ -24,8 +24,8 @@ else
 endif
 
 INCLS=-Ic -I../util
-CFLAGS=$(WFLAG) $(STD) -O2 -ffast-math -march=native $(INCLS)
-CCFLAGS=-Wall -Wextra -std=gnu++14 -O2 -ffast-math -march=native $(INCLS)
+CFLAGS=$(WFLAG) $(STD) -O3 -ffast-math -march=native -mfpmath=sse $(INCLS)
+CCFLAGS=-Wall -Wextra -std=gnu++14 -O3 -ffast-math -march=native -mfpmath=sse $(INCLS)
 #LIBS=-largtable2 -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
