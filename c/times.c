@@ -323,7 +323,7 @@ int times_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C
     }
     else if (N==N2)
     {
-        for (size_t n=N; n>0u; --n, ++X1) { *X1 *= *X2; }
+        for (size_t n=N; n>0u; --n, ++X1, ++X2) { *X1 *= *X2; }
     }
     else if (iscolmajor)
     {
