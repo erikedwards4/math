@@ -54,8 +54,8 @@ if (i3.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input 3 (B) f
 if (!i2.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (A) must be a matrix" << endl; return 1; }
 if (!i3.isvec()) { cerr << progstr+": " << __LINE__ << errstr << "input 3 (B) must be a vector" << endl; return 1; }
 if (!major_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs 1 and 2 must have the same row/col major format" << endl; return 1; }
-Lx = (i1.iscolmajor()) ? i2.R : i2.C;
-Ly = (i1.iscolmajor()) ? i2.C : i2.R;
+Lx = i1.iscolmajor() ? i2.R : i2.C;
+Ly = i1.iscolmajor() ? i2.C : i2.R;
 if (Ly!=i3.N()) { cerr << progstr+": " << __LINE__ << errstr << "length of input 3 (B) must equal nrows of input 2 (A)" << endl; return 1; }
 if (dim==0u && i1.R!=Lx) { cerr << progstr+": " << __LINE__ << errstr << "length of vecs in input 1 (X) must equal Lx of input 2 (A)" << endl; return 1; }
 if (dim==1u && i1.C!=Lx) { cerr << progstr+": " << __LINE__ << errstr << "length of vecs in input 1 (X) must equal Lx of input 2 (A)" << endl; return 1; }

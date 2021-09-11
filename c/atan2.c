@@ -32,16 +32,16 @@ int atan2_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
     {
         for (size_t n=N; n>0u; --n, ++X1, ++Y) { *Y = atan2f(*X1,*X2); }
     }
-    else if (N1==N2)
+    else if (N==N1 && N1==N2)
     {
         for (size_t n=N; n>0u; --n, ++X1, ++X2, ++Y) { *Y = atan2f(*X1,*X2); }
     }
     else if (iscolmajor)
     {
-        const int r1i = (int)(R1>1u), r2i = (int)(R2>1u);
-        const int c1i = (int)R1*((int)(C1>1u)-(int)(R1>1u)), c2i = (int)R2*((int)(C2>1u)-(int)(R2>1u));
-        const int s1i = (int)(R1*C1)*((int)(S1>1u)-(int)(C1>1u)), s2i = (int)(R2*C2)*((int)(S2>1u)-(int)(C2>1u));
-        const int h1i = (int)(R1*C1*S1)*((int)(H1>1u)-(int)(S1>1u)), h2i = (int)(R2*C2*S2)*((int)(H2>1u)-(int)(S2>1u));
+        const int r1i = (R1>1u), r2i = (R2>1u);
+        const int c1i = (int)R1*((C1>1u)-(R1>1u)), c2i = (int)R2*((C2>1u)-(R2>1u));
+        const int s1i = (int)(R1*C1)*((S1>1u)-(C1>1u)), s2i = (int)(R2*C2)*((S2>1u)-(C2>1u));
+        const int h1i = (int)(R1*C1*S1)*((H1>1u)-(S1>1u)), h2i = (int)(R2*C2*S2)*((H2>1u)-(S2>1u));
         for (size_t h=H; h>0u; --h, X1+=h1i, X2+=h2i)
         {
             for (size_t s=S; s>0u; --s, X1+=s1i, X2+=s2i)
@@ -58,10 +58,10 @@ int atan2_s (float *Y, const float *X1, const float *X2, const size_t R1, const 
     }
     else
     {
-        const int h1i = (int)(H1>1u), h2i = (int)(H2>1u);
-        const int s1i = (int)H1*((int)(S1>1u)-(int)(H1>1u)), s2i = (int)H2*((int)(S2>1u)-(int)(H2>1u));
-        const int c1i = (int)(H1*S1)*((int)(C1>1u)-(int)(S1>1u)), c2i = (int)(H2*S2)*((int)(C2>1u)-(int)(S2>1u));
-        const int r1i = (int)(H1*S1*C1)*((int)(R1>1u)-(int)(C1>1u)), r2i = (int)(H2*S2*C2)*((int)(R2>1u)-(int)(C2>1u));
+        const int h1i = (H1>1u), h2i = (H2>1u);
+        const int s1i = (int)H1*((S1>1u)-(H1>1u)), s2i = (int)H2*((S2>1u)-(H2>1u));
+        const int c1i = (int)(H1*S1)*((C1>1u)-(S1>1u)), c2i = (int)(H2*S2)*((C2>1u)-(S2>1u));
+        const int r1i = (int)(H1*S1*C1)*((R1>1u)-(C1>1u)), r2i = (int)(H2*S2*C2)*((R2>1u)-(C2>1u));
         for (size_t r=R; r>0u; --r, X1+=r1i, X2+=r2i)
         {
             for (size_t c=C; c>0u; --c, X1+=c1i, X2+=c2i)
@@ -97,16 +97,16 @@ int atan2_d (double *Y, const double *X1, const double *X2, const size_t R1, con
     {
         for (size_t n=N; n>0u; --n, ++X1, ++Y) { *Y = atan2(*X1,*X2); }
     }
-    else if (N1==N2)
+    else if (N==N1 && N1==N2)
     {
         for (size_t n=N; n>0u; --n, ++X1, ++X2, ++Y) { *Y = atan2(*X1,*X2); }
     }
     else if (iscolmajor)
     {
-        const int r1i = (int)(R1>1u), r2i = (int)(R2>1u);
-        const int c1i = (int)R1*((int)(C1>1u)-(int)(R1>1u)), c2i = (int)R2*((int)(C2>1u)-(int)(R2>1u));
-        const int s1i = (int)(R1*C1)*((int)(S1>1u)-(int)(C1>1u)), s2i = (int)(R2*C2)*((int)(S2>1u)-(int)(C2>1u));
-        const int h1i = (int)(R1*C1*S1)*((int)(H1>1u)-(int)(S1>1u)), h2i = (int)(R2*C2*S2)*((int)(H2>1u)-(int)(S2>1u));
+        const int r1i = (R1>1u), r2i = (R2>1u);
+        const int c1i = (int)R1*((C1>1u)-(R1>1u)), c2i = (int)R2*((C2>1u)-(R2>1u));
+        const int s1i = (int)(R1*C1)*((S1>1u)-(C1>1u)), s2i = (int)(R2*C2)*((S2>1u)-(C2>1u));
+        const int h1i = (int)(R1*C1*S1)*((H1>1u)-(S1>1u)), h2i = (int)(R2*C2*S2)*((H2>1u)-(S2>1u));
         for (size_t h=H; h>0u; --h, X1+=h1i, X2+=h2i)
         {
             for (size_t s=S; s>0u; --s, X1+=s1i, X2+=s2i)
@@ -123,10 +123,10 @@ int atan2_d (double *Y, const double *X1, const double *X2, const size_t R1, con
     }
     else
     {
-        const int h1i = (int)(H1>1u), h2i = (int)(H2>1u);
-        const int s1i = (int)H1*((int)(S1>1u)-(int)(H1>1u)), s2i = (int)H2*((int)(S2>1u)-(int)(H2>1u));
-        const int c1i = (int)(H1*S1)*((int)(C1>1u)-(int)(S1>1u)), c2i = (int)(H2*S2)*((int)(C2>1u)-(int)(S2>1u));
-        const int r1i = (int)(H1*S1*C1)*((int)(R1>1u)-(int)(C1>1u)), r2i = (int)(H2*S2*C2)*((int)(R2>1u)-(int)(C2>1u));
+        const int h1i = (H1>1u), h2i = (H2>1u);
+        const int s1i = (int)H1*((S1>1u)-(H1>1u)), s2i = (int)H2*((S2>1u)-(H2>1u));
+        const int c1i = (int)(H1*S1)*((C1>1u)-(S1>1u)), c2i = (int)(H2*S2)*((C2>1u)-(S2>1u));
+        const int r1i = (int)(H1*S1*C1)*((R1>1u)-(C1>1u)), r2i = (int)(H2*S2*C2)*((R2>1u)-(C2>1u));
         for (size_t r=R; r>0u; --r, X1+=r1i, X2+=r2i)
         {
             for (size_t c=C; c>0u; --c, X1+=c1i, X2+=c2i)
@@ -165,10 +165,10 @@ int atan2_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C
     }
     else if (iscolmajor)
     {
-        const int r2i = (int)(R2>1u);
-        const int c2i = (int)R2*((int)(C2>1u)-(int)(R2>1u));
-        const int s2i = (int)(R2*C2)*((int)(S2>1u)-(int)(C2>1u));
-        const int h2i = (int)(R2*C2*S2)*((int)(H2>1u)-(int)(S2>1u));
+        const int r2i = (R2>1u);
+        const int c2i = (int)R2*((C2>1u)-(R2>1u));
+        const int s2i = (int)(R2*C2)*((S2>1u)-(C2>1u));
+        const int h2i = (int)(R2*C2*S2)*((H2>1u)-(S2>1u));
         for (size_t h=H; h>0u; --h, X2+=h2i)
         {
             for (size_t s=S; s>0u; --s, X2+=s2i)
@@ -185,10 +185,10 @@ int atan2_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C
     }
     else
     {
-        const int h2i = (int)(H2>1u);
-        const int s2i = (int)H2*((int)(S2>1u)-(int)(H2>1u));
-        const int c2i = (int)(H2*S2)*((int)(C2>1u)-(int)(S2>1u));
-        const int r2i = (int)(H2*S2*C2)*((int)(R2>1u)-(int)(C2>1u));
+        const int h2i = (H2>1u);
+        const int s2i = (int)H2*((S2>1u)-(H2>1u));
+        const int c2i = (int)(H2*S2)*((C2>1u)-(S2>1u));
+        const int r2i = (int)(H2*S2*C2)*((R2>1u)-(C2>1u));
         for (size_t r=R; r>0u; --r, X2+=r2i)
         {
             for (size_t c=C; c>0u; --c, X2+=c2i)
@@ -227,10 +227,10 @@ int atan2_inplace_d (double *X1, const double *X2, const size_t R1, const size_t
     }
     else if (iscolmajor)
     {
-        const int r2i = (int)(R2>1u);
-        const int c2i = (int)R2*((int)(C2>1u)-(int)(R2>1u));
-        const int s2i = (int)(R2*C2)*((int)(S2>1u)-(int)(C2>1u));
-        const int h2i = (int)(R2*C2*S2)*((int)(H2>1u)-(int)(S2>1u));
+        const int r2i = (R2>1u);
+        const int c2i = (int)R2*((C2>1u)-(R2>1u));
+        const int s2i = (int)(R2*C2)*((S2>1u)-(C2>1u));
+        const int h2i = (int)(R2*C2*S2)*((H2>1u)-(S2>1u));
         for (size_t h=H; h>0u; --h, X2+=h2i)
         {
             for (size_t s=S; s>0u; --s, X2+=s2i)
@@ -247,10 +247,10 @@ int atan2_inplace_d (double *X1, const double *X2, const size_t R1, const size_t
     }
     else
     {
-        const int h2i = (int)(H2>1u);
-        const int s2i = (int)H2*((int)(S2>1u)-(int)(H2>1u));
-        const int c2i = (int)(H2*S2)*((int)(C2>1u)-(int)(S2>1u));
-        const int r2i = (int)(H2*S2*C2)*((int)(R2>1u)-(int)(C2>1u));
+        const int h2i = (H2>1u);
+        const int s2i = (int)H2*((S2>1u)-(H2>1u));
+        const int c2i = (int)(H2*S2)*((C2>1u)-(S2>1u));
+        const int r2i = (int)(H2*S2*C2)*((R2>1u)-(C2>1u));
         for (size_t r=R; r>0u; --r, X2+=r2i)
         {
             for (size_t c=C; c>0u; --c, X2+=c2i)
