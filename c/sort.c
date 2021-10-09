@@ -140,7 +140,7 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const int id = (ascend) ? 'I' : 'D';
+    const char id = (ascend) ? 'I' : 'D';
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
 
     if (N==0u) {}
@@ -200,7 +200,7 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const int id = (ascend) ? 'I' : 'D';
+    const char id = (ascend) ? 'I' : 'D';
 
     if (N==0u) {}
     else if (L==1u)
@@ -367,7 +367,7 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const int id = (ascend) ? 'I' : 'D';
+    const char id = (ascend) ? 'I' : 'D';
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
 
     if (N==0u || L==1u) {}
@@ -418,7 +418,7 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const int id = (ascend) ? 'I' : 'D';
+    const char id = (ascend) ? 'I' : 'D';
 
     if (N==0u || L==1u) {}
     else if (L==N)

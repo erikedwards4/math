@@ -64,8 +64,6 @@ int eye_s (float *Y, const size_t R, const size_t C, const int iscolmajor)
 
 int eye_d (double *Y, const size_t R, const size_t C, const int iscolmajor)
 {
-    const size_t D0 = (iscolmajor) ? C : R, D1 = (iscolmajor) ? R : C;
-
     if (iscolmajor)
     {
         for (size_t c=0u; c<C; ++c)

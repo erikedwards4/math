@@ -11,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "cmli.hpp"
+#include "../util/cmli.hpp"
 #include <random>
 #include <complex>
 #include "pcg_random.hpp"
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
 
     //Check stdout
-    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0 || strcmp(a_fo->filename[0],"-")==0); }
+    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0u || strcmp(a_fo->filename[0],"-")==0); }
     else { stdo1 = (!isatty(fileno(stdout))); }
     wo1 = (stdo1 || a_fo->count>0);
 
@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
     }
-    else if (o1.T==2)
+    else if (o1.T==2u)
     {
         valarray<uint> Yi(o1.N()); valarray<double> Y(o1.N());
         negative_binomial_distribution<uint> distr(k,p);
@@ -226,8 +226,9 @@ int main(int argc, char *argv[])
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
     
+    //Close fstreams
+    ofs1.close();
 
     //Exit
     return ret;
 }
-
