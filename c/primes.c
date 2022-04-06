@@ -7,14 +7,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int primes_i (int *Y, int *cnt, const size_t N);
-int primes_u (size_t *Y, size_t *cnt, const size_t N);
 
 
 int primes_i (int *Y, int *cnt, const size_t N)

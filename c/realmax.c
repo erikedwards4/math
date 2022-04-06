@@ -3,16 +3,12 @@
 
 #include <stdio.h>
 #include <float.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int realmax_s (float *Y, const size_t N);
-int realmax_d (double *Y, const size_t N);
-int realmax_c (float *Y, const size_t N);
-int realmax_z (double *Y, const size_t N);
 
 
 int realmax_s (float *Y, const size_t N)

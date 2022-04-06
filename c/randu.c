@@ -5,17 +5,12 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
-#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int randu_s (float *Y, const float a, const float b, const size_t N);
-int randu_d (double *Y, const double a, const double b, const size_t N);
-int randu_c (float *Y, const float a, const float b, const size_t N);
-int randu_z (double *Y, const double a, const double b, const size_t N);
 
 
 int randu_s (float *Y, const float a, const float b, const size_t N)

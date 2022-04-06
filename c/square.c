@@ -4,20 +4,12 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
-//#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int square_s (float *Y, const float *X, const size_t N);
-int square_d (double *Y, const double *X, const size_t N);
-int square_c (float *Y, const float *X, const size_t N);
-int square_z (double *Y, const double *X, const size_t N);
-
-int square_inplace_s (float *X, const size_t N);
-int square_inplace_d (double *X, const size_t N);
 
 
 int square_s (float *Y, const float *X, const size_t N)

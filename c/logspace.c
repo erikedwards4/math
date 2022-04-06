@@ -3,16 +3,12 @@
 
 #include <stdio.h>
 #include <math.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int logspace_s (float *Y, const size_t N, const float a, const float b);
-int logspace_d (double *Y, const size_t N, const double a, const double b);
-int logspace_c (float *Y, const size_t N, const float a, const float b);
-int logspace_z (double *Y, const size_t N, const double a, const double b);
 
 
 int logspace_s (float *Y, const size_t N, const float a, const float b)

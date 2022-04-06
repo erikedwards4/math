@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
@@ -21,9 +22,6 @@ typedef struct { double val; size_t ind; } DBL;
 
 static int cmp_ascend_s (const void *a, const void *b);
 static int cmp_ascend_d (const void *a, const void *b);
-
-int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor, const size_t dim);
-int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor, const size_t dim);
 
 
 static int cmp_ascend_s (const void *a, const void *b)

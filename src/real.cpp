@@ -190,6 +190,9 @@ int main(int argc, char *argv[])
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
     
+    //Close fstreams
+    ifs1.close();
+    ofs1.close();
 
     //Exit
     return ret;

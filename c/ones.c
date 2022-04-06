@@ -8,18 +8,13 @@
 //but for loop takes ~83 ms at O2 and O3 levels of optimization.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <cblas.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int ones_s (float *Y, const size_t N);
-int ones_d (double *Y, const size_t N);
-int ones_c (float *Y, const size_t N);
-int ones_z (double *Y, const size_t N);
 
 
 int ones_s (float *Y, const size_t N)

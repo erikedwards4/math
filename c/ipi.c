@@ -2,6 +2,7 @@
 //For complex cases, only real part is set to ipi.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <math.h>
 
 #ifndef M_1_PI
@@ -12,11 +13,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int ipi_s (float *Y, const size_t N);
-int ipi_d (double *Y, const size_t N);
-int ipi_c (float *Y, const size_t N);
-int ipi_z (double *Y, const size_t N);
 
 
 int ipi_s (float *Y, const size_t N)

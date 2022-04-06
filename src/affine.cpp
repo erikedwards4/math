@@ -11,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "cmli.hpp"
+#include "../util/cmli.hpp"
 #include "affine.c"
 
 #ifdef I
@@ -85,15 +85,15 @@ int main(int argc, char *argv[])
 
 
     //Check stdin
-    stdi1 = (a_fi->count==0 || strlen(a_fi->filename[0])==0 || strcmp(a_fi->filename[0],"-")==0);
-    stdi2 = (a_fi->count<=1 || strlen(a_fi->filename[1])==0 || strcmp(a_fi->filename[1],"-")==0);
-    stdi3 = (a_fi->count<=2 || strlen(a_fi->filename[2])==0 || strcmp(a_fi->filename[2],"-")==0);
+    stdi1 = (a_fi->count==0 || strlen(a_fi->filename[0])==0u || strcmp(a_fi->filename[0],"-")==0);
+    stdi2 = (a_fi->count<=1 || strlen(a_fi->filename[1])==0u || strcmp(a_fi->filename[1],"-")==0);
+    stdi3 = (a_fi->count<=2 || strlen(a_fi->filename[2])==0u || strcmp(a_fi->filename[2],"-")==0);
     if (stdi1+stdi2+stdi3>1) { cerr << progstr+": " << __LINE__ << errstr << "can only use stdin for one input" << endl; return 1; }
     if (stdi1+stdi2+stdi3>0 && isatty(fileno(stdin))) { cerr << progstr+": " << __LINE__ << errstr << "no stdin detected" << endl; return 1; }
 
 
     //Check stdout
-    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0 || strcmp(a_fo->filename[0],"-")==0); }
+    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0u || strcmp(a_fo->filename[0],"-")==0); }
     else { stdo1 = (!isatty(fileno(stdout))); }
     wo1 = (stdo1 || a_fo->count>0);
 
@@ -136,8 +136,8 @@ int main(int argc, char *argv[])
     if (!i2.ismat()) { cerr << progstr+": " << __LINE__ << errstr << "input 2 (A) must be a matrix" << endl; return 1; }
     if (!i3.isvec()) { cerr << progstr+": " << __LINE__ << errstr << "input 3 (B) must be a vector" << endl; return 1; }
     if (!major_compat(i1,i2)) { cerr << progstr+": " << __LINE__ << errstr << "inputs 1 and 2 must have the same row/col major format" << endl; return 1; }
-    Lx = (i1.iscolmajor()) ? i2.R : i2.C;
-    Ly = (i1.iscolmajor()) ? i2.C : i2.R;
+    Lx = i1.iscolmajor() ? i2.R : i2.C;
+    Ly = i1.iscolmajor() ? i2.C : i2.R;
     if (Ly!=i3.N()) { cerr << progstr+": " << __LINE__ << errstr << "length of input 3 (B) must equal nrows of input 2 (A)" << endl; return 1; }
     if (dim==0u && i1.R!=Lx) { cerr << progstr+": " << __LINE__ << errstr << "length of vecs in input 1 (X) must equal Lx of input 2 (A)" << endl; return 1; }
     if (dim==1u && i1.C!=Lx) { cerr << progstr+": " << __LINE__ << errstr << "length of vecs in input 1 (X) must equal Lx of input 2 (A)" << endl; return 1; }
@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
         }
         delete[] X1; delete[] X2; delete[] X3; delete[] Y;
     }
-    else if (i1.T==2)
+    else if (i1.T==2u)
     {
         double *X1, *X2, *X3, *Y;
         try { X1 = new double[i1.N()]; }
@@ -278,8 +278,12 @@ int main(int argc, char *argv[])
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
     
+    //Close fstreams
+    ifs1.close(); ifs2.close();
+ ifs3.close();
+
+    ofs1.close();
 
     //Exit
     return ret;
 }
-

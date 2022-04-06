@@ -1,18 +1,12 @@
 //This gets sign for each element of X.
 
 #include <stdio.h>
-//#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int sign_s (float *Y, const float *X, const size_t N);
-int sign_d (double *Y, const double *X, const size_t N);
-
-int sign_inplace_s (float *X, const size_t N);
-int sign_inplace_d (double *X, const size_t N);
 
 
 int sign_s (float *Y, const float *X, const size_t N)

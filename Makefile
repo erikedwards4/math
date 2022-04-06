@@ -2,11 +2,11 @@
 #@date 2018-present
 #@license BSD 3-clause
 
-#math is my own library of functions for basic math operations in C and C++.
+#My own library of functions for basic math operations in C and C++.
 #This is the makefile for the command-line tools in C++.
 
 #Functions that use C-style _Complex must be compiled with g++-6 or g++-7,
-#so there is once choice of compiler (CCC=complex CC) for those cases,
+#so there is one choice of compiler (CCC=complex CC) for those cases,
 #and the usual choice (CC) applies to all the other functions.
 #CC can also be used for the 2nd-stage of compilation for the CCC functions.
 
@@ -24,13 +24,13 @@ else
 endif
 
 INCLS=-Ic -I../util
-CFLAGS=$(WFLAG) $(STD) -O3 -ffast-math -march=native -mfpmath=sse $(INCLS)
-CCFLAGS=-Wall -Wextra -std=gnu++14 -O3 -ffast-math -march=native -mfpmath=sse $(INCLS)
+CFLAGS=$(WFLAG) $(STD) -O2 -ffast-math -march=native -mfpmath=sse $(INCLS)
+CCFLAGS=-Wall -Wextra -std=gnu++14 -O2 -ffast-math -march=native -mfpmath=sse $(INCLS)
 #LIBS=-largtable2 -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
 All: all
-all: Dirs Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Complex Linalg Clean
+all: Dirs Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vecs2scalar Vec2vec Linalg Clean
 
 Dirs:
 	mkdir -pm 777 bin obj
@@ -99,7 +99,7 @@ randperm: srci/randperm.cpp c/randperm.c
 
 #Random: 0 inputs, 1 output with random numbers
 #The Rand functions do not require PCG random to be installed
-#These otherse can use C++ only (the random library), and were originally programmed to do so,
+#These others can use C++ only (the random library), and were originally programmed to do so,
 #but are currently coded to use PCG random here (must sudo apt-get install libpcg-cpp-dev)
 #If PCG random is not available, then comment out after Rand
 Random: Rand Uniform Bernoulli Poisson Normal Sampling
@@ -189,7 +189,7 @@ join3: srci/join3.cpp c/join3.c
 
 
 #Elementwise1 (scalar2scalar): 1 input, 1 output functions that operate element-wise
-Elementwise1: Operators Trig Exp_Log Round Special
+Elementwise1: Operators Trig Exp_Log Round Special Complex Nonlin
 
 Operators: plusplus minusminus neg
 plusplus: srci/plusplus.cpp c/plusplus.c
@@ -265,6 +265,18 @@ lgamma: srci/lgamma.cpp c/lgamma.c
 sinc: srci/sinc.cpp c/sinc.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
+Complex: real imag conj arg proj
+real: srci/real.cpp c/real.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+imag: srci/imag.cpp c/imag.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+conj: srci/conj.cpp c/conj.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+arg: srci/arg.cpp c/arg.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+proj: srci/proj.cpp c/proj.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+
 #Nonlin: other 1 input, 1 output static nonlinearities
 Nonlin: abs square cube sqrt cbrt reciprocal sign deadzone
 abs: srci/abs.cpp c/abs.c
@@ -287,7 +299,9 @@ deadzone: srci/deadzone.cpp c/deadzone.c
 
 
 #Elementwise2: 2 inputs, 1 output, with array broadcasting for the 2 inputs
-Elementwise2: plus minus times rdivide pow hypot atan2 adiff
+Elementwise2: Arithmetic Trig2 Complex2
+
+Arithmetic: plus minus times rdivide adiff pow
 plus: srci/plus.cpp c/plus.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 minus: srci/minus.cpp c/minus.c
@@ -296,14 +310,22 @@ times: srci/times.cpp c/times.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 rdivide: srci/rdivide.cpp c/rdivide.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+adiff: srci/adiff.cpp c/adiff.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 pow: srci/pow.cpp c/pow.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+
+Trig2: hypot atan2
 hypot: srci/hypot.cpp c/hypot.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 atan2: srci/atan2.cpp c/atan2.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
-adiff: srci/adiff.cpp c/adiff.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+
+Complex2: complex polar
+complex: srci/complex.cpp c/complex.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+polar: srci/polar.cpp c/polar.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
 
 
@@ -514,26 +536,6 @@ softmax: srci/softmax.cpp c/softmax.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 betamax: srci/betamax.cpp c/betamax.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
-
-
-
-#Complex: 1-2 inputs, 1 output, for complex-valued operations
-Complex: complex polar real imag conj arg proj #norm
-complex: srci/complex.cpp c/complex.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-polar: srci/polar.cpp c/polar.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-real: srci/real.cpp c/real.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-imag: srci/imag.cpp c/imag.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-conj: srci/conj.cpp c/conj.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-arg: srci/arg.cpp c/arg.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
-proj: srci/proj.cpp c/proj.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-#norm is same as element-wise square
 
 
 

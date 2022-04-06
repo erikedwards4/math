@@ -4,21 +4,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <complex.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int log10_s (float *Y, const float *X, const size_t N);
-int log10_d (double *Y, const double *X, const size_t N);
-int log10_c (float *Y, const float *X, const size_t N);
-int log10_z (double *Y, const double *X, const size_t N);
-
-int log10_inplace_s (float *X, const size_t N);
-int log10_inplace_d (double *X, const size_t N);
-int log10_inplace_c (float *X, const size_t N);
-int log10_inplace_z (double *X, const size_t N);
 
 
 int log10_s (float *Y, const float *X, const size_t N)

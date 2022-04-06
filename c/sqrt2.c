@@ -2,6 +2,7 @@
 //For complex cases, only real part is set to sqrt2.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <math.h>
 
 #ifndef M_SQRT2
@@ -12,11 +13,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int sqrt2_s (float *Y, const size_t N);
-int sqrt2_d (double *Y, const size_t N);
-int sqrt2_c (float *Y, const size_t N);
-int sqrt2_z (double *Y, const size_t N);
 
 
 int sqrt2_s (float *Y, const size_t N)

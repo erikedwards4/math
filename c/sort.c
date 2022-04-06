@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <lapacke.h>
-#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
@@ -22,16 +22,6 @@ static int cmp_ascend_z (const void *a, const void *b);
 // static int cmp_descend_d (const void *a, const void *b);
 static int cmp_descend_c (const void *a, const void *b);
 static int cmp_descend_z (const void *a, const void *b);
-
-int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
-int sort_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
-int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
-int sort_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
-
-int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
-int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
-int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
-int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend);
 
 
 // static int cmp_ascend_s (const void *a, const void *b)

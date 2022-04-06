@@ -2,21 +2,12 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int reciprocal_s (float *Y, const float *X, const size_t N);
-int reciprocal_d (double *Y, const double *X, const size_t N);
-int reciprocal_c (float *Y, const float *X, const size_t N);
-int reciprocal_z (double *Y, const double *X, const size_t N);
-
-int reciprocal_inplace_s (float *X, const size_t N);
-int reciprocal_inplace_d (double *X, const size_t N);
-int reciprocal_inplace_c (float *X, const size_t N);
-int reciprocal_inplace_z (double *X, const size_t N);
 
 
 int reciprocal_s (float *Y, const float *X, const size_t N)

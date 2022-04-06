@@ -5,8 +5,8 @@
 
 #include <stdio.h>
 #include <math.h>
+#include "codee_math.h"
 //#include <lapacke.h>
-//#include <time.h>
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -16,12 +16,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int deg2rad_s (float *Y, const float *X, const size_t N);
-int deg2rad_d (double *Y, const double *X, const size_t N);
-
-int deg2rad_inplace_s (float *X, const size_t N);
-int deg2rad_inplace_d (double *X, const size_t N);
 
 
 int deg2rad_s (float *Y, const float *X, const size_t N)
@@ -42,7 +36,6 @@ int deg2rad_d (double *Y, const double *X, const size_t N)
     
     return 0;
 }
-
 
 
 int deg2rad_inplace_s (float *X, const size_t N)

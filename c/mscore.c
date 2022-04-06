@@ -6,15 +6,13 @@
 #include <stdlib.h>
 #include <math.h>
 #include <lapacke.h>
+#include "codee_math.h"
 
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int mscore_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
-int mscore_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);
 
 
 int mscore_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)

@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include "codee_math.h"
 //#include <complex.h>
 
 #ifndef M_PI
@@ -14,14 +15,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int arg_s (float *Y, const float *X, const size_t N);
-int arg_d (double *Y, const double *X, const size_t N);
-int arg_c (float *Y, const float *X, const size_t N);
-int arg_z (double *Y, const double *X, const size_t N);
-
-int arg_inplace_s (float *X, const size_t N);
-int arg_inplace_d (double *X, const size_t N);
 
 
 int arg_s (float *Y, const float *X, const size_t N)

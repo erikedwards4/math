@@ -5,21 +5,12 @@
 //and in-place version was defintely faster.
 
 #include <stdio.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int neg_s (float *Y, const float *X, const size_t N);
-int neg_d (double *Y, const double *X, const size_t N);
-int neg_c (float *Y, const float *X, const size_t N);
-int neg_z (double *Y, const double *X, const size_t N);
-
-int neg_inplace_s (float *X, const size_t N);
-int neg_inplace_d (double *X, const size_t N);
-int neg_inplace_c (float *X, const size_t N);
-int neg_inplace_z (double *X, const size_t N);
 
 
 int neg_s (float *Y, const float *X, const size_t N)

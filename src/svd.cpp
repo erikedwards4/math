@@ -11,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "cmli.hpp"
+#include "../util/cmli.hpp"
 #include "svd.c"
 
 #ifdef I
@@ -77,16 +77,16 @@ int main(int argc, char *argv[])
 
 
     //Check stdin
-    stdi1 = (a_fi->count==0 || strlen(a_fi->filename[0])==0 || strcmp(a_fi->filename[0],"-")==0);
+    stdi1 = (a_fi->count==0 || strlen(a_fi->filename[0])==0u || strcmp(a_fi->filename[0],"-")==0);
     if (stdi1>0 && isatty(fileno(stdin))) { cerr << progstr+": " << __LINE__ << errstr << "no stdin detected" << endl; return 1; }
 
 
     //Check stdout
-    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0 || strcmp(a_fo->filename[0],"-")==0); }
+    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0u || strcmp(a_fo->filename[0],"-")==0); }
     else { stdo1 = (!isatty(fileno(stdout))); }
-    if (a_fo->count>1) { stdo2 = (strlen(a_fo->filename[1])==0 || strcmp(a_fo->filename[1],"-")==0); }
+    if (a_fo->count>1) { stdo2 = (strlen(a_fo->filename[1])==0u || strcmp(a_fo->filename[1],"-")==0); }
     else { stdo2 = (!isatty(fileno(stdout)) && a_fo->count==1 && stdo1==0); }
-    if (a_fo->count>2) { stdo3 = (strlen(a_fo->filename[2])==0 || strcmp(a_fo->filename[2],"-")==0); }
+    if (a_fo->count>2) { stdo3 = (strlen(a_fo->filename[2])==0u || strcmp(a_fo->filename[2],"-")==0); }
     else { stdo3 = (!isatty(fileno(stdout)) && a_fo->count==2 && stdo1+stdo2==0); }
     if (stdo1+stdo2+stdo3>1) { cerr << progstr+": " << __LINE__ << errstr << "can only use stdout for one output" << endl; return 1; }
     wo1 = (stdo1 || a_fo->count>0); wo2 = (stdo2 || a_fo->count>1); wo3 = (stdo3 || a_fo->count>2);
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
         }
         delete[] X; delete[] U; delete[] S; delete[] Vt;
     }
-    else if (i1.T==2)
+    else if (i1.T==2u)
     {
         double *X, *U, *S, *Vt;
         try { X = new double[i1.N()]; }
@@ -297,8 +297,12 @@ int main(int argc, char *argv[])
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
     
+    //Close fstreams
+    ifs1.close();
+    ofs1.close(); ofs2.close();
+ ofs3.close();
+
 
     //Exit
     return ret;
 }
-

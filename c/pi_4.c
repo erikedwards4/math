@@ -2,6 +2,7 @@
 //For complex cases, only real part is set to pi/4.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <math.h>
 
 #ifndef M_PI_4
@@ -12,11 +13,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int pi_4_s (float *Y, const size_t N);
-int pi_4_d (double *Y, const size_t N);
-int pi_4_c (float *Y, const size_t N);
-int pi_4_z (double *Y, const size_t N);
 
 
 int pi_4_s (float *Y, const size_t N)

@@ -14,21 +14,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <lapacke.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int svd_s (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
-int svd_d (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
-int svd_c (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
-int svd_z (double *U, double *S, double *Vt, const double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
-
-int svd_inplace_s (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
-int svd_inplace_d (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
-int svd_inplace_c (float *U, float *S, float *Vt, float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
-int svd_inplace_z (double *U, double *S, double *Vt, double *X, const size_t R, const size_t C, const int iscolmajor, const size_t K);
 
 
 int svd_s (float *U, float *S, float *Vt, const float *X, const size_t R, const size_t C, const int iscolmajor, const size_t K)

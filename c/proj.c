@@ -2,20 +2,15 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <string.h>
 #include <complex.h>
-//#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int proj_c (float *Y, const float *X, const size_t N);
-int proj_z (double *Y, const double *X, const size_t N);
-
-int proj_inplace_c (float *X, const size_t N);
-int proj_inplace_z (double *X, const size_t N);
 
 
 int proj_c (float *Y, const float *X, const size_t N)

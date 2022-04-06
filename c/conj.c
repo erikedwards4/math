@@ -4,19 +4,13 @@
 //LAPACKE_?lacgv was surprisingly slow!
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <lapacke.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int conj_c (float *Y, const float *X, const size_t N);
-int conj_z (double *Y, const double *X, const size_t N);
-
-int conj_inplace_c (float *X, const size_t N);
-int conj_inplace_z (double *X, const size_t N);
 
 
 int conj_c (float *Y, const float *X, const size_t N)

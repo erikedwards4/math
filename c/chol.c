@@ -7,21 +7,12 @@
 
 #include <stdio.h>
 #include <lapacke.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int chol_s (float *Y, const float *X, const size_t R, const int iscolmajor, const int upper);
-int chol_d (double *Y, const double *X, const size_t R, const int iscolmajor, const int upper);
-int chol_c (float *Y, const float *X, const size_t R, const int iscolmajor, const int upper);
-int chol_z (double *Y, const double *X, const size_t R, const int iscolmajor, const int upper);
-
-int chol_inplace_s (float *X, const size_t R, const int iscolmajor, const int upper);
-int chol_inplace_d (double *X, const size_t R, const int iscolmajor, const int upper);
-int chol_inplace_c (float *X, const size_t R, const int iscolmajor, const int upper);
-int chol_inplace_z (double *X, const size_t R, const int iscolmajor, const int upper);
 
 
 int chol_s (float *Y, const float *X, const size_t R, const int iscolmajor, const int upper)

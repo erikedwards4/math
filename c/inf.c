@@ -3,16 +3,12 @@
 
 #include <stdio.h>
 #include <math.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int inf_s (float *Y, const size_t N);
-int inf_d (double *Y, const size_t N);
-int inf_c (float *Y, const size_t N);
-int inf_z (double *Y, const size_t N);
 
 
 int inf_s (float *Y, const size_t N)

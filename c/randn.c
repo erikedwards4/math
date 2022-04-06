@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
-#include <time.h>
+#include "codee_math.h"
 
 #ifndef M_PI
     #define M_PI 3.141592653589793238462643383279502884
@@ -16,11 +16,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int randn_s (float *Y, const float mu, const float sig, const size_t N);
-int randn_d (double *Y, const double mu, const double sig, const size_t N);
-int randn_c (float *Y, const float mu, const float sig, const size_t N);
-int randn_z (double *Y, const double mu, const double sig, const size_t N);
 
 
 int randn_s (float *Y, const float mu, const float sig, const size_t N)

@@ -2,16 +2,12 @@
 //For complex cases, only real part is set to val.
 
 #include <stdio.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int fill_s (float *Y, const size_t N, const float val);
-int fill_d (double *Y, const size_t N, const double val);
-int fill_c (float *Y, const size_t N, const float val);
-int fill_z (double *Y, const size_t N, const double val);
 
 
 int fill_s (float *Y, const size_t N, const float val)

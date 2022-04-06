@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "../util/cmli.hpp"
+#include "codee_math.h"
 #include "hypot.c"
 
 #ifdef I

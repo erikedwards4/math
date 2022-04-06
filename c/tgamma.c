@@ -6,22 +6,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <complex.h>
-//#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int tgamma_s (float *Y, const float *X, const size_t N);
-int tgamma_d (double *Y, const double *X, const size_t N);
-int tgamma_c (float *Y, const float *X, const size_t N);
-int tgamma_z (double *Y, const double *X, const size_t N);
-
-int tgamma_inplace_s (float *X, const size_t N);
-int tgamma_inplace_d (double *X, const size_t N);
-int tgamma_inplace_c (float *X, const size_t N);
-int tgamma_inplace_z (double *X, const size_t N);
 
 
 int tgamma_s (float *Y, const float *X, const size_t N)

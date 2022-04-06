@@ -17,16 +17,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <cblas.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int linear_s (float *Y, const float *X, const float *A, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Ly, const int iscolmajor, const size_t dim);
-int linear_d (double *Y, const double *X, const double *A, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Ly, const int iscolmajor, const size_t dim);
-int linear_c (float *Y, const float *X, const float *A, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Ly, const int iscolmajor, const size_t dim);
-int linear_z (double *Y, const double *X, const double *A, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Ly, const int iscolmajor, const size_t dim);
 
 
 int linear_s (float *Y, const float *X, const float *A, const size_t R, const size_t C, const size_t S, const size_t H, const size_t Ly, const int iscolmajor, const size_t dim)

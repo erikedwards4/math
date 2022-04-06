@@ -2,6 +2,7 @@
 //For complex cases, only real part is set to ln2.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <math.h>
 
 #ifndef M_LN2
@@ -12,11 +13,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int ln2_s (float *Y, const size_t N);
-int ln2_d (double *Y, const size_t N);
-int ln2_c (float *Y, const size_t N);
-int ln2_z (double *Y, const size_t N);
 
 
 int ln2_s (float *Y, const size_t N)

@@ -2,14 +2,12 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int real_c (float *Y, const float *X, const size_t N);
-int real_z (double *Y, const double *X, const size_t N);
 
 
 int real_c (float *Y, const float *X, const size_t N)

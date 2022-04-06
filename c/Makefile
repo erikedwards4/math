@@ -2,13 +2,14 @@
 #@date 2017-present
 #@license BSD 3-clause
 
-#math is my own library of C functions for general math operations.
+#My own library of C functions for general math operations.
 
 #This is the Makefile used during development of the C functions.
 #Since these are not stand-alone programs (no main functions), the only outputs are object files to obj.
 #It is not necessary to run this when making the C++ command-line tools.
 
-#Needed external libraries: cblas, lapacke, libcerf-dev (complex error function)
+#Needed external libraries: cblas, lapacke,
+#Other external libraries: libcerf-dev (complex error function, but I commented these out for now)
 #To Do: weighted statistics
 
 
@@ -28,11 +29,11 @@ else
 	WFLAG=-Wall -Wextra
 endif
 
-CFLAGS=$(WFLAG) $(STD) -O3 -ffast-math -march=native -mfpmath=sse -fPIC
+CFLAGS=$(WFLAG) $(STD) -O2 -ffast-math -march=native -mfpmath=sse -fPIC
 
 
 All: all
-all: Dirs Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vec2vec Vecs2scalar Complex Linalg Clean
+all: Dirs Generate Matmanip Elementwise1 Elementwise2 Vec2scalar Vec2vec Vecs2scalar Linalg Lib Clean
 
 Dirs:
 	mkdir -pm 777 obj
@@ -40,7 +41,7 @@ Dirs:
 
 #Generate: aka "Factory" functions
 #These take 0 inputs (other than parameters) and generate 1 output.
-#The Random functions are all done in C++
+#The Random functions here are stand-alone (based on PCG random, but no dependencies).
 Generate: Constants Other_Gen Rand
 
 #Constants: 0 inputs, 1 output with a single constant repeated
@@ -119,14 +120,14 @@ join3: join3.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 #Elementwise1 (scalar2scalar): 1 input, 1 output element-wise functions
 #These include many common static nonlinearities.
-Elementwise1: Operators Trig Exp_Log Round Special Nonlin
+Elementwise1: Operators Trig Exp_Log Round Special Complex Nonlin
 
 Operators: plusplus minusminus neg
 plusplus: plusplus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 minusminus: minusminus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 neg: neg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Trig: sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh #rad2deg deg2rad
+Trig: sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh rad2deg deg2rad
 sin: sin.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cos: cos.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 tan: tan.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -163,6 +164,14 @@ tgamma: tgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lgamma: lgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sinc: sinc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
+Complex: real imag conj arg proj #norm
+real: real.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+imag: imag.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+arg: arg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+#norm is same as element-wise square
+
 Nonlin: abs square cube sqrt cbrt nextpow2 reciprocal sign deadzone
 abs: abs.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 square: square.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -175,17 +184,24 @@ sign: sign.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 deadzone: deadzone.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
-
 #Elementwise2: 2 inputs, 1 output, with array broadcasting for the 2 inputs
-Elementwise2: plus minus times rdivide pow hypot atan2 adiff
+Elementwise2: Arithmetic Trig2 Complex2
+
+Arithmetic: plus minus times rdivide adiff pow
 plus: plus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 minus: minus.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 times: times.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 rdivide: rdivide.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+adiff: adiff.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 pow: pow.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Trig2: hypot atan2
 hypot: hypot.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 atan2: atan2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-adiff: adiff.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Complex2: complex polar
+complex: complex.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+polar: polar.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
@@ -359,19 +375,6 @@ wmad: wmad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
-#Complex: 1-2 inputs, 1 output, for complex operations
-Complex: complex polar real imag conj arg proj #norm
-complex: complex.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-polar: polar.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-real: real.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-imag: imag.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-arg: arg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-#norm is same as element-wise square
-
-
-
 #Linalg: linear algebra
 Linalg: Matmul Transform Sim_Mat Dist_Mat Other_Linalg
 
@@ -411,13 +414,15 @@ qr: qr.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 matnorm: matnorm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
-
 #If want to make a library archive for C++ use, this works with clang++
-#ar crs ../lib/libmath.a obj/*.o
+Lib: lib
+lib:
+	ar crs ../lib/libmath.a obj/*.o
+	gcc -fPIC -shared -o ../lib/libmath.so obj/*.o -lopenblas -llapacke -lfftw3f -lfftw3 -lm
 
 
 #make clean
+#find ./obj -type f -name *.o | xargs rm -f
 Clean: clean
 clean:
-	find ./obj -type f -name *.o | xargs rm -f
 	rm -f *.s tmp.*

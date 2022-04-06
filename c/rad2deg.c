@@ -4,6 +4,7 @@
 //The direct for loop was defintely faster that cblas_?scal, even for N=1e6
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <math.h>
 
 #ifndef M_1_PI
@@ -14,12 +15,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int rad2deg_s (float *Y, const float *X, const size_t N);
-int rad2deg_d (double *Y, const double *X, const size_t N);
-
-int rad2deg_inplace_s (float *X, const size_t N);
-int rad2deg_inplace_d (double *X, const size_t N);
 
 
 int rad2deg_s (float *Y, const float *X, const size_t N)
@@ -40,7 +35,6 @@ int rad2deg_d (double *Y, const double *X, const size_t N)
     
     return 0;
 }
-
 
 
 int rad2deg_inplace_s (float *X, const size_t N)

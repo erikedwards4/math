@@ -2,16 +2,12 @@
 //For complex Y, imag part is set to 0.
 
 #include <stdio.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int linspace_s (float *Y, const size_t N, const float a, const float b);
-int linspace_d (double *Y, const size_t N, const double a, const double b);
-int linspace_c (float *Y, const size_t N, const float a, const float b);
-int linspace_z (double *Y, const size_t N, const double a, const double b);
 
 
 int linspace_s (float *Y, const size_t N, const float a, const float b)

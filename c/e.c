@@ -2,6 +2,7 @@
 //For complex cases, only real part is set to e.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <math.h>
 
 #ifndef M_E
@@ -12,11 +13,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int e_s (float *Y, const size_t N);
-int e_d (double *Y, const size_t N);
-int e_c (float *Y, const size_t N);
-int e_z (double *Y, const size_t N);
 
 
 int e_s (float *Y, const size_t N)

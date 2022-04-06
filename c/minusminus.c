@@ -2,14 +2,12 @@
 //This only has in-place version (since that is how used in C code).
 
 #include <stdio.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int minusminus_s (float *X, const size_t N);
-int minusminus_d (double *X, const size_t N);
 
 
 int minusminus_s (float *X, const size_t N)

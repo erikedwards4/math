@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
@@ -19,9 +20,6 @@ typedef struct { double val; double ind; } DBL;
 
 static int cmp_ascend_s (const void *a, const void *b);
 static int cmp_ascend_d (const void *a, const void *b);
-
-int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p);
-int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p);
 
 
 static int cmp_ascend_s (const void *a, const void *b)

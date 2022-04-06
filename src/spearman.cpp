@@ -11,7 +11,7 @@
 #include <valarray>
 #include <unordered_map>
 #include <argtable2.h>
-#include "cmli.hpp"
+#include "../util/cmli.hpp"
 #include "spearman.c"
 
 #ifdef I
@@ -80,14 +80,14 @@ int main(int argc, char *argv[])
 
 
     //Check stdin
-    stdi1 = (a_fi->count==0 || strlen(a_fi->filename[0])==0 || strcmp(a_fi->filename[0],"-")==0);
-    stdi2 = (a_fi->count<=1 || strlen(a_fi->filename[1])==0 || strcmp(a_fi->filename[1],"-")==0);
+    stdi1 = (a_fi->count==0 || strlen(a_fi->filename[0])==0u || strcmp(a_fi->filename[0],"-")==0);
+    stdi2 = (a_fi->count<=1 || strlen(a_fi->filename[1])==0u || strcmp(a_fi->filename[1],"-")==0);
     if (stdi1+stdi2>1) { cerr << progstr+": " << __LINE__ << errstr << "can only use stdin for one input" << endl; return 1; }
     if (stdi1+stdi2>0 && isatty(fileno(stdin))) { cerr << progstr+": " << __LINE__ << errstr << "no stdin detected" << endl; return 1; }
 
 
     //Check stdout
-    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0 || strcmp(a_fo->filename[0],"-")==0); }
+    if (a_fo->count>0) { stdo1 = (strlen(a_fo->filename[0])==0u || strcmp(a_fo->filename[0],"-")==0); }
     else { stdo1 = (!isatty(fileno(stdout))); }
     wo1 = (stdo1 || a_fo->count>0);
 
@@ -132,10 +132,10 @@ int main(int argc, char *argv[])
 
     //Set output header info
     o1.F = i1.F; o1.T = i1.T;
-    o1.R = (dim==0u) ? 1 : (i1.R>i2.R) ? i1.R : i2.R;
-    o1.C = (dim==1u) ? 1 : (i1.C>i2.C) ? i1.C : i2.C;
-    o1.S = (dim==2u) ? 1 : (i1.S>i2.S) ? i1.S : i2.S;
-    o1.H = (dim==3u) ? 1 : (i1.H>i2.H) ? i1.H : i2.H;
+    o1.R = (dim==0u) ? 1u : (i1.R>i2.R) ? i1.R : i2.R;
+    o1.C = (dim==1u) ? 1u : (i1.C>i2.C) ? i1.C : i2.C;
+    o1.S = (dim==2u) ? 1u : (i1.S>i2.S) ? i1.S : i2.S;
+    o1.H = (dim==3u) ? 1u : (i1.H>i2.H) ? i1.H : i2.H;
 
 
     //Open output
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
         }
         delete[] X1; delete[] X2; delete[] Y;
     }
-    else if (i1.T==2)
+    else if (i1.T==2u)
     {
         double *X1, *X2, *Y;
         try { X1 = new double[i1.N()]; }
@@ -203,8 +203,11 @@ int main(int argc, char *argv[])
         cerr << progstr+": " << __LINE__ << errstr << "data type not supported" << endl; return 1;
     }
     
+    //Close fstreams
+    ifs1.close(); ifs2.close();
+
+    ofs1.close();
 
     //Exit
     return ret;
 }
-

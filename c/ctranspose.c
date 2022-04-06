@@ -6,22 +6,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cblas.h>
-//#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int ctranspose_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor);
-int ctranspose_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor);
-int ctranspose_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor);
-int ctranspose_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor);
-
-int ctranspose_inplace_s (float *X, const size_t R, const size_t C, const int iscolmajor);
-int ctranspose_inplace_d (double *X, const size_t R, const size_t C, const int iscolmajor);
-int ctranspose_inplace_c (float *X, const size_t R, const size_t C, const int iscolmajor);
-int ctranspose_inplace_z (double *X, const size_t R, const size_t C, const int iscolmajor);
 
 
 int ctranspose_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor)

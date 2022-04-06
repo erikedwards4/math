@@ -3,17 +3,12 @@
 
 #include <stdio.h>
 #include <math.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int atan2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor);
-int atan2_d (double *Y, const double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor);
-
-int atan2_inplace_s (float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor);
-int atan2_inplace_d (double *X1, const double *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor);
 
 
 int atan2_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor)
@@ -223,7 +218,7 @@ int atan2_inplace_d (double *X1, const double *X2, const size_t R1, const size_t
     }
     else if (N==N2)
     {
-        for (size_t n=N; n>0u; --n, ++X1) { *X1 = atan2(*X1,*X2); }
+        for (size_t n=N; n>0u; --n, ++X1, ++X2) { *X1 = atan2(*X1,*X2); }
     }
     else if (iscolmajor)
     {

@@ -2,7 +2,7 @@
 #include "erfc.c"
 
 //Declarations
-const valarray<size_t> oktypes = {1u,2u,101u,102u};
+const valarray<size_t> oktypes = {1u,2u};
 const size_t I = 1u, O = 1u;
 
 //Description
@@ -40,22 +40,6 @@ if (i1.T==1u)
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
     if (codee::erfc_inplace_s(X,i1.N()))
-    { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
-    if (wo1)
-    {
-        try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
-        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
-    }
-    delete[] X;
-}
-else if (i1.T==101u)
-{
-    float *X;
-    try { X = new float[2u*i1.N()]; }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-    try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
-    catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    if (codee::erfc_inplace_c(X,i1.N()))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

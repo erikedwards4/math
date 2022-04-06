@@ -13,15 +13,12 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int randperm_s (float *Y, const size_t M, const size_t N);
-int randperm_d (double *Y, const size_t M, const size_t N);
 
 
 int randperm_s (float *Y, const size_t M, const size_t N)

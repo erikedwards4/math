@@ -4,16 +4,12 @@
 
 #include <stdio.h>
 #include <float.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int realmin_s (float *Y, const size_t N);
-int realmin_d (double *Y, const size_t N);
-int realmin_c (float *Y, const size_t N);
-int realmin_z (double *Y, const size_t N);
 
 
 int realmin_s (float *Y, const size_t N)

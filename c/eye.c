@@ -4,19 +4,14 @@
 //and slightly faster or same speed for large N.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <cblas.h>
 //#include <lapacke.h>
-//#include <time.h>
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int eye_s (float *Y, const size_t R, const size_t C, const int iscolmajor);
-int eye_d (double *Y, const size_t R, const size_t C, const int iscolmajor);
-int eye_c (float *Y, const size_t R, const size_t C, const int iscolmajor);
-int eye_z (double *Y, const size_t R, const size_t C, const int iscolmajor);
 
 
 int eye_s (float *Y, const size_t R, const size_t C, const int iscolmajor)

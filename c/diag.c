@@ -1,16 +1,12 @@
 //Gets kth diagonal of input X as column vector Y
 
 #include <stdio.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int diag_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k);
-int diag_d (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k);
-int diag_c (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k);
-int diag_z (double *Y, const double *X, const size_t R, const size_t C, const int iscolmajor, const int k);
 
 
 int diag_s (float *Y, const float *X, const size_t R, const size_t C, const int iscolmajor, const int k)

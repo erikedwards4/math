@@ -9,21 +9,12 @@
 
 #include <stdio.h>
 #include <lapacke.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int solve_s (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
-int solve_d (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
-int solve_c (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
-int solve_z (double *X, const double *A, const double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
-
-int solve_inplace_s (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
-int solve_inplace_d (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
-int solve_inplace_c (float *A, float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
-int solve_inplace_z (double *A, double *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr);
 
 
 int solve_s (float *X, const float *A, const float *B, const size_t R1, const size_t C1, const size_t C2, const int iscolmajor, const int tr)

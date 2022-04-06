@@ -2,6 +2,7 @@
 //For complex cases, only real part is set to log2e.
 
 #include <stdio.h>
+#include "codee_math.h"
 //#include <math.h>
 
 #ifndef M_LOG2E
@@ -12,11 +13,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-int log2e_s (float *Y, const size_t N);
-int log2e_d (double *Y, const size_t N);
-int log2e_c (float *Y, const size_t N);
-int log2e_z (double *Y, const size_t N);
 
 
 int log2e_s (float *Y, const size_t N)

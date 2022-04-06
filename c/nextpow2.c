@@ -6,15 +6,12 @@
 //whereas Octave is positive only (-3 -> log2(4)).
 
 #include <stdio.h>
-//#include <time.h>
+#include "codee_math.h"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-int nextpow2_i (int *Y, const int *X, const size_t N);
-int nextpow2_u (size_t *Y, const size_t *X, const size_t N);
 
 
 int nextpow2_i (int *Y, const int *X, const size_t N)
