@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Makes ctypes interface to the C functions in libmath.so.
-Elementwise2: 2 inputs, 1 output with same shape as input
+Elementwise2: 2 inputs, 1 output with same shape as input.
 Each function works element-wise (1 pair of elements at a time).
 """
 
@@ -34,6 +34,7 @@ def complex(x1, x2) -> np.ndarray:
     assert COLMAJOR1 == COLMAJOR2, "inputs must have the same row/col order"
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
+    NDIM = max(x1.ndim, x2.ndim)
 
     # Get input/output shapes
     R1 = x1.shape[0] if x1.ndim > 0 else 1
@@ -56,7 +57,7 @@ def complex(x1, x2) -> np.ndarray:
     # Init output
     y = np.empty((R, C, S, H), dtype=np.complex64) if DTYPE == np.float32 \
         else np.empty((R, C, S, H), dtype=np.complex128)
-    while y.ndim > max(x1.ndim, x2.ndim):
+    while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
     R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
@@ -67,7 +68,7 @@ def complex(x1, x2) -> np.ndarray:
     elif DTYPE == np.float64:
         ret = CLIB.complex_d(Y, X1, X2, R1, C1, S1, H1, R2, C2, S2, H2, COLMAJOR1)
     assert ret == 0, "error during call to C function"
-    
+
     return y
 
 
@@ -84,6 +85,7 @@ def polar(x1, x2) -> np.ndarray:
     assert COLMAJOR1 == COLMAJOR2, "inputs must have the same row/col order"
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
+    NDIM = max(x1.ndim, x2.ndim)
 
     # Get input/output shapes
     R1 = x1.shape[0] if x1.ndim > 0 else 1
@@ -106,7 +108,7 @@ def polar(x1, x2) -> np.ndarray:
     # Init output
     y = np.empty((R, C, S, H), dtype=np.complex64) if DTYPE == np.float32 \
         else np.empty((R, C, S, H), dtype=np.complex128)
-    while y.ndim > max(x1.ndim, x2.ndim):
+    while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
     R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
@@ -117,7 +119,7 @@ def polar(x1, x2) -> np.ndarray:
     elif DTYPE == np.float64:
         ret = CLIB.polar_d(Y, X1, X2, R1, C1, S1, H1, R2, C2, S2, H2, COLMAJOR1)
     assert ret == 0, "error during call to C function"
-    
+
     return y
 
 

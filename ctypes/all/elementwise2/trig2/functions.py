@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Makes ctypes interface to the C functions in libmath.so.
-Elementwise2: 2 inputs, 1 output with same shape as input
+Elementwise2: 2 inputs, 1 output with same shape as input.
 Each function works element-wise (1 pair of elements at a time).
 """
 
@@ -47,6 +47,7 @@ def atan2(x1, x2, inplace=False) -> np.ndarray:
     R, C, S, H = max(R1, R2), max(C1, C2), max(S1, S2), max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    NDIM = max(x1.ndim, x2.ndim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -63,7 +64,7 @@ def atan2(x1, x2, inplace=False) -> np.ndarray:
         return x1
     else:
         y = np.empty((R, C, S, H), dtype=DTYPE)
-        while y.ndim > max(x1.ndim, x2.ndim):
+        while y.ndim > NDIM:
             y = y.squeeze(axis=-1)
         Y = y.ctypes.data_as(C_PTR)
         R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
@@ -91,6 +92,7 @@ def hypot(x1, x2, inplace=False) -> np.ndarray:
     assert COLMAJOR1 == COLMAJOR2, "inputs must have the same row/col order"
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
+    NDIM = max(x1.ndim, x2.ndim)
 
     # Get input/output shapes
     R1 = x1.shape[0] if x1.ndim > 0 else 1
@@ -122,7 +124,7 @@ def hypot(x1, x2, inplace=False) -> np.ndarray:
         y = np.empty((R, C, S, H), dtype=DTYPE) if DTYPE in REAL_DTYPES \
             else np.empty((R, C, S, H), dtype=np.float32) if DTYPE == np.complex64 \
             else np.empty((R, C, S, H), dtype=np.float64)
-        while y.ndim > max(x1.ndim, x2.ndim):
+        while y.ndim > NDIM:
             y = y.squeeze(axis=-1)
         Y = y.ctypes.data_as(C_PTR)
         R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)

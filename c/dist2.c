@@ -4,6 +4,10 @@
 //This is the Euclidean vector distance,
 //which is the root-sum-square of the difference vecs: sqrt(sum(|X1-X2|^2)).
 
+//Broadcasting is only meant for 1D vectors into larger tensors,
+//so if using broadcasting, either X1 or X2 must be a vector,
+//and the shapes must be equal along the appropiate axis.
+
 #include <stdio.h>
 #include <math.h>
 #include "codee_math.h"

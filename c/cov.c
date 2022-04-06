@@ -9,6 +9,10 @@
 //This does NOT compute a covariance matrix for multi-channel input.
 //This computes pairwise covariance taken as a vector similarity measure.
 
+//Broadcasting is only meant for 1D vectors into larger tensors,
+//so if using broadcasting, either X1 or X2 must be a vector,
+//and the shapes must be equal along the appropiate axis.
+
 #include <stdio.h>
 #include "codee_math.h"
 

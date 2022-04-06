@@ -15,6 +15,10 @@
 //Unfortunately, they do not specify if they subtract the means from X1 and X2 first.
 //Since it is a correlation, and they show the usual corr also, I assume that they do.
 
+//Broadcasting is only meant for 1D vectors into larger tensors,
+//so if using broadcasting, either X1 or X2 must be a vector,
+//and the shapes must be equal along the appropiate axis.
+
 #include <stdio.h>
 #include "codee_math.h"
 

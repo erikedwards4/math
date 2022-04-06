@@ -4,6 +4,10 @@
 //This is the dot product with L2-norm normalization, and is in [-1 1].
 //This is equal to the cosine of the angle between the vectors.
 
+//Broadcasting is only meant for 1D vectors into larger tensors,
+//so if using broadcasting, either X1 or X2 must be a vector,
+//and the shapes must be equal along the appropiate axis.
+
 #include <stdio.h>
 #include <math.h>
 #include "codee_math.h"

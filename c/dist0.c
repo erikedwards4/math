@@ -6,6 +6,10 @@
 //which is just the count of X1!=X2.
 //However, for numerical purposes, I use |X1-X2|>thresh.
 
+//Broadcasting is only meant for 1D vectors into larger tensors,
+//so if using broadcasting, either X1 or X2 must be a vector,
+//and the shapes must be equal along the appropiate axis.
+
 #include <stdio.h>
 #include <float.h>
 #include <math.h>

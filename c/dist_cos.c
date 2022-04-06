@@ -3,6 +3,10 @@
 //This is 1 - cosine similarity, so is in [0 2].
 //Although not a proper distance metric, it is often used.
 
+//Broadcasting is only meant for 1D vectors into larger tensors,
+//so if using broadcasting, either X1 or X2 must be a vector,
+//and the shapes must be equal along the appropiate axis.
+
 #include <stdio.h>
 #include <math.h>
 #include "codee_math.h"

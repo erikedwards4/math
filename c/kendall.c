@@ -1,6 +1,10 @@
 //Vecs2scalar operation for 2 inputs X1 and X2.
 //Kendall rank correlation coefficient for each pair of vectors.
 
+//Broadcasting is only meant for 1D vectors into larger tensors,
+//so if using broadcasting, either X1 or X2 must be a vector,
+//and the shapes must be equal along the appropiate axis.
+
 #include <stdio.h>
 #include "codee_math.h"
 

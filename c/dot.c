@@ -6,6 +6,10 @@
 //Direct for loop is much faster for small N, faster for medium N,
 //and ~same speed for huge N (~1e6), compared to cblas_?dot.
 
+//Broadcasting is only meant for 1D vectors into larger tensors,
+//so if using broadcasting, either X1 or X2 must be a vector,
+//and the shapes must be equal along the appropiate axis.
+
 #include <stdio.h>
 #include <cblas.h>
 #include "codee_math.h"
