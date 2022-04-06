@@ -37,8 +37,8 @@ def dot(x1, x2, axis=0) -> np.ndarray:
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
     NDIM = max(x1.ndim, x2.ndim)
-    DIM = NDIM + axis if axis < 0 else axis
-    assert 0 <= DIM < NDIM, "axis out of range [0 NDIM)"
+    dim = NDIM + axis if axis < 0 else axis
+    assert 0 <= dim < NDIM, "axis out of range [0 NDIM)"
     if x1.shape != x2.shape:
         ISVEC1 = (x1.size == max(x1.shape))
         ISVEC2 = (x2.size == max(x2.shape))
@@ -53,12 +53,13 @@ def dot(x1, x2, axis=0) -> np.ndarray:
     C2 = x2.shape[1] if x2.ndim > 1 else 1
     S2 = x2.shape[2] if x2.ndim > 2 else 1
     H2 = x2.shape[3] if x2.ndim > 3 else 1
-    R = 1 if DIM == 0 else max(R1, R2)
-    C = 1 if DIM == 1 else max(C1, C2)
-    S = 1 if DIM == 2 else max(S1, S2)
-    H = 1 if DIM == 3 else max(H1, H2)
+    R = 1 if dim == 0 else max(R1, R2)
+    C = 1 if dim == 1 else max(C1, C2)
+    S = 1 if dim == 2 else max(S1, S2)
+    H = 1 if dim == 3 else max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    DIM = c_size_t(dim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -70,7 +71,6 @@ def dot(x1, x2, axis=0) -> np.ndarray:
     while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
-    R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
 
     # Run
     if DTYPE == np.float32:
@@ -100,8 +100,8 @@ def cov(x1, x2, axis=0) -> np.ndarray:
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
     NDIM = max(x1.ndim, x2.ndim)
-    DIM = NDIM + axis if axis < 0 else axis
-    assert 0 <= DIM < NDIM, "axis out of range [0 NDIM)"
+    dim = NDIM + axis if axis < 0 else axis
+    assert 0 <= dim < NDIM, "axis out of range [0 NDIM)"
     if x1.shape != x2.shape:
         ISVEC1 = (x1.size == max(x1.shape))
         ISVEC2 = (x2.size == max(x2.shape))
@@ -116,12 +116,13 @@ def cov(x1, x2, axis=0) -> np.ndarray:
     C2 = x2.shape[1] if x2.ndim > 1 else 1
     S2 = x2.shape[2] if x2.ndim > 2 else 1
     H2 = x2.shape[3] if x2.ndim > 3 else 1
-    R = 1 if DIM == 0 else max(R1, R2)
-    C = 1 if DIM == 1 else max(C1, C2)
-    S = 1 if DIM == 2 else max(S1, S2)
-    H = 1 if DIM == 3 else max(H1, H2)
+    R = 1 if dim == 0 else max(R1, R2)
+    C = 1 if dim == 1 else max(C1, C2)
+    S = 1 if dim == 2 else max(S1, S2)
+    H = 1 if dim == 3 else max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    DIM = c_size_t(dim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -133,7 +134,6 @@ def cov(x1, x2, axis=0) -> np.ndarray:
     while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
-    R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
 
     # Run
     if DTYPE == np.float32:
@@ -163,8 +163,8 @@ def corr(x1, x2, axis=0) -> np.ndarray:
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
     NDIM = max(x1.ndim, x2.ndim)
-    DIM = NDIM + axis if axis < 0 else axis
-    assert 0 <= DIM < NDIM, "axis out of range [0 NDIM)"
+    dim = NDIM + axis if axis < 0 else axis
+    assert 0 <= dim < NDIM, "axis out of range [0 NDIM)"
     if x1.shape != x2.shape:
         ISVEC1 = (x1.size == max(x1.shape))
         ISVEC2 = (x2.size == max(x2.shape))
@@ -179,12 +179,13 @@ def corr(x1, x2, axis=0) -> np.ndarray:
     C2 = x2.shape[1] if x2.ndim > 1 else 1
     S2 = x2.shape[2] if x2.ndim > 2 else 1
     H2 = x2.shape[3] if x2.ndim > 3 else 1
-    R = 1 if DIM == 0 else max(R1, R2)
-    C = 1 if DIM == 1 else max(C1, C2)
-    S = 1 if DIM == 2 else max(S1, S2)
-    H = 1 if DIM == 3 else max(H1, H2)
+    R = 1 if dim == 0 else max(R1, R2)
+    C = 1 if dim == 1 else max(C1, C2)
+    S = 1 if dim == 2 else max(S1, S2)
+    H = 1 if dim == 3 else max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    DIM = c_size_t(dim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -196,7 +197,6 @@ def corr(x1, x2, axis=0) -> np.ndarray:
     while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
-    R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
 
     # Run
     if DTYPE == np.float32:
@@ -226,8 +226,8 @@ def corr_opus(x1, x2, axis=0) -> np.ndarray:
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
     NDIM = max(x1.ndim, x2.ndim)
-    DIM = NDIM + axis if axis < 0 else axis
-    assert 0 <= DIM < NDIM, "axis out of range [0 NDIM)"
+    dim = NDIM + axis if axis < 0 else axis
+    assert 0 <= dim < NDIM, "axis out of range [0 NDIM)"
     if x1.shape != x2.shape:
         ISVEC1 = (x1.size == max(x1.shape))
         ISVEC2 = (x2.size == max(x2.shape))
@@ -242,12 +242,13 @@ def corr_opus(x1, x2, axis=0) -> np.ndarray:
     C2 = x2.shape[1] if x2.ndim > 1 else 1
     S2 = x2.shape[2] if x2.ndim > 2 else 1
     H2 = x2.shape[3] if x2.ndim > 3 else 1
-    R = 1 if DIM == 0 else max(R1, R2)
-    C = 1 if DIM == 1 else max(C1, C2)
-    S = 1 if DIM == 2 else max(S1, S2)
-    H = 1 if DIM == 3 else max(H1, H2)
+    R = 1 if dim == 0 else max(R1, R2)
+    C = 1 if dim == 1 else max(C1, C2)
+    S = 1 if dim == 2 else max(S1, S2)
+    H = 1 if dim == 3 else max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    DIM = c_size_t(dim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -259,7 +260,6 @@ def corr_opus(x1, x2, axis=0) -> np.ndarray:
     while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
-    R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
 
     # Run
     if DTYPE == np.float32:
@@ -289,8 +289,8 @@ def cos2(x1, x2, axis=0) -> np.ndarray:
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
     NDIM = max(x1.ndim, x2.ndim)
-    DIM = NDIM + axis if axis < 0 else axis
-    assert 0 <= DIM < NDIM, "axis out of range [0 NDIM)"
+    dim = NDIM + axis if axis < 0 else axis
+    assert 0 <= dim < NDIM, "axis out of range [0 NDIM)"
     if x1.shape != x2.shape:
         ISVEC1 = (x1.size == max(x1.shape))
         ISVEC2 = (x2.size == max(x2.shape))
@@ -305,12 +305,13 @@ def cos2(x1, x2, axis=0) -> np.ndarray:
     C2 = x2.shape[1] if x2.ndim > 1 else 1
     S2 = x2.shape[2] if x2.ndim > 2 else 1
     H2 = x2.shape[3] if x2.ndim > 3 else 1
-    R = 1 if DIM == 0 else max(R1, R2)
-    C = 1 if DIM == 1 else max(C1, C2)
-    S = 1 if DIM == 2 else max(S1, S2)
-    H = 1 if DIM == 3 else max(H1, H2)
+    R = 1 if dim == 0 else max(R1, R2)
+    C = 1 if dim == 1 else max(C1, C2)
+    S = 1 if dim == 2 else max(S1, S2)
+    H = 1 if dim == 3 else max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    DIM = c_size_t(dim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -322,7 +323,6 @@ def cos2(x1, x2, axis=0) -> np.ndarray:
     while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
-    R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
 
     # Run
     if DTYPE == np.float32:
@@ -352,8 +352,8 @@ def cokurtosis(x1, x2, axis=0) -> np.ndarray:
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
     NDIM = max(x1.ndim, x2.ndim)
-    DIM = NDIM + axis if axis < 0 else axis
-    assert 0 <= DIM < NDIM, "axis out of range [0 NDIM)"
+    dim = NDIM + axis if axis < 0 else axis
+    assert 0 <= dim < NDIM, "axis out of range [0 NDIM)"
     if x1.shape != x2.shape:
         ISVEC1 = (x1.size == max(x1.shape))
         ISVEC2 = (x2.size == max(x2.shape))
@@ -368,12 +368,13 @@ def cokurtosis(x1, x2, axis=0) -> np.ndarray:
     C2 = x2.shape[1] if x2.ndim > 1 else 1
     S2 = x2.shape[2] if x2.ndim > 2 else 1
     H2 = x2.shape[3] if x2.ndim > 3 else 1
-    R = 1 if DIM == 0 else max(R1, R2)
-    C = 1 if DIM == 1 else max(C1, C2)
-    S = 1 if DIM == 2 else max(S1, S2)
-    H = 1 if DIM == 3 else max(H1, H2)
+    R = 1 if dim == 0 else max(R1, R2)
+    C = 1 if dim == 1 else max(C1, C2)
+    S = 1 if dim == 2 else max(S1, S2)
+    H = 1 if dim == 3 else max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    DIM = c_size_t(dim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -385,7 +386,6 @@ def cokurtosis(x1, x2, axis=0) -> np.ndarray:
     while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
-    R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
 
     # Run
     if DTYPE == np.float32:
@@ -411,8 +411,8 @@ def spearman(x1, x2, axis=0) -> np.ndarray:
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
     NDIM = max(x1.ndim, x2.ndim)
-    DIM = NDIM + axis if axis < 0 else axis
-    assert 0 <= DIM < NDIM, "axis out of range [0 NDIM)"
+    dim = NDIM + axis if axis < 0 else axis
+    assert 0 <= dim < NDIM, "axis out of range [0 NDIM)"
     if x1.shape != x2.shape:
         ISVEC1 = (x1.size == max(x1.shape))
         ISVEC2 = (x2.size == max(x2.shape))
@@ -427,12 +427,13 @@ def spearman(x1, x2, axis=0) -> np.ndarray:
     C2 = x2.shape[1] if x2.ndim > 1 else 1
     S2 = x2.shape[2] if x2.ndim > 2 else 1
     H2 = x2.shape[3] if x2.ndim > 3 else 1
-    R = 1 if DIM == 0 else max(R1, R2)
-    C = 1 if DIM == 1 else max(C1, C2)
-    S = 1 if DIM == 2 else max(S1, S2)
-    H = 1 if DIM == 3 else max(H1, H2)
+    R = 1 if dim == 0 else max(R1, R2)
+    C = 1 if dim == 1 else max(C1, C2)
+    S = 1 if dim == 2 else max(S1, S2)
+    H = 1 if dim == 3 else max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    DIM = c_size_t(dim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -444,7 +445,6 @@ def spearman(x1, x2, axis=0) -> np.ndarray:
     while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
-    R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
 
     # Run
     if DTYPE == np.float32:
@@ -470,8 +470,8 @@ def kendall(x1, x2, axis=0) -> np.ndarray:
     assert x1.ndim < 5, "input x1 must have ndim < 5"
     assert x2.ndim < 5, "input x2 must have ndim < 5"
     NDIM = max(x1.ndim, x2.ndim)
-    DIM = NDIM + axis if axis < 0 else axis
-    assert 0 <= DIM < NDIM, "axis out of range [0 NDIM)"
+    dim = NDIM + axis if axis < 0 else axis
+    assert 0 <= dim < NDIM, "axis out of range [0 NDIM)"
     if x1.shape != x2.shape:
         ISVEC1 = (x1.size == max(x1.shape))
         ISVEC2 = (x2.size == max(x2.shape))
@@ -486,12 +486,13 @@ def kendall(x1, x2, axis=0) -> np.ndarray:
     C2 = x2.shape[1] if x2.ndim > 1 else 1
     S2 = x2.shape[2] if x2.ndim > 2 else 1
     H2 = x2.shape[3] if x2.ndim > 3 else 1
-    R = 1 if DIM == 0 else max(R1, R2)
-    C = 1 if DIM == 1 else max(C1, C2)
-    S = 1 if DIM == 2 else max(S1, S2)
-    H = 1 if DIM == 3 else max(H1, H2)
+    R = 1 if dim == 0 else max(R1, R2)
+    C = 1 if dim == 1 else max(C1, C2)
+    S = 1 if dim == 2 else max(S1, S2)
+    H = 1 if dim == 3 else max(H1, H2)
     R1, C1, S1, H1 = c_size_t(R1), c_size_t(C1), c_size_t(S1), c_size_t(H1)
     R2, C2, S2, H2 = c_size_t(R2), c_size_t(C2), c_size_t(S2), c_size_t(H2)
+    DIM = c_size_t(dim)
 
     # Make pointers
     C_PTR = C_FLT_PTR if DTYPE in FLT_DTYPES else C_DBL_PTR
@@ -503,7 +504,6 @@ def kendall(x1, x2, axis=0) -> np.ndarray:
     while y.ndim > NDIM:
         y = y.squeeze(axis=-1)
     Y = y.ctypes.data_as(C_PTR)
-    R, C, S, H = c_size_t(R), c_size_t(C), c_size_t(S), c_size_t(H)
 
     # Run
     if DTYPE == np.float32:

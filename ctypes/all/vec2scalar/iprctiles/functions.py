@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Makes ctypes interface to the C functions in libmath.so.
-Elementwise1: 1 input, 1 output with same shape as input
-Each function works element-wise (1 element at a time).
+Vec2scalar: 1 input, 1 output with vectors reduced to scalars along dim.
+Each function works vector-wise (1 vector at a time).
 """
 
 from time import time
