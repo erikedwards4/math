@@ -27,46 +27,46 @@ etc.
 # Within each terminal directory, the functions are found in functions.py,
 # and the testing code within unittest.py, doctest.py, etc.
 
-from all.generate.constants.functions import *
-from all.generate.other_gen.functions import *
-from all.generate.rand.functions import *
+from all.generate.constants import *
+from all.generate.other_gen import *
+from all.generate.rand import *
 
-from all.matmanip.construct.functions import *
-from all.matmanip.matsel.functions import *
-from all.matmanip.rearrange.functions import *
-from all.matmanip.split_join.functions import *
+from all.matmanip.construct import *
+from all.matmanip.matsel import *
+from all.matmanip.rearrange import *
+from all.matmanip.split_join import *
 
-from all.elementwise1.operators.functions import *
-from all.elementwise1.trig.functions import *
-from all.elementwise1.exp_log.functions import *
-from all.elementwise1.round.functions import *
-from all.elementwise1.special.functions import *
-from all.elementwise1.nonlin.functions import *
+from all.elementwise1.operators import *
+from all.elementwise1.trig import *
+from all.elementwise1.exp_log import *
+from all.elementwise1.round import *
+from all.elementwise1.special import *
+from all.elementwise1.nonlin import *
 
-from all.elementwise2.arithmetic.functions import *
-from all.elementwise2.trig2.functions import *
-from all.elementwise2.complex2.functions import *
+from all.elementwise2.arithmetic import *
+from all.elementwise2.trig2 import *
+from all.elementwise2.complex2 import *
 
-from all.vec2scalar.sums.functions import *
-from all.vec2scalar.prctiles.functions import *
-from all.vec2scalar.iprctiles.functions import *
-from all.vec2scalar.ranges.functions import *
-from all.vec2scalar.norms.functions import *
-from all.vec2scalar.moments.functions import *
-from all.vec2scalar.other_means.functions import *
-from all.vec2scalar.other_spreads.functions import *
-from all.vec2scalar.other_stats.functions import *
+from all.vec2scalar.sums import *
+from all.vec2scalar.prctiles import *
+from all.vec2scalar.iprctiles import *
+from all.vec2scalar.ranges import *
+from all.vec2scalar.norms import *
+from all.vec2scalar.moments import *
+from all.vec2scalar.other_means import *
+from all.vec2scalar.other_spreads import *
+from all.vec2scalar.other_stats import *
 
-from all.vecs2scalar.similarity.functions import *
-from all.vecs2scalar.dist.functions import *
+from all.vecs2scalar.similarity import *
+from all.vecs2scalar.dist import *
 
-from all.vec2vec.center.functions import *
-from all.vec2vec.scale.functions import *
-from all.vec2vec.normalize.functions import *
-from all.vec2vec.reorder.functions import *
-from all.vec2vec.other_vec2vec.functions import *
+from all.vec2vec.center import *
+from all.vec2vec.scale import *
+from all.vec2vec.normalize import *
+from all.vec2vec.reorder import *
+from all.vec2vec.other_vec2vec import *
 
-from all.linalg.matmul.functions import *
-from all.linalg.transform.functions import *
-from all.linalg.sim_mat.functions import *
-from all.linalg.other_linalg.functions import *
+from all.linalg.matmul import *
+from all.linalg.transform import *
+from all.linalg.sim_mat import *
+from all.linalg.other_linalg import *
