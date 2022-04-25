@@ -26,17 +26,33 @@ int fill_d (double *Y, const size_t N, const double val)
 }
 
 
-int fill_c (float *Y, const size_t N, const float val)
+// int fill_c (float *Y, const size_t N, const float val)
+// {
+//     for (size_t n=N; n>0u; --n, ++Y) { *Y = val; *++Y = 0.0f; }
+
+//     return 0;
+// }
+
+
+// int fill_z (double *Y, const size_t N, const double val)
+// {
+//     for (size_t n=N; n>0u; --n, ++Y) { *Y = val; *++Y = 0.0; }
+
+//     return 0;
+// }
+
+
+int fill_c (float *Y, const size_t N, const float rval, const float ival)
 {
-    for (size_t n=N; n>0u; --n, ++Y) { *Y = val; *++Y = 0.0f; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = rval; *++Y = ival; }
 
     return 0;
 }
 
 
-int fill_z (double *Y, const size_t N, const double val)
+int fill_z (double *Y, const size_t N, const double rval, const double ival)
 {
-    for (size_t n=N; n>0u; --n, ++Y) { *Y = val; *++Y = 0.0; }
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = rval; *++Y = ival; }
 
     return 0;
 }

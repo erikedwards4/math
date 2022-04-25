@@ -1,4 +1,4 @@
-//Gets proj part of complex-valued input X.
+//Gets complex proj (projection to Riemann sphere) of complex-valued input X.
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>

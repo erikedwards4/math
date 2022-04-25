@@ -4,7 +4,7 @@
 //Declarations
 const valarray<size_t> oktypes = {1u,2u,101u,102u};
 const size_t I = 1u, O = 1u;
-size_t dim;
+size_t dim, L;
 int b;
 
 //Description
@@ -19,7 +19,7 @@ descr += "Use -d2 to get kurtosis along slices.\n";
 descr += "Use -d3 to get kurtosis along hyperslices.\n";
 descr += "\n";
 descr += "Include -b (--biased) to use the biased sample estimate [default is unbiased].\n";
-descr += "The 'unbiased' estimate [default] is unbiased only for normal distribution.\n";
+descr += "The 'unbiased' estimate is unbiased only if normally distributed.\n";
 descr += "\n";
 descr += "Examples:\n";
 descr += "$ kurtosis X -o Y \n";
@@ -45,6 +45,8 @@ if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1
 b = (a_b->count>0);
 
 //Checks
+L = (dim==0u) ? i1.R : (dim==1u) ? i1.C : (dim==2u) ? i1.S : i1.H;
+if (L<4u) { cerr << progstr+": " << __LINE__ << errstr << "L (length of vecs in X along dim) must be > 3" << endl; return 1; }
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
 
 //Set output header info

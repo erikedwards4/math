@@ -17,7 +17,7 @@ int linspace_s (float *Y, const size_t N, const float a, const float b)
     {
         const float stp = (b-a)/(float)(N-1u);
         float y = a;
-
+        
         for (size_t n=N-1u; n>0u; --n, ++Y, y+=stp) { *Y = y; }
         *Y = b;
     }

@@ -104,7 +104,7 @@ else if (o1.T==101u)
     float *Y;
     try { Y = new float[2u*o1.N()]; }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
-    if (codee::fill_c(Y,o1.N(),float(val)))
+    if (codee::fill_c(Y,o1.N(),float(val),0.0))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

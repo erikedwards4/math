@@ -144,6 +144,7 @@ int amax_d (double *Y, const double *X, const size_t R, const size_t C, const si
 int amax_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim)
 {
     if (dim>3u) { fprintf(stderr,"error in amax_c: dim must be in [0 3]\n"); return 1; }
+    printf("HI \n");
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;

@@ -42,7 +42,7 @@ Dirs:
 #Generate: aka "Factory" functions
 #These take 0 inputs (other than parameters) and generate 1 output.
 #The Random functions here are stand-alone (based on PCG random, but no dependencies).
-Generate: Constants Other_Gen Rand
+Generate: Constants Rand Other_Gen
 
 #Constants: 0 inputs, 1 output with a single constant repeated
 Constants: zeros ones twos e ln2 ln10 log2e log10e sqrt2 isqrt2 pi ipi pi_2 pi_4 eps realmin realmax inf nan fill
@@ -67,14 +67,6 @@ inf: inf.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 nan: nan.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 fill: fill.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-#Other_Gen: 0 inputs, 1 output
-Other_Gen: eye linspace logspace primes randperm
-eye: eye.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-linspace: linspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-logspace: logspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-primes: primes.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-randperm: randperm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-
 #Rand: 0 inputs, 1 output
 #These are the fastest and go-to versions.
 #They use modified code from PCG random, but are stand-alone (no install of PCG required)
@@ -82,6 +74,14 @@ Rand: randi randu randn
 randi: randi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 randu: randu.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 randn: randn.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+#Other_Gen: 0 inputs, 1 output
+Other_Gen: eye linspace logspace primes randperm
+eye: eye.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+linspace: linspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+logspace: logspace.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+primes: primes.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+randperm: randperm.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
@@ -162,13 +162,13 @@ erf: erf.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 erfc: erfc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 tgamma: tgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lgamma: lgamma.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-sinc: sinc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+# sinc: sinc.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Complex: real imag conj arg proj #norm
+Complex: real imag arg conj proj #norm
 real: real.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 imag: imag.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 arg: arg.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+conj: conj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 proj: proj.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #norm is same as element-wise square
 

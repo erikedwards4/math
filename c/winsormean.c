@@ -20,7 +20,8 @@ extern "C" {
 int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q)
 {
     if (dim>3u) { fprintf(stderr,"error in winsormean_s: dim must be in [0 3]\n"); return 1; }
-    if (p<0.0f || p>50.0f) { fprintf(stderr,"error in winsormean_s: p must be in [0 50]"); return 1; }
+    if (p<0.0f || p>=50.0f) { fprintf(stderr,"error in winsormean_s: p must be in [0 50)"); return 1; }
+    if (q<0.0f || q>=50.0f) { fprintf(stderr,"error in winsormean_s: q must be in [0 50)"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
@@ -97,7 +98,8 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
 int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q)
 {
     if (dim>3u) { fprintf(stderr,"error in winsormean_d: dim must be in [0 3]\n"); return 1; }
-    if (p<0.0 || p>50.0) { fprintf(stderr,"error in winsormean_d: p must be in [0 50]"); return 1; }
+    if (p<0.0 || p>=50.0) { fprintf(stderr,"error in winsormean_d: p must be in [0 50)"); return 1; }
+    if (q<0.0 || q>=50.0) { fprintf(stderr,"error in winsormean_d: q must be in [0 50)"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
@@ -174,7 +176,8 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
 int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q)
 {
     if (dim>3u) { fprintf(stderr,"error in winsormean_inplace_s: dim must be in [0 3]\n"); return 1; }
-    if (p<0.0f || p>50.0f) { fprintf(stderr,"error in winsormean_inplace_s: p must be in [0 50]"); return 1; }
+    if (p<0.0f || p>=50.0f) { fprintf(stderr,"error in winsormean_inplace_s: p must be in [0 50)"); return 1; }
+    if (q<0.0f || q>=50.0f) { fprintf(stderr,"error in winsormean_inplace_s: q must be in [0 50)"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
@@ -245,7 +248,8 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
 int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q)
 {
     if (dim>3u) { fprintf(stderr,"error in winsormean_inplace_d: dim must be in [0 3]\n"); return 1; }
-    if (p<0.0 || p>50.0) { fprintf(stderr,"error in winsormean_inplace_d: p must be in [0 50]"); return 1; }
+    if (p<0.0 || p>=50.0) { fprintf(stderr,"error in winsormean_inplace_d: p must be in [0 50)"); return 1; }
+    if (q<0.0 || q>=50.0) { fprintf(stderr,"error in winsormean_inplace_d: q must be in [0 50)"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;

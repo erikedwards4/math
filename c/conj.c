@@ -1,4 +1,4 @@
-//Gets conj part of complex-valued input X.
+//Complex conjugate of complex-valued input X.
 //This has in-place and not-in-place versions.
 
 //LAPACKE_?lacgv was surprisingly slow!
@@ -11,6 +11,22 @@
 namespace codee {
 extern "C" {
 #endif
+
+
+int conj_s (float *Y, const float *X, const size_t N)
+{
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
+
+    return 0;
+}
+
+
+int conj_d (double *Y, const double *X, const size_t N)
+{
+    for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
+
+    return 0;
+}
 
 
 int conj_c (float *Y, const float *X, const size_t N)
@@ -30,6 +46,19 @@ int conj_z (double *Y, const double *X, const size_t N)
     //for (n=0; n<2u*N; n+=2) { Y[n] = X[n]; }
     //for (n=1; n<2u*N; n+=2) { Y[n] = -X[n]; }
 
+    return 0;
+}
+
+
+
+int conj_inplace_s (float *X, const size_t N)
+{
+    return 0;
+}
+
+
+int conj_inplace_d (double *X, const size_t N)
+{
     return 0;
 }
 

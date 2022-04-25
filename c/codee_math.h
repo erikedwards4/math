@@ -1,11 +1,11 @@
 #pragma once
 
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <math.h>
-// #include <complex.h>
-// #include <lapacke.h>
-// #include <cblas.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <complex.h>
+#include <lapacke.h>
+#include <cblas.h>
 #include <time.h>
 
 #ifndef M_E
@@ -153,8 +153,27 @@ int nan_z (double *Y, const size_t N);
 
 int fill_s (float *Y, const size_t N, const float val);
 int fill_d (double *Y, const size_t N, const double val);
-int fill_c (float *Y, const size_t N, const float val);
-int fill_z (double *Y, const size_t N, const double val);
+// int fill_c (float *Y, const size_t N, const float val);
+// int fill_z (double *Y, const size_t N, const double val);
+int fill_c (float *Y, const size_t N, const float rval, const float ival);
+int fill_z (double *Y, const size_t N, const double rval, const double ival);
+
+// Generate: Rand
+
+int randi_s (float *Y, const int a, const int b, const size_t N);
+int randi_d (double *Y, const int a, const int b, const size_t N);
+int randi_c (float *Y, const int a, const int b, const size_t N);
+int randi_z (double *Y, const int a, const int b, const size_t N);
+
+int randu_s (float *Y, const float a, const float b, const size_t N);
+int randu_d (double *Y, const double a, const double b, const size_t N);
+int randu_c (float *Y, const float a, const float b, const size_t N);
+int randu_z (double *Y, const double a, const double b, const size_t N);
+
+int randn_s (float *Y, const float mu, const float sig, const size_t N);
+int randn_d (double *Y, const double mu, const double sig, const size_t N);
+int randn_c (float *Y, const float mu, const float sig, const size_t N);
+int randn_z (double *Y, const double mu, const double sig, const size_t N);
 
 // Generate: Other_Gen
 
@@ -175,26 +194,11 @@ int logspace_z (double *Y, const size_t N, const double a, const double b);
 
 int primes_i (int *Y, int *cnt, const size_t N);
 int primes_u (size_t *Y, size_t *cnt, const size_t N);
+int primes_s (float *Y, int *cnt, const size_t N);
+int primes_d (double *Y, int *cnt, const size_t N);
 
 int randperm_s (float *Y, const size_t M, const size_t N);
 int randperm_d (double *Y, const size_t M, const size_t N);
-
-// Generate: Rand
-
-int randi_s (float *Y, const int a, const int b, const size_t N);
-int randi_d (double *Y, const int a, const int b, const size_t N);
-int randi_c (float *Y, const int a, const int b, const size_t N);
-int randi_z (double *Y, const int a, const int b, const size_t N);
-
-int randu_s (float *Y, const float a, const float b, const size_t N);
-int randu_d (double *Y, const double a, const double b, const size_t N);
-int randu_c (float *Y, const float a, const float b, const size_t N);
-int randu_z (double *Y, const double a, const double b, const size_t N);
-
-int randn_s (float *Y, const float mu, const float sig, const size_t N);
-int randn_d (double *Y, const double mu, const double sig, const size_t N);
-int randn_c (float *Y, const float mu, const float sig, const size_t N);
-int randn_z (double *Y, const double mu, const double sig, const size_t N);
 
 
 // Matmanip: Construct Matsel Rearrange Split_Join
@@ -307,11 +311,15 @@ int join3_z (double *Y, const double *X1, const double *X2, const double *X3,  c
 
 // Elementwise1: Operators
 
-int plusplus_s (float *X, const size_t N);
-int plusplus_d (double *X, const size_t N);
+int plusplus_s (float *Y, const float *X, const size_t N);
+int plusplus_d (double *Y, const double *X, const size_t N);
+int plusplus_inplace_s (float *X, const size_t N);
+int plusplus_inplace_d (double *X, const size_t N);
 
-int minusminus_s (float *X, const size_t N);
-int minusminus_d (double *X, const size_t N);
+int minusminus_s (float *Y, const float *X, const size_t N);
+int minusminus_d (double *Y, const double *X, const size_t N);
+int minusminus_inplace_s (float *X, const size_t N);
+int minusminus_inplace_d (double *X, const size_t N);
 
 int neg_s (float *Y, const float *X, const size_t N);
 int neg_d (double *Y, const double *X, const size_t N);
@@ -568,14 +576,15 @@ int lgamma_inplace_d (double *X, const size_t N);
 
 // Elementwise1: Complex
 
+int real_s (float *Y, const float *X, const size_t N);
+int real_d (double *Y, const double *X, const size_t N);
 int real_c (float *Y, const float *X, const size_t N);
 int real_z (double *Y, const double *X, const size_t N);
 
+int imag_s (float *Y, const float *X, const size_t N);
+int imag_d (double *Y, const double *X, const size_t N);
 int imag_c (float *Y, const float *X, const size_t N);
 int imag_z (double *Y, const double *X, const size_t N);
-
-int conj_c (float *Y, const float *X, const size_t N);
-int conj_z (double *Y, const double *X, const size_t N);
 
 int arg_s (float *Y, const float *X, const size_t N);
 int arg_d (double *Y, const double *X, const size_t N);
@@ -583,6 +592,15 @@ int arg_c (float *Y, const float *X, const size_t N);
 int arg_z (double *Y, const double *X, const size_t N);
 int arg_inplace_s (float *X, const size_t N);
 int arg_inplace_d (double *X, const size_t N);
+
+int conj_s (float *Y, const float *X, const size_t N);
+int conj_d (double *Y, const double *X, const size_t N);
+int conj_c (float *Y, const float *X, const size_t N);
+int conj_z (double *Y, const double *X, const size_t N);
+int conj_inplace_s (float *X, const size_t N);
+int conj_inplace_d (double *X, const size_t N);
+int conj_inplace_c (float *X, const size_t N);
+int conj_inplace_z (double *X, const size_t N);
 
 int proj_c (float *Y, const float *X, const size_t N);
 int proj_z (double *Y, const double *X, const size_t N);
@@ -604,8 +622,6 @@ int square_c (float *Y, const float *X, const size_t N);
 int square_z (double *Y, const double *X, const size_t N);
 int square_inplace_s (float *X, const size_t N);
 int square_inplace_d (double *X, const size_t N);
-int square_inplace_c (float *X, const size_t N);
-int square_inplace_z (double *X, const size_t N);
 
 int cube_s (float *Y, const float *X, const size_t N);
 int cube_d (double *Y, const double *X, const size_t N);

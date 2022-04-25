@@ -9,6 +9,22 @@ extern "C" {
 #endif
 
 
+int imag_s (float *Y, const float *X, const size_t N)
+{
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = 0.0f; }
+
+    return 0;
+}
+
+
+int imag_d (double *Y, const double *X, const size_t N)
+{
+    for (size_t n=N; n>0u; --n, ++Y) { *Y = 0.0; }
+
+    return 0;
+}
+
+
 int imag_c (float *Y, const float *X, const size_t N)
 {
     for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *++X; }

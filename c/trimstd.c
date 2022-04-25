@@ -22,7 +22,8 @@ extern "C" {
 int trimstd_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q, const int biased)
 {
     if (dim>3u) { fprintf(stderr,"error in trimstd_s: dim must be in [0 3]\n"); return 1; }
-    if (p<0.0f || p>50.0f) { fprintf(stderr,"error in trimstd_s: p must be in [0 50]"); return 1; }
+    if (p<0.0f || p>=50.0f) { fprintf(stderr,"error in trimstd_s: p must be in [0 50)"); return 1; }
+    if (q<0.0f || q>=50.0f) { fprintf(stderr,"error in trimstd_s: q must be in [0 50)"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
@@ -103,7 +104,8 @@ int trimstd_s (float *Y, const float *X, const size_t R, const size_t C, const s
 int trimstd_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q, const int biased)
 {
     if (dim>3u) { fprintf(stderr,"error in trimstd_d: dim must be in [0 3]\n"); return 1; }
-    if (p<0.0 || p>50.0) { fprintf(stderr,"error in trimstd_d: p must be in [0 50]"); return 1; }
+    if (p<0.0 || p>=50.0) { fprintf(stderr,"error in trimstd_d: p must be in [0 50)"); return 1; }
+    if (q<0.0 || q>=50.0) { fprintf(stderr,"error in trimstd_d: q must be in [0 50)"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
@@ -184,7 +186,8 @@ int trimstd_d (double *Y, const double *X, const size_t R, const size_t C, const
 int trimstd_inplace_s (float *Y, float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p, const float q, const int biased)
 {
     if (dim>3u) { fprintf(stderr,"error in trimstd_inplace_s: dim must be in [0 3]\n"); return 1; }
-    if (p<0.0f || p>50.0f) { fprintf(stderr,"error in trimstd_inplace_s: p must be in [0 50]"); return 1; }
+    if (p<0.0f || p>=50.0f) { fprintf(stderr,"error in trimstd_inplace_s: p must be in [0 50)"); return 1; }
+    if (q<0.0f || q>=50.0f) { fprintf(stderr,"error in trimstd_inplace_s: q must be in [0 50)"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
@@ -259,7 +262,8 @@ int trimstd_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
 int trimstd_inplace_d (double *Y, double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p, const double q, const int biased)
 {
     if (dim>3u) { fprintf(stderr,"error in trimstd_inplace_d: dim must be in [0 3]\n"); return 1; }
-    if (p<0.0 || p>50.0) { fprintf(stderr,"error in trimstd_inplace_d: p must be in [0 50]"); return 1; }
+    if (p<0.0 || p>=50.0) { fprintf(stderr,"error in trimstd_inplace_d: p must be in [0 50)"); return 1; }
+    if (q<0.0 || q>=50.0) { fprintf(stderr,"error in trimstd_inplace_d: q must be in [0 50)"); return 1; }
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
