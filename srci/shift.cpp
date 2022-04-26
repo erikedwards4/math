@@ -12,6 +12,7 @@ string descr;
 descr += "Vec2vec operation.\n";
 descr += "Shifts elements of X along dim by N steps.\n";
 descr += "The N edge elements are replaced with 0.\n";
+descr += "Negative N shifts up for dim=0, left for dim=1, etc.\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to shift along cols.\n";
