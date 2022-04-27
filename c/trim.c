@@ -29,7 +29,7 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     const float p1 = (p/100.0f)*(float)(Lx-1u), p2 = (1.0f-q/100.0f)*(float)(Lx-1u);
-    size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
+    const size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
     const size_t Ly = i2-i1+1u;
 
     float *X1;
@@ -96,7 +96,7 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     const double p1 = (p/100.0)*(double)(Lx-1u), p2 = (1.0-q/100.0)*(double)(Lx-1u);
-    size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
+    const size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
     const size_t Ly = i2-i1+1u;
 
     double *X1;
@@ -163,7 +163,7 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     const float p1 = (p/100.0f)*(float)(Lx-1u), p2 = (1.0f-q/100.0f)*(float)(Lx-1u);
-    size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
+    const size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
     const size_t Ly = i2-i1+1u;
 
     if (N==0u) {}
@@ -224,7 +224,7 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     const double p1 = (p/100.0)*(double)(Lx-1u), p2 = (1.0-q/100.0)*(double)(Lx-1u);
-    size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
+    const size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
     const size_t Ly = i2-i1+1u;
 
     if (N==0u) {}

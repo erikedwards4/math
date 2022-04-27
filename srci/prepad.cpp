@@ -20,7 +20,7 @@ descr += "Use -d3 to get prepad along hyperslices.\n";
 descr += "\n";
 descr += "Use -v (--val) to specify the fill value [default=0.0].\n";
 descr += "\n";
-descr += "Use -p (--P) to give the postpad length [default=0].\n";
+descr += "Use -p (--P) to give the prepad length [default=0].\n";
 descr += "The length of output Y along dim will be greater than X by P elements.\n";
 descr += "\n";
 descr += "Examples:\n";

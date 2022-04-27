@@ -51,6 +51,7 @@ if (dim>3u) { cerr << progstr+": " << __LINE__ << errstr << "dim must be in {0,1
 
 //Checks
 if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
+if (base<=0.0) { cerr << progstr+": " << __LINE__ << errstr << "base must be positive" << endl; return 1; }
 
 //Set output header info
 o1.F = i1.F; o1.T = i1.T;

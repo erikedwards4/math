@@ -124,6 +124,7 @@ int main(int argc, char *argv[])
 
     //Checks
     if (i1.isempty()) { cerr << progstr+": " << __LINE__ << errstr << "input (X) found to be empty" << endl; return 1; }
+    if (base<=0.0) { cerr << progstr+": " << __LINE__ << errstr << "base must be positive" << endl; return 1; }
 
 
     //Set output header info
