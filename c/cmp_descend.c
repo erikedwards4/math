@@ -1,6 +1,6 @@
-//Compare function for descending sort.
+//Sort_Help functions.
+//Give comparison (cmp) functions for use by C stdlib qsort.
 
-#include <stdio.h>
 #include <math.h>
 #include "codee_math.h"
 

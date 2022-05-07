@@ -7,121 +7,13 @@
 #include <math.h>
 #include <lapacke.h>
 #include "codee_math.h"
+#include "cmp_ascend.c"
+#include "cmp_descend.c"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-// static int cmp_ascend_s (const void *a, const void *b);
-// static int cmp_ascend_d (const void *a, const void *b);
-static int cmp_ascend_c (const void *a, const void *b);
-static int cmp_ascend_z (const void *a, const void *b);
-
-// static int cmp_descend_s (const void *a, const void *b);
-// static int cmp_descend_d (const void *a, const void *b);
-static int cmp_descend_c (const void *a, const void *b);
-static int cmp_descend_z (const void *a, const void *b);
-
-
-// static int cmp_ascend_s (const void *a, const void *b)
-// {
-// 	const float x1 = *(const float*)a, x2 = *(const float*)b;
-// 	if (x1!=x1) { return 1; }
-//     else if (x2!=x2) { return -1; }
-//     else if (x1>x2) { return 1; }
-//     else if (x2>x1) { return -1; }
-//     else { return 0; }
-// }
-
-
-// static int cmp_ascend_d (const void *a, const void *b)
-// {
-// 	const double x1 = *(const double*)a, x2 = *(const double*)b;
-// 	if (x1!=x1) { return 1; }
-//     else if (x2!=x2) { return -1; }
-//     else if (x1>x2) { return 1; }
-//     else if (x2>x1) { return -1; }
-//     else { return 0; }
-// }
-
-
-static int cmp_ascend_c (const void *a, const void *b)
-{
-	const float sq1 = *(const float *)a**(const float *)a + *((const float *)(a)+1)**((const float *)(a)+1);
-    const float sq2 = *(const float *)b**(const float *)b + *((const float *)(b)+1)**((const float *)(b)+1);
-	if (sq1!=sq1) { return 1; }
-    else if (sq2!=sq2) { return -1; }
-    else if (sq1>sq2) { return 1; }
-    else if (sq2>sq1) { return -1; }
-	else if (atan2f(*((const float *)(a)+1),*(const float *)a) > atan2f(*((const float *)(b)+1),*(const float *)b)) { return 1; }
-    else if (atan2f(*((const float *)(b)+1),*(const float *)b) > atan2f(*((const float *)(a)+1),*(const float *)a)) { return -1; }
-    else { return 0; }
-}
-
-
-static int cmp_ascend_z (const void *a, const void *b)
-{
-	const double sq1 = *(const double *)a**(const double *)a + *((const double *)(a)+1)**((const double *)(a)+1);
-    const double sq2 = *(const double *)b**(const double *)b + *((const double *)(b)+1)**((const double *)(b)+1);
-	if (sq1!=sq1) { return 1; }
-    else if (sq2!=sq2) { return -1; }
-    else if (sq1>sq2) { return 1; }
-    else if (sq2>sq1) { return -1; }
-	else if (atan2(*((const double *)(a)+1),*(const double *)a) > atan2(*((const double *)(b)+1),*(const double *)b)) { return 1; }
-    else if (atan2(*((const double *)(b)+1),*(const double *)b) > atan2(*((const double *)(a)+1),*(const double *)a)) { return -1; }
-    else { return 0; }
-}
-
-
-// static int cmp_descend_s (const void *a, const void *b)
-// {
-// 	const float x1 = *(const float*)a, x2 = *(const float*)b;
-// 	if (x1!=x1) { return -1; }
-//     else if (x2!=x2) { return 1; }
-//     else if (x1<x2) { return 1; }
-//     else if (x2<x1) { return -1; }
-//     else { return 0; }
-// }
-
-
-// static int cmp_descend_d (const void *a, const void *b)
-// {
-// 	const double x1 = *(const double*)a, x2 = *(const double*)b;
-// 	if (x1!=x1) { return -1; }
-//     else if (x2!=x2) { return 1; }
-//     else if (x1<x2) { return 1; }
-//     else if (x2<x1) { return -1; }
-//     else { return 0; }
-// }
-
-
-static int cmp_descend_c (const void *a, const void *b)
-{
-	const float sq1 = *(const float *)a**(const float *)a + *((const float *)(a)+1)**((const float *)(a)+1);
-    const float sq2 = *(const float *)b**(const float *)b + *((const float *)(b)+1)**((const float *)(b)+1);
-	if (sq1!=sq1) { return -1; }
-    else if (sq2!=sq2) { return 1; }
-    else if (sq1<sq2) { return 1; }
-    else if (sq2<sq1) { return -1; }
-	else if (atan2f(*((const float *)(a)+1),*(const float *)a) < atan2f(*((const float *)(b)+1),*(const float *)b)) { return 1; }
-    else if (atan2f(*((const float *)(b)+1),*(const float *)b) < atan2f(*((const float *)(a)+1),*(const float *)a)) { return -1; }
-    else { return 0; }
-}
-
-
-static int cmp_descend_z (const void *a, const void *b)
-{
-	const double sq1 = *(const double *)a**(const double *)a + *((const double *)(a)+1)**((const double *)(a)+1);
-    const double sq2 = *(const double *)b**(const double *)b + *((const double *)(b)+1)**((const double *)(b)+1);
-	if (sq1!=sq1) { return -1; }
-    else if (sq2!=sq2) { return 1; }
-    else if (sq1<sq2) { return 1; }
-    else if (sq2<sq1) { return -1; }
-	else if (atan2(*((const double *)(a)+1),*(const double *)a) < atan2(*((const double *)(b)+1),*(const double *)b)) { return 1; }
-    else if (atan2(*((const double *)(b)+1),*(const double *)b) < atan2(*((const double *)(a)+1),*(const double *)a)) { return -1; }
-    else { return 0; }
-}
 
 
 int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
@@ -360,7 +252,7 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
     const char id = (ascend) ? 'I' : 'D';
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
 
-    struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+    // struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N==0u || L==1u) {}
     else if (L==N)
@@ -400,7 +292,7 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
         }
     }
 
-    clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
+    // clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }

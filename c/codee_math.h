@@ -1049,6 +1049,43 @@ int normalizep_inplace_d (double *X, const size_t R, const size_t C, const size_
 int normalizep_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const float p);
 int normalizep_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const double p);
 
+// Sort_Help
+
+int cmpi_ascend_s (const void *a, const void *b);
+int cmpi_ascend_d (const void *a, const void *b);
+int cmpi_ascend_c (const void *a, const void *b);
+int cmpi_ascend_z (const void *a, const void *b);
+
+int cmpi_descend_s (const void *a, const void *b);
+int cmpi_descend_d (const void *a, const void *b);
+int cmpi_descend_c (const void *a, const void *b);
+int cmpi_descend_z (const void *a, const void *b);
+
+int cmp_ascend_s (const void *a, const void *b);
+int cmp_ascend_d (const void *a, const void *b);
+int cmp_ascend_c (const void *a, const void *b);
+int cmp_ascend_z (const void *a, const void *b);
+
+int cmp_descend_s (const void *a, const void *b);
+int cmp_descend_d (const void *a, const void *b);
+int cmp_descend_c (const void *a, const void *b);
+int cmp_descend_z (const void *a, const void *b);
+
+void insertion_sort_s (float *X, const size_t hi, const int ascend);
+void insertion_sort_d (double *X, const size_t hi, const int ascend);
+void insertion_sort_c (float *X, const size_t hi, const int ascend);
+void insertion_sort_z (double *X, const size_t hi, const int ascend);
+
+void quicksort_s (float *X, const size_t N, const int ascend);
+void quicksort_d (double *X, const size_t N, const int ascend);
+void quicksort_c (float *X, const size_t N, const int ascend);
+void quicksort_z (double *X, const size_t N, const int ascend);
+
+float kselect_s (float *X, size_t hi, size_t k, int largest);
+double kselect_d (double *X, size_t hi, size_t k, int largest);
+size_t kselect_c (float *X, size_t hi, size_t k, int largest);
+size_t kselect_z (double *X, size_t hi, size_t k, int largest);
+
 // Vec2vec: Reorder
 
 int flip_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim);

@@ -275,7 +275,7 @@ qselect: qselect.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #Vec2vec: 1 input, 1 output
 #Operates on each 1-D vector in X to produce a new 1-D vector in Y.
 #Y has the same size as X, except perhaps a change in the vector length.
-Vec2vec: Center Scale Normalize Reorder Other_Vec2vec
+Vec2vec: Center Scale Normalize Sort_Help Reorder Other_Vec2vec
 
 Center: mean0 med0 geomean1
 mean0: mean0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -294,6 +294,15 @@ Normalize: normalize1 normalize2 normalizep
 normalize1: normalize1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalize2: normalize2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalizep: normalizep.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Sort_Help: cmp_ascend cmp_descend cmpi_ascend cmpi_descend insertion_sort quicksort kselect
+cmp_ascend: cmp_ascend.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cmp_descend: cmp_descend.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cmpi_ascend: cmpi_ascend.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cmpi_descend: cmpi_descend.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+insertion_sort: insertion_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+quicksort: quicksort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+kselect: kselect.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Reorder: flip shift cshift insert_sort qsort sort
 flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

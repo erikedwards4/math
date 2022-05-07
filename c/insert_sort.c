@@ -5,113 +5,12 @@
 
 #include <stdio.h>
 #include "codee_math.h"
+#include "insertion_sort.c"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-
-static void insertion_sort_s (float *X, const size_t hi, const int ascend);
-static void insertion_sort_d (double *X, const size_t hi, const int ascend);
-static void insertion_sort_c (float *X, const size_t hi, const int ascend);
-static void insertion_sort_z (double *X, const size_t hi, const int ascend);
-
-
-static void insertion_sort_s(float *X, const size_t hi, const int ascend)
-{
-    if (ascend)
-    {
-        for (size_t i=1u; i<hi; ++i)
-        {
-            size_t j = i; float x = *(X+1);
-            while (j>0u && *X>x) { *(X+1) = *X; --X; --j; }
-            *++X = x; X += i - j;
-        }
-    }
-    else
-    {
-        for (size_t i=1u; i<hi; ++i)
-        {
-            size_t j = i; float x = *(X+1);
-            while (j>0u && *X<x) { *(X+1) = *X; --X; --j; }
-            *++X = x; X += i - j;
-        }
-    }
-    X -= hi - 1u;
-}
-
-
-static void insertion_sort_d(double *X, const size_t hi, const int ascend)
-{
-    if (ascend)
-    {
-        for (size_t i=1u; i<hi; ++i)
-        {
-            size_t j = i; double x = *(X+1);
-            while (j>0u && *X>x) { *(X+1) = *X; --X; --j; }
-            *++X = x; X += i - j;
-        }
-    }
-    else
-    {
-        for (size_t i=1u; i<hi; ++i)
-        {
-            size_t j = i; double x = *(X+1);
-            while (j>0u && *X<x) { *(X+1) = *X; --X; --j; }
-            *++X = x; X += i - j;
-        }
-    }
-    X -= hi - 1u;
-}
-
-
-static void insertion_sort_c(float *X, const size_t hi, const int ascend)
-{
-    if (ascend)
-    {
-        for (size_t i=1u; i<hi; ++i)
-        {
-            size_t j = i; float xr = *(X+2), xi = *(X+3), x = xr*xr + xi*xi + 1e-5f;
-            while (j>0u && *X**X+*(X+1)**(X+1)>x) { *(X+2) = *X; *(X+3) = *(X+1); X-=2; --j; }
-            X += 2; *X = xr; *(X+1) = xi; X += 2u*(i-j);
-        }
-    }
-    else
-    {
-        for (size_t i=1u; i<hi; ++i)
-        {
-            size_t j = i; float xr = *(X+2), xi = *(X+3), x = xr*xr + xi*xi - 1e-5f;
-            while (j>0u && *X**X+*(X+1)**(X+1)<x) { *(X+2) = *X; *(X+3) = *(X+1); X-=2; --j; }
-            X += 2; *X = xr; *(X+1) = xi; X += 2u*(i-j);
-        }
-    }
-    X -= 2u*hi - 2u;
-}
-
-
-static void insertion_sort_z(double *X, const size_t hi, const int ascend)
-{
-    if (ascend)
-    {
-        for (size_t i=1u; i<hi; ++i)
-        {
-            size_t j = i; double xr = *(X+2), xi = *(X+3), x = xr*xr + xi*xi + 1e-9;
-            while (j>0u && *X**X+*(X+1)**(X+1)>x) { *(X+2) = *X; *(X+3) = *(X+1); X-=2; --j; }
-            X += 2; *X = xr; *(X+1) = xi; X += 2u*(i-j);
-        }
-    }
-    else
-    {
-        for (size_t i=1u; i<hi; ++i)
-        {
-            size_t j = i; double xr = *(X+2), xi = *(X+3), x = xr*xr + xi*xi - 1e-9;
-            while (j>0u && *X**X+*(X+1)**(X+1)<x) { *(X+2) = *X; *(X+3) = *(X+1); X-=2; --j; }
-            X += 2; *X = xr; *(X+1) = xi; X += 2u*(i-j);
-        }
-    }
-    X -= 2u*hi - 2u;
-}
 
 
 int insert_sort_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
@@ -340,7 +239,7 @@ int insert_sort_inplace_s (float *X, const size_t R, const size_t C, const size_
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
-    struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+    // struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N==0u || L==1u) {}
     else if (L==N)
@@ -379,7 +278,7 @@ int insert_sort_inplace_s (float *X, const size_t R, const size_t C, const size_
         }
     }
 
-    clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
+    // clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }

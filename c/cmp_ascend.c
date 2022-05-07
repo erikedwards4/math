@@ -1,6 +1,6 @@
-//Compare function for ascending sort.
+//Sort_Help functions.
+//Give comparison (cmp) functions for use by C stdlib qsort.
 
-#include <stdio.h>
 //#include <string.h>
 #include <math.h>
 //#include <complex.h>
@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 
-static int cmp_ascend_s (const void *a, const void *b)
+int cmp_ascend_s (const void *a, const void *b)
 {
 	const float x1 = *(const float*)a, x2 = *(const float*)b;
 	if (x1!=x1) { return 1; }
@@ -22,7 +22,7 @@ static int cmp_ascend_s (const void *a, const void *b)
 }
 
 
-static int cmp_ascend_d (const void *a, const void *b)
+int cmp_ascend_d (const void *a, const void *b)
 {
 	const double x1 = *(const double*)a, x2 = *(const double*)b;
 	if (x1!=x1) { return 1; }
@@ -49,7 +49,7 @@ static int cmp_ascend_d (const void *a, const void *b)
 // }
 
 
-static int cmp_ascend_c (const void *a, const void *b)
+int cmp_ascend_c (const void *a, const void *b)
 {
 	const float abs1 = sqrtf(*(const float *)a**(const float *)a + *((const float *)(a)+1)**((const float *)(a)+1));
     const float abs2 = sqrtf(*(const float *)b**(const float *)b + *((const float *)(b)+1)**((const float *)(b)+1));
@@ -63,7 +63,7 @@ static int cmp_ascend_c (const void *a, const void *b)
 }
 
 
-static int cmp_ascend_z (const void *a, const void *b)
+int cmp_ascend_z (const void *a, const void *b)
 {
 	const double abs1 = sqrt(*(const double *)a**(const double *)a + *((const double *)(a)+1)**((const double *)(a)+1));
     const double abs2 = sqrt(*(const double *)b**(const double *)b + *((const double *)(b)+1)**((const double *)(b)+1));
