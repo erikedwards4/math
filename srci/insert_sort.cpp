@@ -1,5 +1,5 @@
 //Includes
-#include "sort.c"
+#include "insert_sort.c"
 
 //Declarations
 const valarray<size_t> oktypes = {1u,2u,101u,102u};
@@ -10,9 +10,8 @@ int a;
 //Description
 string descr;
 descr += "Vec2vec operation.\n";
-descr += "Sorts elements of X along dim using LAPACKE.\n";
-descr += "This is slightly slower than qsort (same algorithm), \n";
-descr += "but more formal w.r.t. nans, infs and ties for complex nums.\n";
+descr += "Sorts each vector in X along dim using insertion sort.\n";
+descr += "This is faster than qsort if the vectors are short (e.g., L<256).\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to sort along cols.\n";
@@ -23,9 +22,9 @@ descr += "\n";
 descr += "Include -a (--ascend) to sort in ascending order [default=descend].\n";
 descr += "\n";
 descr += "Examples:\n";
-descr += "$ sort X -o Y \n";
-descr += "$ sort -d1 X > Y \n";
-descr += "$ cat X | sort -d2 > Y \n";
+descr += "$ insert_sort X -o Y \n";
+descr += "$ insert_sort -d1 X > Y \n";
+descr += "$ cat X | insert_sort -d2 > Y \n";
 
 //Argtable
 struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");
@@ -63,8 +62,8 @@ if (i1.T==1u)
     //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    //if (codee::sort_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-    if (codee::sort_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+    //if (codee::insert_sort_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+    if (codee::insert_sort_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {
@@ -82,8 +81,8 @@ else if (i1.T==101u)
     //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
     try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
     catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-    //if (codee::sort_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-    if (codee::sort_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+    //if (codee::insert_sort_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+    if (codee::insert_sort_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
     { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
     if (wo1)
     {

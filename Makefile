@@ -265,15 +265,15 @@ lgamma: srci/lgamma.cpp c/lgamma.c
 sinc: srci/sinc.cpp c/sinc.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
-Complex: real imag conj arg proj
+Complex: real imag arg conj proj
 real: srci/real.cpp c/real.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 imag: srci/imag.cpp c/imag.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-conj: srci/conj.cpp c/conj.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 arg: srci/arg.cpp c/arg.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+conj: srci/conj.cpp c/conj.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 proj: srci/proj.cpp c/proj.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
@@ -301,7 +301,7 @@ deadzone: srci/deadzone.cpp c/deadzone.c
 #Elementwise2: 2 inputs, 1 output, with array broadcasting for the 2 inputs
 Elementwise2: Arithmetic Trig2 Complex2
 
-Arithmetic: plus minus times rdivide adiff pow
+Arithmetic: plus minus times rdivide pow adiff
 plus: srci/plus.cpp c/plus.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 minus: srci/minus.cpp c/minus.c
@@ -310,10 +310,10 @@ times: srci/times.cpp c/times.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 rdivide: srci/rdivide.cpp c/rdivide.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
-adiff: srci/adiff.cpp c/adiff.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 pow: srci/pow.cpp c/pow.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CCC) -c src/$@.cpp -oobj/$@.o $(CCFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+adiff: srci/adiff.cpp c/adiff.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
 Trig2: hypot atan2
 hypot: srci/hypot.cpp c/hypot.c
@@ -427,9 +427,11 @@ coeff_var: srci/coeff_var.cpp c/coeff_var.c
 mad: srci/mad.cpp c/mad.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 
-Other_Stats: prod
+Other_Stats: prod qselect
 prod: srci/prod.cpp c/prod.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+qselect: srci/qselect.cpp c/qselect.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 
 
 #Vecs2scalar: reduction operations for 2 inputs.
@@ -501,12 +503,16 @@ normalize2: srci/normalize2.cpp c/normalize2.c
 normalizep: srci/normalizep.cpp c/normalizep.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
-Reorder: flip shift cshift sort
+Reorder: flip shift cshift insert_sort qsort sort
 flip: srci/flip.cpp c/flip.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 shift: srci/shift.cpp c/shift.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 cshift: srci/cshift.cpp c/cshift.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+insert_sort: srci/insert_sort.cpp c/insert_sort.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+qsort: srci/qsort.cpp c/qsort.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 sort: srci/sort.cpp c/sort.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm

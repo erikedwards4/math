@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "../util/cmli.hpp"
-#include "sort.c"
+#include "qsort.c"
 
 #ifdef I
 #undef I
@@ -41,9 +41,8 @@ int main(int argc, char *argv[])
     //Description
     string descr;
     descr += "Vec2vec operation.\n";
-    descr += "Sorts elements of X along dim using LAPACKE.\n";
-    descr += "This is slightly slower than qsort (same algorithm), \n";
-    descr += "but more formal w.r.t. nans, infs and ties for complex nums.\n";
+    descr += "Sorts each vector in X along dim using quicksort.\n";
+    descr += "This is faster than insert_sort if the vectors are long (e.g., L>256).\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Use -d0 to sort along cols.\n";
@@ -54,9 +53,9 @@ int main(int argc, char *argv[])
     descr += "Include -a (--ascend) to sort in ascending order [default=descend].\n";
     descr += "\n";
     descr += "Examples:\n";
-    descr += "$ sort X -o Y \n";
-    descr += "$ sort -d1 X > Y \n";
-    descr += "$ cat X | sort -d2 > Y \n";
+    descr += "$ qsort X -o Y \n";
+    descr += "$ qsort -d1 X > Y \n";
+    descr += "$ cat X | qsort -d2 > Y \n";
 
 
     //Argtable
@@ -151,8 +150,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::sort_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::sort_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+        //if (codee::qsort_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::qsort_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -170,8 +169,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::sort_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::sort_inplace_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+        //if (codee::qsort_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::qsort_inplace_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -189,8 +188,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::sort_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::sort_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+        //if (codee::qsort_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::qsort_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
@@ -208,8 +207,8 @@ int main(int argc, char *argv[])
         //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::sort_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::sort_inplace_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+        //if (codee::qsort_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
+        if (codee::qsort_inplace_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {

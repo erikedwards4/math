@@ -360,6 +360,8 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
     const char id = (ascend) ? 'I' : 'D';
     //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
 
+    struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+
     if (N==0u || L==1u) {}
     else if (L==N)
     {
@@ -397,6 +399,8 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
             free(X1);
         }
     }
+
+    clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }

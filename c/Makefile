@@ -266,8 +266,9 @@ trimvar: trimvar.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 coeff_var: coeff_var.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 mad: mad.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Stats: prod
+Other_Stats: prod qselect
 prod: prod.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+qselect: qselect.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 
 
@@ -294,10 +295,12 @@ normalize1: normalize1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalize2: normalize2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalizep: normalizep.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Reorder: flip shift cshift sort
+Reorder: flip shift cshift insert_sort qsort sort
 flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+insert_sort: insert_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+qsort: qsort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod prepad postpad softmax betamax
