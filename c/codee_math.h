@@ -953,6 +953,8 @@ int prod_z (double *Y, const double *X, const size_t R, const size_t C, const si
 
 int qselect_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t k, const int largest);
 int qselect_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t k, const int largest);
+int qselect_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t k, const int largest);
+int qselect_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const size_t k, const int largest);
 
 
 // Vec2vec: Center Scale Normalize Reorder Other_Vec2vec
