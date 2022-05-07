@@ -295,11 +295,10 @@ normalize1: normalize1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalize2: normalize2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalizep: normalizep.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sort_Help: cmp_ascend cmp_descend cmpi_ascend cmpi_descend insertion_sort quicksort kselect
-cmp_ascend: cmp_ascend.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-cmp_descend: cmp_descend.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-cmpi_ascend: cmpi_ascend.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-cmpi_descend: cmpi_descend.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+Sort_Help: cmp cmpi cmpif insertion_sort quicksort kselect
+cmp: cmp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cmpi: cmpi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+cmpif: cmpif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insertion_sort: insertion_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 quicksort: quicksort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kselect: kselect.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

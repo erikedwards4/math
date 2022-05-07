@@ -1051,6 +1051,16 @@ int normalizep_inplace_z (double *X, const size_t R, const size_t C, const size_
 
 // Sort_Help
 
+int cmp_ascend_s (const void *a, const void *b);
+int cmp_ascend_d (const void *a, const void *b);
+int cmp_ascend_c (const void *a, const void *b);
+int cmp_ascend_z (const void *a, const void *b);
+
+int cmp_descend_s (const void *a, const void *b);
+int cmp_descend_d (const void *a, const void *b);
+int cmp_descend_c (const void *a, const void *b);
+int cmp_descend_z (const void *a, const void *b);
+
 int cmpi_ascend_s (const void *a, const void *b);
 int cmpi_ascend_d (const void *a, const void *b);
 int cmpi_ascend_c (const void *a, const void *b);
@@ -1061,15 +1071,15 @@ int cmpi_descend_d (const void *a, const void *b);
 int cmpi_descend_c (const void *a, const void *b);
 int cmpi_descend_z (const void *a, const void *b);
 
-int cmp_ascend_s (const void *a, const void *b);
-int cmp_ascend_d (const void *a, const void *b);
-int cmp_ascend_c (const void *a, const void *b);
-int cmp_ascend_z (const void *a, const void *b);
+int cmpif_ascend_s (const void *a, const void *b);
+int cmpif_ascend_d (const void *a, const void *b);
+int cmpif_ascend_c (const void *a, const void *b);
+int cmpif_ascend_z (const void *a, const void *b);
 
-int cmp_descend_s (const void *a, const void *b);
-int cmp_descend_d (const void *a, const void *b);
-int cmp_descend_c (const void *a, const void *b);
-int cmp_descend_z (const void *a, const void *b);
+int cmpif_descend_s (const void *a, const void *b);
+int cmpif_descend_d (const void *a, const void *b);
+int cmpif_descend_c (const void *a, const void *b);
+int cmpif_descend_z (const void *a, const void *b);
 
 void insertion_sort_s (float *X, const size_t hi, const int ascend);
 void insertion_sort_d (double *X, const size_t hi, const int ascend);

@@ -7,8 +7,7 @@
 #include <math.h>
 #include <lapacke.h>
 #include "codee_math.h"
-#include "cmp_ascend.c"
-#include "cmp_descend.c"
+#include "cmp.c"
 
 #ifdef __cplusplus
 namespace codee {

@@ -15,37 +15,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "codee_math.h"
+#include "cmpi.c"
 
 #ifdef __cplusplus
 namespace codee {
 extern "C" {
 #endif
-
-typedef struct { float val; size_t ind; } FLT;
-typedef struct { double val; size_t ind; } DBL;
-
-static int cmp_ascend_s (const void *a, const void *b);
-static int cmp_ascend_d (const void *a, const void *b);
-
-
-static int cmp_ascend_s (const void *a, const void *b)
-{
-    const FLT x1 = *(const FLT *)a;
-    const FLT x2 = *(const FLT *)b;
-    if (x1.val>x2.val) { return 1; }
-    else if (x2.val>x1.val) { return -1; }
-    else { return 0; }
-}
-
-
-static int cmp_ascend_d (const void *a, const void *b)
-{
-	const DBL x1 = *(const DBL *)a;
-    const DBL x2 = *(const DBL *)b;
-    if (x1.val>x2.val) { return 1; }
-    else if (x2.val>x1.val) { return -1; }
-    else { return 0; }
-}
 
 
 int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, const size_t C1, const size_t S1, const size_t H1, const size_t R2, const size_t C2, const size_t S2, const size_t H2, const int iscolmajor, const size_t dim)
@@ -63,14 +38,14 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
     if (L1!=L2) { fprintf(stderr,"error in spearman_s: vectors in X1 and X2 must have the same length\n"); return 1; }
     const int den = (int)(L*(L*L-1u));
     int d, dsm;
-    int (*comp)(const void *, const void *) = cmp_ascend_s;
+    int (*comp)(const void *, const void *) = cmpi_ascend_s;
 
     int *r1, *r2;
-    FLT *XI1, *XI2;
+    FLT_I *XI1, *XI2;
     if (!(r1=(int *)malloc(L*sizeof(int)))) { fprintf(stderr,"error in spearman_s: problem with malloc. "); perror("malloc"); return 1; }
     if (!(r2=(int *)malloc(L*sizeof(int)))) { fprintf(stderr,"error in spearman_s: problem with malloc. "); perror("malloc"); return 1; }
-    if (!(XI1=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in spearman_s: problem with malloc. "); perror("malloc"); return 1; }
-    if (!(XI2=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in spearman_s: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(XI1=(FLT_I *)malloc(L*sizeof(FLT_I)))) { fprintf(stderr,"error in spearman_s: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(XI2=(FLT_I *)malloc(L*sizeof(FLT_I)))) { fprintf(stderr,"error in spearman_s: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -84,7 +59,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
             XI1[l].val = *X1; XI1[l].ind = l;
             XI2[l].val = *X2; XI2[l].ind = l;
         }
-        qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
+        qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
         for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
         for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -107,7 +82,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                     XI1[l].val = *X1; XI1[l].ind = l;
                     XI2[l].val = *X2; XI2[l].ind = l;
                 }
-                qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
+                qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
                 for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
                 for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -128,7 +103,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                         XI1[l].val = *X1; XI1[l].ind = l;
                         XI2[l].val = *X2; XI2[l].ind = l;
                     }
-                    qsort(XI1,L,sizeof(FLT),comp); qsort(XI2,L,sizeof(FLT),comp);
+                    qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
                     for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
                     for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -158,14 +133,14 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
     if (L1!=L2) { fprintf(stderr,"error in spearman_d: vectors in X1 and X2 must have the same length\n"); return 1; }
     const int den = (int)(L*(L*L-1u));
     int d, dsm;
-    int (*comp)(const void *, const void *) = cmp_ascend_d;
+    int (*comp)(const void *, const void *) = cmpi_ascend_d;
 
     int *r1, *r2;
-    DBL *XI1, *XI2;
+    DBL_I *XI1, *XI2;
     if (!(r1=(int *)malloc(L*sizeof(int)))) { fprintf(stderr,"error in spearman_d: problem with malloc. "); perror("malloc"); return 1; }
     if (!(r2=(int *)malloc(L*sizeof(int)))) { fprintf(stderr,"error in spearman_d: problem with malloc. "); perror("malloc"); return 1; }
-    if (!(XI1=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in spearman_d: problem with malloc. "); perror("malloc"); return 1; }
-    if (!(XI2=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in spearman_d: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(XI1=(DBL_I *)malloc(L*sizeof(DBL_I)))) { fprintf(stderr,"error in spearman_d: problem with malloc. "); perror("malloc"); return 1; }
+    if (!(XI2=(DBL_I *)malloc(L*sizeof(DBL_I)))) { fprintf(stderr,"error in spearman_d: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -179,7 +154,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
             XI1[l].val = *X1; XI1[l].ind = l;
             XI2[l].val = *X2; XI2[l].ind = l;
         }
-        qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
+        qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
         for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
         for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -202,7 +177,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                     XI1[l].val = *X1; XI1[l].ind = l;
                     XI2[l].val = *X2; XI2[l].ind = l;
                 }
-                qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
+                qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
                 for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
                 for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -223,7 +198,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                         XI1[l].val = *X1; XI1[l].ind = l;
                         XI2[l].val = *X2; XI2[l].ind = l;
                     }
-                    qsort(XI1,L,sizeof(DBL),comp); qsort(XI2,L,sizeof(DBL),comp);
+                    qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
                     for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
                     for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }

@@ -6,8 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "codee_math.h"
-#include "cmpi_ascend.c"
-#include "cmpi_descend.c"
+#include "cmpif.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -21,10 +20,10 @@ int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmpi_ascend_s : cmpi_descend_s;
+    int (*comp)(const void *, const void *) = (ascend) ? cmpif_ascend_s : cmpif_descend_s;
 
-    FLT *XI;
-    if (!(XI=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in sorti_s: problem with malloc. "); perror("malloc"); return 1; }
+    FLT_F *XI;
+    if (!(XI=(FLT_F *)malloc(L*sizeof(FLT_F)))) { fprintf(stderr,"error in sorti_s: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -34,7 +33,7 @@ int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const siz
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (float)l; }
-        qsort(XI,L,sizeof(FLT),comp);
+        qsort(XI,L,sizeof(FLT_F),comp);
         for (size_t l=0u; l<L; ++l, ++Y) { *Y = XI[l].ind; }
     }
     else
@@ -48,7 +47,7 @@ int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const siz
             for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (float)l; }
-                qsort(XI,L,sizeof(FLT),comp);
+                qsort(XI,L,sizeof(FLT_F),comp);
                 for (size_t l=0u; l<L; ++l, ++Y) { *Y = XI[l].ind; }
             }
         }
@@ -59,7 +58,7 @@ int sorti_s (float *Y, const float *X, const size_t R, const size_t C, const siz
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = (float)l; }
-                    qsort(XI,L,sizeof(FLT),comp);
+                    qsort(XI,L,sizeof(FLT_F),comp);
                     for (size_t l=0u; l<L; ++l) { Y[l*K] = XI[l].ind; }
                 }
             }
@@ -77,10 +76,10 @@ int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmpi_ascend_d : cmpi_descend_d;
+    int (*comp)(const void *, const void *) = (ascend) ? cmpif_ascend_d : cmpif_descend_d;
 
-    DBL *XI;
-    if (!(XI=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in sorti_d: problem with malloc. "); perror("malloc"); return 1; }
+    DBL_D *XI;
+    if (!(XI=(DBL_D *)malloc(L*sizeof(DBL_D)))) { fprintf(stderr,"error in sorti_d: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -90,7 +89,7 @@ int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const s
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (double)l; }
-        qsort(XI,L,sizeof(DBL),comp);
+        qsort(XI,L,sizeof(DBL_D),comp);
         for (size_t l=0u; l<L; ++l, ++Y) { *Y = XI[l].ind; }
     }
     else
@@ -104,7 +103,7 @@ int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (double)l; }
-                qsort(XI,L,sizeof(DBL),comp);
+                qsort(XI,L,sizeof(DBL_D),comp);
                 for (size_t l=0u; l<L; ++l, ++Y) { *Y = XI[l].ind; }
             }
         }
@@ -115,7 +114,7 @@ int sorti_d (double *Y, const double *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = (double)l; }
-                    qsort(XI,L,sizeof(DBL),comp);
+                    qsort(XI,L,sizeof(DBL_D),comp);
                     for (size_t l=0u; l<L; ++l) { Y[l*K] = XI[l].ind; }
                 }
             }
@@ -133,10 +132,10 @@ int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const siz
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmpi_ascend_c : cmpi_descend_c;
+    int (*comp)(const void *, const void *) = (ascend) ? cmpif_ascend_c : cmpif_descend_c;
 
-    CFLT *XI;
-    if (!(XI=(CFLT *)malloc(L*sizeof(CFLT)))) { fprintf(stderr,"error in sorti_c: problem with malloc. "); perror("malloc"); return 1; }
+    CFLT_F *XI;
+    if (!(XI=(CFLT_F *)malloc(L*sizeof(CFLT_F)))) { fprintf(stderr,"error in sorti_c: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -146,7 +145,7 @@ int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const siz
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = (float)l; }
-        qsort(XI,L,sizeof(CFLT),comp);
+        qsort(XI,L,sizeof(CFLT_F),comp);
         for (size_t l=0u; l<L; ++l, ++Y) { *Y = XI[l].ind; }
     }
     else
@@ -160,7 +159,7 @@ int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const siz
             for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = (float)l; }
-                qsort(XI,L,sizeof(CFLT),comp);
+                qsort(XI,L,sizeof(CFLT_F),comp);
                 for (size_t l=0u; l<L; ++l, ++Y) { *Y = XI[l].ind; }
             }
         }
@@ -171,7 +170,7 @@ int sorti_c (float *Y, const float *X, const size_t R, const size_t C, const siz
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].r = X[2u*l*K]; XI[l].i = X[2u*l*K+1u]; XI[l].ind = (float)l; }
-                    qsort(XI,L,sizeof(CFLT),comp);
+                    qsort(XI,L,sizeof(CFLT_F),comp);
                     for (size_t l=0u; l<L; ++l) { Y[l*K] = XI[l].ind; }
                 }
             }
@@ -189,10 +188,10 @@ int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const s
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmpi_ascend_z : cmpi_descend_z;
+    int (*comp)(const void *, const void *) = (ascend) ? cmpif_ascend_z : cmpif_descend_z;
 
-    ZDBL *XI;
-    if (!(XI=(ZDBL *)malloc(L*sizeof(ZDBL)))) { fprintf(stderr,"error in sorti_z: problem with malloc. "); perror("malloc"); return 1; }
+    CDBL_D *XI;
+    if (!(XI=(CDBL_D *)malloc(L*sizeof(CDBL_D)))) { fprintf(stderr,"error in sorti_z: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -202,7 +201,7 @@ int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const s
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = (double)l; }
-        qsort(XI,L,sizeof(ZDBL),comp);
+        qsort(XI,L,sizeof(CDBL_D),comp);
         for (size_t l=0u; l<L; ++l, ++Y) { *Y = XI[l].ind; }
     }
     else
@@ -216,7 +215,7 @@ int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const s
             for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].r = *X; XI[l].i = *++X; XI[l].ind = (double)l; }
-                qsort(XI,L,sizeof(ZDBL),comp);
+                qsort(XI,L,sizeof(CDBL_D),comp);
                 for (size_t l=0u; l<L; ++l, ++Y) { *Y = XI[l].ind; }
             }
         }
@@ -227,7 +226,7 @@ int sorti_z (double *Y, const double *X, const size_t R, const size_t C, const s
                 for (size_t b=B; b>0u; --b, ++X, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].r = X[2u*l*K]; XI[l].i = X[2u*l*K+1u]; XI[l].ind = (double)l; }
-                    qsort(XI,L,sizeof(ZDBL),comp);
+                    qsort(XI,L,sizeof(CDBL_D),comp);
                     for (size_t l=0u; l<L; ++l) { Y[l*K] = XI[l].ind; }
                 }
             }
@@ -245,10 +244,10 @@ int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmpi_ascend_s : cmpi_descend_s;
+    int (*comp)(const void *, const void *) = (ascend) ? cmpif_ascend_s : cmpif_descend_s;
 
-    FLT *XI;
-    if (!(XI=(FLT *)malloc(L*sizeof(FLT)))) { fprintf(stderr,"error in sorti_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+    FLT_F *XI;
+    if (!(XI=(FLT_F *)malloc(L*sizeof(FLT_F)))) { fprintf(stderr,"error in sorti_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -258,7 +257,7 @@ int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = (float)l; }
-        qsort(XI,L,sizeof(FLT),comp);
+        qsort(XI,L,sizeof(FLT_F),comp);
         for (size_t l=0u; l<L; ++l, ++X) { *X = XI[l].ind; }
     }
     else
@@ -272,7 +271,7 @@ int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
             for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = (float)l; }
-                qsort(XI,L,sizeof(FLT),comp);
+                qsort(XI,L,sizeof(FLT_F),comp);
                 for (size_t l=0u; l<L; ++l, ++X) { *X = XI[l].ind; }
             }
         }
@@ -283,7 +282,7 @@ int sorti_inplace_s (float *X, const size_t R, const size_t C, const size_t S, c
                 for (size_t b=B; b>0u; --b, ++X)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = (float)l; }
-                    qsort(XI,L,sizeof(FLT),comp);
+                    qsort(XI,L,sizeof(FLT_F),comp);
                     for (size_t l=0u; l<L; ++l) { X[l*K] = XI[l].ind; }
                 }
             }
@@ -301,10 +300,10 @@ int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmpi_ascend_d : cmpi_descend_d;
+    int (*comp)(const void *, const void *) = (ascend) ? cmpif_ascend_d : cmpif_descend_d;
 
-    DBL *XI;
-    if (!(XI=(DBL *)malloc(L*sizeof(DBL)))) { fprintf(stderr,"error in sorti_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+    DBL_D *XI;
+    if (!(XI=(DBL_D *)malloc(L*sizeof(DBL_D)))) { fprintf(stderr,"error in sorti_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -314,7 +313,7 @@ int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = (double)l; }
-        qsort(XI,L,sizeof(DBL),comp);
+        qsort(XI,L,sizeof(DBL_D),comp);
         for (size_t l=0u; l<L; ++l, ++X) { *X = XI[l].ind; }
     }
     else
@@ -328,7 +327,7 @@ int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
             for (size_t v=V; v>0u; --v)
             {
                 for (size_t l=0u; l<L; ++l) { XI[l].val = X[l]; XI[l].ind = (double)l; }
-                qsort(XI,L,sizeof(DBL),comp);
+                qsort(XI,L,sizeof(DBL_D),comp);
                 for (size_t l=0u; l<L; ++l, ++X) { *X = XI[l].ind; }
             }
         }
@@ -339,7 +338,7 @@ int sorti_inplace_d (double *X, const size_t R, const size_t C, const size_t S, 
                 for (size_t b=B; b>0u; --b, ++X)
                 {
                     for (size_t l=0u; l<L; ++l) { XI[l].val = X[l*K]; XI[l].ind = (double)l; }
-                    qsort(XI,L,sizeof(DBL),comp);
+                    qsort(XI,L,sizeof(DBL_D),comp);
                     for (size_t l=0u; l<L; ++l) { X[l*K] = XI[l].ind; }
                 }
             }
