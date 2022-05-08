@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "../util/cmli.hpp"
-#include "qsort.c"
+#include "qranks.c"
 
 #ifdef I
 #undef I
@@ -41,8 +41,12 @@ int main(int argc, char *argv[])
     //Description
     string descr;
     descr += "Vec2vec operation.\n";
-    descr += "Sorts each vector in X along dim using quicksort.\n";
-    descr += "This is faster than insert_sort if the vectors are long (e.g., L > 128).\n";
+    descr += "Sorts elements of X along dim and returns ranks.\n";
+    descr += "which are the indices to X that would sort X.\n";
+    descr += "See qsorti for the inverse (indices to sorted X to recover X).\n";
+    descr += "\n";
+    descr += "This uses (my own implementation of) the quicksort algorithm.\n";
+    descr += "This is faster than insert_ranks if the vectors are long (e.g., L > 128).\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Use -d0 to sort along cols.\n";
@@ -52,10 +56,12 @@ int main(int argc, char *argv[])
     descr += "\n";
     descr += "Include -a (--ascend) to sort in ascending order [default=descend].\n";
     descr += "\n";
+    descr += "Although indices are ints, this returns float or double data type.\n";
+    descr += "\n";
     descr += "Examples:\n";
-    descr += "$ qsort X -o Y \n";
-    descr += "$ qsort -d1 X > Y \n";
-    descr += "$ cat X | qsort -d2 > Y \n";
+    descr += "$ ranks X -o Y \n";
+    descr += "$ ranks -d1 X > Y \n";
+    descr += "$ cat X | ranks -d2 > Y \n";
 
 
     //Argtable
@@ -121,8 +127,10 @@ int main(int argc, char *argv[])
 
 
     //Set output header info
-    o1.F = i1.F; o1.T = i1.T;
-    o1.R = i1.R; o1.C = i1.C; o1.S = i1.S; o1.H = i1.H;
+    o1.F = i1.F;
+    o1.T = i1.isreal() ? i1.T : i1.T-100u;
+    o1.R = i1.R; o1.C = i1.C;
+    o1.S = i1.S; o1.H = i1.H;
 
 
     //Open output
@@ -143,79 +151,75 @@ int main(int argc, char *argv[])
     //Process
     if (i1.T==1u)
     {
-        float *X; //, *Y;
+        float *X, *Y;
         try { X = new float[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new float[o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        try { Y = new float[o1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::qsort_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::qsort_inplace_s(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+        if (codee::qranks_s(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        delete[] X; delete[] Y;
     }
     else if (i1.T==2u)
     {
-        double *X; //, *Y;
+        double *X, *Y;
         try { X = new double[i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new double[o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        try { Y = new double[o1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::qsort_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::qsort_inplace_d(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+        if (codee::qranks_d(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        delete[] X; delete[] Y;
     }
     else if (i1.T==101u)
     {
-        float *X; //, *Y;
+        float *X, *Y;
         try { X = new float[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new float[2u*o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        try { Y = new float[o1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::qsort_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::qsort_inplace_c(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+        if (codee::qranks_c(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        delete[] X; delete[] Y;
     }
     else if (i1.T==102u)
     {
-        double *X; //, *Y;
+        double *X, *Y;
         try { X = new double[2u*i1.N()]; }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for input file (X)" << endl; return 1; }
-        //try { Y = new double[2u*o1.N()]; }
-        //catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
+        try { Y = new double[o1.N()]; }
+        catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem allocating for output file (Y)" << endl; return 1; }
         try { ifs1.read(reinterpret_cast<char*>(X),i1.nbytes()); }
         catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem reading input file (X)" << endl; return 1; }
-        //if (codee::qsort_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim))
-        if (codee::qsort_inplace_z(X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
+        if (codee::qranks_z(Y,X,i1.R,i1.C,i1.S,i1.H,i1.iscolmajor(),dim,a))
         { cerr << progstr+": " << __LINE__ << errstr << "problem during function call" << endl; return 1; }
         if (wo1)
         {
-            try { ofs1.write(reinterpret_cast<char*>(X),o1.nbytes()); }
+            try { ofs1.write(reinterpret_cast<char*>(Y),o1.nbytes()); }
             catch (...) { cerr << progstr+": " << __LINE__ << errstr << "problem writing output file (Y)" << endl; return 1; }
         }
-        delete[] X; //delete[] Y;
+        delete[] X; delete[] Y;
     }
     else
     {

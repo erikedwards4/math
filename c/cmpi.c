@@ -1,4 +1,4 @@
-//Sort_Help functions.
+//Sorti_Help functions.
 //Give comparison (cmp) functions using structs that include the index (cmpi),
 //where the index is represented as a size_t for faster speed in ranks.
 //See ranks.c for usage.
@@ -10,12 +10,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-
-typedef struct { float val; size_t ind; } FLT_I;
-typedef struct { double val; size_t ind; } DBL_I;
-typedef struct { float r; float i; size_t ind; } CFLT_I;
-typedef struct { double r; double i; size_t ind; } CDBL_I;
 
 
 int cmpi_ascend_s (const void *a, const void *b)

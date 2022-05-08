@@ -72,10 +72,11 @@ void insertion_sort_c (float *X, const size_t hi, const int ascend)
             while (j>0u && *X**X+*(X+1)**(X+1)>x)
             {
                 *(X+2) = *X; *(X+3) = *(X+1);
-                X-=2; --j;
+                X -= 2; --j;
             }
-            X += 2; *X = xr;
-            *(X+1) = xi; X += 2u*(i-j);
+            X += 2;
+            *X = xr; *(X+1) = xi;
+            X += 2u*(i-j);
         }
     }
     else
@@ -87,10 +88,11 @@ void insertion_sort_c (float *X, const size_t hi, const int ascend)
             while (j>0u && *X**X+*(X+1)**(X+1)<x)
             {
                 *(X+2) = *X; *(X+3) = *(X+1);
-                X-=2; --j;
+                X -= 2; --j;
             }
-            X += 2; *X = xr;
-            *(X+1) = xi; X += 2u*(i-j);
+            X += 2;
+            *X = xr; *(X+1) = xi;
+            X += 2u*(i-j);
         }
     }
     X -= 2u*hi - 2u;
@@ -108,10 +110,11 @@ void insertion_sort_z (double *X, const size_t hi, const int ascend)
             while (j>0u && *X**X+*(X+1)**(X+1)>x)
             {
                 *(X+2) = *X; *(X+3) = *(X+1);
-                X-=2; --j;
+                X -= 2; --j;
             }
-            X += 2; *X = xr;
-            *(X+1) = xi; X += 2u*(i-j);
+            X += 2;
+            *X = xr; *(X+1) = xi;
+            X += 2u*(i-j);
         }
     }
     else
@@ -123,10 +126,11 @@ void insertion_sort_z (double *X, const size_t hi, const int ascend)
             while (j>0u && *X**X+*(X+1)**(X+1)<x)
             {
                 *(X+2) = *X; *(X+3) = *(X+1);
-                X-=2; --j;
+                X -= 2; --j;
             }
-            X += 2; *X = xr;
-            *(X+1) = xi; X += 2u*(i-j);
+            X += 2;
+            *X = xr; *(X+1) = xi;
+            X += 2u*(i-j);
         }
     }
     X -= 2u*hi - 2u;

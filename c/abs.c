@@ -34,7 +34,7 @@ int abs_d (double *Y, const double *X, const size_t N)
 int abs_c (float *Y, const float *X, const size_t N)
 {
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
-    for (size_t n=N; n>0u; --n, ++Y)
+    for (size_t n=N; n>0u; --n, X+=2, ++Y)
     {
         *Y = sqrtf(*X**X + *(X+1)**(X+1));
     }

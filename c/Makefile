@@ -275,7 +275,7 @@ qselect: qselect.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 #Vec2vec: 1 input, 1 output
 #Operates on each 1-D vector in X to produce a new 1-D vector in Y.
 #Y has the same size as X, except perhaps a change in the vector length.
-Vec2vec: Center Scale Normalize Sort_Help Reorder Other_Vec2vec
+Vec2vec: Center Scale Normalize Sort_Help Sorti_Help Sortif_Help Reorder Isort Other_Vec2vec
 
 Center: mean0 med0 geomean1
 mean0: mean0.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -295,13 +295,23 @@ normalize1: normalize1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalize2: normalize2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalizep: normalizep.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sort_Help: cmp cmpi cmpif insertion_sort quicksort kselect
+Sort_Help: cmp insertion_sort quicksort kselect
 cmp: cmp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-cmpi: cmpi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-cmpif: cmpif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insertion_sort: insertion_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 quicksort: quicksort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kselect: kselect.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Sorti_Help: cmpi insertion_sorti quicksorti kselecti
+cmpi: cmpi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+insertion_sorti: insertion_sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+quicksorti: quicksorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+kselecti: kselecti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Sortif_Help: cmpif insertion_sortif quicksortif kselectif
+cmpif: cmpif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+insertion_sortif: insertion_sortif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+quicksortif: quicksortif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+kselectif: kselectif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Reorder: flip shift cshift insert_sort qsort sort
 flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -311,9 +321,15 @@ insert_sort: insert_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 qsort: qsort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod prepad postpad softmax betamax
+Isort: insert_sorti qsorti sorti insert_ranks qranks ranks
+insert_sorti: insert_sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+qsorti: qsorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sorti: sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+insert_ranks: insert_ranks.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+qranks: qranks.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 ranks: ranks.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+
+Other_Vec2vec: prctiles moments winsorize trim cumsum cumprod prepad postpad softmax betamax
 prctiles: prctiles.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 moments: moments.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 winsorize: winsorize.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

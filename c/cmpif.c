@@ -1,4 +1,4 @@
-//Sort_Help functions.
+//Sorti_Help functions.
 //Give comparison (cmp) functions using structs that include the index (cmpi),
 //where the index is represented as a float (cmpif) for faster speed in sorti.
 //See sorti.c for usage.
@@ -10,12 +10,6 @@
 namespace codee {
 extern "C" {
 #endif
-
-
-typedef struct { float val; float ind; } FLT_F;
-typedef struct { double val; double ind; } DBL_D;
-typedef struct { float r; float i; float ind; } CFLT_F;
-typedef struct { double r; double i; double ind; } CDBL_D;
 
 
 int cmpif_ascend_s (const void *a, const void *b)

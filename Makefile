@@ -471,7 +471,7 @@ dist_cos: srci/dist_cos.cpp c/dist_cos.c
 
 
 #Vec2vec: each vector in tensor X is transformed to a vector in tensor Y
-Vec2vec: Center Scale Normalize Reorder Other_Vec2vec
+Vec2vec: Center Scale Normalize Reorder Isort Other_Vec2vec
 
 Center: mean0 med0 geomean1
 mean0: srci/mean0.cpp c/mean0.c
@@ -517,11 +517,21 @@ qsort: srci/qsort.cpp c/qsort.c
 sort: srci/sort.cpp c/sort.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 
-Other_Vec2vec: sorti ranks prctiles moments winsorize trim cumsum cumprod softmax betamax
+Isort: insert_sorti qsorti sorti insert_ranks qranks ranks
+insert_sorti: srci/insert_sorti.cpp c/insert_sorti.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
+qsorti: srci/qsorti.cpp c/qsorti.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 sorti: srci/sorti.cpp c/sorti.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+insert_ranks: srci/insert_ranks.cpp c/insert_ranks.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2
+qranks: srci/qranks.cpp c/qranks.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2
 ranks: srci/ranks.cpp c/ranks.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+
+Other_Vec2vec: prctiles moments winsorize trim cumsum cumprod softmax betamax
 prctiles: srci/prctiles.cpp c/prctiles.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
 moments: srci/moments.cpp c/moments.c

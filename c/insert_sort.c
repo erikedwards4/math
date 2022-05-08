@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "codee_math.h"
 #include "insertion_sort.c"
+#include "insertion_sortif.c"
 
 #ifdef __cplusplus
 namespace codee {
