@@ -5,10 +5,11 @@
 //However, it turns out to be almost the identical speed for matrices.
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 #include <lapacke.h>
 #include "codee_math.h"
+#include "quicksort.c"
+#include "kselect.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -172,6 +173,7 @@ int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
     const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
     const float w1 = 1.0f - w2;
 
+struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     if (N==0u) {}
     else if (L==1u)
     {
@@ -179,7 +181,9 @@ int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
     }
     else if (L==N)
     {
-        if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
+        //if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
+        //quicksort_s(X,L,1);
+        float x = kselect_s(X,L-1,i1+1,1);
         X += i1;
         *Y = w1**X + w2**(X+1);
     }
@@ -217,6 +221,8 @@ int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
             free(X1);
         }
     }
+clock_gettime(CLOCK_REALTIME,&toc);
+fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }

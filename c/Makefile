@@ -295,31 +295,41 @@ normalize1: normalize1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalize2: normalize2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalizep: normalizep.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sort_Help: cmp insertion_sort quicksort kselect
+Sort_Help: cmp lomuto_partition hoare_partition insertion_sort quicksort partial_sort kselect
 cmp: cmp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+lomuto_partition: lomuto_partition.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+hoare_partition: hoare_partition.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insertion_sort: insertion_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 quicksort: quicksort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+partial_sort: partial_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kselect: kselect.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sorti_Help: cmpi insertion_sorti quicksorti kselecti
+Sorti_Help: cmpi lomuto_partitioni hoare_partitioni insertion_sorti quicksorti partial_sorti kselecti
 cmpi: cmpi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+lomuto_partitioni: lomuto_partitioni.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+hoare_partitioni: hoare_partitioni.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insertion_sorti: insertion_sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 quicksorti: quicksorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+partial_sorti: partial_sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kselecti: kselecti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sortif_Help: cmpif insertion_sortif quicksortif kselectif
+Sortif_Help: cmpif lomuto_partitionif hoare_partitionif insertion_sortif quicksortif partial_sortif kselectif
 cmpif: cmpif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+lomuto_partitionif: lomuto_partitionif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+hoare_partitionif: hoare_partitionif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insertion_sortif: insertion_sortif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 quicksortif: quicksortif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+partial_sortif: partial_sortif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kselectif: kselectif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Reorder: flip shift cshift insert_sort qsort sort
+Reorder: flip shift cshift insert_sort qsort sort partsort
 flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insert_sort: insert_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 qsort: qsort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+partsort: partsort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Isort: insert_sorti qsorti sorti insert_ranks qranks ranks
 insert_sorti: insert_sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

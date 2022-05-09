@@ -27,8 +27,8 @@ descr += "\n";
 descr += "Examples:\n";
 descr += "$ qselect -k5 X -o Y \n";
 descr += "$ qselect -k8 X > Y \n";
-descr += "$ qselect -k4 -d1 X > Y \n";
-descr += "$ cat X | qselect -k29 > Y \n";
+descr += "$ qselect -k4 -l -d1 X > Y \n";
+descr += "$ cat X | qselect -k29 -l > Y \n";
 
 //Argtable
 struct arg_file  *a_fi = arg_filen(nullptr,nullptr,"<file>",I-1,I,"input file (X)");

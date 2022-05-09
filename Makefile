@@ -503,7 +503,7 @@ normalize2: srci/normalize2.cpp c/normalize2.c
 normalizep: srci/normalizep.cpp c/normalizep.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
 
-Reorder: flip shift cshift insert_sort qsort sort
+Reorder: flip shift cshift insert_sort qsort sort partsort
 flip: srci/flip.cpp c/flip.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 shift: srci/shift.cpp c/shift.c
@@ -515,7 +515,9 @@ insert_sort: srci/insert_sort.cpp c/insert_sort.c
 qsort: srci/qsort.cpp c/qsort.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 sort: srci/sort.cpp c/sort.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -llapacke
+partsort: srci/partsort.cpp c/partsort.c
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 
 Isort: insert_sorti qsorti sorti insert_ranks qranks ranks
 insert_sorti: srci/insert_sorti.cpp c/insert_sorti.c
@@ -523,13 +525,13 @@ insert_sorti: srci/insert_sorti.cpp c/insert_sorti.c
 qsorti: srci/qsorti.cpp c/qsorti.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 sorti: srci/sorti.cpp c/sorti.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS); $(CC) obj/$@.o -obin/$@ -largtable2
 insert_ranks: srci/insert_ranks.cpp c/insert_ranks.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2
 qranks: srci/qranks.cpp c/qranks.c
 	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2
 ranks: srci/ranks.cpp c/ranks.c
-	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2 -lm
+	$(ss) -vd srci/$@.cpp > src/$@.cpp; $(CC) -c src/$@.cpp -oobj/$@.o $(CFLAGS) -Wno-padded; $(CC) obj/$@.o -obin/$@ -largtable2
 
 Other_Vec2vec: prctiles moments winsorize trim cumsum cumprod softmax betamax
 prctiles: srci/prctiles.cpp c/prctiles.c

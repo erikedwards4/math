@@ -1,12 +1,10 @@
 //Vec2vec operation.
-//Sorts each vector in X along dim.
+//Partial sorts each vector in X along dim using partial_sort (based on quickselect algo).
 //This has in-place and not-in-place versions.
-//Too bad there is no LAPACKE_?laord for the in-place version.
 
 #include <stdio.h>
-#include <lapacke.h>
 #include "codee_math.h"
-#include "cmp.c"
+#include "partial_sort.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -14,13 +12,12 @@ extern "C" {
 #endif
 
 
-int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
+int partsort_s (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend, const size_t k)
 {
-    if (dim>3u) { fprintf(stderr,"error in sort_s: dim must be in [0 3]\n"); return 1; }
-
+    if (dim>3u) { fprintf(stderr,"error in partsort_s: dim must be in [0 3]\n"); return 1; }
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const char id = (ascend) ? 'I' : 'D';
+    if (k>L-1u) { fprintf(stderr,"error in partsort_s: k must be in [0 L-1]\n"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -31,7 +28,7 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
     {
         for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = *X; }
         Y -= L;
-        if (LAPACKE_slasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
+        partial_sort_s(Y,L,k,ascend);
     }
     else
     {
@@ -41,26 +38,24 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
 
         if (K==1u && (G==1u || B==1u))
         {
-            //for (size_t n=N; n>0u; --n, ++X, ++Y) { *Y = *X; }
-            //Y -= N; //surprisingly, only same speed
             for (size_t v=V; v>0u; --v, Y+=L)
             {
                 for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 Y -= L;
-                if (LAPACKE_slasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
+                partial_sort_s(Y,L,k,ascend);
             }
         }
         else
         {
             float *X1;
-            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sort_s: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in partsort_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=L, Y-=K*L-1u)
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,L,k,ascend);
                     for (size_t l=L; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
@@ -72,13 +67,12 @@ int sort_s (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int sort_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
+int partsort_d (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend, const size_t k)
 {
-    if (dim>3u) { fprintf(stderr,"error in sort_d: dim must be in [0 3]\n"); return 1; }
-
+    if (dim>3u) { fprintf(stderr,"error in partsort_d: dim must be in [0 3]\n"); return 1; }
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const char id = (ascend) ? 'I' : 'D';
+    if (k>L-1u) { fprintf(stderr,"error in partsort_d: k must be in [0 L-1]\n"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -88,7 +82,7 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
     else if (L==N)
     {
         for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = *X; }
-        if (LAPACKE_dlasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
+        partial_sort_d(Y,L,k,ascend);
     }
     else
     {
@@ -102,20 +96,20 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 Y -= L;
-                if (LAPACKE_dlasrt_work(id,(int)L,Y)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
+                partial_sort_d(Y,L,k,ascend);
             }
         }
         else
         {
             double *X1;
-            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sort_d: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in partsort_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=G; g>0u; --g, X+=B*(L-1u), Y+=B*(L-1u))
             {
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, X1-=L, Y-=K*L-1u)
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,L,k,ascend);
                     for (size_t l=L; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
             }
@@ -127,13 +121,12 @@ int sort_d (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
+int partsort_c (float *Y, const float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend, const size_t k)
 {
-    if (dim>3u) { fprintf(stderr,"error in sort_c: dim must be in [0 3]\n"); return 1; }
-
+    if (dim>3u) { fprintf(stderr,"error in partsort_c: dim must be in [0 3]\n"); return 1; }
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_c : cmp_descend_c;
+    if (k>L-1u) { fprintf(stderr,"error in partsort_c: k must be in [0 L-1]\n"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -143,7 +136,7 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
     else if (L==N)
     {
         for (size_t l=2u*L; l>0u; --l, ++X, ++Y) { *Y = *X; }
-        qsort(Y,L,2*sizeof(float),comp);
+        partial_sort_c(Y,L,k,ascend);
     }
     else
     {
@@ -157,21 +150,20 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
             {
                 for (size_t l=2u*L; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 Y -= 2u*L;
-                qsort(Y,L,2*sizeof(float),comp);
+                partial_sort_c(Y,L,k,ascend);
             }
         }
         else
         {
             float *X1;
-            if (!(X1=(float *)malloc(2u*L*sizeof(float)))) { fprintf(stderr,"error in sort_c: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(float *)malloc(2u*L*sizeof(float)))) { fprintf(stderr,"error in partsort_c: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
             {
                 for (size_t b=B; b>0u; --b, X1-=2u*L, X-=K*L-1u, Y-=K*L-1u)
                 {
                     for (size_t l=L; l>0u; --l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
-                    qsort(X1,L,2*sizeof(float),comp);
-                    X1 -= 2u*L;
+                    partial_sort_c(X1,L,k,ascend);
                     for (size_t l=L; l>0u; --l, ++X1, Y+=2u*K-1u) { *Y = *X1; *++Y = *++X1; }
                 }
             }
@@ -183,13 +175,12 @@ int sort_c (float *Y, const float *X, const size_t R, const size_t C, const size
 }
 
 
-int sort_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
+int partsort_z (double *Y, const double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend, const size_t k)
 {
-    if (dim>3u) { fprintf(stderr,"error in sort_z: dim must be in [0 3]\n"); return 1; }
-
+    if (dim>3u) { fprintf(stderr,"error in partsort_z: dim must be in [0 3]\n"); return 1; }
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_z : cmp_descend_z;
+    if (k>L-1u) { fprintf(stderr,"error in partsort_z: k must be in [0 L-1]\n"); return 1; }
 
     if (N==0u) {}
     else if (L==1u)
@@ -199,7 +190,7 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
     else if (L==N)
     {
         for (size_t l=2u*L; l>0u; --l, ++X, ++Y) { *Y = *X; }
-        qsort(Y,L,2*sizeof(double),comp);
+        partial_sort_z(Y,L,k,ascend);
     }
     else
     {
@@ -213,21 +204,20 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t l=2u*L; l>0u; --l, ++X, ++Y) { *Y = *X; }
                 Y -= 2u*L;
-                qsort(Y,L,2*sizeof(double),comp);
+                partial_sort_z(Y,L,k,ascend);
             }
         }
         else
         {
             double *X1;
-            if (!(X1=(double *)malloc(2u*L*sizeof(double)))) { fprintf(stderr,"error in sort_z: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(double *)malloc(2u*L*sizeof(double)))) { fprintf(stderr,"error in partsort_z: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u), Y+=2u*B*(L-1u))
             {
                 for (size_t b=B; b>0u; --b, X1-=2u*L, X-=K*L-1u, Y-=K*L-1u)
                 {
                     for (size_t l=L; l>0u; --l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
-                    qsort(X1,L,2*sizeof(double),comp);
-                    X1 -= 2u*L;
+                    partial_sort_z(X1,L,k,ascend);
                     for (size_t l=L; l>0u; --l, ++X1, Y+=2u*K-1u) { *Y = *X1; *++Y = *++X1; }
                 }
             }
@@ -239,22 +229,19 @@ int sort_z (double *Y, const double *X, const size_t R, const size_t C, const si
 }
 
 
-int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
+int partsort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend, const size_t k)
 {
-    if (dim>3u) { fprintf(stderr,"error in sort_inplace_s: dim must be in [0 3]\n"); return 1; }
-
+    if (dim>3u) { fprintf(stderr,"error in partsort_inplace_s: dim must be in [0 3]\n"); return 1; }
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const char id = (ascend) ? 'I' : 'D';
-    //int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_s : cmp_descend_s;
-
+    if (k>L-1u) { fprintf(stderr,"error in partsort_inplace_s: k must be in [0 L-1]\n"); return 1; }
+    
     // struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N==0u || L==1u) {}
     else if (L==N)
     {
-        if (LAPACKE_slasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
-        //qsort(X,L,sizeof(float),comp);
+        partial_sort_s(X,L,k,ascend);
     }
     else
     {
@@ -266,20 +253,20 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
         {
             for (size_t v=V; v>0u; --v, X+=L)
             {
-                if (LAPACKE_slasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X,L,k,ascend);
             }
         }
         else
         {
             float *X1;
-            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in partsort_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
                 for (size_t b=B; b>0u; --b, ++X1, X+=K+1u)
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,L,k,ascend);
                     X1 += L-1u; X -= K;
                     for (size_t l=L; l>0u; --l, --X1, X-=K) { *X = *X1; }
                 }
@@ -294,18 +281,17 @@ int sort_inplace_s (float *X, const size_t R, const size_t C, const size_t S, co
 }
 
 
-int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
+int partsort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend, const size_t k)
 {
-    if (dim>3u) { fprintf(stderr,"error in sort_inplace_d: dim must be in [0 3]\n"); return 1; }
-
+    if (dim>3u) { fprintf(stderr,"error in partsort_inplace_d: dim must be in [0 3]\n"); return 1; }
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const char id = (ascend) ? 'I' : 'D';
+    if (k>L-1u) { fprintf(stderr,"error in partsort_inplace_d: k must be in [0 L-1]\n"); return 1; }
 
     if (N==0u || L==1u) {}
     else if (L==N)
     {
-        if (LAPACKE_dlasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X,L,k,ascend);
     }
     else
     {
@@ -317,20 +303,20 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
         {
             for (size_t v=V; v>0u; --v, X+=L)
             {
-                if (LAPACKE_dlasrt_work(id,(int)L,X)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X,L,k,ascend);
             }
         }
         else
         {
             double *X1;
-            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in partsort_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=G; g>0u; --g, X+=B*(L-1u))
             {
                 for (size_t b=B; b>0u; --b, ++X1, X+=K+1u)
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in sort_inplace_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,L,k,ascend);
                     X1 += L-1u; X -= K;
                     for (size_t l=L; l>0u; --l, --X1, X-=K) { *X = *X1; }
                 }
@@ -343,18 +329,17 @@ int sort_inplace_d (double *X, const size_t R, const size_t C, const size_t S, c
 }
 
 
-int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
+int partsort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend, const size_t k)
 {
-    if (dim>3u) { fprintf(stderr,"error in sort_inplace_c: dim must be in [0 3]\n"); return 1; }
-
+    if (dim>3u) { fprintf(stderr,"error in partsort_inplace_c: dim must be in [0 3]\n"); return 1; }
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_c : cmp_descend_c;
+    if (k>L-1u) { fprintf(stderr,"error in partsort_inplace_c: k must be in [0 L-1]\n"); return 1; }
 
     if (N==0u || L==1u) {}
     else if (L==N)
     {
-        qsort(X,L,2*sizeof(float),comp);
+        partial_sort_c(X,L,k,ascend);
     }
     else
     {
@@ -366,20 +351,20 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
         {
             for (size_t v=V; v>0u; --v, X+=2u*L)
             {
-                qsort(X,L,2*sizeof(float),comp);
+                partial_sort_c(X,L,k,ascend);
             }
         }
         else
         {
             float *X1;
-            if (!(X1=(float *)malloc(2u*L*sizeof(float)))) { fprintf(stderr,"error in sort_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(float *)malloc(2u*L*sizeof(float)))) { fprintf(stderr,"error in partsort_inplace_c: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
                 for (size_t b=B; b>0u; --b, X1+=2, X+=2u*K+2u)
                 {
                     for (size_t l=L; l>0u; --l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
-                    qsort(X1,L,2*sizeof(float),comp);
+                    partial_sort_c(X1,L,k,ascend);
                     X1 += 2u*L-2u; X -= 2u*K;
                     for (size_t l=L; l>0u; --l, X1-=2, X-=2u*K) { *X = *X1; *(X+1) = *(X1+1); }
                 }
@@ -392,18 +377,17 @@ int sort_inplace_c (float *X, const size_t R, const size_t C, const size_t S, co
 }
 
 
-int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend)
+int partsort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, const size_t H, const int iscolmajor, const size_t dim, const int ascend, const size_t k)
 {
-    if (dim>3u) { fprintf(stderr,"error in sort_inplace_z: dim must be in [0 3]\n"); return 1; }
-
+    if (dim>3u) { fprintf(stderr,"error in partsort_inplace_z: dim must be in [0 3]\n"); return 1; }
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    int (*comp)(const void *, const void *) = (ascend) ? cmp_ascend_z : cmp_descend_z;
+    if (k>L-1u) { fprintf(stderr,"error in partsort_inplace_z: k must be in [0 L-1]\n"); return 1; }
 
     if (N==0u || L==1u) {}
     else if (L==N)
     {
-        qsort(X,L,2*sizeof(double),comp);
+        partial_sort_z(X,L,k,ascend);
     }
     else
     {
@@ -415,20 +399,20 @@ int sort_inplace_z (double *X, const size_t R, const size_t C, const size_t S, c
         {
             for (size_t v=V; v>0u; --v, X+=2u*L)
             {
-                qsort(X,L,2*sizeof(double),comp);
+                partial_sort_z(X,L,k,ascend);
             }
         }
         else
         {
             double *X1;
-            if (!(X1=(double *)malloc(2u*L*sizeof(double)))) { fprintf(stderr,"error in sort_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
+            if (!(X1=(double *)malloc(2u*L*sizeof(double)))) { fprintf(stderr,"error in partsort_inplace_z: problem with malloc. "); perror("malloc"); return 1; }
             for (size_t g=G; g>0u; --g, X+=2u*B*(L-1u))
             {
                 for (size_t b=B; b>0u; --b, X1+=2, X+=2u*K+2u)
                 {
                     for (size_t l=L; l>0u; --l, X+=2u*K-1u, ++X1) { *X1 = *X; *++X1 = *++X; }
                     X1 -= 2u*L;
-                    qsort(X1,L,2*sizeof(double),comp);
+                    partial_sort_z(X1,L,k,ascend);
                     X1 += 2u*L-2u; X -= 2u*K;
                     for (size_t l=L; l>0u; --l, X1-=2, X-=2u*K) { *X = *X1; *(X+1) = *(X1+1); }
                 }
