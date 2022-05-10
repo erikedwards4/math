@@ -1,6 +1,8 @@
 //Sorti_Help function.
 //Implements insertion sort algorithm (see insert_sorti.c for use).
 
+#pragma once
+
 #include "codee_math.h"
 
 #ifdef __cplusplus

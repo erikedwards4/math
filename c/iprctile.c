@@ -4,10 +4,12 @@
 //and rounds up for exact ties (0.5 case).
 
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <math.h>
 #include "codee_math.h"
-#include "cmpif.c"
+//#include "cmpif.c"
+//#include "partial_sortif.c"
+#include "kselectif.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -31,6 +33,8 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
     const size_t i1 = (p<100.0f) ? (size_t)floorf(p1) : L-2u;
     const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
     const size_t ip = (w2<0.5f) ? i1 : i1+1u;
+
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     
     if (N==0u) {}
     else if (L==1u)
@@ -40,8 +44,10 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (float)l; }
-        qsort(XI,L,sizeof(FLT_F),cmpif_ascend_s);
-        *Y = XI[ip].ind;
+        //qsort(XI,L,sizeof(FLT_F),cmpif_ascend_s);
+        //partial_sortif_s(XI,L,ip,1);
+        //*Y = XI[ip].ind;
+        *Y = kselectif_s(XI,L-1u,ip,1).ind;
     }
     else
     {
@@ -54,8 +60,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (float)l; }
-                qsort(XI,L,sizeof(FLT_F),cmpif_ascend_s);
-                *Y = XI[ip].ind;
+                *Y = kselectif_s(XI,L-1u,ip,1).ind;
             }
         }
         else
@@ -65,12 +70,13 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K) { XI[l].val = *X; XI[l].ind = (float)l; }
-                    qsort(XI,L,sizeof(FLT_F),cmpif_ascend_s);
-                    *Y = XI[ip].ind;
+                    *Y = kselectif_s(XI,L-1u,ip,1).ind;
                 }
             }
         }
     }
+
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     free(XI);
     return 0;
@@ -102,8 +108,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (double)l; }
-        qsort(XI,L,sizeof(DBL_D),cmpif_ascend_d);
-        *Y = XI[ip].ind;
+        *Y = kselectif_d(XI,L-1u,ip,1).ind;
     }
     else
     {
@@ -116,8 +121,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (double)l; }
-                qsort(XI,L,sizeof(DBL_D),cmpif_ascend_d);
-                *Y = XI[ip].ind;
+                *Y = kselectif_d(XI,L-1u,ip,1).ind;
             }
         }
         else
@@ -127,8 +131,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K) { XI[l].val = *X; XI[l].ind = (double)l; }
-                    qsort(XI,L,sizeof(DBL_D),cmpif_ascend_d);
-                    *Y = XI[ip].ind;
+                    *Y = kselectif_d(XI,L-1u,ip,1).ind;
                 }
             }
         }

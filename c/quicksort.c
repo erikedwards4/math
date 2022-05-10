@@ -2,6 +2,8 @@
 //Implements quicksort algorithm (see qsort.c for use).
 //This operates in-place.
 
+#pragma once
+
 #include "codee_math.h"
 #include "insertion_sort.c"
 #include "hoare_partition.c"

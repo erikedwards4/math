@@ -3,6 +3,8 @@
 //See qselect.c for usage.
 //This operates in-place and partial sorts X.
 
+#pragma once
+
 #include "codee_math.h"
 
 #ifdef __cplusplus
@@ -21,14 +23,14 @@ size_t lomuto_partitioni_s (FLT_I *X, const size_t hi, size_t p, const int large
     {
         for (size_t i=0u; i<hi; ++i)
         {
-            if (X[i].val>=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
+            if (X[i].val<=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
         }
     }
     else
     {
         for (size_t i=0u; i<hi; ++i)
         {
-            if (X[i].val<=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
+            if (X[i].val>=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
         }
     }
     x = X[p]; X[p] = X[hi]; X[hi] = x;
@@ -46,14 +48,14 @@ size_t lomuto_partitioni_d (DBL_I *X, const size_t hi, size_t p, const int large
     {
         for (size_t i=0u; i<hi; ++i)
         {
-            if (X[i].val>=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
+            if (X[i].val<=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
         }
     }
     else
     {
         for (size_t i=0u; i<hi; ++i)
         {
-            if (X[i].val<=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
+            if (X[i].val>=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
         }
     }
     x = X[p]; X[p] = X[hi]; X[hi] = x;
@@ -71,14 +73,14 @@ size_t lomuto_partitioni_c (CFLT_I *X, const size_t hi, size_t p, const int larg
     {
         for (size_t i=0u; i<hi; ++i)
         {
-            if (X[i].val>=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
+            if (X[i].val<=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
         }
     }
     else
     {
         for (size_t i=0u; i<hi; ++i)
         {
-            if (X[i].val<=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
+            if (X[i].val>=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
         }
     }
     x = X[p]; X[p] = X[hi]; X[hi] = x;
@@ -96,14 +98,14 @@ size_t lomuto_partitioni_z (CDBL_I *X, const size_t hi, size_t p, const int larg
     {
         for (size_t i=0u; i<hi; ++i)
         {
-            if (X[i].val>=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
+            if (X[i].val<=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
         }
     }
     else
     {
         for (size_t i=0u; i<hi; ++i)
         {
-            if (X[i].val<=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
+            if (X[i].val>=pivot) { x = X[i]; X[i] = X[p]; X[p] = x; ++p; }
         }
     }
     x = X[p]; X[p] = X[hi]; X[hi] = x;

@@ -1,6 +1,8 @@
 //Sortif_Help function.
 //Implements quicksort algorithm (see qsortif.c for use).
 
+#pragma once
+
 #include "codee_math.h"
 #include "insertion_sortif.c"
 #include "hoare_partitionif.c"

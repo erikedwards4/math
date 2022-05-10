@@ -3,6 +3,8 @@
 //See qselect.c for usage.
 //This operates in-place and partial sorts X.
 
+#pragma once
+
 #include "codee_math.h"
 #include "lomuto_partitionif.c"
 
@@ -12,69 +14,59 @@ extern "C" {
 #endif
 
 
-float kselectif_s (FLT_F *X, size_t hi, size_t k, const int largest)
+FLT_F kselectif_s (FLT_F *X, size_t hi, size_t k, const int largest)
 {
     while (hi>0u)
     {
-        size_t p = hi;
+        size_t p = k;
         p = lomuto_partitionif_s(X, hi, p, largest);
-        if (k==p) { return X[k].val;; }
+        if (k==p) { return X[k]; }
         else if (k<p) { hi = p - 1u; }
         else { ++p; X += p; hi -= p; k -= p; }
     }
-    return X[0].val;
+    return X[0];
 }
 
 
-double kselectif_d (DBL_D *X, size_t hi, size_t k, const int largest)
+DBL_D kselectif_d (DBL_D *X, size_t hi, size_t k, const int largest)
 {
     while (hi>0u)
     {
-        size_t p = hi;
+        size_t p = k;
         p = lomuto_partitionif_d(X, hi, p, largest);
-        if (k==p) { return X[k].val;; }
+        if (k==p) { return X[k]; }
         else if (k<p) { hi = p - 1u; }
         else { ++p; X += p; hi -= p; k -= p; }
     }
-    return X[0].val;
+    return X[0];
 }
 
 
-size_t kselectif_c (CFLT_F *X, size_t hi, size_t k, const int largest)
+CFLT_F kselectif_c (CFLT_F *X, size_t hi, size_t k, const int largest)
 {
-    size_t cnt = 0u;
     while (hi>0u)
     {
-        size_t p = hi;
+        size_t p = k;
         p = lomuto_partitionif_c(X, hi, p, largest);
-        if (k==p) { return cnt+k; }
+        if (k==p) { return X[k]; }
         else if (k<p) { hi = p - 1u; }
-        else
-        {
-            ++p; X += p; cnt += p;
-            hi -= p; k -= p;
-        }
+        else { ++p; X += p; hi -= p; k -= p; }
     }
-    return cnt;
+    return X[0];
 }
 
 
-size_t kselectif_z (CDBL_D *X, size_t hi, size_t k, const int largest)
+CDBL_D kselectif_z (CDBL_D *X, size_t hi, size_t k, const int largest)
 {
-    size_t cnt = 0u;
     while (hi>0u)
     {
-        size_t p = hi;
+        size_t p = k;
         p = lomuto_partitionif_z(X, hi, p, largest);
-        if (k==p) { return cnt+k; }
+        if (k==p) { return X[k]; }
         else if (k<p) { hi = p - 1u; }
-        else
-        {
-            ++p; X += p; cnt += p;
-            hi -= p; k -= p;
-        }
+        else { ++p; X += p; hi -= p; k -= p; }
     }
-    return cnt;
+    return X[0];
 }
 
 

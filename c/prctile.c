@@ -6,9 +6,8 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <lapacke.h>
+// #include <lapacke.h>
 #include "codee_math.h"
-#include "quicksort.c"
 #include "kselect.c"
 
 #ifdef __cplusplus
@@ -28,8 +27,10 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const s
     //Prep interpolation
     const float p1 = (p/100.0f)*(float)(L-1u);
     const size_t i1 = (p<100.0f) ? (size_t)floorf(p1) : L-2u;
+    const size_t i2 = i1 + 1u;
     const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
     const float w1 = 1.0f - w2;
+    float x1, x2;
 
     float *X1;
     if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in prctile_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -43,10 +44,9 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const s
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in prctile_s: problem with LAPACKE function\n"); }
-        X1 += i1;
-        *Y = w1**X1 + w2**(X1+1);
-        X1 -= i1;
+        x2 = kselect_s(X1,L-1u,i2,1);
+        x1 = kselect_s(X1,i2,i1,1);
+        *Y = w1*x1 + w2*x2;
     }
     else
     {
@@ -60,10 +60,9 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in prctile_s: problem with LAPACKE function\n"); }
-                X1 += i1;
-                *Y = w1**X1 + w2**(X1+1);
-                X1 -= i1;
+                x2 = kselect_s(X1,L-1u,i2,1);
+                x1 = kselect_s(X1,i2,i1,1);
+                *Y = w1*x1 + w2*x2;
             }
         }
         else
@@ -74,10 +73,9 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in prctile_s: problem with LAPACKE function\n"); }
-                    X1 += i1;
-                    *Y = w1**X1 + w2**(X1+1);
-                    X1 -= i1;
+                    x2 = kselect_s(X1,L-1u,i2,1);
+                    x1 = kselect_s(X1,i2,i1,1);
+                    *Y = w1*x1 + w2*x2;
                 }
             }
         }
@@ -99,8 +97,10 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C, const
     //Prep interpolation
     const double p1 = (p/100.0)*(double)(L-1u);
     const size_t i1 = (p<100.0) ? (size_t)floor(p1) : L-2u;
+    const size_t i2 = i1 + 1u;
     const double w2 = (p<100.0) ? p1-floor(p1) : 1.0;
     const double w1 = 1.0 - w2;
+    double x1, x2;
 
     double *X1;
     if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in prctile_d: problem with malloc. "); perror("malloc"); return 1; }
@@ -114,10 +114,9 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C, const
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in prctile_d: problem with LAPACKE function\n"); }
-        X1 += i1;
-        *Y = w1**X1 + w2**(X1+1);
-        X1 -= i1;
+        x2 = kselect_d(X1,L-1u,i2,1);
+        x1 = kselect_d(X1,i2,i1,1);
+        *Y = w1*x1 + w2*x2;
     }
     else
     {
@@ -131,10 +130,9 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in prctile_d: problem with LAPACKE function\n"); }
-                X1 += i1;
-                *Y = w1**X1 + w2**(X1+1);
-                X1 -= i1;
+                x2 = kselect_d(X1,L-1u,i2,1);
+                x1 = kselect_d(X1,i2,i1,1);
+                *Y = w1*x1 + w2*x2;
             }
         }
         else
@@ -145,10 +143,9 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C, const
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in prctile_d: problem with LAPACKE function\n"); }
-                    X1 += i1;
-                    *Y = w1**X1 + w2**(X1+1);
-                    X1 -= i1;
+                    x2 = kselect_d(X1,L-1u,i2,1);
+                    x1 = kselect_d(X1,i2,i1,1);
+                    *Y = w1*x1 + w2*x2;
                 }
             }
         }
@@ -170,10 +167,13 @@ int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
     //Prep interpolation
     const float p1 = (p/100.0f)*(float)(L-1u);
     const size_t i1 = (p<100.0f) ? (size_t)floorf(p1) : L-2u;
+    const size_t i2 = i1 + 1u;
     const float w2 = (p<100.0f) ? p1-floorf(p1) : 1.0f;
     const float w1 = 1.0f - w2;
+    float x1, x2;
 
-struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+    // struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+    
     if (N==0u) {}
     else if (L==1u)
     {
@@ -181,11 +181,14 @@ struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
     }
     else if (L==N)
     {
+        x2 = kselect_s(X,L-1u,i2,1);
+        x1 = kselect_s(X,i2,i1,1);
+        *Y = w1*x1 + w2*x2;
         //if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
         //quicksort_s(X,L,1);
-        float x = kselect_s(X,L-1,i1+1,1);
-        X += i1;
-        *Y = w1**X + w2**(X+1);
+        //partsort_s(X,L,i1+1u,1);
+        //X += i1;
+        //*Y = w1**X + w2**(X+1);
     }
     else
     {
@@ -195,11 +198,11 @@ struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=V; v>0u; --v, X+=L-i1, ++Y)
+            for (size_t v=V; v>0u; --v, X+=L, ++Y)
             {
-                if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
-                X += i1;
-                *Y = w1**X + w2**(X+1);
+                x2 = kselect_s(X,L-1u,i2,1);
+                x1 = kselect_s(X,i2,i1,1);
+                *Y = w1*x1 + w2*x2;
             }
         }
         else
@@ -212,17 +215,16 @@ struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
-                    X1 += i1;
-                    *Y = w1**X1 + w2**(X1+1);
-                    X1 -= i1;
+                    x2 = kselect_s(X1,L-1u,i2,1);
+                    x1 = kselect_s(X1,i2,i1,1);
+                    *Y = w1*x1 + w2*x2;
                 }
             }
             free(X1);
         }
     }
-clock_gettime(CLOCK_REALTIME,&toc);
-fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
+    
+    // clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -239,8 +241,10 @@ int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
     //Prep interpolation
     const double p1 = (p/100.0)*(double)(L-1u);
     const size_t i1 = (p<100.0) ? (size_t)floor(p1) : L-2u;
+    const size_t i2 = i1 + 1u;
     const double w2 = (p<100.0) ? p1-floor(p1) : 1.0;
     const double w1 = 1.0 - w2;
+    double x1, x2;
 
     if (N==0u) {}
     else if (L==1u)
@@ -249,9 +253,9 @@ int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
     }
     else if (L==N)
     {
-        if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in prctile_inplace_d: problem with LAPACKE function\n"); }
-        X += i1;
-        *Y = w1**X + w2**(X+1);
+        x2 = kselect_d(X,L-1u,i2,1);
+        x1 = kselect_d(X,i2,i1,1);
+        *Y = w1*x1 + w2*x2;
     }
     else
     {
@@ -261,11 +265,11 @@ int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=V; v>0u; --v, X+=L-i1, ++Y)
+            for (size_t v=V; v>0u; --v, X+=L, ++Y)
             {
-                if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in prctile_inplace_d: problem with LAPACKE function\n"); }
-                X += i1;
-                *Y = w1**X + w2**(X+1);
+                x2 = kselect_d(X,L-1u,i2,1);
+                x1 = kselect_d(X,i2,i1,1);
+                *Y = w1*x1 + w2*x2;
             }
         }
         else
@@ -278,10 +282,9 @@ int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in prctile_inplace_d: problem with LAPACKE function\n"); }
-                    X1 += i1;
-                    *Y = w1**X1 + w2**(X1+1);
-                    X1 -= i1;
+                    x2 = kselect_d(X1,L-1u,i2,1);
+                    x1 = kselect_d(X1,i2,i1,1);
+                    *Y = w1*x1 + w2*x2;
                 }
             }
             free(X1);

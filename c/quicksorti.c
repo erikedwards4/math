@@ -1,6 +1,8 @@
 //Sorti_Help function.
 //Implements quicksort algorithm (see qsorti.c for use).
 
+#pragma once
+
 #include "codee_math.h"
 #include "insertion_sorti.c"
 #include "hoare_partitioni.c"

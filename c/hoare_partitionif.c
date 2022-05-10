@@ -3,6 +3,8 @@
 //See quicksortif.c, etc. for usage.
 //This operates in-place.
 
+#pragma once
+
 #include "codee_math.h"
 
 #ifdef __cplusplus

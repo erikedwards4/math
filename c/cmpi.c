@@ -3,6 +3,8 @@
 //where the index is represented as a size_t for faster speed in ranks.
 //See ranks.c for usage.
 
+#pragma once
+
 #include <math.h>
 #include "codee_math.h"
 

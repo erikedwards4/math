@@ -1133,10 +1133,10 @@ void partial_sorti_d (DBL_I *X, size_t N, size_t k, const int ascend);
 void partial_sorti_c (CFLT_I *X, size_t N, size_t k, const int ascend);
 void partial_sorti_z (CDBL_I *X, size_t N, size_t k, const int ascend);
 
-float kselecti_s (FLT_I *X, size_t hi, size_t k, const int largest);
-double kselecti_d (DBL_I *X, size_t hi, size_t k, const int largest);
-size_t kselecti_c (CFLT_I *X, size_t hi, size_t k, const int largest);
-size_t kselecti_z (CDBL_I *X, size_t hi, size_t k, const int largest);
+FLT_I kselecti_s (FLT_I *X, size_t hi, size_t k, const int largest);
+DBL_I kselecti_d (DBL_I *X, size_t hi, size_t k, const int largest);
+CFLT_I kselecti_c (CFLT_I *X, size_t hi, size_t k, const int largest);
+CDBL_I kselecti_z (CDBL_I *X, size_t hi, size_t k, const int largest);
 
 //Sortif_Help
 
@@ -1180,10 +1180,10 @@ void partial_sortif_d (DBL_D *X, size_t N, size_t k, const int ascend);
 void partial_sortif_c (CFLT_F *X, size_t N, size_t k, const int ascend);
 void partial_sortif_z (CDBL_D *X, size_t N, size_t k, const int ascend);
 
-float kselectif_s (FLT_F *X, size_t hi, size_t k, const int largest);
-double kselectif_d (DBL_D *X, size_t hi, size_t k, const int largest);
-size_t kselectif_c (CFLT_F *X, size_t hi, size_t k, const int largest);
-size_t kselectif_z (CDBL_D *X, size_t hi, size_t k, const int largest);
+FLT_F kselectif_s (FLT_F *X, size_t hi, size_t k, const int largest);
+DBL_D kselectif_d (DBL_D *X, size_t hi, size_t k, const int largest);
+CFLT_F kselectif_c (CFLT_F *X, size_t hi, size_t k, const int largest);
+CDBL_D kselectif_z (CDBL_D *X, size_t hi, size_t k, const int largest);
 
 // Vec2vec: Reorder
 

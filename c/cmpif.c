@@ -3,6 +3,8 @@
 //where the index is represented as a float (cmpif) for faster speed in sorti.
 //See sorti.c for usage.
 
+#pragma once
+
 #include <math.h>
 #include "codee_math.h"
 

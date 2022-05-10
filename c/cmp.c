@@ -1,6 +1,8 @@
 //Sort_Help functions.
 //Give comparison (cmp) functions for use by C stdlib qsort.
 
+#pragma once
+
 //#include <string.h>
 #include <math.h>
 //#include <complex.h>

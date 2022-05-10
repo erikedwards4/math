@@ -5,6 +5,8 @@
 //This operates in-place.
 //The m2start functions move m (min or max) to X[0], and X[0] to index of m.
 
+#pragma once
+
 #include "codee_math.h"
 #include "lomuto_partition.c"
 #include "quicksort.c"
@@ -15,7 +17,7 @@ extern "C" {
 #endif
 
 
-#define K_THRESH 2u
+#define K_THRESH 5u
 
 static void m2start_s (float *X, size_t N, const int ascend);
 static void m2start_d (double *X, size_t N, const int ascend);
@@ -115,7 +117,7 @@ void partial_sort_s (float *X, size_t N, size_t k, const int ascend)
 {
     if (k<K_THRESH)
     {
-        for (size_t j=0u; j<=k; ++j) { m2start_s(X+j, N-j, ascend); }
+        for (size_t j=0u; j<=k; ++j, --N, ++X) { m2start_s(X, N, ascend); }
     }
     else
     {
@@ -140,7 +142,7 @@ void partial_sort_d (double *X, size_t N, size_t k, const int ascend)
 {
     if (k<K_THRESH)
     {
-        for (size_t j=0u; j<=k; ++j) { m2start_d(X+j, N-j, ascend); }
+        for (size_t j=0u; j<=k; ++j, --N, ++X) { m2start_d(X, N, ascend); }
     }
     else
     {
@@ -165,7 +167,7 @@ void partial_sort_c (float *X, size_t N, size_t k, const int ascend)
 {
     if (k<K_THRESH)
     {
-        for (size_t j=0u; j<=k; ++j) { m2start_c(X+2u*j, N-j, ascend); }
+        for (size_t j=0u; j<=k; ++j, --N, X+=2) { m2start_c(X, N, ascend); }
     }
     else
     {
@@ -190,7 +192,7 @@ void partial_sort_z (double *X, size_t N, size_t k, const int ascend)
 {
     if (k<K_THRESH)
     {
-        for (size_t j=0u; j<=k; ++j) { m2start_z(X+2u*j, N-j, ascend); }
+        for (size_t j=0u; j<=k; ++j, --N, X+=2) { m2start_z(X, N, ascend); }
     }
     else
     {
