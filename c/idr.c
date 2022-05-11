@@ -6,10 +6,10 @@
 //However, it turns out to be almost the identical speed for matrices.
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
-#include <lapacke.h>
 #include "codee_math.h"
+#include "extremum.c"
+#include "kselect.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -27,8 +27,9 @@ int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     //Prep interpolation
     const float p1 = 0.1f*(float)(L-1u), p2 = 0.9f*(float)(L-1u);
     const size_t i1 = (size_t)floorf(p1), i2 = (size_t)floorf(p2);
-    const float w2 = floorf(p1) - p1, w1 = -1.0f - w2;
+    const float w2 = p1 - floorf(p1), w1 = 1.0f - w2;
     const float w4 = p2 - floorf(p2), w3 = 1.0f - w4;
+    float x1, x2, x3, x4;
 
     float *X1;
     if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in idr_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -42,12 +43,11 @@ int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_s: problem with LAPACKE function\n"); }
-        X1 += i1;
-        *Y = w1**X1 + w2**(X1+1);
-        X1 += i2 - i1;
-        *Y += w3**X1 + w4**(X1+1);
-        X1 -= i2;
+        x4 = kselect_s(X1,L,i2+1u,1);
+        x3 = extremum_s(X1,i2+1u,0);
+        x2 = kselect_s(X1,i2,i1+1u,1);
+        x1 = extremum_s(X1,i1+1u,0);
+        *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
     }
     else
     {
@@ -61,12 +61,11 @@ int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_s: problem with LAPACKE function\n"); }
-                X1 += i1;
-                *Y = w1**X1 + w2**(X1+1);
-                X1 += i2 - i1;
-                *Y += w3**X1 + w4**(X1+1);
-                X1 -= i2;
+                x4 = kselect_s(X1,L,i2+1u,1);
+                x3 = extremum_s(X1,i2+1u,0);
+                x2 = kselect_s(X1,i2,i1+1u,1);
+                x1 = extremum_s(X1,i1+1u,0);
+                *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
             }
         }
         else
@@ -77,12 +76,11 @@ int idr_s (float *Y, const float *X, const size_t R, const size_t C, const size_
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_s: problem with LAPACKE function\n"); }
-                    X1 += i1;
-                    *Y = w1**X1 + w2**(X1+1);
-                    X1 += i2 - i1;
-                    *Y += w3**X1 + w4**(X1+1);
-                    X1 -= i2;
+                    x4 = kselect_s(X1,L,i2+1u,1);
+                    x3 = extremum_s(X1,i2+1u,0);
+                    x2 = kselect_s(X1,i2,i1+1u,1);
+                    x1 = extremum_s(X1,i1+1u,0);
+                    *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
                 }
             }
         }
@@ -103,8 +101,9 @@ int idr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     //Prep interpolation
     const double p1 = 0.1*(double)(L-1u), p2 = 0.9*(double)(L-1u);
     const size_t i1 = (size_t)floor(p1), i2 = (size_t)floor(p2);
-    const double w2 = floor(p1) - p1, w1 = -1.0 - w2;
+    const double w2 = p1 - floor(p1), w1 = 1.0 - w2;
     const double w4 = p2 - floor(p2), w3 = 1.0 - w4;
+    double x1, x2, x3, x4;
 
     double *X1;
     if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in idr_d: problem with malloc. "); perror("malloc"); return 1; }
@@ -118,12 +117,11 @@ int idr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_d: problem with LAPACKE function\n"); }
-        X1 += i1;
-        *Y = w1**X1 + w2**(X1+1);
-        X1 += i2 - i1;
-        *Y += w3**X1 + w4**(X1+1);
-        X1 -= i2;
+        x4 = kselect_d(X1,L,i2+1u,1);
+        x3 = extremum_d(X1,i2+1u,0);
+        x2 = kselect_d(X1,i2,i1+1u,1);
+        x1 = extremum_d(X1,i1+1u,0);
+        *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
     }
     else
     {
@@ -137,12 +135,11 @@ int idr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_d: problem with LAPACKE function\n"); }
-                X1 += i1;
-                *Y = w1**X1 + w2**(X1+1);
-                X1 += i2 - i1;
-                *Y += w3**X1 + w4**(X1+1);
-                X1 -= i2;
+                x4 = kselect_d(X1,L,i2+1u,1);
+                x3 = extremum_d(X1,i2+1u,0);
+                x2 = kselect_d(X1,i2,i1+1u,1);
+                x1 = extremum_d(X1,i1+1u,0);
+                *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
             }
         }
         else
@@ -153,12 +150,11 @@ int idr_d (double *Y, const double *X, const size_t R, const size_t C, const siz
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_d: problem with LAPACKE function\n"); }
-                    X1 += i1;
-                    *Y = w1**X1 + w2**(X1+1);
-                    X1 += i2 - i1;
-                    *Y += w3**X1 + w4**(X1+1);
-                    X1 -= i2;
+                    x4 = kselect_d(X1,L,i2+1u,1);
+                    x3 = extremum_d(X1,i2+1u,0);
+                    x2 = kselect_d(X1,i2,i1+1u,1);
+                    x1 = extremum_d(X1,i1+1u,0);
+                    *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
                 }
             }
         }
@@ -179,8 +175,9 @@ int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
     //Prep interpolation
     const float p1 = 0.1f*(float)(L-1u), p2 = 0.9f*(float)(L-1u);
     const size_t i1 = (size_t)floorf(p1), i2 = (size_t)floorf(p2);
-    const float w2 = floorf(p1) - p1, w1 = -1.0f - w2;
+    const float w2 = p1 - floorf(p1), w1 = 1.0f - w2;
     const float w4 = p2 - floorf(p2), w3 = 1.0f - w4;
+    float x1, x2, x3, x4;
 
     if (N==0u) {}
     else if (L==1u)
@@ -189,11 +186,11 @@ int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
     }
     else if (L==N)
     {
-        if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_s: problem with LAPACKE function\n"); }
-        X += i1;
-        *Y = w1**X + w2**(X+1);
-        X += i2 - i1;
-        *Y += w3**X + w4**(X+1);
+        x4 = kselect_s(X,L,i2+1u,1);
+        x3 = extremum_s(X,i2+1u,0);
+        x2 = kselect_s(X,i2,i1+1u,1);
+        x1 = extremum_s(X,i1+1u,0);
+        *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
     }
     else
     {
@@ -203,13 +200,13 @@ int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=V; v>0u; --v, X+=L-i2, ++Y)
+            for (size_t v=V; v>0u; --v, X+=L, ++Y)
             {
-                if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_s: problem with LAPACKE function\n"); }
-                X += i1;
-                *Y = w1**X + w2**(X+1);
-                X += i2 - i1;
-                *Y += w3**X + w4**(X+1);
+                x4 = kselect_s(X,L,i2+1u,1);
+                x3 = extremum_s(X,i2+1u,0);
+                x2 = kselect_s(X,i2,i1+1u,1);
+                x1 = extremum_s(X,i1+1u,0);
+                *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
             }
         }
         else
@@ -222,12 +219,11 @@ int idr_inplace_s (float *Y, float *X, const size_t R, const size_t C, const siz
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_inplace_s: problem with LAPACKE function\n"); }
-                    X1 += i1;
-                    *Y = w1**X1 + w2**(X1+1);
-                    X1 += i2 - i1;
-                    *Y += w3**X1 + w4**(X1+1);
-                    X1 -= i2;
+                    x4 = kselect_s(X1,L,i2+1u,1);
+                    x3 = extremum_s(X1,i2+1u,0);
+                    x2 = kselect_s(X1,i2,i1+1u,1);
+                    x1 = extremum_s(X1,i1+1u,0);
+                    *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
                 }
             }
             free(X1);
@@ -248,8 +244,9 @@ int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
     //Prep interpolation
     const double p1 = 0.1*(double)(L-1u), p2 = 0.9*(double)(L-1u);
     const size_t i1 = (size_t)floor(p1), i2 = (size_t)floor(p2);
-    const double w2 = floor(p1) - p1, w1 = -1.0 - w2;
+    const double w2 = p1 - floor(p1), w1 = 1.0 - w2;
     const double w4 = p2 - floor(p2), w3 = 1.0 - w4;
+    double x1, x2, x3, x4;
 
     if (N==0u) {}
     else if (L==1u)
@@ -258,11 +255,11 @@ int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
     }
     else if (L==N)
     {
-        if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_d: problem with LAPACKE function\n"); }
-        X += i1;
-        *Y = w1**X + w2**(X+1);
-        X += i2 - i1;
-        *Y += w3**X + w4**(X+1);
+        x4 = kselect_d(X,L,i2+1u,1);
+        x3 = extremum_d(X,i2+1u,0);
+        x2 = kselect_d(X,i2,i1+1u,1);
+        x1 = extremum_d(X,i1+1u,0);
+        *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
     }
     else
     {
@@ -272,13 +269,13 @@ int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
 
         if (K==1u && (G==1u || B==1u))
         {
-            for (size_t v=V; v>0u; --v, X+=L-i2, ++Y)
+            for (size_t v=V; v>0u; --v, X+=L, ++Y)
             {
-                if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in idr_inplace_d: problem with LAPACKE function\n"); }
-                X += i1;
-                *Y = w1**X + w2**(X+1);
-                X += i2 - i1;
-                *Y += w3**X + w4**(X+1);
+                x4 = kselect_d(X,L,i2+1u,1);
+                x3 = extremum_d(X,i2+1u,0);
+                x2 = kselect_d(X,i2,i1+1u,1);
+                x1 = extremum_d(X,i1+1u,0);
+                *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
             }
         }
         else
@@ -291,12 +288,11 @@ int idr_inplace_d (double *Y, double *X, const size_t R, const size_t C, const s
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in idr_inplace_d: problem with LAPACKE function\n"); }
-                    X1 += i1;
-                    *Y = w1**X1 + w2**(X1+1);
-                    X1 += i2 - i1;
-                    *Y += w3**X1 + w4**(X1+1);
-                    X1 -= i2;
+                    x4 = kselect_d(X1,L,i2+1u,1);
+                    x3 = extremum_d(X1,i2+1u,0);
+                    x2 = kselect_d(X1,i2,i1+1u,1);
+                    x1 = extremum_d(X1,i1+1u,0);
+                    *Y = w3*x3 + w4*x4 - w1*x1 - w2*x2;
                 }
             }
             free(X1);

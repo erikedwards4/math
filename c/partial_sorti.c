@@ -97,6 +97,7 @@ void partial_sorti_s (FLT_I *X, size_t N, size_t k, const int ascend)
     if (k<K_THRESH)
     {
         for (size_t j=0u; j<=k; ++j, --N, ++X) { m2starti_s(X, N, ascend); }
+        // for (size_t j=k+1u; j>0u; --j, --N, ++X) { FLT_I m = extremumi_s(X, N, ascend); X[m.i] = X[0]; X[0] = m; }
     }
     else
     {
@@ -105,7 +106,7 @@ void partial_sorti_s (FLT_I *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partitioni_s(X, N-1u, N-1u, !ascend);
+                p = lomuto_partitioni_s(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }
@@ -130,7 +131,7 @@ void partial_sorti_d (DBL_I *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partitioni_d(X, N-1u, N-1u, !ascend);
+                p = lomuto_partitioni_d(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }
@@ -155,7 +156,7 @@ void partial_sorti_c (CFLT_I *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partitioni_c(X, N-1u, N-1u, !ascend);
+                p = lomuto_partitioni_c(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }
@@ -180,7 +181,7 @@ void partial_sorti_z (CDBL_I *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partitioni_z(X, N-1u, N-1u, !ascend);
+                p = lomuto_partitioni_z(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }

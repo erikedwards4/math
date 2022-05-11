@@ -47,7 +47,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
         //qsort(XI,L,sizeof(FLT_F),cmpif_ascend_s);
         //partial_sortif_s(XI,L,ip,1);
         //*Y = XI[ip].ind;
-        *Y = kselectif_s(XI,L-1u,ip,1).ind;
+        *Y = kselectif_s(XI,L,ip,1).ind;
     }
     else
     {
@@ -60,7 +60,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (float)l; }
-                *Y = kselectif_s(XI,L-1u,ip,1).ind;
+                *Y = kselectif_s(XI,L,ip,1).ind;
             }
         }
         else
@@ -70,7 +70,7 @@ int iprctile_s (float *Y, const float *X, const size_t R, const size_t C, const 
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K) { XI[l].val = *X; XI[l].ind = (float)l; }
-                    *Y = kselectif_s(XI,L-1u,ip,1).ind;
+                    *Y = kselectif_s(XI,L,ip,1).ind;
                 }
             }
         }
@@ -108,7 +108,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
     else if (L==N)
     {
         for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (double)l; }
-        *Y = kselectif_d(XI,L-1u,ip,1).ind;
+        *Y = kselectif_d(XI,L,ip,1).ind;
     }
     else
     {
@@ -121,7 +121,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
             for (size_t v=V; v>0u; --v, ++Y)
             {
                 for (size_t l=0u; l<L; ++l, ++X) { XI[l].val = *X; XI[l].ind = (double)l; }
-                *Y = kselectif_d(XI,L-1u,ip,1).ind;
+                *Y = kselectif_d(XI,L,ip,1).ind;
             }
         }
         else
@@ -131,7 +131,7 @@ int iprctile_d (double *Y, const double *X, const size_t R, const size_t C, cons
                 for (size_t b=B; b>0u; --b, X-=K*L-1u, ++Y)
                 {
                     for (size_t l=0u; l<L; ++l, X+=K) { XI[l].val = *X; XI[l].ind = (double)l; }
-                    *Y = kselectif_d(XI,L-1u,ip,1).ind;
+                    *Y = kselectif_d(XI,L,ip,1).ind;
                 }
             }
         }

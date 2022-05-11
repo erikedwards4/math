@@ -13,8 +13,9 @@ extern "C" {
 #endif
 
 
-size_t lomuto_partition_s (float *X, const size_t hi, size_t p, const int largest)
+size_t lomuto_partition_s (float *X, const size_t N, size_t p, const int largest)
 {
+    const size_t hi = N - 1u;
     float x = X[p], pivot = x;
     X[p] = X[hi]; X[hi] = x;
     p = 0u;
@@ -37,8 +38,9 @@ size_t lomuto_partition_s (float *X, const size_t hi, size_t p, const int larges
 }
 
 
-size_t lomuto_partition_d (double *X, const size_t hi, size_t p, const int largest)
+size_t lomuto_partition_d (double *X, const size_t N, size_t p, const int largest)
 {
+    const size_t hi = N - 1u;
     double x = X[p], pivot = x;
     X[p] = X[hi]; X[hi] = x;
     p = 0u;
@@ -61,8 +63,9 @@ size_t lomuto_partition_d (double *X, const size_t hi, size_t p, const int large
 }
 
 
-size_t lomuto_partition_c (float *X, const size_t hi, size_t p, const int largest)
+size_t lomuto_partition_c (float *X, const size_t N, size_t p, const int largest)
 {
+    const size_t hi = N - 1u;
     float xr = X[2u*p], xi = X[2u*p+1u], pivot = xr*xr + xi*xi;
     X[2u*p] = X[2u*hi]; X[2u*hi] = xr;
     X[2u*p+1u] = X[2u*hi+1u]; X[2u*hi+1u] = xi;
@@ -97,8 +100,9 @@ size_t lomuto_partition_c (float *X, const size_t hi, size_t p, const int larges
 }
 
 
-size_t lomuto_partition_z (double *X, const size_t hi, size_t p, const int largest)
+size_t lomuto_partition_z (double *X, const size_t N, size_t p, const int largest)
 {
+    const size_t hi = N - 1u;
     double xr = X[2u*p], xi = X[2u*p+1u], pivot = xr*xr + xi*xi;
     X[2u*p] = X[2u*hi]; X[2u*hi] = xr;
     X[2u*p+1u] = X[2u*hi+1u]; X[2u*hi+1u] = xi;

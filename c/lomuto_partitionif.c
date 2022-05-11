@@ -13,8 +13,9 @@ extern "C" {
 #endif
 
 
-size_t lomuto_partitionif_s (FLT_F *X, const size_t hi, size_t p, const int largest)
+size_t lomuto_partitionif_s (FLT_F *X, const size_t N, size_t p, const int largest)
 {
+    const size_t hi = N - 1u;
     FLT_F x = X[p];
     float pivot = x.val;
     X[p] = X[hi]; X[hi] = x;
@@ -38,8 +39,9 @@ size_t lomuto_partitionif_s (FLT_F *X, const size_t hi, size_t p, const int larg
 }
 
 
-size_t lomuto_partitionif_d (DBL_D *X, const size_t hi, size_t p, const int largest)
+size_t lomuto_partitionif_d (DBL_D *X, const size_t N, size_t p, const int largest)
 {
+    const size_t hi = N - 1u;
     DBL_D x = X[p];
     double pivot = x.val;
     X[p] = X[hi]; X[hi] = x;
@@ -63,8 +65,9 @@ size_t lomuto_partitionif_d (DBL_D *X, const size_t hi, size_t p, const int larg
 }
 
 
-size_t lomuto_partitionif_c (CFLT_F *X, const size_t hi, size_t p, const int largest)
+size_t lomuto_partitionif_c (CFLT_F *X, const size_t N, size_t p, const int largest)
 {
+    const size_t hi = N - 1u;
     CFLT_F x = X[p];
     float pivot = x.val;
     X[p] = X[hi]; X[hi] = x;
@@ -88,8 +91,9 @@ size_t lomuto_partitionif_c (CFLT_F *X, const size_t hi, size_t p, const int lar
 }
 
 
-size_t lomuto_partitionif_z (CDBL_D *X, const size_t hi, size_t p, const int largest)
+size_t lomuto_partitionif_z (CDBL_D *X, const size_t N, size_t p, const int largest)
 {
+    const size_t hi = N - 1u;
     CDBL_D x = X[p];
     double pivot = x.val;
     X[p] = X[hi]; X[hi] = x;

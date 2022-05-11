@@ -2,10 +2,10 @@
 //Subtracts median and divides by the MAD (median absolute deviation from the median).
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <lapacke.h>
+//#include <lapacke.h>
 #include "codee_math.h"
+#include "extremum.c"
+#include "kselect.c"
 
 
 #ifdef __cplusplus

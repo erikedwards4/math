@@ -8,10 +8,9 @@
 //The inplace version still outputs Y, but modifies X during processing.
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
-#include <lapacke.h>
 #include "codee_math.h"
+#include "partial_sort.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -46,7 +45,7 @@ int trimstd_s (float *Y, const float *X, const size_t R, const size_t C, const s
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimstd_s: problem with LAPACKE function\n"); }
+        partial_sort_s(X1,L,i2,1);
         mn = sm2 = 0.0f;
         X1 += i1;
         for (size_t l=i1; l<=i2; ++l, ++X1) { mn += *X1; }
@@ -67,7 +66,7 @@ int trimstd_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimstd_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X1,L,i2,1);
                 mn = sm2 = 0.0f;
                 X1 += i1;
                 for (size_t l=i1; l<=i2; ++l, ++X1) { mn += *X1; }
@@ -84,7 +83,7 @@ int trimstd_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimstd_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,L,i2,1);
                     mn = sm2 = 0.0f;
                     X1 += i1;
                     for (size_t l=i1; l<=i2; ++l, ++X1) { mn += *X1; }
@@ -128,7 +127,7 @@ int trimstd_d (double *Y, const double *X, const size_t R, const size_t C, const
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimstd_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X1,L,i2,1);
         mn = sm2 = 0.0;
         X1 += i1;
         for (size_t l=i1; l<=i2; ++l, ++X1) { mn += *X1; }
@@ -149,7 +148,7 @@ int trimstd_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimstd_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X1,L,i2,1);
                 mn = sm2 = 0.0;
                 X1 += i1;
                 for (size_t l=i1; l<=i2; ++l, ++X1) { mn += *X1; }
@@ -166,7 +165,7 @@ int trimstd_d (double *Y, const double *X, const size_t R, const size_t C, const
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimstd_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,L,i2,1);
                     mn = sm2 = 0.0;
                     X1 += i1;
                     for (size_t l=i1; l<=i2; ++l, ++X1) { mn += *X1; }
@@ -205,7 +204,7 @@ int trimstd_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
     }
     else if (L==N)
     {
-        if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimstd_inplace_s: problem with LAPACKE function\n"); }
+        partial_sort_s(X,L,i2,1);
         mn = sm2 = 0.0f;
         X += i1;
         for (size_t l=i1; l<=i2; ++l, ++X) { mn += *X; }
@@ -223,7 +222,7 @@ int trimstd_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
         {
             for (size_t v=V; v>0u; --v, X+=L-i1, ++Y)
             {
-                if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimstd_inplace_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X,L,i2,1);
                 mn = sm2 = 0.0f;
                 X += i1;
                 for (size_t l=i1; l<=i2; ++l, ++X) { mn += *X; }
@@ -242,7 +241,7 @@ int trimstd_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimstd_inplace_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,L,i2,1);
                     mn = sm2 = 0.0f;
                     X1 += i1;
                     for (size_t l=i1; l<=i2; ++l, ++X1) { mn += *X1; }
@@ -281,7 +280,7 @@ int trimstd_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
     }
     else if (L==N)
     {
-        if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimstd_inplace_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X,L,i2,1);
         mn = sm2 = 0.0;
         X += i1;
         for (size_t l=i1; l<=i2; ++l, ++X) { mn += *X; }
@@ -299,7 +298,7 @@ int trimstd_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
         {
             for (size_t v=V; v>0u; --v, X+=L-i1, ++Y)
             {
-                if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimstd_inplace_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X,L,i2,1);
                 mn = sm2 = 0.0;
                 X += i1;
                 for (size_t l=i1; l<=i2; ++l, ++X) { mn += *X; }
@@ -318,7 +317,7 @@ int trimstd_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimstd_inplace_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,L,i2,1);
                     mn = sm2 = 0.0;
                     X1 += i1;
                     for (size_t l=i1; l<=i2; ++l, ++X1) { mn += *X1; }

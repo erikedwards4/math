@@ -36,7 +36,7 @@ int qselect_s (float *Y, const float *X, const size_t R, const size_t C, const s
         {
             for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
             X1 -= L;
-            *Y = kselect_s(X1,L-1u,k,largest);
+            *Y = kselect_s(X1,L,k,largest);
         }
         else
         {
@@ -52,7 +52,7 @@ int qselect_s (float *Y, const float *X, const size_t R, const size_t C, const s
                     X1 -= L;
                     //if (LAPACKE_slasrt_work(id,(int)L,X1)) { fprintf(stderr,"error in qselect_s: problem with LAPACKE function\n"); }
                     //*Y = X1[k];
-                    *Y = kselect_s(X1,L-1u,k,largest);
+                    *Y = kselect_s(X1,L,k,largest);
                 }
             }
             else
@@ -63,7 +63,7 @@ int qselect_s (float *Y, const float *X, const size_t R, const size_t C, const s
                     {
                         for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                         X1 -= L;
-                        *Y = kselect_s(X1,L-1u,k,largest);
+                        *Y = kselect_s(X1,L,k,largest);
                     }
                 }
             }
@@ -100,7 +100,7 @@ int qselect_d (double *Y, const double *X, const size_t R, const size_t C, const
         {
             for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
             X1 -= L;
-            *Y = kselect_d(X1,L-1u,k,largest);
+            *Y = kselect_d(X1,L,k,largest);
         }
         else
         {
@@ -114,7 +114,7 @@ int qselect_d (double *Y, const double *X, const size_t R, const size_t C, const
                 {
                     for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    *Y = kselect_d(X1,L-1u,k,largest);
+                    *Y = kselect_d(X1,L,k,largest);
                 }
             }
             else
@@ -125,7 +125,7 @@ int qselect_d (double *Y, const double *X, const size_t R, const size_t C, const
                     {
                         for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                         X1 -= L;
-                        *Y = kselect_d(X1,L-1u,k,largest);
+                        *Y = kselect_d(X1,L,k,largest);
                     }
                 }
             }
@@ -160,7 +160,7 @@ int qselect_c (float *Y, const float *X, const size_t R, const size_t C, const s
         {
             for (size_t l=2u*L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
             X1 -= 2u*L;
-            size_t i = kselect_c(X1,L-1u,k,largest);
+            size_t i = kselect_c(X1,L,k,largest);
             *Y = X1[i]; *(Y+1) = X1[i+1u];
         }
         else
@@ -175,7 +175,7 @@ int qselect_c (float *Y, const float *X, const size_t R, const size_t C, const s
                 {
                     for (size_t l=2u*L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                     X1 -= 2u*L;
-                    size_t i = kselect_c(X1,L-1u,k,largest);
+                    size_t i = kselect_c(X1,L,k,largest);
                     *Y = X1[i]; *(Y+1) = X1[i+1u];
                 }
             }
@@ -187,7 +187,7 @@ int qselect_c (float *Y, const float *X, const size_t R, const size_t C, const s
                     {
                         for (size_t l=L; l>0u; --l, X+=2u*K, X1+=2) { *X1 = *X; *(X1+1) = *(X+1); }
                         X1 -= 2u*L;
-                        size_t i = kselect_c(X1,L-1u,k,largest);
+                        size_t i = kselect_c(X1,L,k,largest);
                         *Y = X1[i]; *(Y+1) = X1[i+1u];
                     }
                 }
@@ -223,7 +223,7 @@ int qselect_z (double *Y, const double *X, const size_t R, const size_t C, const
         {
             for (size_t l=2u*L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
             X1 -= 2u*L;
-            size_t i = kselect_z(X1,L-1u,k,largest);
+            size_t i = kselect_z(X1,L,k,largest);
             *Y = X1[i]; *(Y+1) = X1[i+1u];
         }
         else
@@ -238,7 +238,7 @@ int qselect_z (double *Y, const double *X, const size_t R, const size_t C, const
                 {
                     for (size_t l=2u*L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                     X1 -= 2u*L;
-                    size_t i = kselect_z(X1,L-1u,k,largest);
+                    size_t i = kselect_z(X1,L,k,largest);
                     *Y = X1[i]; *(Y+1) = X1[i+1u];
                 }
             }
@@ -250,7 +250,7 @@ int qselect_z (double *Y, const double *X, const size_t R, const size_t C, const
                     {
                         for (size_t l=L; l>0u; --l, X+=2u*K, X1+=2) { *X1 = *X; *(X1+1) = *(X+1); }
                         X1 -= 2u*L;
-                        size_t i = kselect_z(X1,L-1u,k,largest);
+                        size_t i = kselect_z(X1,L,k,largest);
                         *Y = X1[i]; *(Y+1) = X1[i+1u];
                     }
                 }

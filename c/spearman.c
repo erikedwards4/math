@@ -13,9 +13,10 @@
 //and the shapes must be equal along the appropiate axis.
 
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include "codee_math.h"
-#include "cmpi.c"
+//#include "cmpi.c"
+#include "quicksorti.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -38,7 +39,7 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
     if (L1!=L2) { fprintf(stderr,"error in spearman_s: vectors in X1 and X2 must have the same length\n"); return 1; }
     const int den = (int)(L*(L*L-1u));
     int d, dsm;
-    int (*comp)(const void *, const void *) = cmpi_ascend_s;
+    //int (*comp)(const void *, const void *) = cmpi_1_s;
 
     int *r1, *r2;
     FLT_I *XI1, *XI2;
@@ -59,7 +60,8 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
             XI1[l].val = *X1; XI1[l].ind = l;
             XI2[l].val = *X2; XI2[l].ind = l;
         }
-        qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
+        //qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
+        quicksorti_s(XI1,L,1); quicksorti_s(XI2,L,1);
         for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
         for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -82,7 +84,8 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                     XI1[l].val = *X1; XI1[l].ind = l;
                     XI2[l].val = *X2; XI2[l].ind = l;
                 }
-                qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
+                //qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
+                quicksorti_s(XI1,L,1); quicksorti_s(XI2,L,1);
                 for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
                 for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -103,7 +106,8 @@ int spearman_s (float *Y, const float *X1, const float *X2, const size_t R1, con
                         XI1[l].val = *X1; XI1[l].ind = l;
                         XI2[l].val = *X2; XI2[l].ind = l;
                     }
-                    qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
+                    //qsort(XI1,L,sizeof(FLT_I),comp); qsort(XI2,L,sizeof(FLT_I),comp);
+                    quicksorti_s(XI1,L,1); quicksorti_s(XI2,L,1);
                     for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
                     for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -133,7 +137,7 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
     if (L1!=L2) { fprintf(stderr,"error in spearman_d: vectors in X1 and X2 must have the same length\n"); return 1; }
     const int den = (int)(L*(L*L-1u));
     int d, dsm;
-    int (*comp)(const void *, const void *) = cmpi_ascend_d;
+    //int (*comp)(const void *, const void *) = cmpi_1_d;
 
     int *r1, *r2;
     DBL_I *XI1, *XI2;
@@ -154,7 +158,8 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
             XI1[l].val = *X1; XI1[l].ind = l;
             XI2[l].val = *X2; XI2[l].ind = l;
         }
-        qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
+        //qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
+        quicksorti_d(XI1,L,1); quicksorti_d(XI2,L,1);
         for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
         dsm = 0;
         for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -177,7 +182,8 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                     XI1[l].val = *X1; XI1[l].ind = l;
                     XI2[l].val = *X2; XI2[l].ind = l;
                 }
-                qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
+                //qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
+                quicksorti_d(XI1,L,1); quicksorti_d(XI2,L,1);
                 for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                 dsm = 0;
                 for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }
@@ -198,7 +204,8 @@ int spearman_d (double *Y, const double *X1, const double *X2, const size_t R1, 
                         XI1[l].val = *X1; XI1[l].ind = l;
                         XI2[l].val = *X2; XI2[l].ind = l;
                     }
-                    qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
+                    //qsort(XI1,L,sizeof(DBL_I),comp); qsort(XI2,L,sizeof(DBL_I),comp);
+                    quicksorti_d(XI1,L,1); quicksorti_d(XI2,L,1);
                     for (size_t l=0u; l<L; ++l) { r1[XI1[l].ind] = r2[XI2[l].ind] = (int)l; }
                     dsm = 0;
                     for (size_t l=L; l>0u; --l, ++r1, ++r2) { d = *r1-*r2; dsm += d*d; }

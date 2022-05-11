@@ -9,6 +9,7 @@
 // #include <lapacke.h>
 #include "codee_math.h"
 #include "kselect.c"
+#include "extremum.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -44,8 +45,9 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const s
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        x2 = kselect_s(X1,L-1u,i2,1);
-        x1 = kselect_s(X1,i2,i1,1);
+        x2 = kselect_s(X1,L,i2,1);
+        // x1 = kselect_s(X1,i2,i1,1);
+        x1 = extremum_s(X,i2,0);
         *Y = w1*x1 + w2*x2;
     }
     else
@@ -60,8 +62,8 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const s
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                x2 = kselect_s(X1,L-1u,i2,1);
-                x1 = kselect_s(X1,i2,i1,1);
+                x2 = kselect_s(X1,L,i2,1);
+                x1 = extremum_s(X,i2,0);
                 *Y = w1*x1 + w2*x2;
             }
         }
@@ -73,8 +75,8 @@ int prctile_s (float *Y, const float *X, const size_t R, const size_t C, const s
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    x2 = kselect_s(X1,L-1u,i2,1);
-                    x1 = kselect_s(X1,i2,i1,1);
+                    x2 = kselect_s(X1,L,i2,1);
+                    x1 = extremum_s(X1,i2,0);
                     *Y = w1*x1 + w2*x2;
                 }
             }
@@ -114,8 +116,8 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C, const
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        x2 = kselect_d(X1,L-1u,i2,1);
-        x1 = kselect_d(X1,i2,i1,1);
+        x2 = kselect_d(X1,L,i2,1);
+        x1 = extremum_d(X,i2,0);
         *Y = w1*x1 + w2*x2;
     }
     else
@@ -130,8 +132,8 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C, const
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                x2 = kselect_d(X1,L-1u,i2,1);
-                x1 = kselect_d(X1,i2,i1,1);
+                x2 = kselect_d(X1,L,i2,1);
+                x1 = extremum_d(X,i2,0);
                 *Y = w1*x1 + w2*x2;
             }
         }
@@ -143,8 +145,8 @@ int prctile_d (double *Y, const double *X, const size_t R, const size_t C, const
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    x2 = kselect_d(X1,L-1u,i2,1);
-                    x1 = kselect_d(X1,i2,i1,1);
+                    x2 = kselect_d(X1,L,i2,1);
+                    x1 = extremum_d(X1,i2,0);
                     *Y = w1*x1 + w2*x2;
                 }
             }
@@ -181,8 +183,9 @@ int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
     }
     else if (L==N)
     {
-        x2 = kselect_s(X,L-1u,i2,1);
-        x1 = kselect_s(X,i2,i1,1);
+        x2 = kselect_s(X,L,i2,1);
+        //x1 = kselect_s(X,i1,i1,1);
+        x1 = extremum_s(X,i2,0);
         *Y = w1*x1 + w2*x2;
         //if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in prctile_inplace_s: problem with LAPACKE function\n"); }
         //quicksort_s(X,L,1);
@@ -200,8 +203,8 @@ int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
         {
             for (size_t v=V; v>0u; --v, X+=L, ++Y)
             {
-                x2 = kselect_s(X,L-1u,i2,1);
-                x1 = kselect_s(X,i2,i1,1);
+                x2 = kselect_s(X,L,i2,1);
+                x1 = extremum_s(X,i2,0);
                 *Y = w1*x1 + w2*x2;
             }
         }
@@ -215,8 +218,8 @@ int prctile_inplace_s (float *Y, float *X, const size_t R, const size_t C, const
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    x2 = kselect_s(X1,L-1u,i2,1);
-                    x1 = kselect_s(X1,i2,i1,1);
+                    x2 = kselect_s(X1,L,i2,1);
+                    x1 = extremum_s(X1,i2,0);
                     *Y = w1*x1 + w2*x2;
                 }
             }
@@ -253,8 +256,8 @@ int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
     }
     else if (L==N)
     {
-        x2 = kselect_d(X,L-1u,i2,1);
-        x1 = kselect_d(X,i2,i1,1);
+        x2 = kselect_d(X,L,i2,1);
+        x1 = extremum_d(X,i2,0);
         *Y = w1*x1 + w2*x2;
     }
     else
@@ -267,8 +270,8 @@ int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
         {
             for (size_t v=V; v>0u; --v, X+=L, ++Y)
             {
-                x2 = kselect_d(X,L-1u,i2,1);
-                x1 = kselect_d(X,i2,i1,1);
+                x2 = kselect_d(X,L,i2,1);
+                x1 = extremum_d(X,i2,0);
                 *Y = w1*x1 + w2*x2;
             }
         }
@@ -282,8 +285,8 @@ int prctile_inplace_d (double *Y, double *X, const size_t R, const size_t C, con
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    x2 = kselect_d(X1,L-1u,i2,1);
-                    x1 = kselect_d(X1,i2,i1,1);
+                    x2 = kselect_d(X1,L,i2,1);
+                    x1 = extremum_d(X1,i2,0);
                     *Y = w1*x1 + w2*x2;
                 }
             }

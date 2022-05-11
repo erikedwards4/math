@@ -295,8 +295,9 @@ normalize1: normalize1.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalize2: normalize2.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 normalizep: normalizep.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sort_Help: cmp lomuto_partition hoare_partition insertion_sort quicksort partial_sort kselect
+Sort_Help: cmp extremum lomuto_partition hoare_partition insertion_sort quicksort partial_sort kselect
 cmp: cmp.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+extremum: extremum.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lomuto_partition: lomuto_partition.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 hoare_partition: hoare_partition.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insertion_sort: insertion_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -304,8 +305,9 @@ quicksort: quicksort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 partial_sort: partial_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kselect: kselect.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sorti_Help: cmpi lomuto_partitioni hoare_partitioni insertion_sorti quicksorti partial_sorti kselecti
+Sorti_Help: cmpi extremumi lomuto_partitioni hoare_partitioni insertion_sorti quicksorti partial_sorti kselecti
 cmpi: cmpi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+extremumi: extremumi.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lomuto_partitioni: lomuto_partitioni.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 hoare_partitioni: hoare_partitioni.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insertion_sorti: insertion_sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
@@ -313,8 +315,9 @@ quicksorti: quicksorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 partial_sorti: partial_sorti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kselecti: kselecti.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Sortif_Help: cmpif lomuto_partitionif hoare_partitionif insertion_sortif quicksortif partial_sortif kselectif
+Sortif_Help: cmpif extremumif lomuto_partitionif hoare_partitionif insertion_sortif quicksortif partial_sortif kselectif
 cmpif: cmpif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+extremumif: extremumif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 lomuto_partitionif: lomuto_partitionif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 hoare_partitionif: hoare_partitionif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insertion_sortif: insertion_sortif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)

@@ -1061,20 +1061,25 @@ int cmp_descend_d (const void *a, const void *b);
 int cmp_descend_c (const void *a, const void *b);
 int cmp_descend_z (const void *a, const void *b);
 
-size_t lomuto_partition_s (float *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partition_d (double *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partition_c (float *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partition_z (double *X, const size_t hi, size_t p, const int largest);
+float extremum_s (const float *X, const size_t N, const int min);
+double extremum_d (const double *X, const size_t N, const int min);
+float extremum_c (const float *X, const size_t N, const int min);
+double extremum_z (const double *X, const size_t N, const int min);
+
+size_t lomuto_partition_s (float *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partition_d (double *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partition_c (float *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partition_z (double *X, const size_t N, size_t p, const int largest);
 
 size_t hoare_partition_s (float *X, const size_t N, const int ascend);
 size_t hoare_partition_d (double *X, const size_t N, const int ascend);
 size_t hoare_partition_c (float *X, const size_t N, const int ascend);
 size_t hoare_partition_z (double *X, const size_t N, const int ascend);
 
-void insertion_sort_s (float *X, const size_t hi, const int ascend);
-void insertion_sort_d (double *X, const size_t hi, const int ascend);
-void insertion_sort_c (float *X, const size_t hi, const int ascend);
-void insertion_sort_z (double *X, const size_t hi, const int ascend);
+void insertion_sort_s (float *X, const size_t N, const int ascend);
+void insertion_sort_d (double *X, const size_t N, const int ascend);
+void insertion_sort_c (float *X, const size_t N, const int ascend);
+void insertion_sort_z (double *X, const size_t N, const int ascend);
 
 void quicksort_s (float *X, const size_t N, const int ascend);
 void quicksort_d (double *X, const size_t N, const int ascend);
@@ -1086,10 +1091,10 @@ void partial_sort_d (double *X, size_t N, size_t k, const int ascend);
 void partial_sort_c (float *X, size_t N, size_t k, const int ascend);
 void partial_sort_z (double *X, size_t N, size_t k, const int ascend);
 
-float kselect_s (float *X, size_t hi, size_t k, const int largest);
-double kselect_d (double *X, size_t hi, size_t k, const int largest);
-size_t kselect_c (float *X, size_t hi, size_t k, const int largest);
-size_t kselect_z (double *X, size_t hi, size_t k, const int largest);
+float kselect_s (float *X, size_t N, size_t k, const int largest);
+double kselect_d (double *X, size_t N, size_t k, const int largest);
+size_t kselect_c (float *X, size_t N, size_t k, const int largest);
+size_t kselect_z (double *X, size_t N, size_t k, const int largest);
 
 // Sorti_Help
 
@@ -1108,20 +1113,25 @@ int cmpi_descend_d (const void *a, const void *b);
 int cmpi_descend_c (const void *a, const void *b);
 int cmpi_descend_z (const void *a, const void *b);
 
-size_t lomuto_partitioni_s (FLT_I *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partitioni_d (DBL_I *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partitioni_c (CFLT_I *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partitioni_z (CDBL_I *X, const size_t hi, size_t p, const int largest);
+FLT_I extremumi_s (const FLT_I *X, const size_t N, const int min);
+DBL_I extremumi_d (const DBL_I *X, const size_t N, const int min);
+CFLT_I extremumi_c (const CFLT_I *X, const size_t N, const int min);
+CDBL_I extremumi_z (const CDBL_I *X, const size_t N, const int min);
+
+size_t lomuto_partitioni_s (FLT_I *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partitioni_d (DBL_I *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partitioni_c (CFLT_I *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partitioni_z (CDBL_I *X, const size_t N, size_t p, const int largest);
 
 size_t hoare_partitioni_s (FLT_I *X, const size_t N, const int ascend);
 size_t hoare_partitioni_d (DBL_I *X, const size_t N, const int ascend);
 size_t hoare_partitioni_c (CFLT_I *X, const size_t N, const int ascend);
 size_t hoare_partitioni_z (CDBL_I *X, const size_t N, const int ascend);
 
-void insertion_sorti_s (FLT_I *X, const size_t hi, const int ascend);
-void insertion_sorti_d (DBL_I *X, const size_t hi, const int ascend);
-void insertion_sorti_c (CFLT_I *X, const size_t hi, const int ascend);
-void insertion_sorti_z (CDBL_I *X, const size_t hi, const int ascend);
+void insertion_sorti_s (FLT_I *X, const size_t N, const int ascend);
+void insertion_sorti_d (DBL_I *X, const size_t N, const int ascend);
+void insertion_sorti_c (CFLT_I *X, const size_t N, const int ascend);
+void insertion_sorti_z (CDBL_I *X, const size_t N, const int ascend);
 
 void quicksorti_s (FLT_I *X, const size_t N, const int ascend);
 void quicksorti_d (DBL_I *X, const size_t N, const int ascend);
@@ -1133,10 +1143,10 @@ void partial_sorti_d (DBL_I *X, size_t N, size_t k, const int ascend);
 void partial_sorti_c (CFLT_I *X, size_t N, size_t k, const int ascend);
 void partial_sorti_z (CDBL_I *X, size_t N, size_t k, const int ascend);
 
-FLT_I kselecti_s (FLT_I *X, size_t hi, size_t k, const int largest);
-DBL_I kselecti_d (DBL_I *X, size_t hi, size_t k, const int largest);
-CFLT_I kselecti_c (CFLT_I *X, size_t hi, size_t k, const int largest);
-CDBL_I kselecti_z (CDBL_I *X, size_t hi, size_t k, const int largest);
+FLT_I kselecti_s (FLT_I *X, size_t N, size_t k, const int largest);
+DBL_I kselecti_d (DBL_I *X, size_t N, size_t k, const int largest);
+CFLT_I kselecti_c (CFLT_I *X, size_t N, size_t k, const int largest);
+CDBL_I kselecti_z (CDBL_I *X, size_t N, size_t k, const int largest);
 
 //Sortif_Help
 
@@ -1155,20 +1165,25 @@ int cmpif_descend_d (const void *a, const void *b);
 int cmpif_descend_c (const void *a, const void *b);
 int cmpif_descend_z (const void *a, const void *b);
 
-size_t lomuto_partitionif_s (FLT_F *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partitionif_d (DBL_D *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partitionif_c (CFLT_F *X, const size_t hi, size_t p, const int largest);
-size_t lomuto_partitionif_z (CDBL_D *X, const size_t hi, size_t p, const int largest);
+FLT_F extremumif_s (const FLT_F *X, const size_t N, const int min);
+DBL_D extremumif_d (const DBL_D *X, const size_t N, const int min);
+CFLT_F extremumif_c (const CFLT_F *X, const size_t N, const int min);
+CDBL_D extremumif_z (const CDBL_D *X, const size_t N, const int min);
+
+size_t lomuto_partitionif_s (FLT_F *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partitionif_d (DBL_D *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partitionif_c (CFLT_F *X, const size_t N, size_t p, const int largest);
+size_t lomuto_partitionif_z (CDBL_D *X, const size_t N, size_t p, const int largest);
 
 size_t hoare_partitionif_s (FLT_F *X, const size_t N, const int ascend);
 size_t hoare_partitionif_d (DBL_D *X, const size_t N, const int ascend);
 size_t hoare_partitionif_c (CFLT_F *X, const size_t N, const int ascend);
 size_t hoare_partitionif_z (CDBL_D *X, const size_t N, const int ascend);
 
-void insertion_sortif_s (FLT_F *X, const size_t hi, const int ascend);
-void insertion_sortif_d (DBL_D *X, const size_t hi, const int ascend);
-void insertion_sortif_c (CFLT_F *X, const size_t hi, const int ascend);
-void insertion_sortif_z (CDBL_D *X, const size_t hi, const int ascend);
+void insertion_sortif_s (FLT_F *X, const size_t N, const int ascend);
+void insertion_sortif_d (DBL_D *X, const size_t N, const int ascend);
+void insertion_sortif_c (CFLT_F *X, const size_t N, const int ascend);
+void insertion_sortif_z (CDBL_D *X, const size_t N, const int ascend);
 
 void quicksortif_s (FLT_F *X, const size_t N, const int ascend);
 void quicksortif_d (DBL_D *X, const size_t N, const int ascend);
@@ -1180,10 +1195,10 @@ void partial_sortif_d (DBL_D *X, size_t N, size_t k, const int ascend);
 void partial_sortif_c (CFLT_F *X, size_t N, size_t k, const int ascend);
 void partial_sortif_z (CDBL_D *X, size_t N, size_t k, const int ascend);
 
-FLT_F kselectif_s (FLT_F *X, size_t hi, size_t k, const int largest);
-DBL_D kselectif_d (DBL_D *X, size_t hi, size_t k, const int largest);
-CFLT_F kselectif_c (CFLT_F *X, size_t hi, size_t k, const int largest);
-CDBL_D kselectif_z (CDBL_D *X, size_t hi, size_t k, const int largest);
+FLT_F kselectif_s (FLT_F *X, size_t N, size_t k, const int largest);
+DBL_D kselectif_d (DBL_D *X, size_t N, size_t k, const int largest);
+CFLT_F kselectif_c (CFLT_F *X, size_t N, size_t k, const int largest);
+CDBL_D kselectif_z (CDBL_D *X, size_t N, size_t k, const int largest);
 
 // Vec2vec: Reorder
 

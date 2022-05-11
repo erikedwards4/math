@@ -60,8 +60,8 @@ static void m2start_d (double *X, size_t N, const int ascend)
 static void m2start_c (float *X, size_t N, const int ascend)
 {
     size_t i = 0u;
-    float xr = *X++, xi = *X++;
-    float mr = xr, mi = xi, xa = xr*xr+xi*xi, ma = xa;
+    float xr = *X++, xi = *X++, xa = xr*xr + xi*xi;
+    float mr = xr, mi = xi, ma = xa;
     if (ascend)
     {
         for (size_t n=1u; n<N; ++n)
@@ -88,8 +88,8 @@ static void m2start_c (float *X, size_t N, const int ascend)
 static void m2start_z (double *X, size_t N, const int ascend)
 {
     size_t i = 0u;
-    double xr = *X++, xi = *X++;
-    double mr = xr, mi = xi, xa = xr*xr+xi*xi, ma = xa;
+    double xr = *X++, xi = *X++, xa = xr*xr + xi*xi;
+    double mr = xr, mi = xi, ma = xa;
     if (ascend)
     {
         for (size_t n=1u; n<N; ++n)
@@ -126,7 +126,7 @@ void partial_sort_s (float *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partition_s(X, N-1u, N-1u, !ascend);
+                p = lomuto_partition_s(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }
@@ -151,7 +151,7 @@ void partial_sort_d (double *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partition_d(X, N-1u, N-1u, !ascend);
+                p = lomuto_partition_d(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }
@@ -176,7 +176,7 @@ void partial_sort_c (float *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partition_c(X, N-1u, N-1u, !ascend);
+                p = lomuto_partition_c(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += 2u*p; cnt += 2u*p; N -= p; k -= p; }
@@ -201,7 +201,7 @@ void partial_sort_z (double *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partition_z(X, N-1u, N-1u, !ascend);
+                p = lomuto_partition_z(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += 2u*p; cnt += 2u*p; N -= p; k -= p; }

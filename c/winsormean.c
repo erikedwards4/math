@@ -8,8 +8,9 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <lapacke.h>
+// #include <lapacke.h>
 #include "codee_math.h"
+#include "kselect.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -25,10 +26,10 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / (float)L;
+    const float den = (float)L;
 
     const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
-    const size_t i1 = (size_t)ceilf(p1), i2 = (size_t)floorf(p2);
+    const size_t i1 = (size_t)ceilf(p1), i2 = p2>(float)i1 ? (size_t)floorf(p2) : i1;
     float mn, mx, sm;
 
     float *X1;
@@ -43,13 +44,13 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_s: problem with LAPACKE function\n"); }
-        X1 += i2; mx = *X1;
-        X1 -= i2-i1; mn = *X1++;
+        mx = kselect_s(X1,L,i2,1);
+        mn = kselect_s(X1,i2,i1,1);
+        X1 += i1 + 1u;
         sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
         for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
         X1 -= i2-i1+1u;
-        *Y = sm * den;
+        *Y = sm / den;
     }
     else
     {
@@ -63,12 +64,12 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_s: problem with LAPACKE function\n"); }
-                X1 += i2; mx = *X1;
-                X1 -= i2-i1; mn = *X1++;
+                mx = kselect_s(X1,L,i2,1);
+                mn = kselect_s(X1,i2,i1,1);
+                X1 += i1 + 1u;
                 sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
                 for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
-                *Y = sm * den;
+                *Y = sm / den;
             }
         }
         else
@@ -79,12 +80,12 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_s: problem with LAPACKE function\n"); }
-                    X1 += i2; mx = *X1;
-                    X1 -= i2-i1; mn = *X1++;
+                    mx = kselect_s(X1,L,i2,1);
+                    mn = kselect_s(X1,i2,i1,1);
+                    X1 += i1 + 1u;
                     sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
                     for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
-                    *Y = sm * den;
+                    *Y = sm / den;
                 }
             }
         }
@@ -103,10 +104,10 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / (double)L;
+    const double den = (double)L;
 
     const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
-    const size_t i1 = (size_t)ceil(p1), i2 = (size_t)floor(p2);
+    const size_t i1 = (size_t)ceil(p1), i2 = p2>(double)i1 ? (size_t)floor(p2) : i1;
     double mn, mx, sm;
 
     double *X1;
@@ -121,13 +122,13 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_d: problem with LAPACKE function\n"); }
-        X1 += i2; mx = *X1;
-        X1 -= i2-i1; mn = *X1++;
+        mx = kselect_d(X1,L,i2,1);
+        mn = kselect_d(X1,i2,i1,1);
+        X1 += i1 + 1u;
         sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
         for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
         X1 -= i2-i1+1u;
-        *Y = sm * den;
+        *Y = sm / den;
     }
     else
     {
@@ -141,12 +142,12 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_d: problem with LAPACKE function\n"); }
-                X1 += i2; mx = *X1;
-                X1 -= i2-i1; mn = *X1++;
+                mx = kselect_d(X1,L,i2,1);
+                mn = kselect_d(X1,i2,i1,1);
+                X1 += i1 + 1u;
                 sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
                 for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
-                *Y = sm * den;
+                *Y = sm / den;
             }
         }
         else
@@ -157,12 +158,12 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_d: problem with LAPACKE function\n"); }
-                    X1 += i2; mx = *X1;
-                    X1 -= i2-i1; mn = *X1++;
+                    mx = kselect_d(X1,L,i2,1);
+                    mn = kselect_d(X1,i2,i1,1);
+                    X1 += i1 + 1u;
                     sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
                     for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
-                    *Y = sm * den;
+                    *Y = sm / den;
                 }
             }
         }
@@ -181,11 +182,13 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const float den = 1.0f / (float)L;
+    const float den = (float)L;
 
     const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
-    const size_t i1 = (size_t)ceilf(p1), i2 = (size_t)floorf(p2);
+    const size_t i1 = (size_t)ceilf(p1), i2 = p2>(float)i1 ? (size_t)floorf(p2) : i1;
     float mn, mx, sm;
+
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N==0u) {}
     else if (L==1u)
@@ -194,12 +197,16 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
     }
     else if (L==N)
     {
-        if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in winsormean_inplace_s: problem with LAPACKE function\n"); }
-        X += i2; mx = *X;
-        X -= i2-i1; mn = *X++;
+        //if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in winsormean_inplace_s: problem with LAPACKE function\n"); }
+        //partial_sort_s(X,L,i2,1);
+        //X += i2; mx = *X;
+        //X -= i2-i1; mn = *X++;
+        mx = kselect_s(X,L,i2,1);
+        mn = kselect_s(X,i2,i1,1);
+        X += i1 + 1u;
         sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
         for (size_t l=i1+1u; l<i2; ++l, ++X) { sm += *X; }
-        *Y = sm * den;
+        *Y = sm / den;
     }
     else
     {
@@ -211,12 +218,12 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
         {
             for (size_t v=V; v>0u; --v, X+=L-i2, ++Y)
             {
-                if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in winsormean_inplace_s: problem with LAPACKE function\n"); }
-                X += i2; mx = *X;
-                X -= i2-i1; mn = *X++;
+                mx = kselect_s(X,L,i2,1);
+                mn = kselect_s(X,i2,i1,1);
+                X += i1 + 1u;
                 sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
                 for (size_t l=i1+1u; l<i2; ++l, ++X) { sm += *X; }
-                *Y = sm * den;
+                *Y = sm / den;
             }
         }
         else
@@ -229,17 +236,19 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_inplace_s: problem with LAPACKE function\n"); }
-                    X1 += i2; mx = *X1;
-                    X1 -= i2-i1; mn = *X1++;
+                    mx = kselect_s(X1,L,i2,1);
+                    mn = kselect_s(X1,i2,i1,1);
+                    X1 += i1 + 1u;
                     sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
                     for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
-                    *Y = sm * den;
+                    *Y = sm / den;
                 }
             }
             free(X1);
         }
     }
+
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -253,10 +262,10 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
 
     const size_t N = R*C*S*H;
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
-    const double den = 1.0 / (double)L;
+    const double den = (double)L;
 
     const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
-    const size_t i1 = (size_t)ceil(p1), i2 = (size_t)floor(p2);
+    const size_t i1 = (size_t)ceil(p1), i2 = p2>(double)i1 ? (size_t)floor(p2) : i1;
     double mn, mx, sm;
 
     if (N==0u) {}
@@ -266,12 +275,12 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
     }
     else if (L==N)
     {
-        if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in winsormean_inplace_d: problem with LAPACKE function\n"); }
-        X += i2; mx = *X;
-        X -= i2-i1; mn = *X++;
+        mx = kselect_d(X,L,i2,1);
+        mn = kselect_d(X,i2,i1,1);
+        X += i1 + 1u;
         sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
         for (size_t l=i1+1u; l<i2; ++l, ++X) { sm += *X; }
-        *Y = sm * den;
+        *Y = sm / den;
     }
     else
     {
@@ -283,12 +292,12 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
         {
             for (size_t v=V; v>0u; --v, X+=L-i2, ++Y)
             {
-                if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in winsormean_inplace_d: problem with LAPACKE function\n"); }
-                X += i2; mx = *X;
-                X -= i2-i1; mn = *X++;
+                mx = kselect_d(X,L,i2,1);
+                mn = kselect_d(X,i2,i1,1);
+                X += i1 + 1u;
                 sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
                 for (size_t l=i1+1u; l<i2; ++l, ++X) { sm += *X; }
-                *Y = sm * den;
+                *Y = sm / den;
             }
         }
         else
@@ -301,12 +310,12 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsormean_inplace_d: problem with LAPACKE function\n"); }
-                    X1 += i2; mx = *X1;
-                    X1 -= i2-i1; mn = *X1++;
+                    mx = kselect_d(X1,L,i2,1);
+                    mn = kselect_d(X1,i2,i1,1);
+                    X1 += i1 + 1u;
                     sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
                     for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
-                    *Y = sm * den;
+                    *Y = sm / den;
                 }
             }
             free(X1);

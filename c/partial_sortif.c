@@ -105,7 +105,7 @@ void partial_sortif_s (FLT_F *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partitionif_s(X, N-1u, N-1u, !ascend);
+                p = lomuto_partitionif_s(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }
@@ -130,7 +130,7 @@ void partial_sortif_d (DBL_D *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partitionif_d(X, N-1u, N-1u, !ascend);
+                p = lomuto_partitionif_d(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }
@@ -155,7 +155,7 @@ void partial_sortif_c (CFLT_F *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partitionif_c(X, N-1u, N-1u, !ascend);
+                p = lomuto_partitionif_c(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }
@@ -180,7 +180,7 @@ void partial_sortif_z (CDBL_D *X, size_t N, size_t k, const int ascend)
             size_t p, cnt=0u;
             while (N>1u)
             {
-                p = lomuto_partitionif_z(X, N-1u, N-1u, !ascend);
+                p = lomuto_partitionif_z(X, N, k, ascend);
                 if (k==p) { break; }
                 else if (k<p) { N = p; }
                 else { ++p; X += p; N -= p; k -= p; cnt += p; }

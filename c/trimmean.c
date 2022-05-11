@@ -8,10 +8,10 @@
 //The inplace version still outputs Y, but modifies X during processing.
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
-#include <lapacke.h>
+//#include <lapacke.h>
 #include "codee_math.h"
+#include "partial_sort.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -30,7 +30,7 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
 
     const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
-    const float den = 1.0f / (float)(i2-i1+1u);
+    const float den = (float)(i2-i1+1u);
     float sm;
 
     float *X1;
@@ -45,11 +45,13 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
+        //if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
+        //quicksort_s(X1,L,1);
+        partial_sort_s(X1,L,i2,1);
         sm = 0.0f; X1 += i1;
         for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
         X1 -= i2 + 1u;
-        *Y = sm * den;
+        *Y = sm / den;
     }
     else
     {
@@ -63,10 +65,10 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X1,L,i2,1);
                 sm = 0.0f; X1 += i1;
                 for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
-                *Y = sm * den;
+                *Y = sm / den;
             }
         }
         else
@@ -77,15 +79,15 @@ int trimmean_s (float *Y, const float *X, const size_t R, const size_t C, const 
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,L,i2,1);
                     sm = 0.0f; X1 += i1;
                     for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
-                    *Y = sm * den;
+                    *Y = sm / den;
                 }
             }
         }
     }
-
+    
     free(X1);
     return 0;
 }
@@ -102,7 +104,7 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
 
     const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
-    const double den = 1.0 / (double)(i2-i1+1u);
+    const double den = (double)(i2-i1+1u);
     double sm;
 
     double *X1;
@@ -117,11 +119,11 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X1,L,i2,1);
         sm = 0.0; X1 += i1;
         for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
         X1 -= i2 + 1u;
-        *Y = sm * den;
+        *Y = sm / den;
     }
     else
     {
@@ -135,10 +137,10 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X1,L,i2,1);
                 sm = 0.0; X1 += i1;
                 for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
-                *Y = sm * den;
+                *Y = sm / den;
             }
         }
         else
@@ -149,10 +151,10 @@ int trimmean_d (double *Y, const double *X, const size_t R, const size_t C, cons
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,L,i2,1);
                     sm = 0.0; X1 += i1;
                     for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
-                    *Y = sm * den;
+                    *Y = sm / den;
                 }
             }
         }
@@ -174,8 +176,10 @@ int trimmean_inplace_s (float *Y, float *X, const size_t R, const size_t C, cons
 
     const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     size_t i1 = (size_t)floorf(p1), i2 = (size_t)ceilf(p2);
-    const float den = 1.0f / (float)(i2-i1+1u);
+    const float den = (float)(i2-i1+1u);
     float sm;
+
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N==0u) {}
     else if (L==1u)
@@ -184,10 +188,11 @@ int trimmean_inplace_s (float *Y, float *X, const size_t R, const size_t C, cons
     }
     else if (L==N)
     {
-        if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
+        //if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
+        partial_sort_s(X,L,i2,1);
         sm = 0.0f; X += i1;
         for (size_t l=i1; l<=i2; ++l, ++X) { sm += *X; }
-        *Y = sm * den;
+        *Y = sm / den;
     }
     else
     {
@@ -199,10 +204,10 @@ int trimmean_inplace_s (float *Y, float *X, const size_t R, const size_t C, cons
         {
             for (size_t v=V; v>0u; --v, X+=L-i2-1u, ++Y)
             {
-                if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X,L,i2,1);
                 sm = 0.0f; X += i1;
                 for (size_t l=i1; l<=i2; ++l, ++X) { sm += *X; }
-                *Y = sm * den;
+                *Y = sm / den;
             }
         }
         else
@@ -215,15 +220,17 @@ int trimmean_inplace_s (float *Y, float *X, const size_t R, const size_t C, cons
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,L,i2,1);
                     sm = 0.0f; X1 += i1;
                     for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
-                    *Y = sm * den;
+                    *Y = sm / den;
                 }
             }
             free(X1);
         }
     }
+
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }
@@ -240,7 +247,7 @@ int trimmean_inplace_d (double *Y, double *X, const size_t R, const size_t C, co
 
     const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     size_t i1 = (size_t)floor(p1), i2 = (size_t)ceil(p2);
-    const double den = 1.0 / (double)(i2-i1+1u);
+    const double den = (double)(i2-i1+1u);
     double sm;
 
     if (N==0u) {}
@@ -250,10 +257,10 @@ int trimmean_inplace_d (double *Y, double *X, const size_t R, const size_t C, co
     }
     else if (L==N)
     {
-        if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X,L,i2,1);
         sm = 0.0; X += i1;
         for (size_t l=i1; l<=i2; ++l, ++X) { sm += *X; }
-        *Y = sm * den;
+        *Y = sm / den;
     }
     else
     {
@@ -265,10 +272,10 @@ int trimmean_inplace_d (double *Y, double *X, const size_t R, const size_t C, co
         {
             for (size_t v=V; v>0u; --v, X+=L-i2-1u, ++Y)
             {
-                if (LAPACKE_dlasrt_work('I',(int)L,X)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X,L,i2,1);
                 sm = 0.0; X += i1;
                 for (size_t l=i1; l<=i2; ++l, ++X) { sm += *X; }
-                *Y = sm * den;
+                *Y = sm / den;
             }
         }
         else
@@ -281,10 +288,10 @@ int trimmean_inplace_d (double *Y, double *X, const size_t R, const size_t C, co
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in trimmean_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,L,i2,1);
                     sm = 0.0; X1 += i1;
                     for (size_t l=i1; l<=i2; ++l, ++X1) { sm += *X1; }
-                    *Y = sm * den;
+                    *Y = sm / den;
                 }
             }
             free(X1);
