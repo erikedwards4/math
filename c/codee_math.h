@@ -2,11 +2,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <float.h>
 #include <math.h>
 #include <complex.h>
+#include <time.h>
 #include <lapacke.h>
 #include <cblas.h>
-#include <time.h>
 
 #ifndef M_E
     #define M_E 2.71828182845904523536
