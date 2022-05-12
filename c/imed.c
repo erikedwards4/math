@@ -4,6 +4,7 @@
 //and rounds up for even-length vecs.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "codee_math.h"
 //#include "cmpif.c"

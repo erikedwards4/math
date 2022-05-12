@@ -45,8 +45,7 @@ int main(int argc, char *argv[])
     descr += "which are the indices to X that would sort X.\n";
     descr += "See qsorti for the inverse (indices to sorted X to recover X).\n";
     descr += "\n";
-    descr += "This uses (my own implementation of) the quicksort algorithm.\n";
-    descr += "This is faster than insert_ranks if the vectors are long (e.g., L > 128).\n";
+    descr += "This uses the C stdlib qsort function.\n";
     descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Use -d0 to sort along cols.\n";

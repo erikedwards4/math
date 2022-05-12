@@ -5,6 +5,7 @@
 //However, it turns out to be almost the identical speed for matrices.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 // #include <lapacke.h>
 #include "codee_math.h"

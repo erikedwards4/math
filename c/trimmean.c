@@ -8,6 +8,7 @@
 //The inplace version still outputs Y, but modifies X during processing.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 //#include <lapacke.h>
 #include "codee_math.h"

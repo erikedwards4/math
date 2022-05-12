@@ -3,6 +3,7 @@
 //The indices are uints, but are returned as float or double.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "codee_math.h"
 #include "insertion_sortif.c"
 

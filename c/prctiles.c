@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <lapacke.h>
 #include "codee_math.h"
+#include "partial_sort.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -27,7 +27,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
     if (!(X1=(float *)malloc(Lx*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
 
     //Prep interpolation
-    size_t *i1;
+    size_t *i1, i2 = 1u;
     float *w1, *w2;
     if (!(i1=(size_t *)malloc(Ly*sizeof(size_t)))) { fprintf(stderr,"error in prctiles_s: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w1=(float *)malloc(Ly*sizeof(float)))) { fprintf(stderr,"error in prctiles_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -37,6 +37,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
         if (*P<0.0f || *P>100.0f) { fprintf(stderr,"error in prctiles_s: prctiles must be in [0 100]\n"); return 1; }
         float p1 = (*P/100.0f)*(float)(Lx-1u);
         *i1 = (*P<100.0f) ? (size_t)floorf(p1) : Lx-2u;
+        if (*i1+1u>i2) { i2 = *i1+1u; }
         *w2 = (*P<100.0f) ? p1-floorf(p1) : 1.0f;
         *w1 = 1.0f - *w2;
     }
@@ -51,7 +52,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
     {
         for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= Lx;
-        if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_s: problem with LAPACKE function\n"); }
+        partial_sort_s(X1,Lx,i2,1);
         X1 += *i1++;
         *Y++ = *w1++**X1 + *w2++**(X1+1);
         for (size_t l=Ly; l>1u; --l, ++i1, ++w1, ++w2, ++Y)
@@ -73,7 +74,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
             {
                 for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
-                if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X1,Lx,i2,1);
                 X1 += *i1++;
                 *Y++ = *w1++**X1 + *w2++**(X1+1);
                 for (size_t l=Ly; l>1u; --l, ++i1, ++w1, ++w2, ++Y)
@@ -91,7 +92,7 @@ int prctiles_s (float *Y, const float *X, const float *P, const size_t Ly, const
                 {
                     for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
-                    if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,Lx,i2,1);
                     X1 += *i1++;
                     *Y = *w1++**X1 + *w2++**(X1+1);
                     Y += K;
@@ -121,7 +122,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
     if (!(X1=(double *)malloc(Lx*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
 
     //Prep interpolation
-    size_t *i1;
+    size_t *i1, i2 = 1u;
     double *w1, *w2;
     if (!(i1=(size_t *)malloc(Ly*sizeof(size_t)))) { fprintf(stderr,"error in prctiles_d: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w1=(double *)malloc(Ly*sizeof(double)))) { fprintf(stderr,"error in prctiles_d: problem with malloc. "); perror("malloc"); return 1; }
@@ -131,6 +132,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
         if (*P<0.0 || *P>100.0) { fprintf(stderr,"error in prctiles_d: prctiles must be in [0 100]\n"); return 1; }
         double p1 = (*P/100.0)*(double)(Lx-1u);
         *i1 = (*P<100.0) ? (size_t)floor(p1) : Lx-2u;
+        if (*i1+1u>i2) { i2 = *i1+1u; }
         *w2 = (*P<100.0) ? p1-floor(p1) : 1.0;
         *w1 = 1.0 - *w2;
     }
@@ -145,7 +147,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
     {
         for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= Lx;
-        if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X1,Lx,i2,1);
         X1 += *i1++;
         *Y++ = *w1++**X1 + *w2++**(X1+1);
         for (size_t l=Ly; l>1u; --l, ++i1, ++w1, ++w2, ++Y)
@@ -167,7 +169,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
             {
                 for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
-                if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X1,Lx,i2,1);
                 X1 += *i1++;
                 *Y++ = *w1++**X1 + *w2++**(X1+1);
                 for (size_t l=Ly; l>1u; --l, ++i1, ++w1, ++w2, ++Y)
@@ -185,7 +187,7 @@ int prctiles_d (double *Y, const double *X, const double *P, const size_t Ly, co
                 {
                     for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
-                    if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,Lx,i2,1);
                     X1 += *i1++;
                     *Y = *w1++**X1 + *w2++**(X1+1);
                     Y += K;
@@ -212,7 +214,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    size_t *i1;
+    size_t *i1, i2 = 1u;
     float *w1, *w2;
     if (!(i1=(size_t *)malloc(Ly*sizeof(size_t)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w1=(float *)malloc(Ly*sizeof(float)))) { fprintf(stderr,"error in prctiles_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -222,6 +224,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
         if (*P<0.0f || *P>100.0f) { fprintf(stderr,"error in prctiles_inplace_s: prctiles must be in [0 100]\n"); return 1; }
         float p1 = (*P/100.0f)*(float)(Lx-1u);
         *i1 = (*P<100.0f) ? (size_t)floorf(p1) : Lx-2u;
+        if (*i1+1u>i2) { i2 = *i1+1u; }
         *w2 = (*P<100.0f) ? p1-floorf(p1) : 1.0f;
         *w1 = 1.0f - *w2;
     }
@@ -234,7 +237,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
     }
     else if (Lx==N)
     {
-        if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
+        partial_sort_s(X,Lx,i2,1);
         X += *i1++;
         *Y++ = *w1++**X + *w2++**(X+1);
         for (size_t l=Ly; l>1u; --l, ++i1, ++w1, ++w2, ++Y)
@@ -254,7 +257,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
         {
             for (size_t v=V; v>0u; --v, X+=Lx-*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
-                if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X,Lx,i2,1);
                 X += *i1++;
                 *Y++ = *w1++**X + *w2++**(X+1);
                 for (size_t l=Ly; l>1u; --l, ++i1, ++w1, ++w2, ++Y)
@@ -274,7 +277,7 @@ int prctiles_inplace_s (float *Y, float *X, const float *P, const size_t Ly, con
                 {
                     for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
-                    if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_inplace_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,Lx,i2,1);
                     X1 += *i1++;
                     *Y = *w1++**X1 + *w2++**(X1+1);
                     Y += K;
@@ -302,7 +305,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
     const size_t Lx = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
 
     //Prep interpolation
-    size_t *i1;
+    size_t *i1, i2 = 1u;
     double *w1, *w2;
     if (!(i1=(size_t *)malloc(Ly*sizeof(size_t)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
     if (!(w1=(double *)malloc(Ly*sizeof(double)))) { fprintf(stderr,"error in prctiles_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
@@ -312,6 +315,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
         if (*P<0.0 || *P>100.0) { fprintf(stderr,"error in prctiles_inplace_d: prctiles must be in [0 100]\n"); return 1; }
         double p1 = (*P/100.0)*(double)(Lx-1u);
         *i1 = (*P<100.0) ? (size_t)floor(p1) : Lx-2u;
+        if (*i1+1u>i2) { i2 = *i1+1u; }
         *w2 = (*P<100.0) ? p1-floor(p1) : 1.0;
         *w1 = 1.0 - *w2;
     }
@@ -324,7 +328,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
     }
     else if (Lx==N)
     {
-        if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X,Lx,i2,1);
         X += *i1++;
         *Y++ = *w1++**X + *w2++**(X+1);
         for (size_t l=Ly; l>1u; --l, ++i1, ++w1, ++w2, ++Y)
@@ -344,7 +348,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
         {
             for (size_t v=V; v>0u; --v, X+=Lx-*(i1-1u), i1-=Ly, w1-=Ly, w2-=Ly)
             {
-                if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X,Lx,i2,1);
                 X += *i1++;
                 *Y++ = *w1++**X + *w2++**(X+1);
                 for (size_t l=Ly; l>1u; --l, ++i1, ++w1, ++w2, ++Y)
@@ -364,7 +368,7 @@ int prctiles_inplace_d (double *Y, double *X, const double *P, const size_t Ly, 
                 {
                     for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                     X1 -= Lx;
-                    if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in prctiles_inplace_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,Lx,i2,1);
                     X1 += *i1++;
                     *Y = *w1++**X1 + *w2++**(X1+1);
                     Y += K;

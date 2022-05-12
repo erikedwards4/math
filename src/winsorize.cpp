@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <argtable2.h>
 #include "../util/cmli.hpp"
+#include "kselect.c"
 #include "winsorize.c"
 
 #ifdef I

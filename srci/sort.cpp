@@ -1,5 +1,5 @@
 //Includes
-#include "sort.c"
+#include "qsort.c"
 
 //Declarations
 const valarray<size_t> oktypes = {1u,2u,101u,102u};
@@ -10,9 +10,8 @@ int a;
 //Description
 string descr;
 descr += "Vec2vec operation.\n";
-descr += "Sorts elements of X along dim using LAPACKE.\n";
-descr += "This is slightly slower than qsort (same algorithm), \n";
-descr += "but more formal w.r.t. nans, infs and ties for complex nums.\n";
+descr += "Sorts each vector in X along dim using quicksort.\n";
+descr += "This is faster than insert_sort if the vectors are long (e.g., L > 128).\n";
 descr += "\n";
 descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
 descr += "Use -d0 to sort along cols.\n";

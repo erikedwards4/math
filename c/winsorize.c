@@ -8,10 +8,11 @@
 //The output vector has the same length and overall order as the input vector.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <float.h>
 #include <math.h>
-#include <lapacke.h>
 #include "codee_math.h"
+#include "kselect.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -30,7 +31,7 @@ int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const
     
     const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     const size_t i1 = (size_t)ceilf(p1), i2 = (size_t)floorf(p2);
-    float mn, mx;
+    float x1, x2;
 
     float *X1;
     if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in winsorize_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -44,9 +45,9 @@ int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X -= L; X1 -= L;
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_s: problem with LAPACKE function\n"); }
-        mn = *(X1+i1); mx = *(X1+i2);
-        for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = (*X<mn) ? mn : (*X>mx) ? mx : *X; }
+        x2 = kselect_s(X1,L,i2,1);
+        x1 = kselect_s(X1,i2,i1,1);
+        for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = (*X<x1) ? x1 : (*X>x2) ? x2 : *X; }
     }
     else
     {
@@ -60,9 +61,9 @@ int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X -= L; X1 -= L;
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_s: problem with LAPACKE function\n"); }
-                mn = *(X1+i1); mx = *(X1+i2);
-                for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = (*X<mn) ? mn : (*X>mx) ? mx : *X; }
+                x2 = kselect_s(X1,L,i2,1);
+                x1 = kselect_s(X1,i2,i1,1);
+                for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = (*X<x1) ? x1 : (*X>x2) ? x2 : *X; }
             }
         }
         else
@@ -73,9 +74,9 @@ int winsorize_s (float *Y, const float *X, const size_t R, const size_t C, const
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X -= K*L; X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_s: problem with LAPACKE function\n"); }
-                    mn = *(X1+i1); mx = *(X1+i2);
-                    for (size_t l=L; l>0u; --l, X+=K, Y+=K) { *Y = (*X<mn) ? mn : (*X>mx) ? mx : *X; }
+                    x2 = kselect_s(X1,L,i2,1);
+                    x1 = kselect_s(X1,i2,i1,1);
+                    for (size_t l=L; l>0u; --l, X+=K, Y+=K) { *Y = (*X<x1) ? x1 : (*X>x2) ? x2 : *X; }
                 }
             }
         }
@@ -96,7 +97,7 @@ int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, con
 
     const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     const size_t i1 = (size_t)ceil(p1), i2 = (size_t)floor(p2);
-    double mn, mx;
+    double x1, x2;
 
     double *X1;
     if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in winsorize_d: problem with malloc. "); perror("malloc"); return 1; }
@@ -110,9 +111,9 @@ int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, con
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X -= L; X1 -= L;
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_d: problem with LAPACKE function\n"); }
-        mn = *(X1+i1); mx = *(X1+i2);
-        for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = (*X<mn) ? mn : (*X>mx) ? mx : *X; }
+        x2 = kselect_d(X1,L,i2,1);
+        x1 = kselect_d(X1,i2,i1,1);
+        for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = (*X<x1) ? x1 : (*X>x2) ? x2 : *X; }
     }
     else
     {
@@ -126,9 +127,9 @@ int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, con
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X -= L; X1 -= L;
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_d: problem with LAPACKE function\n"); }
-                mn = *(X1+i1); mx = *(X1+i2);
-                for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = (*X<mn) ? mn : (*X>mx) ? mx : *X; }
+                x2 = kselect_d(X1,L,i2,1);
+                x1 = kselect_d(X1,i2,i1,1);
+                for (size_t l=L; l>0u; --l, ++X, ++Y) { *Y = (*X<x1) ? x1 : (*X>x2) ? x2 : *X; }
             }
         }
         else
@@ -139,9 +140,9 @@ int winsorize_d (double *Y, const double *X, const size_t R, const size_t C, con
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X -= K*L; X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_d: problem with LAPACKE function\n"); }
-                    mn = *(X1+i1); mx = *(X1+i2);
-                    for (size_t l=L; l>0u; --l, X+=K, Y+=K) { *Y = (*X<mn) ? mn : (*X>mx) ? mx : *X; }
+                    x2 = kselect_d(X1,L,i2,1);
+                    x1 = kselect_d(X1,i2,i1,1);
+                    for (size_t l=L; l>0u; --l, X+=K, Y+=K) { *Y = (*X<x1) ? x1 : (*X>x2) ? x2 : *X; }
                 }
             }
         }
@@ -162,7 +163,7 @@ int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t 
 
     const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     const size_t i1 = (size_t)ceilf(p1), i2 = (size_t)floorf(p2);
-    float mn, mx;
+    float x1, x2;
 
     float *X1;
     if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in winsorize_inplace_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -172,12 +173,12 @@ int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t 
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X -= L; X1 -= L;
-        if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_inplace_s: problem with LAPACKE function\n"); }
-        mn = *(X1+i1); mx = *(X1+i2);
+        x2 = kselect_s(X1,L,i2,1);
+        x1 = kselect_s(X1,i2,i1,1);
         for (size_t l=L; l>0u; --l, ++X)
         {
-            if (*X<mn) { *X = mn; }
-            else if (*X>mx) { *X = mx; }
+            if (*X<x1) { *X = x1; }
+            else if (*X>x2) { *X = x2; }
         }
     }
     else
@@ -192,12 +193,12 @@ int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t 
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X -= L; X1 -= L;
-                if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_inplace_s: problem with LAPACKE function\n"); }
-                mn = *(X1+i1); mx = *(X1+i2);
+                x2 = kselect_s(X1,L,i2,1);
+                x1 = kselect_s(X1,i2,i1,1);
                 for (size_t l=L; l>0u; --l, ++X)
                 {
-                    if (*X<mn) { *X = mn; }
-                    else if (*X>mx) { *X = mx; }
+                    if (*X<x1) { *X = x1; }
+                    else if (*X>x2) { *X = x2; }
                 }
             }
         }
@@ -209,12 +210,12 @@ int winsorize_inplace_s (float *X, const size_t R, const size_t C, const size_t 
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X -= K*L; X1 -= L;
-                    if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_inplace_s: problem with LAPACKE function\n"); }
-                    mn = *(X1+i1); mx = *(X1+i2);
+                    x2 = kselect_s(X1,L,i2,1);
+                    x1 = kselect_s(X1,i2,i1,1);
                     for (size_t l=L; l>0u; --l, X+=K)
                     {
-                        if (*X<mn) { *X = mn; }
-                        else if (*X>mx) { *X = mx; }
+                        if (*X<x1) { *X = x1; }
+                        else if (*X>x2) { *X = x2; }
                     }
                 }
             }
@@ -236,7 +237,7 @@ int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t
 
     const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     const size_t i1 = (size_t)ceil(p1), i2 = (size_t)floor(p2);
-    double mn, mx;
+    double x1, x2;
 
     double *X1;
     if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in winsorize_inplace_d: problem with malloc. "); perror("malloc"); return 1; }
@@ -246,12 +247,12 @@ int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X -= L; X1 -= L;
-        if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_inplace_d: problem with LAPACKE function\n"); }
-        mn = *(X1+i1); mx = *(X1+i2);
+        x2 = kselect_d(X1,L,i2,1);
+        x1 = kselect_d(X1,i2,i1,1);
         for (size_t l=L; l>0u; --l, ++X)
         {
-            if (*X<mn) { *X = mn; }
-            else if (*X>mx) { *X = mx; }
+            if (*X<x1) { *X = x1; }
+            else if (*X>x2) { *X = x2; }
         }
     }
     else
@@ -266,12 +267,12 @@ int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X -= L; X1 -= L;
-                if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_inplace_d: problem with LAPACKE function\n"); }
-                mn = *(X1+i1); mx = *(X1+i2);
+                x2 = kselect_d(X1,L,i2,1);
+                x1 = kselect_d(X1,i2,i1,1);
                 for (size_t l=L; l>0u; --l, ++X)
                 {
-                    if (*X<mn) { *X = mn; }
-                    else if (*X>mx) { *X = mx; }
+                    if (*X<x1) { *X = x1; }
+                    else if (*X>x2) { *X = x2; }
                 }
             }
         }
@@ -283,12 +284,12 @@ int winsorize_inplace_d (double *X, const size_t R, const size_t C, const size_t
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X -= K*L; X1 -= L;
-                    if (LAPACKE_dlasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in winsorize_inplace_d: problem with LAPACKE function\n"); }
-                    mn = *(X1+i1); mx = *(X1+i2);
+                    x2 = kselect_d(X1,L,i2,1);
+                    x1 = kselect_d(X1,i2,i1,1);
                     for (size_t l=L; l>0u; --l, X+=K)
                     {
-                        if (*X<mn) { *X = mn; }
-                        else if (*X>mx) { *X = mx; }
+                        if (*X<x1) { *X = x1; }
+                        else if (*X>x2) { *X = x2; }
                     }
                 }
             }

@@ -325,13 +325,13 @@ quicksortif: quicksortif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 partial_sortif: partial_sortif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 kselectif: kselectif.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
-Reorder: flip shift cshift insert_sort qsort sort partsort
+Reorder: flip shift cshift insert_sort sort lapacke_sort partsort
 flip: flip.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 shift: shift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 cshift: cshift.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 insert_sort: insert_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
-qsort: qsort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 sort: sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
+lapacke_sort: lapacke_sort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 partsort: partsort.c; $(CC) -c $@.c -o obj/$@.o $(CFLAGS)
 
 Isort: insert_sorti qsorti sorti insert_ranks qranks ranks

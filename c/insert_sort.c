@@ -4,6 +4,7 @@
 //This has in-place and not-in-place versions.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "codee_math.h"
 #include "insertion_sort.c"
 #include "insertion_sortif.c"

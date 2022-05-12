@@ -6,6 +6,7 @@
 //However, it turns out to be almost the identical speed for matrices.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "codee_math.h"
 #include "extremum.c"

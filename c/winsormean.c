@@ -7,6 +7,7 @@
 //The inplace version still outputs Y, but modifies X during processing.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 // #include <lapacke.h>
 #include "codee_math.h"
@@ -30,7 +31,7 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
 
     const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     const size_t i1 = (size_t)ceilf(p1), i2 = p2>(float)i1 ? (size_t)floorf(p2) : i1;
-    float mn, mx, sm;
+    float x1, x2, sm;
 
     float *X1;
     if (!(X1=(float *)malloc(L*sizeof(float)))) { fprintf(stderr,"error in winsormean_s: problem with malloc. "); perror("malloc"); return 1; }
@@ -44,10 +45,10 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        mx = kselect_s(X1,L,i2,1);
-        mn = kselect_s(X1,i2,i1,1);
+        x2 = kselect_s(X1,L,i2,1);
+        x1 = kselect_s(X1,i2,i1,1);
         X1 += i1 + 1u;
-        sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
+        sm = (float)(i1+1u)*x1 + (float)(L-i2)*x2;
         for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
         X1 -= i2-i1+1u;
         *Y = sm / den;
@@ -64,10 +65,10 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                mx = kselect_s(X1,L,i2,1);
-                mn = kselect_s(X1,i2,i1,1);
+                x2 = kselect_s(X1,L,i2,1);
+                x1 = kselect_s(X1,i2,i1,1);
                 X1 += i1 + 1u;
-                sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
+                sm = (float)(i1+1u)*x1 + (float)(L-i2)*x2;
                 for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
                 *Y = sm / den;
             }
@@ -80,10 +81,10 @@ int winsormean_s (float *Y, const float *X, const size_t R, const size_t C, cons
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    mx = kselect_s(X1,L,i2,1);
-                    mn = kselect_s(X1,i2,i1,1);
+                    x2 = kselect_s(X1,L,i2,1);
+                    x1 = kselect_s(X1,i2,i1,1);
                     X1 += i1 + 1u;
-                    sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
+                    sm = (float)(i1+1u)*x1 + (float)(L-i2)*x2;
                     for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
                     *Y = sm / den;
                 }
@@ -108,7 +109,7 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
 
     const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     const size_t i1 = (size_t)ceil(p1), i2 = p2>(double)i1 ? (size_t)floor(p2) : i1;
-    double mn, mx, sm;
+    double x1, x2, sm;
 
     double *X1;
     if (!(X1=(double *)malloc(L*sizeof(double)))) { fprintf(stderr,"error in winsormean_d: problem with malloc. "); perror("malloc"); return 1; }
@@ -122,10 +123,10 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
     {
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
-        mx = kselect_d(X1,L,i2,1);
-        mn = kselect_d(X1,i2,i1,1);
+        x2 = kselect_d(X1,L,i2,1);
+        x1 = kselect_d(X1,i2,i1,1);
         X1 += i1 + 1u;
-        sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
+        sm = (double)(i1+1u)*x1 + (double)(L-i2)*x2;
         for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
         X1 -= i2-i1+1u;
         *Y = sm / den;
@@ -142,10 +143,10 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
             {
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
-                mx = kselect_d(X1,L,i2,1);
-                mn = kselect_d(X1,i2,i1,1);
+                x2 = kselect_d(X1,L,i2,1);
+                x1 = kselect_d(X1,i2,i1,1);
                 X1 += i1 + 1u;
-                sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
+                sm = (double)(i1+1u)*x1 + (double)(L-i2)*x2;
                 for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
                 *Y = sm / den;
             }
@@ -158,10 +159,10 @@ int winsormean_d (double *Y, const double *X, const size_t R, const size_t C, co
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    mx = kselect_d(X1,L,i2,1);
-                    mn = kselect_d(X1,i2,i1,1);
+                    x2 = kselect_d(X1,L,i2,1);
+                    x1 = kselect_d(X1,i2,i1,1);
                     X1 += i1 + 1u;
-                    sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
+                    sm = (double)(i1+1u)*x1 + (double)(L-i2)*x2;
                     for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
                     *Y = sm / den;
                 }
@@ -186,7 +187,7 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
 
     const float p1 = (p/100.0f)*(float)(L-1u), p2 = (1.0f-q/100.0f)*(float)(L-1u);
     const size_t i1 = (size_t)ceilf(p1), i2 = p2>(float)i1 ? (size_t)floorf(p2) : i1;
-    float mn, mx, sm;
+    float x1, x2, sm;
 
     //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
@@ -199,12 +200,12 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
     {
         //if (LAPACKE_slasrt_work('I',(int)L,X)) { fprintf(stderr,"error in winsormean_inplace_s: problem with LAPACKE function\n"); }
         //partial_sort_s(X,L,i2,1);
-        //X += i2; mx = *X;
-        //X -= i2-i1; mn = *X++;
-        mx = kselect_s(X,L,i2,1);
-        mn = kselect_s(X,i2,i1,1);
+        //X += i2; x2 = *X;
+        //X -= i2-i1; x1 = *X++;
+        x2 = kselect_s(X,L,i2,1);
+        x1 = kselect_s(X,i2,i1,1);
         X += i1 + 1u;
-        sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
+        sm = (float)(i1+1u)*x1 + (float)(L-i2)*x2;
         for (size_t l=i1+1u; l<i2; ++l, ++X) { sm += *X; }
         *Y = sm / den;
     }
@@ -218,10 +219,10 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
         {
             for (size_t v=V; v>0u; --v, X+=L-i2, ++Y)
             {
-                mx = kselect_s(X,L,i2,1);
-                mn = kselect_s(X,i2,i1,1);
+                x2 = kselect_s(X,L,i2,1);
+                x1 = kselect_s(X,i2,i1,1);
                 X += i1 + 1u;
-                sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
+                sm = (float)(i1+1u)*x1 + (float)(L-i2)*x2;
                 for (size_t l=i1+1u; l<i2; ++l, ++X) { sm += *X; }
                 *Y = sm / den;
             }
@@ -236,10 +237,10 @@ int winsormean_inplace_s (float *Y, float *X, const size_t R, const size_t C, co
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    mx = kselect_s(X1,L,i2,1);
-                    mn = kselect_s(X1,i2,i1,1);
+                    x2 = kselect_s(X1,L,i2,1);
+                    x1 = kselect_s(X1,i2,i1,1);
                     X1 += i1 + 1u;
-                    sm = (float)(i1+1u)*mn + (float)(L-i2)*mx;
+                    sm = (float)(i1+1u)*x1 + (float)(L-i2)*x2;
                     for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
                     *Y = sm / den;
                 }
@@ -266,7 +267,7 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
 
     const double p1 = (p/100.0)*(double)(L-1u), p2 = (1.0-q/100.0)*(double)(L-1u);
     const size_t i1 = (size_t)ceil(p1), i2 = p2>(double)i1 ? (size_t)floor(p2) : i1;
-    double mn, mx, sm;
+    double x1, x2, sm;
 
     if (N==0u) {}
     else if (L==1u)
@@ -275,10 +276,10 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
     }
     else if (L==N)
     {
-        mx = kselect_d(X,L,i2,1);
-        mn = kselect_d(X,i2,i1,1);
+        x2 = kselect_d(X,L,i2,1);
+        x1 = kselect_d(X,i2,i1,1);
         X += i1 + 1u;
-        sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
+        sm = (double)(i1+1u)*x1 + (double)(L-i2)*x2;
         for (size_t l=i1+1u; l<i2; ++l, ++X) { sm += *X; }
         *Y = sm / den;
     }
@@ -292,10 +293,10 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
         {
             for (size_t v=V; v>0u; --v, X+=L-i2, ++Y)
             {
-                mx = kselect_d(X,L,i2,1);
-                mn = kselect_d(X,i2,i1,1);
+                x2 = kselect_d(X,L,i2,1);
+                x1 = kselect_d(X,i2,i1,1);
                 X += i1 + 1u;
-                sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
+                sm = (double)(i1+1u)*x1 + (double)(L-i2)*x2;
                 for (size_t l=i1+1u; l<i2; ++l, ++X) { sm += *X; }
                 *Y = sm / den;
             }
@@ -310,10 +311,10 @@ int winsormean_inplace_d (double *Y, double *X, const size_t R, const size_t C, 
                 {
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
-                    mx = kselect_d(X1,L,i2,1);
-                    mn = kselect_d(X1,i2,i1,1);
+                    x2 = kselect_d(X1,L,i2,1);
+                    x1 = kselect_d(X1,i2,i1,1);
                     X1 += i1 + 1u;
-                    sm = (double)(i1+1u)*mn + (double)(L-i2)*mx;
+                    sm = (double)(i1+1u)*x1 + (double)(L-i2)*x2;
                     for (size_t l=i1+1u; l<i2; ++l, ++X1) { sm += *X1; }
                     *Y = sm / den;
                 }

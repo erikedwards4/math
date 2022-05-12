@@ -8,6 +8,7 @@
 //The not-inplace version leaves them constant, but requires tmp copies.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <lapacke.h>
 #include "codee_math.h"
 

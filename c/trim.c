@@ -10,9 +10,10 @@
 //The inplace version still outputs Y, but modifies X during processing.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
-#include <lapacke.h>
 #include "codee_math.h"
+#include "partial_sort.c"
 
 #ifdef __cplusplus
 namespace codee {
@@ -44,7 +45,7 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
     {
         for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= Lx;
-        if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+        partial_sort_s(X1,Lx,i2,1);
         X1 += i1;
         for (size_t l=Ly; l>0u; --l, ++X1, ++Y) { *Y = *X1; }
         X1 -= i1 + Ly;
@@ -61,7 +62,7 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
             {
                 for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
-                if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X1,Lx,i2,1);
                 X1 += i1;
                 for (size_t l=Ly; l>0u; --l, ++X1, ++Y) { *Y = *X1; }
             }
@@ -74,7 +75,7 @@ int trim_s (float *Y, const float *X, const size_t R, const size_t C, const size
                 {
                     for (size_t l=Lx; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= Lx;
-                    if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,Lx,i2,1);
                     X1 += i1;
                     for (size_t l=Ly; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
@@ -111,7 +112,7 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
     {
         for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= Lx;
-        if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X1,Lx,i2,1);
         X1 += i1;
         for (size_t l=Ly; l>0u; --l, ++X1, ++Y) { *Y = *X1; }
         X1 -= i1 + Ly;
@@ -128,7 +129,7 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
             {
                 for (size_t l=Lx; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= Lx;
-                if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X1,Lx,i2,1);
                 X1 += i1;
                 for (size_t l=Ly; l>0u; --l, ++X1, ++Y) { *Y = *X1; }
             }
@@ -141,7 +142,7 @@ int trim_d (double *Y, const double *X, const size_t R, const size_t C, const si
                 {
                     for (size_t l=Lx; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= Lx;
-                    if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,Lx,i2,1);
                     X1 += i1;
                     for (size_t l=Ly; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
@@ -173,7 +174,7 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
     }
     else if (Lx==N)
     {
-        if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+        partial_sort_s(X,Lx,i2,1);
         X += i1;
         for (size_t l=Ly; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
@@ -187,7 +188,7 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
         {
             for (size_t v=V; v>0u; --v, X+=Lx-Ly-i1)
             {
-                if (LAPACKE_slasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+                partial_sort_s(X,Lx,i2,1);
                 X += i1;
                 for (size_t l=Ly; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
@@ -202,7 +203,7 @@ int trim_inplace_s (float *Y, float *X, const size_t R, const size_t C, const si
                 {
                     for (size_t l=Lx; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= Lx;
-                    if (LAPACKE_slasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_s: problem with LAPACKE function\n"); }
+                    partial_sort_s(X1,Lx,i2,1);
                     X1 += i1;
                     for (size_t l=Ly; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }
@@ -234,7 +235,7 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
     }
     else if (Lx==N)
     {
-        if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+        partial_sort_d(X,Lx,i2,1);
         X += i1;
         for (size_t l=Ly; l>0u; --l, ++X, ++Y) { *Y = *X; }
     }
@@ -248,7 +249,7 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
         {
             for (size_t v=V; v>0u; --v, X+=Lx-Ly-i1)
             {
-                if (LAPACKE_dlasrt_work('I',(int)Lx,X)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+                partial_sort_d(X,Lx,i2,1);
                 X += i1;
                 for (size_t l=Ly; l>0u; --l, ++X, ++Y) { *Y = *X; }
             }
@@ -263,7 +264,7 @@ int trim_inplace_d (double *Y, double *X, const size_t R, const size_t C, const 
                 {
                     for (size_t l=Lx; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= Lx;
-                    if (LAPACKE_dlasrt_work('I',(int)Lx,X1)) { fprintf(stderr,"error in trim_d: problem with LAPACKE function\n"); }
+                    partial_sort_d(X1,Lx,i2,1);
                     X1 += i1;
                     for (size_t l=Ly; l>0u; --l, ++X1, Y+=K) { *Y = *X1; }
                 }

@@ -2,6 +2,7 @@
 //This has no in-place version (no faster version that I can find).
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "codee_math.h"
 
 #ifdef __cplusplus

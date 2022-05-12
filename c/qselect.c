@@ -2,6 +2,7 @@
 //Does qselect algorithm to get kth largest element for each vector in X along dim.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "codee_math.h"
 #include "kselect.c"
 
@@ -20,7 +21,7 @@ int qselect_s (float *Y, const float *X, const size_t R, const size_t C, const s
     const size_t L = (dim==0u) ? R : (dim==1u) ? C : (dim==2u) ? S : H;
     if (k>=L) { fprintf(stderr,"error in qselect_s: k must be in [0 L-1]\n"); return 1; }
 
-    struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
+    //struct timespec tic, toc; clock_gettime(CLOCK_REALTIME,&tic);
 
     if (N==0u) {}
     else if (L==1u)
@@ -71,7 +72,7 @@ int qselect_s (float *Y, const float *X, const size_t R, const size_t C, const s
         free(X1);
     }
 
-    clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
+    //clock_gettime(CLOCK_REALTIME,&toc); fprintf(stderr,"elapsed time = %.6f ms\n",(double)(toc.tv_sec-tic.tv_sec)*1e3+(double)(toc.tv_nsec-tic.tv_nsec)/1e6);
 
     return 0;
 }

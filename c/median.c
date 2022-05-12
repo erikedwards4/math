@@ -5,6 +5,7 @@
 //However, it turns out to be almost the identical speed for matrices.
 
 #include <stdio.h>
+#include <stdlib.h>
 //#include <lapacke.h>
 #include "codee_math.h"
 #include "extremum.c"
@@ -38,7 +39,7 @@ int median_s (float *Y, const float *X, const size_t R, const size_t C, const si
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         x2 = kselect_s(X1,L,i2,1);
-        *Y = (L%2u) ? x2 : 0.5f*(x2+extremum_s(X,i2,0));
+        *Y = (L%2u) ? x2 : 0.5f*(x2+extremum_s(X1,i2,0));
         // if (LAPACKE_slasrt_work('I',(int)L,X1)) { fprintf(stderr,"error in median_s: problem with LAPACKE function\n"); }
         // X1 += i2;
         // *Y = (L%2u) ? *X1 : 0.5f*(*X1 + *(X1-1));
@@ -57,7 +58,7 @@ int median_s (float *Y, const float *X, const size_t R, const size_t C, const si
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
                 x2 = kselect_s(X1,L,i2,1);
-                *Y = (L%2u) ? x2 : 0.5f*(x2+extremum_s(X,i2,0));
+                *Y = (L%2u) ? x2 : 0.5f*(x2+extremum_s(X1,i2,0));
             }
         }
         else
@@ -69,7 +70,7 @@ int median_s (float *Y, const float *X, const size_t R, const size_t C, const si
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     x2 = kselect_s(X1,L,i2,1);
-                    *Y = (L%2u) ? x2 : 0.5f*(x2+extremum_s(X,i2,0));
+                    *Y = (L%2u) ? x2 : 0.5f*(x2+extremum_s(X1,i2,0));
                 }
             }
         }
@@ -102,7 +103,7 @@ int median_d (double *Y, const double *X, const size_t R, const size_t C, const 
         for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
         X1 -= L;
         x2 = kselect_d(X1,L,i2,1);
-        *Y = (L%2u) ? x2 : 0.5*(x2+extremum_d(X,i2,0));
+        *Y = (L%2u) ? x2 : 0.5*(x2+extremum_d(X1,i2,0));
     }
     else
     {
@@ -117,7 +118,7 @@ int median_d (double *Y, const double *X, const size_t R, const size_t C, const 
                 for (size_t l=L; l>0u; --l, ++X, ++X1) { *X1 = *X; }
                 X1 -= L;
                 x2 = kselect_d(X1,L,i2,1);
-                *Y = (L%2u) ? x2 : 0.5*(x2+extremum_d(X,i2,0));
+                *Y = (L%2u) ? x2 : 0.5*(x2+extremum_d(X1,i2,0));
             }
         }
         else
@@ -129,7 +130,7 @@ int median_d (double *Y, const double *X, const size_t R, const size_t C, const 
                     for (size_t l=L; l>0u; --l, X+=K, ++X1) { *X1 = *X; }
                     X1 -= L;
                     x2 = kselect_d(X1,L,i2,1);
-                    *Y = (L%2u) ? x2 : 0.5*(x2+extremum_d(X,i2,0));
+                    *Y = (L%2u) ? x2 : 0.5*(x2+extremum_d(X1,i2,0));
                 }
             }
         }

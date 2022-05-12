@@ -45,6 +45,9 @@ int main(int argc, char *argv[])
     descr += "These are in [0 L-1] and are the inverse of the ranks (see ranks).\n";
     descr += "That is, the sorti indices would recover X from the sorted X.\n";
     descr += "\n";
+    descr += "This uses (my own implementation of) the quicksort algorithm.\n";
+    descr += "This is faster than insert_sorti if the vectors are long (e.g., L > 128).\n";
+    descr += "\n";
     descr += "Use -d (--dim) to give the dimension (axis) [default=0].\n";
     descr += "Use -d0 to sort along cols.\n";
     descr += "Use -d1 to sort along rows.\n";
